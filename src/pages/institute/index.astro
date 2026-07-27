@@ -1,45 +1,68 @@
 ---
+
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import Navigation from "@/components/navigation/Navigation.astro"
 import Footer from "@/components/Footer.astro"
-
-// Read and parse session cookie
 const sessionCookie = Astro.cookies.get("user_session")?.value;
 const user = sessionCookie ? JSON.parse(sessionCookie) : null;
-
-const chapters = [
-  { id: "01", title: "Introduction to Effect", description: "Why Effect exists and the problems it solves", isLocked: false },
-  { id: "02", title: "Effect Basics", description: "Constructing, running, and composing basic Effects", isLocked: !user },
-  { id: "03", title: "Error Management", description: "Expected vs unexpected errors and typed channels", isLocked: !user },
-]
 ---
-
-<BaseLayout title="Effect Institute" description="Effect lessons.">
-  <div class="min-h-screen bg-black font-mono text-xs text-zinc-100">
-    <div class="mx-auto max-w-2xl border-x border-zinc-900 bg-black min-h-screen flex flex-col justify-between">
+<BaseLayout
+  title="Effect Institute"
+  description="Strange, semi-interactive Effect lessons."
+>
+  <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs">
+    
+    <!-- Outer Container -->
+    <div class="mx-auto max-w-2xl border-x border-zinc-900">
       
-      <div>
-        <Navigation activeSlug="institute" />
+      <!-- Top Bar / Navigation -->
+         <Navigation activeSlug="institute" />
+      <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 tracking-wider uppercase">
+        <a href="/" class="font-semibold tracking-widest text-zinc-200">
+          EFFECT INSTITUTE
+        </a>
+        <a href="#signin" class="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors text-[11px]">
+          <span>📌</span> SIGN IN
+        </a>
+      </header>
 
-        <!-- Sub-Header / User State -->
-        <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 uppercase">
-          <a href="/" class="font-semibold tracking-widest text-zinc-200">EFFECT INSTITUTE</a>
+      <!-- Testimonial Ticker -->
+      <div class="border-b border-zinc-900 px-4 py-1.5 text-[11px] text-zinc-500 overflow-hidden whitespace-nowrap">
+        <span>...ep doing what you're doing. This is the best tutorial format I've ever seen.</span>
+        <span class="mx-2 text-zinc-700">▪</span>
+        <span>Feedback</span>
+      </div>
+
+      <!-- Hero Visual Section -->
+      <section class="relative flex h-52 w-full items-center justify-center border-b border-zinc-900 bg-black overflow-hidden">
+        
+        <!-- Background Grid Pattern -->
+        <div 
+          class="absolute inset-0 opacity-20 pointer-events-none"
+          style="background-image: radial-gradient(circle, #52525b 1px, transparent 1px); background-size: 12px 12px;"
+        ></div>
+
+        <!-- Center Circular Graphic -->
+        <div class="relative flex items-center justify-center">
+          <div class="h-32 w-32 rounded-full border border-zinc-800"></div>
+          <div class="absolute h-16 w-16 rounded-full border border-zinc-800"></div>
+          <div class="absolute h-1.5 w-1.5 rounded-full bg-white"></div>
           
-          {user ? (
-            <div class="flex items-center gap-2">
-              <img src={user.avatar} alt={user.login} class="h-4 w-4 rounded-full border border-zinc-700" />
-              <span class="text-[11px] text-zinc-300">@{user.login}</span>
-              <a href="/api/auth/logout" class="text-zinc-500 hover:text-red-400 ml-2">LOGOUT</a>
-            </div>
-          ) : (
-            <a href="/api/auth/github" class="flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors">
-              <span>📌</span> SIGN IN
-            </a>
-          )}
-        </header>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="h-40 w-40 animate-[spin_30s_linear_infinite]" viewBox="0 0 100 100">
+              <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
+              <text class="fill-zinc-300 text-[6px] font-semibold tracking-[0.22em] uppercase">
+                <textPath href="#textPath">
+                  EFFECT INSTITUTE ➔ EFFECT INSTITUTE ➔
+                </textPath>
+              </text>
+            </svg>
+          </div>
+        </div>
+      </section>
 
-        <!-- Dynamic Join / Welcome Bar -->
-        <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 px-4 py-4 bg-black">
+      <!-- Tagline & Action Section -->
+      <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 px-4 py-4 bg-black">
           <div>
             <h1 class="text-xs font-medium text-zinc-100">
               {user ? `Welcome back, ${user.name}` : "Strange, semi-interactive Effect lessons"}
@@ -62,33 +85,40 @@ const chapters = [
           )}
         </section>
 
-        <!-- Chapters List with Dynamic Lock Icons -->
-        <main class="divide-y divide-zinc-900 border-b border-zinc-900">
-          {chapters.map((chapter) => (
-            <a 
-              href={chapter.isLocked ? "/api/auth/github" : `/lessons/${chapter.id}`}
-              class="group flex items-center justify-between px-4 py-3.5 hover:bg-zinc-900/40 transition-colors"
-            >
-              <div>
-                <h2 class="text-xs font-medium text-zinc-200 group-hover:text-white">
-                  {chapter.id}. {chapter.title}
-                </h2>
-                <p class="mt-0.5 text-[11px] text-zinc-500">{chapter.description}</p>
-              </div>
+      <!-- Chapters List -->
+      <main>
+        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase">
+          CHAPTERS
+        </div>
 
-              <div class="shrink-0">
-                {chapter.isLocked ? (
-                  <span class="text-zinc-600 text-xs">🔒</span>
-                ) : (
-                  <span class="text-emerald-500 text-xs">🔓</span>
-                )}
-              </div>
-            </a>
-          ))}
-        </main>
-      </div>
+        <!-- Chapter 1 -->
+        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
+          <div>
+            <h2 class="text-xs font-medium text-zinc-100">
+              Introduction to Effect
+            </h2>
+            <p class="mt-0.5 text-[11px] text-zinc-500">
+              Why Effect exists and the problems it solves
+            </p>
+          </div>
+          <div class="text-zinc-600 text-xs">🔒</div>
+        </div>
 
-      <Footer />
+        <!-- Chapter 2 -->
+        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
+          <div>
+            <h2 class="text-xs font-medium text-zinc-100">
+              Effect Basics
+            </h2>
+            <p class="mt-0.5 text-[11px] text-zinc-500">
+              Constructing, running, and composing basic Effects
+            </p>
+          </div>
+          <div class="text-zinc-600 text-xs">🔒</div>
+        </div>
+      </main>
+
     </div>
-  </div>
+    <Footer/>
+</div>
 </BaseLayout>
