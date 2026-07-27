@@ -38,15 +38,6 @@ export type NavigationActiveSlug = "blog" | "podcast" | "docs" | "playground"
 
 export const LANDING_NAVIGATION_LINKS: ReadonlyArray<NavigationLink> = [
   {
-    id: "docs",
-    kind: "internal",
-    label: "Docs",
-    href: "/docs/",
-    group: "primary",
-    surfaces: ["desktop", "mobile"],
-    cta: "none",
-  },
-  {
     id: "blog",
     kind: "internal",
     label: "Blog",
@@ -60,15 +51,6 @@ export const LANDING_NAVIGATION_LINKS: ReadonlyArray<NavigationLink> = [
     kind: "internal",
     label: "Podcast",
     href: "/podcast/",
-    group: "primary",
-    surfaces: ["desktop", "mobile"],
-    cta: "none",
-  },
-  {
-    id: "playground",
-    kind: "internal",
-    label: "Play",
-    href: "/play/",
     group: "primary",
     surfaces: ["desktop", "mobile"],
     cta: "none",
