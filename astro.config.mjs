@@ -2,6 +2,8 @@ import { defineConfig, fontProviders } from "astro/config"
 import { fileURLToPath } from "node:url"
 import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
+import mdx from "@astrojs/mdx"
+
 const GoogleFontProvider = fontProviders.google()
 export default defineConfig({
     site: "http://localhost:4321",
@@ -31,6 +33,6 @@ export default defineConfig({
       },
     },
   },
-  integrations: [react()],
+  integrations: [react(), mdx()],
   // ...fonts, etc.
 })
