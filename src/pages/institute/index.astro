@@ -1,48 +1,121 @@
 ---
+
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import Navigation from "@/components/navigation/Navigation.astro"
 import Footer from "@/components/Footer.astro"
 ---
 
 <BaseLayout
-  title="Institute"
-  description="Research, training, and resources from the Institute."
+  title="Effect Institute"
+  description="Strange, semi-interactive Effect lessons."
 >
-  <div class="relative w-full">
-    <Navigation activeSlug="institute" />
+  <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs">
+    
+    <!-- Outer Container -->
+    <div class="mx-auto max-w-2xl border-x border-zinc-900">
+      
+      <!-- Top Bar / Navigation -->
+         <Navigation activeSlug="institute" />
+      <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 tracking-wider uppercase">
+        <a href="/" class="font-semibold tracking-widest text-zinc-200">
+          EFFECT INSTITUTE
+        </a>
+        <a href="#signin" class="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors text-[11px]">
+          <span>📌</span> SIGN IN
+        </a>
+      </header>
 
-    <main class="relative w-full pt-16">
-      <!-- Hero -->
-      <section class="mx-auto max-w-5xl px-6 py-20 text-center lg:py-28">
-        <p class="mb-4 font-mono text-sm font-medium tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-          The Institute
-        </p>
-        <h1 class="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl dark:text-white">
-          Research and training for the next generation of builders
-        </h1>
-        <p class="mx-auto mt-6 max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
-          A short paragraph describing what the Institute does, who it's for,
-          and why it exists — replace this with your actual mission statement.
-        </p>
-        <div class="mt-10 flex justify-center gap-4">
+      <!-- Testimonial Ticker -->
+      <div class="border-b border-zinc-900 px-4 py-1.5 text-[11px] text-zinc-500 overflow-hidden whitespace-nowrap">
+        <span>...ep doing what you're doing. This is the best tutorial format I've ever seen.</span>
+        <span class="mx-2 text-zinc-700">▪</span>
+        <span>Feedback</span>
+      </div>
+
+      <!-- Hero Visual Section -->
+      <section class="relative flex h-52 w-full items-center justify-center border-b border-zinc-900 bg-black overflow-hidden">
+        
+        <!-- Background Grid Pattern -->
+        <div 
+          class="absolute inset-0 opacity-20 pointer-events-none"
+          style="background-image: radial-gradient(circle, #52525b 1px, transparent 1px); background-size: 12px 12px;"
+        ></div>
+
+        <!-- Center Circular Graphic -->
+        <div class="relative flex items-center justify-center">
+          <div class="h-32 w-32 rounded-full border border-zinc-800"></div>
+          <div class="absolute h-16 w-16 rounded-full border border-zinc-800"></div>
+          <div class="absolute h-1.5 w-1.5 rounded-full bg-white"></div>
           
-            href="#programs"
-            class="rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
-          
-            Explore Programs
-          
-          
-            href="#contact"
-            class="rounded-md border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
-          
-            Get in Touch
-          
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg class="h-40 w-40 animate-[spin_30s_linear_infinite]" viewBox="0 0 100 100">
+              <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
+              <text class="fill-zinc-300 text-[6px] font-semibold tracking-[0.22em] uppercase">
+                <textPath href="#textPath">
+                  EFFECT INSTITUTE ➔ EFFECT INSTITUTE ➔
+                </textPath>
+              </text>
+            </svg>
+          </div>
         </div>
       </section>
 
-    </main>
+      <!-- Tagline & Action Section -->
+      <section class="flex items-center justify-between gap-4 border-b border-zinc-900 px-4 py-4">
+        <div>
+          <h1 class="text-xs font-medium text-zinc-200">
+            Strange, semi-interactive Effect lessons
+          </h1>
+          <p class="mt-0.5 text-[11px] text-zinc-500">
+            Sign in to unlock all lessons.
+          </p>
+        </div>
+        
+        <a 
+          href="#join" 
+          class="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-colors hover:bg-zinc-200 shrink-0"
+        >
+          <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          JOIN US
+        </a>
+      </section>
 
+      <!-- Chapters List -->
+      <main>
+        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase">
+          CHAPTERS
+        </div>
 
+        <!-- Chapter 1 -->
+        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
+          <div>
+            <h2 class="text-xs font-medium text-zinc-100">
+              Introduction to Effect
+            </h2>
+            <p class="mt-0.5 text-[11px] text-zinc-500">
+              Why Effect exists and the problems it solves
+            </p>
+          </div>
+          <div class="text-zinc-600 text-xs">🔒</div>
+        </div>
 
-  </div>
+        <!-- Chapter 2 -->
+        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
+          <div>
+            <h2 class="text-xs font-medium text-zinc-100">
+              Effect Basics
+            </h2>
+            <p class="mt-0.5 text-[11px] text-zinc-500">
+              Constructing, running, and composing basic Effects
+            </p>
+          </div>
+          <div class="text-zinc-600 text-xs">🔒</div>
+        </div>
+      </main>
+
+    </div>
+    <Footer/>
+</div>
 </BaseLayout>
