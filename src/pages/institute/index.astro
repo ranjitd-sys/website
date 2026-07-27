@@ -1,0 +1,48 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro"
+import Navigation from "@/components/navigation/Navigation.astro"
+import Footer from "@/components/Footer.astro"
+---
+
+<BaseLayout
+  title="Institute"
+  description="Research, training, and resources from the Institute."
+>
+  <div class="relative w-full">
+    <Navigation activeSlug="institute" />
+
+    <main class="relative w-full pt-16">
+      <!-- Hero -->
+      <section class="mx-auto max-w-5xl px-6 py-20 text-center lg:py-28">
+        <p class="mb-4 font-mono text-sm font-medium tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
+          The Institute
+        </p>
+        <h1 class="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl dark:text-white">
+          Research and training for the next generation of builders
+        </h1>
+        <p class="mx-auto mt-6 max-w-2xl text-lg text-zinc-600 dark:text-zinc-400">
+          A short paragraph describing what the Institute does, who it's for,
+          and why it exists — replace this with your actual mission statement.
+        </p>
+        <div class="mt-10 flex justify-center gap-4">
+          
+            href="#programs"
+            class="rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+          
+            Explore Programs
+          
+          
+            href="#contact"
+            class="rounded-md border border-zinc-300 px-5 py-2.5 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900"
+          
+            Get in Touch
+          
+        </div>
+      </section>
+
+    </main>
+
+
+
+  </div>
+</BaseLayout>
