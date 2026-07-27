@@ -3,176 +3,92 @@ import BaseLayout from "@/layouts/BaseLayout.astro"
 import Navigation from "@/components/navigation/Navigation.astro"
 import Footer from "@/components/Footer.astro"
 
-// Dynamic Chapter Data
+// Read and parse session cookie
+const sessionCookie = Astro.cookies.get("user_session")?.value;
+const user = sessionCookie ? JSON.parse(sessionCookie) : null;
+
 const chapters = [
-  {
-    id: "01",
-    title: "Introduction to Effect",
-    description: "Why Effect exists and the problems it solves",
-    isLocked: false,
-    duration: "15 mins",
-  },
-  {
-    id: "02",
-    title: "Effect Basics",
-    description: "Constructing, running, and composing basic Effects",
-    isLocked: true,
-    duration: "30 mins",
-  },
-  {
-    id: "03",
-    title: "Error Management",
-    description: "Expected vs unexpected errors and typed error channels",
-    isLocked: true,
-    duration: "45 mins",
-  },
-  {
-    id: "04",
-    title: "Context & Requirements",
-    description: "Dependency injection using Services and Layers",
-    isLocked: true,
-    duration: "40 mins",
-  },
+  { id: "01", title: "Introduction to Effect", description: "Why Effect exists and the problems it solves", isLocked: false },
+  { id: "02", title: "Effect Basics", description: "Constructing, running, and composing basic Effects", isLocked: !user },
+  { id: "03", title: "Error Management", description: "Expected vs unexpected errors and typed channels", isLocked: !user },
 ]
 ---
 
-<BaseLayout
-  title="Effect Institute"
-  description="Strange, semi-interactive Effect lessons."
->
-  <div class="min-h-screen bg-black font-mono text-xs text-zinc-100 selection:bg-zinc-800 selection:text-white">
-    
-    <!-- Outer Container -->
+<BaseLayout title="Effect Institute" description="Effect lessons.">
+  <div class="min-h-screen bg-black font-mono text-xs text-zinc-100">
     <div class="mx-auto max-w-2xl border-x border-zinc-900 bg-black min-h-screen flex flex-col justify-between">
       
       <div>
-        <!-- Main Navigation Component -->
         <Navigation activeSlug="institute" />
 
-        <!-- Sub-Header / Sign-in Bar -->
-        <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 tracking-wider uppercase">
-          <a href="/" class="font-semibold tracking-widest text-zinc-200 hover:text-white transition-colors">
-            EFFECT INSTITUTE
-          </a>
-          <a href="#signin" class="group flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors">
-            <svg class="h-3 w-3 text-zinc-500 group-hover:text-zinc-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-            </svg>
-            SIGN IN
-          </a>
+        <!-- Sub-Header / User State -->
+        <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 uppercase">
+          <a href="/" class="font-semibold tracking-widest text-zinc-200">EFFECT INSTITUTE</a>
+          
+          {user ? (
+            <div class="flex items-center gap-2">
+              <img src={user.avatar} alt={user.login} class="h-4 w-4 rounded-full border border-zinc-700" />
+              <span class="text-[11px] text-zinc-300">@{user.login}</span>
+              <a href="/api/auth/logout" class="text-zinc-500 hover:text-red-400 ml-2">LOGOUT</a>
+            </div>
+          ) : (
+            <a href="/api/auth/github" class="flex items-center gap-1.5 text-[11px] text-zinc-400 hover:text-white transition-colors">
+              <span>📌</span> SIGN IN
+            </a>
+          )}
         </header>
 
-        <!-- Testimonial Ticker -->
-        <div class="flex items-center gap-2 border-b border-zinc-900 px-4 py-1.5 text-[11px] text-zinc-500 overflow-hidden whitespace-nowrap">
-          <span class="truncate">"...keep doing what you're doing. This is the best tutorial format I've ever seen."</span>
-          <span class="text-zinc-700">▪</span>
-          <a href="#feedback" class="hover:text-zinc-300 underline underline-offset-2 transition-colors shrink-0">Feedback</a>
-        </div>
-
-        <!-- Hero Visual Section -->
-        <section class="relative flex h-60 w-full items-center justify-center border-b border-zinc-900 bg-zinc-950/40 overflow-hidden">
-          
-          <!-- Background Dot-Grid Pattern -->
-          <div 
-            class="absolute inset-0 opacity-25 pointer-events-none"
-            style="background-image: radial-gradient(circle, #71717a 1px, transparent 1px); background-size: 14px 14px;"
-          ></div>
-
-          <!-- Crosshair Guide Lines -->
-          <div class="absolute inset-x-0 top-1/2 h-px bg-zinc-900/60 pointer-events-none"></div>
-          <div class="absolute inset-y-0 left-1/2 w-px bg-zinc-900/60 pointer-events-none"></div>
-
-          <!-- Rotating Circular Graphic -->
-          <div class="relative flex items-center justify-center">
-            <!-- Concentric Rings -->
-            <div class="h-36 w-36 rounded-full border border-zinc-800/80"></div>
-            <div class="absolute h-20 w-20 rounded-full border border-zinc-800"></div>
-            <div class="absolute h-10 w-10 rounded-full border border-zinc-800/60"></div>
-            <div class="absolute h-1.5 w-1.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"></div>
-            
-            <!-- Rotating Text Badge -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg class="h-44 w-44 animate-[spin_25s_linear_infinite]" viewBox="0 0 100 100">
-                <path id="textPath" d="M 50, 50 m -36, 0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" fill="none" />
-                <text class="fill-zinc-300 text-[5.8px] font-semibold tracking-[0.24em] uppercase">
-                  <textPath href="#textPath">
-                    EFFECT ➔ INSTITUTE ➔ EFFECT ➔ INSTITUTE ➔
-                  </textPath>
-                </text>
-              </svg>
-            </div>
-          </div>
-        </section>
-
-        <!-- Tagline & Join Action Bar -->
+        <!-- Dynamic Join / Welcome Bar -->
         <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 px-4 py-4 bg-black">
           <div>
-            <h1 class="text-xs font-medium text-zinc-100 tracking-wide">
-              Strange, semi-interactive Effect lessons
+            <h1 class="text-xs font-medium text-zinc-100">
+              {user ? `Welcome back, ${user.name}` : "Strange, semi-interactive Effect lessons"}
             </h1>
             <p class="mt-0.5 text-[11px] text-zinc-500">
-              Sign in to unlock all lessons and track your progress.
+              {user ? "All chapters are now unlocked for your account." : "Sign in with GitHub to unlock all lessons."}
             </p>
           </div>
           
-          <a 
-            href="#join" 
-            class="inline-flex items-center justify-center gap-2 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-zinc-200 active:scale-[0.98] shrink-0"
-          >
-            <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-            </svg>
-            JOIN US
-          </a>
+          {!user && (
+            <a 
+              href="/api/auth/github" 
+              class="inline-flex items-center justify-center gap-2 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-zinc-200"
+            >
+              <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+              </svg>
+              JOIN US
+            </a>
+          )}
         </section>
 
-        <!-- Chapters List -->
-        <main>
-          <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase">
-            <span>CHAPTERS</span>
-            <span>STATUS</span>
-          </div>
+        <!-- Chapters List with Dynamic Lock Icons -->
+        <main class="divide-y divide-zinc-900 border-b border-zinc-900">
+          {chapters.map((chapter) => (
+            <a 
+              href={chapter.isLocked ? "/api/auth/github" : `/lessons/${chapter.id}`}
+              class="group flex items-center justify-between px-4 py-3.5 hover:bg-zinc-900/40 transition-colors"
+            >
+              <div>
+                <h2 class="text-xs font-medium text-zinc-200 group-hover:text-white">
+                  {chapter.id}. {chapter.title}
+                </h2>
+                <p class="mt-0.5 text-[11px] text-zinc-500">{chapter.description}</p>
+              </div>
 
-          <!-- Dynamic Chapter Mapping -->
-          <div class="divide-y divide-zinc-900 border-b border-zinc-900">
-            {chapters.map((chapter) => (
-              <a 
-                href={chapter.isLocked ? "#signin" : `/lessons/${chapter.id}`}
-                class="group flex items-center justify-between px-4 py-3.5 hover:bg-zinc-900/40 transition-colors"
-              >
-                <div class="pr-4">
-                  <div class="flex items-center gap-2">
-                    <span class="text-zinc-600 font-mono text-[11px]">{chapter.id}.</span>
-                    <h2 class="text-xs font-medium text-zinc-200 group-hover:text-white transition-colors">
-                      {chapter.title}
-                    </h2>
-                  </div>
-                  <p class="mt-0.5 text-[11px] text-zinc-500 group-hover:text-zinc-400 transition-colors">
-                    {chapter.description}
-                  </p>
-                </div>
-
-                <div class="flex items-center gap-3 shrink-0">
-                  <span class="hidden sm:inline text-[10px] text-zinc-600">{chapter.duration}</span>
-                  {chapter.isLocked ? (
-                    <svg class="h-3.5 w-3.5 text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  ) : (
-                    <svg class="h-3.5 w-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                    </svg>
-                  )}
-                </div>
-              </a>
-            ))}
-          </div>
+              <div class="shrink-0">
+                {chapter.isLocked ? (
+                  <span class="text-zinc-600 text-xs">🔒</span>
+                ) : (
+                  <span class="text-emerald-500 text-xs">🔓</span>
+                )}
+              </div>
+            </a>
+          ))}
         </main>
       </div>
 
-      <!-- Footer -->
+      <Footer />
     </div>
-    <Footer />
-
   </div>
 </BaseLayout>

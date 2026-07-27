@@ -3,10 +3,11 @@ import { fileURLToPath } from "node:url"
 import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
 import mdx from "@astrojs/mdx"
-
 const GoogleFontProvider = fontProviders.google()
 export default defineConfig({
     site: "http://localhost:4321",
+    output:"server",
+   
      fonts: [
     {
       provider: GoogleFontProvider,
