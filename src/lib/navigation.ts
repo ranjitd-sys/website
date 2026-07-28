@@ -34,7 +34,7 @@ export interface ExternalNavigationLink extends NavigationLinkBase {
 
 export type NavigationLink = InternalNavigationLink | ExternalNavigationLink
 
-export type NavigationActiveSlug = "blog" | "podcast" | "docs" | "playground" | "institute"
+export type NavigationActiveSlug = "blog" | "podcast" | "docs" | "playground" | "careers"
 
 export const LANDING_NAVIGATION_LINKS: ReadonlyArray<NavigationLink> = [
   {
@@ -56,10 +56,10 @@ export const LANDING_NAVIGATION_LINKS: ReadonlyArray<NavigationLink> = [
     cta: "none",
   },
    {
-    id: "institute",
+    id: "careers",
     kind: "internal",
-    label: "institute",
-    href: "/institute/",
+    label: "careers",
+    href: "/careers/",
     group: "primary",
     surfaces: ["desktop", "mobile"],
     cta: "none",
