@@ -1,5 +1,4 @@
 ---
-
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import Navigation from "@/components/navigation/Navigation.astro"
 import Footer from "@/components/Footer.astro"
@@ -7,8 +6,8 @@ const sessionCookie = Astro.cookies.get("user_session")?.value;
 const user = sessionCookie ? JSON.parse(sessionCookie) : null;
 ---
 <BaseLayout
-  title="Effect Institute"
-  description="Strange, semi-interactive Effect lessons."
+  title="Careers & Institute"
+  description="Master our stack. Join the team."
 >
   <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs">
     
@@ -16,10 +15,10 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
     <div class="mx-auto max-w-2xl border-x border-zinc-900">
       
       <!-- Top Bar / Navigation -->
-         <Navigation activeSlug="institute" />
+      <Navigation activeSlug="institute" />
       <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 tracking-wider uppercase">
         <a href="/" class="font-semibold tracking-widest text-zinc-200">
-          EFFECT INSTITUTE
+          INSTITUTE / CAREERS
         </a>
         <a href="#signin" class="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors text-[11px]">
           <span>📌</span> SIGN IN
@@ -28,97 +27,121 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
 
       <!-- Testimonial Ticker -->
       <div class="border-b border-zinc-900 px-4 py-1.5 text-[11px] text-zinc-500 overflow-hidden whitespace-nowrap">
-        <span>...ep doing what you're doing. This is the best tutorial format I've ever seen.</span>
+        <span>...ep doing what you're doing. Best tutorial format I've seen, and the most talented team I've ever worked with.</span>
         <span class="mx-2 text-zinc-700">▪</span>
-        <span>Feedback</span>
+        <span>Community Feedback</span>
       </div>
 
-      <!-- Hero Visual Section -->
-      <section class="relative flex h-52 w-full items-center justify-center border-b border-zinc-900 bg-black overflow-hidden">
+      <!-- Hero Section -->
+      <section class="border-b border-zinc-900 px-4 py-8 bg-black">
+        <h1 class="text-3xl font-bold tracking-tighter text-zinc-100 mb-3 uppercase">
+          Prove your <br/>
+          <span class="text-zinc-500">capabilities.</span>
+        </h1>
+        <p class="max-w-md text-[11px] text-zinc-400 leading-relaxed mb-6">
+          We don't do standard interviews. Connect your GitHub, complete our interactive engineering tracks, and unlock access to apply for open roles directly.
+        </p>
         
-        <!-- Background Grid Pattern -->
-        <div 
-          class="absolute inset-0 opacity-20 pointer-events-none"
-          style="background-image: radial-gradient(circle, #52525b 1px, transparent 1px); background-size: 12px 12px;"
-        ></div>
-
-        <!-- Center Circular Graphic -->
-        <div class="relative flex items-center justify-center">
-          <div class="h-32 w-32 rounded-full border border-zinc-800"></div>
-          <div class="absolute h-16 w-16 rounded-full border border-zinc-800"></div>
-          <div class="absolute h-1.5 w-1.5 rounded-full bg-white"></div>
-          
-          <div class="absolute inset-0 flex items-center justify-center">
-            <svg class="h-40 w-40 animate-[spin_30s_linear_infinite]" viewBox="0 0 100 100">
-              <path id="textPath" d="M 50, 50 m -35, 0 a 35,35 0 1,1 70,0 a 35,35 0 1,1 -70,0" fill="none" />
-              <text class="fill-zinc-300 text-[6px] font-semibold tracking-[0.22em] uppercase">
-                <textPath href="#textPath">
-                  EFFECT INSTITUTE ➔ EFFECT INSTITUTE ➔
-                </textPath>
-              </text>
+        {!user ? (
+          <a 
+            href="/api/auth/github" 
+            class="inline-flex items-center justify-center gap-2 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-zinc-200"
+          >
+            <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
             </svg>
+            Connect GitHub to Start
+          </a>
+        ) : (
+          <div class="inline-flex items-center gap-2 border border-zinc-800 bg-zinc-950 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-400">
+            ✓ Authentication Active
           </div>
-        </div>
+          
+            <a href="/api/auth/logout">Log out</a>
+
+        )}
       </section>
 
-      <!-- Tagline & Action Section -->
-      <section class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-900 px-4 py-4 bg-black">
-          <div>
-            <h1 class="text-xs font-medium text-zinc-100">
-              {user ? `Welcome back, ${user.name}` : "Strange, semi-interactive Effect lessons"}
-            </h1>
-            <p class="mt-0.5 text-[11px] text-zinc-500">
-              {user ? "All chapters are now unlocked for your account." : "Sign in with GitHub to unlock all lessons."}
-            </p>
-          </div>
-          
-          {!user && (
-            <a 
-              href="/api/auth/github" 
-              class="inline-flex items-center justify-center gap-2 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-zinc-200"
-            >
-              <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-              </svg>
-              JOIN US
-            </a>
-          )}
-        </section>
-
-      <!-- Chapters List -->
       <main>
-        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase">
-          CHAPTERS
+        <!-- ==================== PHASE 1: CURRICULUM ==================== -->
+        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950">
+          Phase 1: The Curriculum
         </div>
 
-        <!-- Chapter 1 -->
-        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
-          <div>
-            <h2 class="text-xs font-medium text-zinc-100">
-              Introduction to Effect
-            </h2>
-            <p class="mt-0.5 text-[11px] text-zinc-500">
-              Why Effect exists and the problems it solves
+        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
+          <div class="max-w-[80%]">
+            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
+              01. Functional Fundamentals with Effect-TS
+            </h3>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
             </p>
           </div>
-          <div class="text-zinc-600 text-xs">🔒</div>
+          <div class="mt-1">
+            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
+          </div>
         </div>
 
-        <!-- Chapter 2 -->
-        <div class="flex items-center justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-950 transition-colors">
-          <div>
-            <h2 class="text-xs font-medium text-zinc-100">
-              Effect Basics
-            </h2>
-            <p class="mt-0.5 text-[11px] text-zinc-500">
-              Constructing, running, and composing basic Effects
+        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
+          <div class="max-w-[80%]">
+            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
+              02. Distributed Systems & High Availability
+            </h3>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Design sharding patterns, implement distributed state machines, and handle cluster management.
             </p>
           </div>
-          <div class="text-zinc-600 text-xs">🔒</div>
+          <div class="mt-1">
+            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
+          </div>
         </div>
+
+        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
+          <div class="max-w-[80%]">
+            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
+              03. Next-Gen Runtimes (Bun)
+            </h3>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Optimizing application performance and building scalable TypeScript services using the Bun runtime.
+            </p>
+          </div>
+          <div class="mt-1">
+            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
+          </div>
+        </div>
+
+        <!-- ==================== PHASE 2: OPEN ROLES ==================== -->
+        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950 mt-4">
+          Phase 2: Open Roles (Unlocks upon completion)
+        </div>
+
+        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Systems Backend Engineer</h3>
+            <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
+          </div>
+          <p class="text-[11px] text-zinc-500">Focus: Effect-TS, Distributed Architecture, Cloud Infrastructure</p>
+          <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
+            {user ? "Requires 3/3 Curriculum completions to apply." : "Authenticate to view requirements."}
+          </div>
+        </div>
+
+        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
+          <div class="flex items-center justify-between">
+            <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Full-Stack Architect</h3>
+            <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
+          </div>
+          <p class="text-[11px] text-zinc-500">Focus: Minimalist UI/UX, Brutalist Design, React, Node/Bun</p>
+          <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
+            {user ? "Requires 2/3 Curriculum completions to apply." : "Authenticate to view requirements."}
+          </div>
+        </div>
+
       </main>
 
+      <!-- Footer -->
+      
     </div>
     <Footer/>
-</div>
+  </div>
 </BaseLayout>
