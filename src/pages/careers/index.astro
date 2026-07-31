@@ -40,7 +40,7 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
           <span class="text-zinc-500">capabilities.</span>
         </h1>
         <p class="max-w-md text-[11px] text-zinc-400 leading-relaxed mb-6">
-          We don't do standard interviews. Connect your GitHub, complete our interactive engineering tracks, and unlock access to apply for open roles directly.
+          We don't do standard interviews. Connect your GitHub, link your repository, complete our interactive engineering tracks, and unlock access to apply for open roles directly.
         </p>
         
         {!user ? (
@@ -54,12 +54,52 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
             Connect GitHub to Start
           </a>
         ) : (
-          <button class="inline-flex items-center gap-2 border border-zinc-800 bg-zinc-950 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-red-400 hover:bg-red-900">
-            Log out
-          </button>
-          
-      
+          <div class="flex flex-col gap-3 max-w-md">
+            <!-- User Info & Logout -->
+            <div class="flex items-center justify-between border border-zinc-800 bg-zinc-950 px-3 py-2 text-[11px]">
+              <div class="flex items-center gap-2">
+                <img src={user.avatar} alt={user.login} class="w-5 h-5 rounded-full border border-zinc-700" />
+                <span class="text-zinc-300">Connected: <strong class="text-white">{user.login}</strong></span>
+              </div>
+              <a href="/api/auth/logout" class="text-red-400 hover:text-red-300 font-bold uppercase transition-colors">
+                Log out
+              </a>
+            </div>
 
+            <!-- Repository Selection Box -->
+            {!user.selectedRepo ? (
+              <div class="border border-zinc-800 bg-zinc-950 p-3">
+                <p class="text-zinc-400 mb-2 uppercase text-[10px] tracking-widest">Select Assessment Repository:</p>
+                <div class="flex gap-2">
+                  <select 
+                    id="repo-select" 
+                    class="bg-black border border-zinc-800 text-zinc-200 px-2 py-1.5 text-xs flex-1 outline-none focus:border-zinc-500"
+                  >
+                    <option value="">Loading repositories...</option>
+                  </select>
+                  <button 
+                    id="save-repo-btn"
+                    class="bg-white text-black font-bold uppercase px-3 py-1.5 text-[11px] hover:bg-zinc-200 transition-colors"
+                  >
+                    Link
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div class="border border-zinc-800 bg-zinc-950 p-3 flex items-center justify-between">
+                <div>
+                  <span class="text-zinc-500 uppercase text-[10px] tracking-wider block">Linked Repository:</span>
+                  <span class="text-zinc-200 font-bold">{user.selectedRepo}</span>
+                </div>
+                <button 
+                  id="change-repo-btn" 
+                  class="text-[10px] text-zinc-400 hover:text-white underline uppercase transition-colors"
+                >
+                  Change
+                </button>
+              </div>
+            )}
+          </div>
         )}
       </section>
 
@@ -70,61 +110,109 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
         </div>
 
         <!-- 01. Effect-TS -->
-<div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
-  <div class="max-w-[80%]">
-    <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
-      01. Functional Fundamentals with Effect-TS
-    </h3>
-    <p class="text-[11px] text-zinc-500 leading-relaxed">
-      Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
-    </p>
-  </div>
-  <div class="mt-1">
-    {user ? (
-      <a href="/careers/effect-ts" class="text-[10px] inline-block text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</a>
-    ) : (
-      <span class="text-[10px] text-zinc-600">LOCKED</span>
-    )}
-  </div>
-</div>
-
-<!-- Do the same for your other courses, using href="/lessons/distributed-systems" and href="/lessons/bun-runtime" -->
-        
-
-        
+        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
+          <div class="max-w-[80%]">
+            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
+              01. Functional Fundamentals with Effect-TS
+            </h3>
+            <p class="text-[11px] text-zinc-500 leading-relaxed">
+              Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
+            </p>
+          </div>
+          <div class="mt-1">
+            {user && user.selectedRepo ? (
+              <a href="/careers/effect-ts" class="text-[10px] inline-block text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</a>
+            ) : (
+              <span class="text-[10px] text-zinc-600" title="Link a repository first">LOCKED</span>
+            )}
+          </div>
+        </div>
 
         <!-- ==================== PHASE 2: OPEN ROLES ==================== -->
         <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950 mt-4">
           Phase 2: Open Roles (Unlocks upon completion)
         </div>
 
-        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
+        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user && user.selectedRepo ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Systems Backend Engineer</h3>
             <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
           </div>
           <p class="text-[11px] text-zinc-500">Focus: Effect-TS, Distributed Architecture, Cloud Infrastructure</p>
           <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
-            {user ? "Requires 3/3 Curriculum completions to apply." : "Authenticate to view requirements."}
+            {user && user.selectedRepo ? "Requires curriculum completion to apply." : "Link a repository to unlock requirements."}
           </div>
         </div>
 
-        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
+        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user && user.selectedRepo ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
           <div class="flex items-center justify-between">
             <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Full-Stack Architect</h3>
             <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
           </div>
           <p class="text-[11px] text-zinc-500">Focus: Minimalist UI/UX, Brutalist Design, React, Node/Bun</p>
           <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
-            {user ? "Requires 2/3 Curriculum completions to apply." : "Authenticate to view requirements."}
+            {user && user.selectedRepo ? "Requires curriculum completion to apply." : "Link a repository to unlock requirements."}
           </div>
         </div>
 
       </main>
 
       <!-- Footer -->
-      
     </div>
     <Footer/>
   </div>
 </BaseLayout>
+
+<script>
+  // Client-side handlers for repository selection
+  const selectEl = document.getElementById("repo-select") as HTMLSelectElement;
+  const saveBtn = document.getElementById("save-repo-btn");
+  const changeBtn = document.getElementById("change-repo-btn");
+
+  if (selectEl) {
+    fetch("/api/auth/github/repos")
+      .then(res => res.json())
+      .then(repos => {
+        selectEl.innerHTML = '<option value="">-- Choose repository --</option>';
+        repos.forEach((r: { fullName: string; private: boolean }) => {
+          const opt = document.createElement("option");
+          opt.value = r.fullName;
+          opt.textContent = `${r.fullName} ${r.private ? '[private]' : ''}`;
+          selectEl.appendChild(opt);
+        });
+      })
+      .catch(() => {
+        selectEl.innerHTML = '<option value="">Failed to load repositories</option>';
+      });
+  }
+
+  saveBtn?.addEventListener("click", async () => {
+    const repoFullName = selectEl?.value;
+    if (!repoFullName) return alert("Please select a repository first.");
+
+    const res = await fetch("/api/auth/github/select-repo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repoFullName })
+    });
+
+    if (res.ok) {
+      window.location.reload();
+    } else {
+      alert("Failed to link repository.");
+    }
+  });
+
+  changeBtn?.addEventListener("click", async () => {
+    // Reset selected repo by passing empty string
+    const res = await fetch("/api/auth/github/select-repo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repoFullName: "" })
+    });
+
+    if (res.ok) {
+      window.location.reload();
+    }
+  });
+</script>
