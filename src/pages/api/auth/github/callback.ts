@@ -44,13 +44,13 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
     name: githubUser.name || githubUser.login,
     avatar: githubUser.avatar_url,
   }), {
-    path: "/",
+    path: "/careers",
     httpOnly: true,
     secure: import.meta.env.PROD,
     sameSite: "lax",
     maxAge: 60 * 60 * 24 * 7, // 1 week
   });
 
-  return redirect("/", 302);
+  return redirect("/careers/", 302);
 };
 

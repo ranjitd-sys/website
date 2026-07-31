@@ -5,6 +5,7 @@ import Footer from "@/components/Footer.astro"
 const sessionCookie = Astro.cookies.get("user_session")?.value;
 const user = sessionCookie ? JSON.parse(sessionCookie) : null;
 ---
+
 <BaseLayout
   title="Careers & Institute"
   description="Master our stack. Join the team."
@@ -12,7 +13,7 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
   <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs">
     
     <!-- Outer Container -->
-    <div class="mx-auto max-w-2xl border-x border-zinc-900">
+    <div class="mx-auto max-w-5xl border-x border-zinc-900">
       
       <!-- Top Bar / Navigation -->
       <Navigation activeSlug="careers" />
@@ -53,11 +54,11 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
             Connect GitHub to Start
           </a>
         ) : (
-          <div class="inline-flex items-center gap-2 border border-zinc-800 bg-zinc-950 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-400">
-            ✓ Authentication Active
-          </div>
+          <button class="inline-flex items-center gap-2 border border-zinc-800 bg-zinc-950 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-red-400 hover:bg-red-900">
+            Log out
+          </button>
           
-            <a href="/api/auth/logout">Log out</a>
+      
 
         )}
       </section>
@@ -68,47 +69,29 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
           Phase 1: The Curriculum
         </div>
 
-        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
-          <div class="max-w-[80%]">
-            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
-              01. Functional Fundamentals with Effect-TS
-            </h3>
-            <p class="text-[11px] text-zinc-500 leading-relaxed">
-              Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
-            </p>
-          </div>
-          <div class="mt-1">
-            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
-          </div>
-        </div>
+        <!-- 01. Effect-TS -->
+<div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
+  <div class="max-w-[80%]">
+    <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
+      01. Functional Fundamentals with Effect-TS
+    </h3>
+    <p class="text-[11px] text-zinc-500 leading-relaxed">
+      Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
+    </p>
+  </div>
+  <div class="mt-1">
+    {user ? (
+      <a href="/careers/effect-ts" class="text-[10px] inline-block text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</a>
+    ) : (
+      <span class="text-[10px] text-zinc-600">LOCKED</span>
+    )}
+  </div>
+</div>
 
-        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
-          <div class="max-w-[80%]">
-            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
-              02. Distributed Systems & High Availability
-            </h3>
-            <p class="text-[11px] text-zinc-500 leading-relaxed">
-              Design sharding patterns, implement distributed state machines, and handle cluster management.
-            </p>
-          </div>
-          <div class="mt-1">
-            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
-          </div>
-        </div>
+<!-- Do the same for your other courses, using href="/lessons/distributed-systems" and href="/lessons/bun-runtime" -->
+        
 
-        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
-          <div class="max-w-[80%]">
-            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
-              03. Next-Gen Runtimes (Bun)
-            </h3>
-            <p class="text-[11px] text-zinc-500 leading-relaxed">
-              Optimizing application performance and building scalable TypeScript services using the Bun runtime.
-            </p>
-          </div>
-          <div class="mt-1">
-            {user ? <span class="text-[10px] text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</span> : <span class="text-[10px] text-zinc-600">LOCKED</span>}
-          </div>
-        </div>
+        
 
         <!-- ==================== PHASE 2: OPEN ROLES ==================== -->
         <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950 mt-4">
