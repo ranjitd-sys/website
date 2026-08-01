@@ -1,180 +1,295 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro"
-import Navigation from "@/components/navigation/Navigation.astro"
-import Footer from "@/components/Footer.astro"
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Navigation from "@/components/navigation/Navigation.astro";
+import Footer from "@/components/Footer.astro";
+
+// Parse user session cookie
 const sessionCookie = Astro.cookies.get("user_session")?.value;
 const user = sessionCookie ? JSON.parse(sessionCookie) : null;
+console.log(user)
+
+const isPhase1Done = user?.phase1Completed ?? false;
+const analysisStatus = user?.analysisStatus || "idle";
+const isRepoLinked = Boolean(user?.selectedRepo);
 ---
 
-<BaseLayout
-  title="Careers & Institute"
-  description="Master our stack. Join the team."
->
-  <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs">
+<BaseLayout title="Careers & Institute" description="Master our stack. Join the team.">
+  <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs selection:bg-zinc-800 selection:text-emerald-400">
     
     <!-- Outer Container -->
-    <div class="mx-auto max-w-5xl border-x border-zinc-900">
+    <div class="mx-auto max-w-4xl border-x border-zinc-900 shadow-2xl">
       
-      <!-- Top Bar / Navigation -->
+      <!-- Navigation -->
       <Navigation activeSlug="careers" />
-      <header class="flex items-center justify-between border-b border-zinc-900 px-4 py-2.5 tracking-wider uppercase">
-        <a href="/" class="font-semibold tracking-widest text-zinc-200">
+      
+      <header class="flex items-center justify-between border-b border-zinc-900 px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/50">
+        <a href="/" class="font-semibold tracking-widest text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           INSTITUTE / CAREERS
         </a>
-        <a href="#signin" class="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors text-[11px]">
-          <span>📌</span> SIGN IN
-        </a>
+        
+        {user ? (
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-2 py-1 rounded-sm">
+              <img src={user.avatar} alt={user.login} class="w-4 h-4 rounded-full border border-zinc-700" />
+              <span class="text-zinc-200 text-[10px]">{user.login}</span>
+            </div>
+            <a href="/api/auth/logout" class="text-zinc-500 hover:text-red-400 transition-colors">EXIT</a>
+          </div>
+        ) : (
+          <a href="/api/auth/github" class="text-zinc-400 hover:text-white transition-colors">
+            AUTHENTICATE →
+          </a>
+        )}
       </header>
 
-      <!-- Testimonial Ticker -->
-      <div class="border-b border-zinc-900 px-4 py-1.5 text-[11px] text-zinc-500 overflow-hidden whitespace-nowrap">
-        <span>...ep doing what you're doing. Best tutorial format I've seen, and the most talented team I've ever worked with.</span>
-        <span class="mx-2 text-zinc-700">▪</span>
-        <span>Community Feedback</span>
-      </div>
-
-      <!-- Hero Section -->
-      <section class="border-b border-zinc-900 px-4 py-8 bg-black">
-        <h1 class="text-3xl font-bold tracking-tighter text-zinc-100 mb-3 uppercase">
-          Prove your <br/>
-          <span class="text-zinc-500">capabilities.</span>
-        </h1>
-        <p class="max-w-md text-[11px] text-zinc-400 leading-relaxed mb-6">
-          We don't do standard interviews. Connect your GitHub, link your repository, complete our interactive engineering tracks, and unlock access to apply for open roles directly.
-        </p>
-        
-        {!user ? (
-          <a 
-            href="/api/auth/github" 
-            class="inline-flex items-center justify-center gap-2 bg-white px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black transition-all hover:bg-zinc-200"
-          >
-            <svg class="h-3.5 w-3.5" fill="currentColor" viewBox="0 0 24 24">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
-            </svg>
-            Connect GitHub to Start
-          </a>
-        ) : (
-          <div class="flex flex-col gap-3 max-w-md">
-            <!-- User Info & Logout -->
-            <div class="flex items-center justify-between border border-zinc-800 bg-zinc-950 px-3 py-2 text-[11px]">
-              <div class="flex items-center gap-2">
-                <img src={user.avatar} alt={user.login} class="w-5 h-5 rounded-full border border-zinc-700" />
-                <span class="text-zinc-300">Connected: <strong class="text-white">{user.login}</strong></span>
-              </div>
-              <a href="/api/auth/logout" class="text-red-400 hover:text-red-300 font-bold uppercase transition-colors">
-                Log out
-              </a>
-            </div>
-
-            <!-- Repository Selection Box -->
-            {!user.selectedRepo ? (
-              <div class="border border-zinc-800 bg-zinc-950 p-3">
-                <p class="text-zinc-400 mb-2 uppercase text-[10px] tracking-widest">Select Assessment Repository:</p>
-                <div class="flex gap-2">
-                  <select 
-                    id="repo-select" 
-                    class="bg-black border border-zinc-800 text-zinc-200 px-2 py-1.5 text-xs flex-1 outline-none focus:border-zinc-500"
-                  >
-                    <option value="">Loading repositories...</option>
-                  </select>
-                  <button 
-                    id="save-repo-btn"
-                    class="bg-white text-black font-bold uppercase px-3 py-1.5 text-[11px] hover:bg-zinc-200 transition-colors"
-                  >
-                    Link
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div class="border border-zinc-800 bg-zinc-950 p-3 flex items-center justify-between">
-                <div>
-                  <span class="text-zinc-500 uppercase text-[10px] tracking-wider block">Linked Repository:</span>
-                  <span class="text-zinc-200 font-bold">{user.selectedRepo}</span>
-                </div>
-                <button 
-                  id="change-repo-btn" 
-                  class="text-[10px] text-zinc-400 hover:text-white underline uppercase transition-colors"
-                >
-                  Change
-                </button>
-              </div>
-            )}
+      <!-- Hero & Mission -->
+      <section class="border-b border-zinc-900 px-6 py-10 bg-gradient-to-b from-zinc-950/80 to-black">
+        <div class="max-w-xl">
+          <div class="inline-block border border-zinc-800 bg-zinc-900/50 px-2.5 py-1 text-[10px] text-zinc-400 uppercase tracking-widest mb-4">
+            PROOF OF CAPABILITY ENGINE
           </div>
-        )}
+          <h1 class="text-3xl font-bold tracking-tight text-white mb-3 uppercase leading-none">
+            Master the Stack.<br />
+            <span class="text-zinc-500">Analyze your code.</span>
+          </h1>
+          <p class="text-[11px] text-zinc-400 leading-relaxed">
+            We bypass traditional resume screening. Complete our functional curriculum, submit your codebase for automated static analysis, and unlock direct interviews.
+          </p>
+        </div>
+
+        <!-- Progress Tracker Bar -->
+        <div class="mt-8 grid grid-cols-3 gap-2 border border-zinc-900 bg-zinc-950 p-2">
+          <div class={`px-3 py-2 border ${user ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-zinc-800 bg-black'}`}>
+            <span class="text-[9px] text-zinc-500 block uppercase">Step 01</span>
+            <span class={`font-bold ${user ? 'text-emerald-400' : 'text-zinc-400'}`}>
+              {user ? '✓ GitHub Connected' : '1. Connect Account'}
+            </span>
+          </div>
+
+          <div class={`px-3 py-2 border ${isPhase1Done ? 'border-emerald-500/30 bg-emerald-950/10' : user ? 'border-amber-500/30 bg-amber-950/10' : 'border-zinc-800 bg-black opacity-50'}`}>
+            <span class="text-[9px] text-zinc-500 block uppercase">Step 02</span>
+            <span class={`font-bold ${isPhase1Done ? 'text-emerald-400' : user ? 'text-amber-400' : 'text-zinc-500'}`}>
+              {isPhase1Done ? '✓ Track Finished' : '2. Complete Track'}
+            </span>
+          </div>
+
+          <div class={`px-3 py-2 border ${analysisStatus === 'completed' ? 'border-emerald-500/30 bg-emerald-950/10' : isPhase1Done ? 'border-zinc-700 bg-black' : 'border-zinc-800 bg-black opacity-50'}`}>
+            <span class="text-[9px] text-zinc-500 block uppercase">Step 03</span>
+            <span class={`font-bold ${analysisStatus === 'completed' ? 'text-emerald-400' : isPhase1Done ? 'text-zinc-300' : 'text-zinc-500'}`}>
+              {analysisStatus === 'completed' ? '✓ Code Analyzed' : '3. Submit Repo'}
+            </span>
+          </div>
+        </div>
       </section>
 
       <main>
-        <!-- ==================== PHASE 1: CURRICULUM ==================== -->
-        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950">
-          Phase 1: The Curriculum
+        <!-- ==================== PHASE 1 ==================== -->
+        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
+          <span>Phase 01 / Required Curriculum</span>
+          <span class="text-zinc-600">01 OF 01 REQUIRED</span>
         </div>
 
-        <!-- 01. Effect-TS -->
-        <div class="flex items-start justify-between border-b border-zinc-900 px-4 py-4 hover:bg-zinc-900/50 transition-colors">
-          <div class="max-w-[80%]">
-            <h3 class="text-xs font-medium text-zinc-100 mb-0.5">
-              01. Functional Fundamentals with Effect-TS
-            </h3>
-            <p class="text-[11px] text-zinc-500 leading-relaxed">
-              Master state management, error handling, and concurrency using the Effect ecosystem. Prerequisite for backend roles.
-            </p>
-          </div>
-          <div class="mt-1">
-            {user && user.selectedRepo ? (
-              <a href="/careers/effect-ts" class="text-[10px] inline-block text-zinc-100 border border-zinc-700 px-2 py-1 cursor-pointer hover:bg-white hover:text-black transition-colors">START</a>
-            ) : (
-              <span class="text-[10px] text-zinc-600" title="Link a repository first">LOCKED</span>
-            )}
+        <div class="p-6 border-b border-zinc-900 hover:bg-zinc-950/40 transition-colors">
+          <div class="flex items-start justify-between gap-4">
+            <div class="max-w-xl">
+              <div class="flex items-center gap-2 mb-1.5">
+                <span class="text-zinc-500 font-bold">01.</span>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wide">
+                  Functional Fundamentals with Effect-TS
+                </h3>
+                {isPhase1Done && (
+                  <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5">
+                    PASSED
+                  </span>
+                )}
+              </div>
+              <p class="text-[11px] text-zinc-400 leading-relaxed">
+                Master algebraic data types, error management, and concurrency models in Effect-TS. Completing this module unlocks code repository submission.
+              </p>
+            </div>
+
+            <div>
+              {user ? (
+                <a 
+                  href="/careers/effect-ts" 
+                  class={`text-[10px] uppercase font-bold tracking-wider border px-3 py-1.5 transition-all inline-block ${
+                    isPhase1Done 
+                      ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800' 
+                      : 'border-white bg-white text-black hover:bg-zinc-200'
+                  }`}
+                >
+                  {isPhase1Done ? "Review Track" : "Start Track →"}
+                </a>
+              ) : (
+                <a 
+                  href="/api/auth/github" 
+                  class="text-[10px] uppercase font-bold border border-zinc-800 bg-zinc-900/50 text-zinc-500 px-3 py-1.5 inline-block hover:border-zinc-700 hover:text-zinc-300 transition-all"
+                >
+                  Auth Required
+                </a>
+              )}
+            </div>
           </div>
         </div>
 
-        <!-- ==================== PHASE 2: OPEN ROLES ==================== -->
-        <div class="border-b border-zinc-900 px-4 py-2 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950 mt-4">
-          Phase 2: Open Roles (Unlocks upon completion)
+        <!-- ==================== PHASE 2: REPO SUBMISSION ==================== -->
+        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
+          <span>Phase 02 / Repository Analysis</span>
+          <span class={isPhase1Done ? "text-emerald-400" : "text-zinc-600"}>
+            {isPhase1Done ? "UNLOCKED" : "LOCKED"}
+          </span>
         </div>
 
-        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user && user.selectedRepo ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
-          <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Systems Backend Engineer</h3>
-            <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
-          </div>
-          <p class="text-[11px] text-zinc-500">Focus: Effect-TS, Distributed Architecture, Cloud Infrastructure</p>
-          <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
-            {user && user.selectedRepo ? "Requires curriculum completion to apply." : "Link a repository to unlock requirements."}
-          </div>
+        <div class="p-6 border-b border-zinc-900 bg-black">
+          {!isPhase1Done ? (
+            /* Locked State */
+            <div class="border border-dashed border-zinc-800 bg-zinc-950/50 p-6 text-center">
+              <span class="text-zinc-600 text-lg block mb-2">🔒</span>
+              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">
+                Repository Submission Locked
+              </h4>
+              <p class="text-[11px] text-zinc-500 max-w-sm mx-auto">
+                Complete <strong class="text-zinc-400">Phase 01: Effect-TS Fundamentals</strong> above to unlock the capability evaluation engine.
+              </p>
+            </div>
+          ) : (
+            /* Unlocked State */
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                    <span class="text-emerald-400">⚡</span> Static Codebase Assessment
+                  </h4>
+                  <p class="text-[11px] text-zinc-400">
+                    Select a GitHub repository that demonstrates your implementation patterns.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Repo Selection Controls -->
+              <div class="border border-zinc-800 bg-zinc-950 p-4">
+                <span class="text-[10px] text-zinc-500 uppercase tracking-wider block mb-2">
+                  Target Repository:
+                </span>
+
+                {!isRepoLinked ? (
+                  <div class="flex gap-2">
+                    <select 
+                      id="repo-select" 
+                      class="bg-black border border-zinc-800 text-zinc-200 px-3 py-2 text-xs flex-1 outline-none focus:border-zinc-500"
+                    >
+                      <option value="">Fetching your repositories...</option>
+                    </select>
+                    <button 
+                      id="save-repo-btn"
+                      class="bg-white text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider hover:bg-zinc-200 transition-colors"
+                    >
+                      Link Repository
+                    </button>
+                  </div>
+                ) : (
+                  <div class="flex items-center justify-between bg-black border border-zinc-900 px-3 py-2">
+                    <span class="text-zinc-200 font-bold tracking-wide">{user.selectedRepo}</span>
+                    <button 
+                      id="change-repo-btn" 
+                      class="text-[10px] text-zinc-500 hover:text-white underline uppercase transition-colors"
+                    >
+                      Change Repository
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <!-- Trigger Analysis Action -->
+              {isRepoLinked && (
+                <div class="border-t border-zinc-900 pt-3">
+                  {analysisStatus === "idle" && (
+                    <div class="flex items-center justify-between">
+                      <span class="text-[11px] text-zinc-400">Ready for automated inspection.</span>
+                      <button 
+                        id="run-analysis-btn"
+                        class="bg-emerald-400 hover:bg-emerald-300 text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider transition-colors"
+                      >
+                        Run Analysis Pipeline →
+                      </button>
+                    </div>
+                  )}
+
+                  {analysisStatus === "analyzing" && (
+                    <div class="flex items-center gap-3 text-amber-400 text-[11px] bg-amber-950/20 border border-amber-900/40 p-3">
+                      <span class="animate-spin">🌀</span>
+                      <span>Evaluating architecture, AST patterns, and Effect-TS compliance...</span>
+                    </div>
+                  )}
+
+                  {analysisStatus === "completed" && (
+                    <div class="flex items-center justify-between bg-zinc-950 border border-emerald-500/30 p-4">
+                      <div>
+                        <span class="text-[10px] text-emerald-400 uppercase font-bold block">
+                          Analysis Complete
+                        </span>
+                        <span class="text-2xl font-bold text-white">{user.analysisScore ?? 94}/100</span>
+                      </div>
+                      <a 
+                        href="/careers/analysis-report" 
+                        class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors"
+                      >
+                        Inspect Report →
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
-        <div class={`flex flex-col gap-1 px-4 py-4 border-b border-zinc-900 ${user && user.selectedRepo ? 'opacity-100' : 'opacity-40 grayscale pointer-events-none'}`}>
-          <div class="flex items-center justify-between">
-            <h3 class="text-xs font-bold text-zinc-100 uppercase tracking-wide">Full-Stack Architect</h3>
-            <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5">HIRING</span>
-          </div>
-          <p class="text-[11px] text-zinc-500">Focus: Minimalist UI/UX, Brutalist Design, React, Node/Bun</p>
-          <div class="mt-1 text-[10px] text-zinc-500 border border-dashed border-zinc-800 p-2 bg-zinc-950/50">
-            {user && user.selectedRepo ? "Requires curriculum completion to apply." : "Link a repository to unlock requirements."}
+        <!-- ==================== OPEN ROLES ==================== -->
+        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80">
+          Open Positions
+        </div>
+
+        <div class="divide-y divide-zinc-900">
+          <!-- Position 1 -->
+          <div class={`p-6 transition-opacity ${analysisStatus === 'completed' ? 'opacity-100' : 'opacity-50'}`}>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="text-xs font-bold text-white uppercase tracking-wide">Systems Backend Engineer</h3>
+              <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 font-bold">HIRING</span>
+            </div>
+            <p class="text-[11px] text-zinc-500 mb-3">Focus: Effect-TS, Distributed Systems, Cloud Native Infrastructure</p>
+            <div class="text-[10px] text-zinc-400 border border-zinc-900 p-2.5 bg-zinc-950/50">
+              {analysisStatus === 'completed' ? (
+                <a href="/careers/apply/backend" class="text-emerald-400 hover:underline font-bold uppercase">
+                  Submit Application with Evaluation Report →
+                </a>
+              ) : (
+                <span class="text-zinc-600">Complete curriculum and repository analysis to unlock application.</span>
+              )}
+            </div>
           </div>
         </div>
 
       </main>
 
-      <!-- Footer -->
     </div>
-    <Footer/>
+    <Footer />
   </div>
 </BaseLayout>
 
-<script>
-  // Client-side handlers for repository selection
-  const selectEl = document.getElementById("repo-select") as HTMLSelectElement;
+<script define:vars={{ slug: "effect-ts" }}>
+  // Repository Selection & Analysis Logic
+  const selectEl = document.getElementById("repo-select");
   const saveBtn = document.getElementById("save-repo-btn");
   const changeBtn = document.getElementById("change-repo-btn");
+  const analysisBtn = document.getElementById("run-analysis-btn");
 
   if (selectEl) {
     fetch("/api/auth/github/repos")
       .then(res => res.json())
       .then(repos => {
-        selectEl.innerHTML = '<option value="">-- Choose repository --</option>';
-        repos.forEach((r: { fullName: string; private: boolean }) => {
+        selectEl.innerHTML = '<option value="">-- Select GitHub Repository --</option>';
+        repos.forEach((r) => {
           const opt = document.createElement("option");
           opt.value = r.fullName;
           opt.textContent = `${r.fullName} ${r.private ? '[private]' : ''}`;
@@ -182,13 +297,13 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
         });
       })
       .catch(() => {
-        selectEl.innerHTML = '<option value="">Failed to load repositories</option>';
+        selectEl.innerHTML = '<option value="">Failed to fetch repositories</option>';
       });
   }
 
   saveBtn?.addEventListener("click", async () => {
     const repoFullName = selectEl?.value;
-    if (!repoFullName) return alert("Please select a repository first.");
+    if (!repoFullName) return alert("Please select a repository from the list.");
 
     const res = await fetch("/api/auth/github/select-repo", {
       method: "POST",
@@ -196,23 +311,150 @@ const user = sessionCookie ? JSON.parse(sessionCookie) : null;
       body: JSON.stringify({ repoFullName })
     });
 
-    if (res.ok) {
-      window.location.reload();
-    } else {
-      alert("Failed to link repository.");
-    }
+    if (res.ok) window.location.reload();
   });
 
   changeBtn?.addEventListener("click", async () => {
-    // Reset selected repo by passing empty string
     const res = await fetch("/api/auth/github/select-repo", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ repoFullName: "" })
     });
 
+    if (res.ok) window.location.reload();
+  });
+
+  analysisBtn?.addEventListener("click", async () => {
+    analysisBtn.disabled = true;
+    analysisBtn.innerText = "Initiating...";
+
+    const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
     if (res.ok) {
       window.location.reload();
+    } else {
+      alert("Failed to queue analysis.");
+      analysisBtn.disabled = false;
+      analysisBtn.innerText = "Run Analysis Pipeline →";
     }
+  });
+
+  // Quiz Attempt Validation & Enforcement Logic
+  const completeBtn = document.getElementById("complete-lesson-btn");
+  const statusEl = document.getElementById("lesson-status");
+  const errorEl = document.getElementById("quiz-error");
+  const errorTextEl = document.getElementById("quiz-error-text");
+  const successEl = document.getElementById("quiz-success");
+  const successTextEl = document.getElementById("quiz-success-text");
+  const questions = document.querySelectorAll(".quiz-question");
+
+  function setAttemptRecordedState(scorePercentage) {
+    if (!completeBtn || !statusEl) return;
+
+    const isPassed = scorePercentage >= 70;
+
+    if (isPassed) {
+      if (errorEl) {
+        errorEl.classList.add("hidden");
+        errorEl.classList.remove("flex");
+      }
+      if (successEl && successTextEl) {
+        successEl.classList.remove("hidden");
+        successEl.classList.add("flex");
+        successTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Requirement met (70%+). Attempt completed.`;
+      }
+
+      statusEl.textContent = "Assessment Completed (Passed) ✓";
+      statusEl.classList.replace("text-zinc-400", "text-emerald-400");
+    } else {
+      if (successEl) {
+        successEl.classList.add("hidden");
+        successEl.classList.remove("flex");
+      }
+      if (errorEl && errorTextEl) {
+        errorEl.classList.remove("hidden");
+        errorEl.classList.add("flex");
+        errorTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Attempt recorded (Did not meet 70% threshold).`;
+      }
+
+      statusEl.textContent = "Assessment Completed (Failed) ✗";
+      statusEl.classList.replace("text-zinc-400", "text-red-400");
+    }
+
+    completeBtn.textContent = "Return to Curriculum";
+    completeBtn.classList.remove("bg-white", "text-black", "hover:bg-zinc-200");
+    completeBtn.classList.add("bg-zinc-800", "text-zinc-100", "hover:bg-zinc-700", "border", "border-zinc-700");
+
+    localStorage.setItem(`lesson:${slug}:attempted`, "true");
+    localStorage.setItem(`lesson:${slug}:score`, scorePercentage.toString());
+
+    document.querySelectorAll("input[type='radio']").forEach(input => {
+      input.disabled = true;
+    });
+    document.querySelectorAll(".radio-label").forEach(label => {
+      label.classList.add("opacity-50", "cursor-not-allowed");
+      label.classList.remove("hover:bg-zinc-900", "hover:border-zinc-700", "cursor-pointer");
+    });
+  }
+
+  // Check attempt status on load
+  const hasAttempted = localStorage.getItem(`lesson:${slug}:attempted`) === "true";
+  const savedScore = localStorage.getItem(`lesson:${slug}:score`);
+
+  if (hasAttempted) {
+    setAttemptRecordedState(savedScore !== null ? parseFloat(savedScore) : 0);
+  }
+
+  completeBtn?.addEventListener("click", () => {
+    if (localStorage.getItem(`lesson:${slug}:attempted`) === "true") {
+      window.location.href = "/careers";
+      return;
+    }
+
+    if (questions.length === 0) {
+      setAttemptRecordedState(100);
+      return;
+    }
+
+    let unattemptedCount = 0;
+
+    // Reset visual error indicators
+    questions.forEach(q => q.classList.remove("border-red-500/50"));
+
+    // Check if every question has a selected answer
+    questions.forEach((q) => {
+      const qIndex = q.getAttribute("data-question-index");
+      const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+
+      if (!selected) {
+        unattemptedCount++;
+        q.classList.add("border-red-500/50");
+      }
+    });
+
+    // Halt submission if any questions remain unanswered
+    if (unattemptedCount > 0) {
+      if (errorEl && errorTextEl) {
+        errorTextEl.textContent = `Please answer all questions before submitting. (${unattemptedCount} remaining)`;
+        errorEl.classList.remove("hidden");
+        errorEl.classList.add("flex");
+        errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+      return;
+    }
+
+    // Calculate score
+    let correctCount = 0;
+    questions.forEach((q) => {
+      const qIndex = q.getAttribute("data-question-index");
+      const correctIndex = q.getAttribute("data-correct-index");
+      const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+
+      if (selected && selected.value === correctIndex) {
+        correctCount++;
+      }
+    });
+
+    const scorePercentage = (correctCount / questions.length) * 100;
+    setAttemptRecordedState(scorePercentage);
   });
 </script>

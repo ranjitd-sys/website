@@ -2,20 +2,23 @@
 import BaseLayout from "@/layouts/BaseLayout.astro"
 import Navigation from "@/components/navigation/Navigation.astro"
 import Footer from "@/components/Footer.astro"
-import { lessons } from "@/data/lession" // Assuming this is where your data is
+import { lessons } from "@/data/lession" 
+import { parseSignedSession, safeLookup } from "@/lib/session"
 
-// 1. Route Protection
-const sessionCookie = Astro.cookies.get("user_session")?.value;
-const user = sessionCookie ? JSON.parse(sessionCookie) : null;
+console.log(typeof(Astro.cookies.get("user_session")?.value));
 
-if (!user) {
+const session =  Astro.cookies.get("user_session")?.value;
+console.log("sesison", session)
+if (!session) {
   return Astro.redirect("/careers");
 }
 
-// 2. Grab the dynamic slug
 const { slug } = Astro.params;
-//@ts-ignore
-const lesson = slug ? lessons[slug] : undefined;
+
+const lesson = safeLookup(lessons, slug);
+if (!lesson) {
+  return Astro.redirect("/404");
+}
 
 if (!lesson) {
   return Astro.redirect("/404");
@@ -23,7 +26,6 @@ if (!lesson) {
 ---
 
 <BaseLayout title={lesson.title} description={lesson.description}>
-  {/* Base text size increased to text-sm for better general readability */}
   <div class="min-h-screen bg-black text-zinc-100 font-mono text-sm flex flex-col">
     
     <!-- Header Area -->
@@ -52,7 +54,7 @@ if (!lesson) {
         </p>
       </div>
       
-      <!-- Lesson Sections (Interleaved Text and Code) -->
+      <!-- Lesson Sections -->
       <div class="space-y-16">
         {lesson.sections?.map((section:any) => (
           <section class="relative">
@@ -60,7 +62,6 @@ if (!lesson) {
               {section.title}
             </h2>
             
-            {/* Increased text size and line height for much easier reading */}
             <p class="text-[15px] md:text-base text-zinc-300 leading-[2] mb-8">
               {section.text}
             </p>
@@ -76,7 +77,6 @@ if (!lesson) {
                   <span class="ml-2 text-zinc-400 font-semibold">index.ts</span>
                 </div>
                 <div class="p-6 overflow-x-auto">
-                  {/* Code size increased slightly for readability */}
                   <pre class="text-[13.5px] text-zinc-300 font-mono m-0 leading-[1.7]"><code>{section.code}</code></pre>
                 </div>
               </div>
@@ -177,97 +177,105 @@ if (!lesson) {
   const successTextEl = document.getElementById("quiz-success-text");
   const questions = document.querySelectorAll(".quiz-question");
 
-  function setCompletedState(scorePercentage = null) {
-    if (!completeBtn || !statusEl) return;
-    
-    // Hide error banner
-    if (errorEl) {
-      errorEl.classList.add("hidden");
-      errorEl.classList.remove("flex");
-    }
-    
-    // Show success banner
-    if (successEl && successTextEl) {
-      successEl.classList.remove("hidden");
-      successEl.classList.add("flex");
-      if (scorePercentage !== null) {
-        successTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. You met the 70% requirement.`;
-      } else {
-        successTextEl.textContent = `You have previously passed this assessment.`;
-      }
-    }
-    
-    // Update bottom status text and colors
-    statusEl.textContent = "Assessment Passed ✓";
-    statusEl.classList.replace("text-zinc-400", "text-emerald-400");
-    
-    // Transform button to "Return"
-    completeBtn.textContent = "Return to Curriculum";
-    completeBtn.classList.remove("bg-white", "text-black", "hover:bg-zinc-200");
-    completeBtn.classList.add("bg-zinc-800", "text-zinc-100", "hover:bg-zinc-700", "border", "border-zinc-700");
-    
-    // Store completion in browser
-    localStorage.setItem(`lesson:${slug}:completed`, "true");
-
-    // Lock the radio buttons visually and functionally so they can't be changed
-    document.querySelectorAll("input[type='radio']").forEach(input => {
-      input.disabled = true;
-    });
+  function lockQuiz() {
+    document.querySelectorAll("input[type='radio']").forEach(input => { input.disabled = true; });
     document.querySelectorAll(".radio-label").forEach(label => {
       label.classList.add("opacity-50", "cursor-not-allowed");
       label.classList.remove("hover:bg-zinc-900", "hover:border-zinc-700", "cursor-pointer");
     });
   }
 
-  // 1. Check if already completed on page load
-  if (localStorage.getItem(`lesson:${slug}:completed`) === "true") {
-    setCompletedState();
+  function renderResult(scorePercentage, passed) {
+    if (!completeBtn || !statusEl) return;
+
+    if (passed) {
+      errorEl?.classList.add("hidden"); errorEl?.classList.remove("flex");
+      if (successEl && successTextEl) {
+        successEl.classList.remove("hidden"); successEl.classList.add("flex");
+        successTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Requirement met (70%+). Attempt completed.`;
+      }
+      statusEl.textContent = "Assessment Completed (Passed) ✓";
+      statusEl.classList.replace("text-zinc-400", "text-emerald-400");
+    } else {
+      successEl?.classList.add("hidden"); successEl?.classList.remove("flex");
+      if (errorEl && errorTextEl) {
+        errorEl.classList.remove("hidden"); errorEl.classList.add("flex");
+        errorTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Attempt recorded (Did not meet 70% threshold).`;
+      }
+      statusEl.textContent = "Assessment Completed (Failed) ✗";
+      statusEl.classList.replace("text-zinc-400", "text-red-400");
+    }
+
+    completeBtn.textContent = "Return to Curriculum";
+    completeBtn.classList.remove("bg-white", "text-black", "hover:bg-zinc-200");
+    completeBtn.classList.add("bg-zinc-800", "text-zinc-100", "hover:bg-zinc-700", "border", "border-zinc-700");
+
+    // Cosmetic only — server re-grades on every real submission, so this
+    // can't be used to fake a pass; it just avoids re-showing the quiz UI.
+    localStorage.setItem(`lesson:${slug}:attempted`, "true");
+    localStorage.setItem(`lesson:${slug}:score`, scorePercentage.toString());
+    localStorage.setItem(`lesson:${slug}:passed`, passed ? "true" : "false");
+
+    lockQuiz();
   }
 
-  // 2. Handle Submission Logic (70% Threshold)
-  completeBtn?.addEventListener("click", () => {
-    // If already completed, return to menu
-    if (localStorage.getItem(`lesson:${slug}:completed`) === "true") {
+  const hasAttempted = localStorage.getItem(`lesson:${slug}:attempted`) === "true";
+  if (hasAttempted) {
+    const savedScore = parseFloat(localStorage.getItem(`lesson:${slug}:score`) ?? "0");
+    const savedPassed = localStorage.getItem(`lesson:${slug}:passed`) === "true";
+    renderResult(savedScore, savedPassed);
+  }
+
+  completeBtn?.addEventListener("click", async () => {
+    if (localStorage.getItem(`lesson:${slug}:attempted`) === "true") {
       window.location.href = "/careers";
       return;
     }
 
-    // If there is no quiz, just pass immediately
-    if (questions.length === 0) {
-      setCompletedState(100);
-      return;
+    let answers = [];
+
+    if (questions.length > 0) {
+      let unattemptedCount = 0;
+      questions.forEach(q => q.classList.remove("border-red-500/50"));
+
+      questions.forEach((q) => {
+        const qIndex = q.getAttribute("data-question-index");
+        const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
+        if (!selected) {
+          unattemptedCount++;
+          q.classList.add("border-red-500/50");
+          answers.push(-1);
+        } else {
+          answers.push(Number(selected.value));
+        }
+      });
+
+      if (unattemptedCount > 0) {
+        if (errorEl && errorTextEl) {
+          errorTextEl.textContent = `Please answer all questions before submitting. (${unattemptedCount} remaining)`;
+          errorEl.classList.remove("hidden");
+          errorEl.classList.add("flex");
+          errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+        return;
+      }
     }
 
-    let correctCount = 0;
-    const totalQuestions = questions.length;
-
-    questions.forEach((q) => {
-      const qIndex = q.getAttribute("data-question-index");
-      const correctIndex = q.getAttribute("data-correct-index");
-      
-      const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
-      
-      if (selected && selected.value === correctIndex) {
-        correctCount++;
-      }
-    });
-
-    const scorePercentage = (correctCount / totalQuestions) * 100;
-
-    // Check if score is 70% or higher
-    if (scorePercentage >= 70) {
-      setCompletedState(scorePercentage);
-    } else {
-      // Show error message with dynamic score
+    try {
+      const res = await fetch("/api/careers/submit-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, answers }),
+      });
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      const data = await res.json();
+      renderResult(data.scorePercentage, data.passed);
+    } catch (err) {
+      console.error("Failed to submit quiz:", err);
       if (errorEl && errorTextEl) {
-        errorTextEl.textContent = `You scored ${Math.round(scorePercentage)}%. A score of 70% is required to pass.`;
+        errorTextEl.textContent = "Something went wrong submitting your answers. Please try again.";
         errorEl.classList.remove("hidden");
-        errorEl.classList.add("flex"); 
-        
-        // Brief shake animation
-        errorEl.style.transform = "translateX(4px)";
-        setTimeout(() => errorEl.style.transform = "translateX(-4px)", 100);
-        setTimeout(() => errorEl.style.transform = "translateX(0)", 200);
+        errorEl.classList.add("flex");
       }
     }
   });
