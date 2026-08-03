@@ -45,4 +45,4 @@ Real-time order processing depends on the user being online with an active Chrom
 | `shipment_cancelled`         | Order cancelled before shipping (by seller, buyer, or marketplace)             | **Triggered by seller:** `POST /v3/shipments/cancel`<br>**Pushed by:** Flipkart Notification Service (if cancelled by others)<br>**Poll fallback:** `GET /v3/shipments/{shipmentIds}`  | Reconcile inventory back to available pool. Stop any in-progress packing.                          |
 
 ### Actor Mapping 
-![alt text](image.png)
+![alt text](image-4.png)
