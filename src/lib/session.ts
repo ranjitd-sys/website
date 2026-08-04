@@ -3,6 +3,7 @@ import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { z } from "zod";
 
 const SESSION_SECRET = import.meta.env.SESSION_SECRET; // must be exactly 32 bytes when hex-decoded
+console.log("Secre", SESSION_SECRET)
 if (!SESSION_SECRET || Buffer.from(SESSION_SECRET, "hex").length !== 32) {
   throw new Error("SESSION_SECRET must be a 64-char hex string (32 bytes) for AES-256-GCM");
 }
@@ -36,9 +37,15 @@ export function serializeSession(session: Session): string {
 }
 
 export function parseSignedSession(cookieValue: string | undefined): Session | null {
-  if (!cookieValue) return null;
+  if (!cookieValue) {
+    console.log("[session] no cookie value received");
+    return null;
+  }
   const parts = cookieValue.split(".");
-  if (parts.length !== 3) return null;
+  if (parts.length !== 3) {
+    console.log("[session] cookie malformed, parts:", parts.length);
+    return null;
+  }
   const [ivB64, authTagB64, cipherB64] = parts;
 
   try {
@@ -47,14 +54,16 @@ export function parseSignedSession(cookieValue: string | undefined): Session | n
     const encrypted = Buffer.from(cipherB64, "base64url");
 
     const decipher = createDecipheriv("aes-256-gcm", KEY, iv);
-    decipher.setAuthTag(authTag); // wrong key/tampered ciphertext throws here
+    decipher.setAuthTag(authTag);
     const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
 
     const result = SessionSchema.safeParse(JSON.parse(decrypted.toString("utf-8")));
+    if (!result.success) {
+      console.log("[session] schema validation failed:", result.error.flatten());
+    }
     return result.success ? result.data : null;
-  } catch {
-    // Decryption/auth failure, bad base64, bad JSON, or schema mismatch —
-    // all treated as "not a valid session."
+  } catch (err) {
+    console.log("[session] decrypt/parse threw:", err); // <-- this tells you exactly which stage failed
     return null;
   }
 }

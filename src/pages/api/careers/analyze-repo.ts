@@ -1,23 +1,22 @@
+// src/pages/api/careers/analyze-repo.ts
 import type { APIRoute } from "astro";
 import { parseSignedSession, serializeSession } from "@/lib/session";
 
-export const POST: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ cookies }) => {
   const user = parseSignedSession(cookies.get("user_session")?.value);
 
   if (!user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
-  const { repoFullName } = await request.json();
-
-  if (!repoFullName) {
-    return new Response(JSON.stringify({ error: "Repository name required" }), { status: 400 });
+  if (!user.selectedRepo || !user.phase1Completed) {
+    return new Response(JSON.stringify({ error: "Prerequisites not met" }), { status: 400 });
   }
 
-  // Update session with the chosen repository
+  // Update user session state to 'running'
   const updatedUser = {
     ...user,
-    selectedRepo: repoFullName,
+    analysisStatus: "running" as const,
   };
 
   cookies.set("user_session", serializeSession(updatedUser), {
@@ -28,7 +27,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     maxAge: 60 * 60 * 24 * 7,
   });
 
-  return new Response(JSON.stringify({ success: true, selectedRepo: repoFullName }), {
+  // Example: Queue an async background worker or trigger GitHub API inspection
+  // e.g. await queueRepoAnalysis(updatedUser.selectedRepo, updatedUser.login);
+
+  return new Response(JSON.stringify({ success: true, status: "running" }), {
     status: 200,
     headers: { "Content-Type": "application/json" },
   });

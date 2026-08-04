@@ -2,11 +2,12 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navigation from "@/components/navigation/Navigation.astro";
 import Footer from "@/components/Footer.astro";
+import { parseSignedSession } from "@/lib/session";
 
 // Parse user session cookie
-const sessionCookie = Astro.cookies.get("user_session")?.value;
-const user = sessionCookie ? JSON.parse(sessionCookie) : null;
-console.log(user)
+const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
+
+
 
 const isPhase1Done = user?.phase1Completed ?? false;
 const analysisStatus = user?.analysisStatus || "idle";
@@ -74,10 +75,10 @@ const isRepoLinked = Boolean(user?.selectedRepo);
             </span>
           </div>
 
-          <div class={`px-3 py-2 border ${analysisStatus === 'completed' ? 'border-emerald-500/30 bg-emerald-950/10' : isPhase1Done ? 'border-zinc-700 bg-black' : 'border-zinc-800 bg-black opacity-50'}`}>
+          <div class={`px-3 py-2 border ${analysisStatus === 'done' ? 'border-emerald-500/30 bg-emerald-950/10' : isPhase1Done ? 'border-zinc-700 bg-black' : 'border-zinc-800 bg-black opacity-50'}`}>
             <span class="text-[9px] text-zinc-500 block uppercase">Step 03</span>
-            <span class={`font-bold ${analysisStatus === 'completed' ? 'text-emerald-400' : isPhase1Done ? 'text-zinc-300' : 'text-zinc-500'}`}>
-              {analysisStatus === 'completed' ? '✓ Code Analyzed' : '3. Submit Repo'}
+            <span class={`font-bold ${analysisStatus === 'done' ? 'text-emerald-400' : isPhase1Done ? 'text-zinc-300' : 'text-zinc-500'}`}>
+              {analysisStatus === 'done' ? '✓ Code Analyzed' : '3. Submit Repo'}
             </span>
           </div>
         </div>
@@ -190,7 +191,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                   </div>
                 ) : (
                   <div class="flex items-center justify-between bg-black border border-zinc-900 px-3 py-2">
-                    <span class="text-zinc-200 font-bold tracking-wide">{user.selectedRepo}</span>
+                    <span class="text-zinc-200 font-bold tracking-wide">{user?.selectedRepo}</span>
                     <button 
                       id="change-repo-btn" 
                       class="text-[10px] text-zinc-500 hover:text-white underline uppercase transition-colors"
@@ -216,20 +217,20 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                     </div>
                   )}
 
-                  {analysisStatus === "analyzing" && (
+                  {analysisStatus === "running" && (
                     <div class="flex items-center gap-3 text-amber-400 text-[11px] bg-amber-950/20 border border-amber-900/40 p-3">
                       <span class="animate-spin">🌀</span>
                       <span>Evaluating architecture, AST patterns, and Effect-TS compliance...</span>
                     </div>
                   )}
 
-                  {analysisStatus === "completed" && (
+                  {analysisStatus === "done" && (
                     <div class="flex items-center justify-between bg-zinc-950 border border-emerald-500/30 p-4">
                       <div>
                         <span class="text-[10px] text-emerald-400 uppercase font-bold block">
                           Analysis Complete
                         </span>
-                        <span class="text-2xl font-bold text-white">{user.analysisScore ?? 94}/100</span>
+                        <span class="text-2xl font-bold text-white">{user?.analysisStatus ?? 94}/100</span>
                       </div>
                       <a 
                         href="/careers/analysis-report" 
@@ -252,14 +253,14 @@ const isRepoLinked = Boolean(user?.selectedRepo);
 
         <div class="divide-y divide-zinc-900">
           <!-- Position 1 -->
-          <div class={`p-6 transition-opacity ${analysisStatus === 'completed' ? 'opacity-100' : 'opacity-50'}`}>
+          <div class={`p-6 transition-opacity ${analysisStatus === 'done' ? 'opacity-100' : 'opacity-50'}`}>
             <div class="flex items-center justify-between mb-1">
               <h3 class="text-xs font-bold text-white uppercase tracking-wide">Systems Backend Engineer</h3>
               <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 font-bold">HIRING</span>
             </div>
             <p class="text-[11px] text-zinc-500 mb-3">Focus: Effect-TS, Distributed Systems, Cloud Native Infrastructure</p>
             <div class="text-[10px] text-zinc-400 border border-zinc-900 p-2.5 bg-zinc-950/50">
-              {analysisStatus === 'completed' ? (
+              {analysisStatus === 'done' ? (
                 <a href="/careers/apply/backend" class="text-emerald-400 hover:underline font-bold uppercase">
                   Submit Application with Evaluation Report →
                 </a>

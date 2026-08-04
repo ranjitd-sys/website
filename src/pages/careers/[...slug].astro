@@ -7,7 +7,7 @@ import { parseSignedSession, safeLookup } from "@/lib/session"
 
 console.log(typeof(Astro.cookies.get("user_session")?.value));
 
-const session =  Astro.cookies.get("user_session")?.value;
+const session =  parseSignedSession(Astro.cookies.get("user_session")?.value);
 console.log("sesison", session)
 if (!session) {
   return Astro.redirect("/careers");

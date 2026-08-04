@@ -9,13 +9,12 @@ const BodySchema = z.object({
 });
 
 export const POST: APIRoute = async ({ request, cookies }) => {
+  
   const session = parseSignedSession(cookies.get("user_session")?.value);
-  if (!session) {
-    return new Response(JSON.stringify({ error: "Unauthorized" }), {
-      status: 401,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
+if (!session) {
+  cookies.delete("user_session", { path: "/" });
+  return new Response(JSON.stringify({ error: "Session expired, please log in again" }), { status: 401 });
+}
 
   let body: unknown;
   try {

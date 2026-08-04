@@ -1,14 +1,14 @@
 
 // src/pages/api/github/repos.ts
 import type { APIRoute } from "astro";
+import { parseSignedSession } from "@/lib/session";
 
 export const GET: APIRoute = async ({ cookies }) => {
-  const sessionCookie = cookies.get("user_session")?.value;
-  if (!sessionCookie) {
+  const user = parseSignedSession( cookies.get("user_session")?.value)
+  if (!user) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
   }
 
-  const user = JSON.parse(sessionCookie);
 
   const response = await fetch("https://api.github.com/user/repos?sort=updated&per_page=50", {
     headers: {

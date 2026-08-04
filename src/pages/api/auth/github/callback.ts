@@ -1,4 +1,10 @@
 import type { APIRoute } from "astro";
+import { serializeSession, parseSignedSession } from "../../../../lib/session"; // adjust path
+
+// Step 4: Retrieve existing session state if user is returning
+
+
+
 
 export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   const code = url.searchParams.get("code");
@@ -46,7 +52,7 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
   // 3. Provision Challenge Repository from Template Repo
   const repoName = `institute-effect-${githubUser.login.toLowerCase()}`;
-  
+
   try {
     await fetch(`https://api.github.com/repos/your-organization/challenge-effect-template/generate`, {
       method: "POST",
@@ -69,6 +75,8 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
 
   // 4. Retrieve existing session state if user is returning
   const existingCookie = cookies.get("user_session")?.value;
+  const existingSession = parseSignedSession(existingCookie);
+
   let existingData: Record<string, any> = {};
 
   if (existingCookie) {
@@ -80,25 +88,24 @@ export const GET: APIRoute = async ({ url, cookies, redirect }) => {
   }
 
   // 5. Construct & Set Cookie Session
-  const sessionData = {
-    id: githubUser.id,
-    login: githubUser.login,
-    name: githubUser.name || githubUser.login,
-    avatar: githubUser.avatar_url,
-    token: accessToken,
-    phase1Completed: existingData.phase1Completed ?? false,
-    selectedRepo: existingData.selectedRepo ?? "",
-    analysisStatus: existingData.analysisStatus ?? "idle",
-    analysisScore: existingData.analysisScore ?? undefined,
-  };
+const sessionData = {
+  id: githubUser.id,
+  login: githubUser.login,
+  name: githubUser.name || githubUser.login,
+  avatar: githubUser.avatar_url,
+  token: accessToken,
+  phase1Completed: existingSession?.phase1Completed ?? false,
+  selectedRepo: existingSession?.selectedRepo ?? "",
+  analysisStatus: existingSession?.analysisStatus ?? "idle",
+};
 
-  cookies.set("user_session", JSON.stringify(sessionData), {
-    path: "/",
-    httpOnly: true, 
-    secure: import.meta.env.PROD,
-    sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 7, // 1 week
-  });
+  cookies.set("user_session", serializeSession(sessionData), {
+  path: "/",
+  httpOnly: true,
+  secure: import.meta.env.PROD,
+  sameSite: "lax",
+  maxAge: 60 * 60 * 24 * 7,
+});
 
   return redirect("/careers/", 302);
 };
