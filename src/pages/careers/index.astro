@@ -7,8 +7,6 @@ import { parseSignedSession } from "@/lib/session";
 // Parse user session cookie
 const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
 
-
-
 const isPhase1Done = user?.phase1Completed ?? false;
 const analysisStatus = user?.analysisStatus || "idle";
 const isRepoLinked = Boolean(user?.selectedRepo);
@@ -23,34 +21,46 @@ const isRepoLinked = Boolean(user?.selectedRepo);
       <!-- Navigation -->
       <Navigation activeSlug="careers" />
       
-      <header class="flex items-center justify-between border-b border-zinc-900 px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/50">
+      <!-- Sticky Frosted Glass Header with Logout Toggle -->
+      <header class="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-900/80 px-4 sm:px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/70 backdrop-blur-md transition-all">
         <a href="/" class="font-semibold tracking-widest text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           INSTITUTE / CAREERS
         </a>
         
         {user ? (
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 sm:gap-3">
             <div class="flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-2 py-1 rounded-sm">
               <img src={user.avatar} alt={user.login} class="w-4 h-4 rounded-full border border-zinc-700" />
-              <span class="text-zinc-200 text-[10px]">{user.login}</span>
+              <span class="text-zinc-200 text-[10px] hidden sm:inline">{user.login}</span>
             </div>
-            <a href="/api/auth/logout" class="text-zinc-500 hover:text-red-400 transition-colors">EXIT</a>
+            <!-- Logout Button -->
+            
+            <a 
+              href="/api/auth/logout" 
+              class="text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-900/50 bg-zinc-900/50 hover:bg-red-950/20 px-2.5 py-1 rounded-sm transition-all flex items-center gap-1.5 text-[10px] font-bold"
+            >
+              <span>LOGOUT</span>
+              <span class="text-[9px] text-zinc-500">↳</span>
+            </a>
           </div>
         ) : (
-          <a href="/api/auth/github" class="text-zinc-400 hover:text-white transition-colors">
+          <a 
+            href="/api/auth/github" 
+            class="text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 px-3 py-1 rounded-sm transition-all text-[10px] font-bold"
+          >
             AUTHENTICATE →
           </a>
         )}
       </header>
 
       <!-- Hero & Mission -->
-      <section class="border-b border-zinc-900 px-6 py-10 bg-gradient-to-b from-zinc-950/80 to-black">
+      <section class="border-b border-zinc-900 px-4 sm:px-6 py-8 bg-gradient-to-b from-zinc-950/80 to-black">
         <div class="max-w-xl">
-          <div class="inline-block border border-zinc-800 bg-zinc-900/50 px-2.5 py-1 text-[10px] text-zinc-400 uppercase tracking-widest mb-4">
+          <div class="inline-block border border-zinc-800 bg-zinc-900/50 px-2.5 py-1 text-[10px] text-zinc-400 uppercase tracking-widest mb-3">
             PROOF OF CAPABILITY ENGINE
           </div>
-          <h1 class="text-3xl font-bold tracking-tight text-white mb-3 uppercase leading-none">
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-3 uppercase leading-tight">
             Master the Stack.<br />
             <span class="text-zinc-500">Analyze your code.</span>
           </h1>
@@ -60,7 +70,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
         </div>
 
         <!-- Progress Tracker Bar -->
-        <div class="mt-8 grid grid-cols-3 gap-2 border border-zinc-900 bg-zinc-950 p-2">
+        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2 border border-zinc-900 bg-zinc-950 p-2">
           <div class={`px-3 py-2 border ${user ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-zinc-800 bg-black'}`}>
             <span class="text-[9px] text-zinc-500 block uppercase">Step 01</span>
             <span class={`font-bold ${user ? 'text-emerald-400' : 'text-zinc-400'}`}>
@@ -85,36 +95,43 @@ const isRepoLinked = Boolean(user?.selectedRepo);
       </section>
 
       <main>
-        <!-- ==================== PHASE 1 ==================== -->
-        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
+        <!-- ==================== PHASE 1: CURRICULUM ==================== -->
+        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
           <span>Phase 01 / Required Curriculum</span>
-          <span class="text-zinc-600">01 OF 01 REQUIRED</span>
+          <span class={user ? "text-emerald-400 font-bold" : "text-zinc-600"}>
+            {user ? "UNLOCKED" : "LOCKED"}
+          </span>
         </div>
 
-        <div class="p-6 border-b border-zinc-900 hover:bg-zinc-950/40 transition-colors">
-          <div class="flex items-start justify-between gap-4">
-            <div class="max-w-xl">
-              <div class="flex items-center gap-2 mb-1.5">
-                <span class="text-zinc-500 font-bold">01.</span>
-                <h3 class="text-xs font-bold text-white uppercase tracking-wide">
-                  Functional Fundamentals with Effect-TS
-                </h3>
-                {isPhase1Done && (
-                  <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5">
-                    PASSED
-                  </span>
-                )}
+        <div class="relative border-b border-zinc-900 bg-black overflow-hidden">
+          
+          <!-- Blurred Teaser Content -->
+          <div class={`p-4 sm:p-6 transition-all duration-500 ${!user ? 'blur-md opacity-25 select-none pointer-events-none filter scale-[0.99]' : ''}`}>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="max-w-xl space-y-2">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="text-zinc-500 font-bold">01.</span>
+                  <h3 class="text-xs font-bold text-white uppercase tracking-wide">
+                    Functional Fundamentals with Effect-TS
+                  </h3>
+                  {isPhase1Done && (
+                    <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5 font-bold">
+                      PASSED
+                    </span>
+                  )}
+                </div>
+                <p class="text-[11px] text-zinc-400 leading-relaxed">
+                  Master algebraic data types, error management, and concurrency models in Effect-TS. Completing this module unlocks code repository submission.
+                </p>
+                <div class="flex gap-2 pt-1">
+                  <span class="border border-zinc-800 bg-zinc-900/60 text-zinc-400 text-[9px] px-2 py-0.5">3 Modules</span>
+                </div>
               </div>
-              <p class="text-[11px] text-zinc-400 leading-relaxed">
-                Master algebraic data types, error management, and concurrency models in Effect-TS. Completing this module unlocks code repository submission.
-              </p>
-            </div>
 
-            <div>
-              {user ? (
+              <div class="shrink-0">
                 <a 
                   href="/careers/effect-ts" 
-                  class={`text-[10px] uppercase font-bold tracking-wider border px-3 py-1.5 transition-all inline-block ${
+                  class={`text-[10px] uppercase font-bold tracking-wider border px-3.5 py-2 transition-all inline-block w-full sm:w-auto text-center ${
                     isPhase1Done 
                       ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800' 
                       : 'border-white bg-white text-black hover:bg-zinc-200'
@@ -122,27 +139,42 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                 >
                   {isPhase1Done ? "Review Track" : "Start Track →"}
                 </a>
-              ) : (
-                <a 
-                  href="/api/auth/github" 
-                  class="text-[10px] uppercase font-bold border border-zinc-800 bg-zinc-900/50 text-zinc-500 px-3 py-1.5 inline-block hover:border-zinc-700 hover:text-zinc-300 transition-all"
-                >
-                  Auth Required
-                </a>
-              )}
+              </div>
             </div>
           </div>
+
+          <!-- Glassmorphic Overlay with Lock Icon & Call-to-Action -->
+          {!user && (
+            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/70 backdrop-blur-md p-4 text-center">
+              <div class="w-8 h-8 rounded-full  flex items-center justify-center text-zinc-400 text-sm mb-2 shadow-xl">
+                🔒
+              </div>
+              <h4 class="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-1">
+                Curriculum Module Locked
+              </h4>
+              <p class="text-[11px] text-zinc-400 max-w-xs sm:max-w-sm mx-auto mb-3 leading-relaxed">
+                Connect your GitHub account to unlock Effect-TS Functional Fundamentals and start the assessment.
+              </p>
+              <a 
+                href="/api/auth/github" 
+                class="text-[10px] uppercase font-bold tracking-wider border border-white bg-white text-black hover:bg-zinc-200 px-4 py-2 inline-block transition-all shadow-xl"
+              >
+                Authenticate via GitHub →
+              </a>
+            </div>
+          )}
+
         </div>
 
         <!-- ==================== PHASE 2: REPO SUBMISSION ==================== -->
-        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
+        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
           <span>Phase 02 / Repository Analysis</span>
-          <span class={isPhase1Done ? "text-emerald-400" : "text-zinc-600"}>
+          <span class={isPhase1Done ? "text-emerald-400 font-bold" : "text-zinc-600"}>
             {isPhase1Done ? "UNLOCKED" : "LOCKED"}
           </span>
         </div>
 
-        <div class="p-6 border-b border-zinc-900 bg-black">
+        <div class="p-4 sm:p-6 border-b border-zinc-900 bg-black">
           {!isPhase1Done ? (
             /* Locked State */
             <div class="border border-dashed border-zinc-800 bg-zinc-950/50 p-6 text-center">
@@ -157,44 +189,42 @@ const isRepoLinked = Boolean(user?.selectedRepo);
           ) : (
             /* Unlocked State */
             <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                    <span class="text-emerald-400">⚡</span> Static Codebase Assessment
-                  </h4>
-                  <p class="text-[11px] text-zinc-400">
-                    Select a GitHub repository that demonstrates your implementation patterns.
-                  </p>
-                </div>
+              <div>
+                <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 mb-1">
+                  <span class="text-emerald-400">⚡</span> Static Codebase Assessment
+                </h4>
+                <p class="text-[11px] text-zinc-400">
+                  Select a GitHub repository that demonstrates your implementation patterns.
+                </p>
               </div>
 
               <!-- Repo Selection Controls -->
-              <div class="border border-zinc-800 bg-zinc-950 p-4">
+              <div class="border border-zinc-800 bg-zinc-950 p-3 sm:p-4">
                 <span class="text-[10px] text-zinc-500 uppercase tracking-wider block mb-2">
                   Target Repository:
                 </span>
 
                 {!isRepoLinked ? (
-                  <div class="flex gap-2">
+                  <div class="flex flex-col sm:flex-row gap-2">
                     <select 
                       id="repo-select" 
-                      class="bg-black border border-zinc-800 text-zinc-200 px-3 py-2 text-xs flex-1 outline-none focus:border-zinc-500"
+                      class="bg-black border border-zinc-800 text-zinc-200 px-3 py-2 text-xs flex-1 outline-none focus:border-zinc-500 truncate"
                     >
                       <option value="">Fetching your repositories...</option>
                     </select>
                     <button 
                       id="save-repo-btn"
-                      class="bg-white text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider hover:bg-zinc-200 transition-colors"
+                      class="bg-white text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider hover:bg-zinc-200 transition-colors shrink-0"
                     >
                       Link Repository
                     </button>
                   </div>
                 ) : (
-                  <div class="flex items-center justify-between bg-black border border-zinc-900 px-3 py-2">
-                    <span class="text-zinc-200 font-bold tracking-wide">{user?.selectedRepo}</span>
+                  <div class="flex items-center justify-between gap-2 bg-black border border-zinc-900 px-3 py-2">
+                    <span class="text-zinc-200 font-bold tracking-wide truncate">{user?.selectedRepo}</span>
                     <button 
                       id="change-repo-btn" 
-                      class="text-[10px] text-zinc-500 hover:text-white underline uppercase transition-colors"
+                      class="text-[10px] text-zinc-500 hover:text-white underline uppercase transition-colors shrink-0"
                     >
                       Change Repository
                     </button>
@@ -206,11 +236,11 @@ const isRepoLinked = Boolean(user?.selectedRepo);
               {isRepoLinked && (
                 <div class="border-t border-zinc-900 pt-3">
                   {analysisStatus === "idle" && (
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <span class="text-[11px] text-zinc-400">Ready for automated inspection.</span>
                       <button 
                         id="run-analysis-btn"
-                        class="bg-emerald-400 hover:bg-emerald-300 text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider transition-colors"
+                        class="bg-emerald-400 hover:bg-emerald-300 text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider transition-colors shrink-0"
                       >
                         Run Analysis Pipeline →
                       </button>
@@ -225,7 +255,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                   )}
 
                   {analysisStatus === "done" && (
-                    <div class="flex items-center justify-between bg-zinc-950 border border-emerald-500/30 p-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950 border border-emerald-500/30 p-4">
                       <div>
                         <span class="text-[10px] text-emerald-400 uppercase font-bold block">
                           Analysis Complete
@@ -234,7 +264,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                       </div>
                       <a 
                         href="/careers/analysis-report" 
-                        class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors"
+                        class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors text-center shrink-0"
                       >
                         Inspect Report →
                       </a>
@@ -247,16 +277,16 @@ const isRepoLinked = Boolean(user?.selectedRepo);
         </div>
 
         <!-- ==================== OPEN ROLES ==================== -->
-        <div class="border-b border-zinc-900 px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80">
+        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80">
           Open Positions
         </div>
 
         <div class="divide-y divide-zinc-900">
           <!-- Position 1 -->
-          <div class={`p-6 transition-opacity ${analysisStatus === 'done' ? 'opacity-100' : 'opacity-50'}`}>
-            <div class="flex items-center justify-between mb-1">
+          <div class={`p-4 sm:p-6 transition-opacity ${analysisStatus === 'done' ? 'opacity-100' : 'opacity-50'}`}>
+            <div class="flex items-center justify-between gap-2 mb-1">
               <h3 class="text-xs font-bold text-white uppercase tracking-wide">Systems Backend Engineer</h3>
-              <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 font-bold">HIRING</span>
+              <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 font-bold shrink-0">HIRING</span>
             </div>
             <p class="text-[11px] text-zinc-500 mb-3">Focus: Effect-TS, Distributed Systems, Cloud Native Infrastructure</p>
             <div class="text-[10px] text-zinc-400 border border-zinc-900 p-2.5 bg-zinc-950/50">
