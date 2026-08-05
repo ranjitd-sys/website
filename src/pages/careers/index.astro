@@ -35,7 +35,6 @@ const isRepoLinked = Boolean(user?.selectedRepo);
               <span class="text-zinc-200 text-[10px] hidden sm:inline">{user.login}</span>
             </div>
             <!-- Logout Button -->
-            
             <a 
               href="/api/auth/logout" 
               class="text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-900/50 bg-zinc-900/50 hover:bg-red-950/20 px-2.5 py-1 rounded-sm transition-all flex items-center gap-1.5 text-[10px] font-bold"
@@ -146,7 +145,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
           <!-- Glassmorphic Overlay with Lock Icon & Call-to-Action -->
           {!user && (
             <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/70 backdrop-blur-md p-4 text-center">
-              <div class="w-8 h-8 rounded-full  flex items-center justify-center text-zinc-400 text-sm mb-2 shadow-xl">
+              <div class="w-8 h-8 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 text-sm mb-2 shadow-xl">
                 🔒
               </div>
               <h4 class="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-1">
@@ -246,6 +245,20 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                       </button>
                     </div>
                   )}
+                  <!-- Container to display fetched repository files -->
+                  <!-- File List Container -->
+<div id="analysis-output" class="hidden border border-zinc-800 bg-zinc-950 p-4 mt-4 space-y-3">
+  <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+      📁 Scanned Repository Files
+    </span>
+    <span id="file-count-badge" class="text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5">
+      0 files
+    </span>
+  </div>
+
+  <ul id="file-list" class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1"></ul>
+</div>
 
                   {analysisStatus === "running" && (
                     <div class="flex items-center gap-3 text-amber-400 text-[11px] bg-amber-950/20 border border-amber-900/40 p-3">
@@ -357,13 +370,40 @@ const isRepoLinked = Boolean(user?.selectedRepo);
 
   analysisBtn?.addEventListener("click", async () => {
     analysisBtn.disabled = true;
-    analysisBtn.innerText = "Initiating...";
+    analysisBtn.innerText = "Fetching Repository Files...";
 
-    const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
-    if (res.ok) {
-      window.location.reload();
-    } else {
-      alert("Failed to queue analysis.");
+    try {
+      const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        const outputContainer = document.getElementById("analysis-output");
+        const fileCountBadge = document.getElementById("file-count-badge");
+        const fileList = document.getElementById("file-list");
+
+        if (outputContainer && fileList && fileCountBadge) {
+          fileCountBadge.textContent = `${data.fileCount} files`;
+          fileList.innerHTML = "";
+
+          // Render only file paths
+          data.files.forEach((file) => {
+            const li = document.createElement("li");
+            li.className = "py-1.5 px-2 text-zinc-300 hover:bg-zinc-900/60 flex items-center gap-2";
+            li.innerHTML = `<span class="text-zinc-600">📄</span> <span>${file.path}</span>`;
+            fileList.appendChild(li);
+          });
+
+          outputContainer.classList.remove("hidden");
+        }
+
+        analysisBtn.innerText = "Analysis Complete ✓";
+      } else {
+        alert(data.error || "Failed to fetch repository files.");
+        analysisBtn.disabled = false;
+        analysisBtn.innerText = "Run Analysis Pipeline →";
+      }
+    } catch (err) {
+      alert("Error fetching repository files.");
       analysisBtn.disabled = false;
       analysisBtn.innerText = "Run Analysis Pipeline →";
     }
