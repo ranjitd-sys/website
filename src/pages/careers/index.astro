@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navigation from "@/components/navigation/Navigation.astro";
 import Footer from "@/components/Footer.astro";
 import { parseSignedSession } from "@/lib/session";
+import { getRepoTree } from "@/lib/github";
 
 // Parse user session cookie
 const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
@@ -10,6 +11,27 @@ const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
 const isPhase1Done = user?.phase1Completed ?? false;
 const analysisStatus = user?.analysisStatus || "idle";
 const isRepoLinked = Boolean(user?.selectedRepo);
+
+// Fetch file tree on server side if analysis is already completed
+let repoFiles: string[] = [];
+
+if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
+  const [owner, repo] = user.selectedRepo.split("/");
+  try {
+    const tree = await getRepoTree(owner, repo, user.token);
+    repoFiles = tree
+      .filter(
+        (item) =>
+          item.type === "blob" &&
+          (item.size ?? 0) < 100_000 &&
+          /\.(ts|tsx|js|jsx|json|md|prisma)$/.test(item.path) &&
+          !item.path.includes("node_modules")
+      )
+      .map((item) => item.path);
+  } catch (err) {
+    console.error("Failed to load repo files:", err);
+  }
+}
 ---
 
 <BaseLayout title="Careers & Institute" description="Master our stack. Join the team.">
@@ -21,7 +43,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
       <!-- Navigation -->
       <Navigation activeSlug="careers" />
       
-      <!-- Sticky Frosted Glass Header with Logout Toggle -->
+      <!-- Sticky Glass Header -->
       <header class="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-900/80 px-4 sm:px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/70 backdrop-blur-md transition-all">
         <a href="/" class="font-semibold tracking-widest text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -34,7 +56,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
               <img src={user.avatar} alt={user.login} class="w-4 h-4 rounded-full border border-zinc-700" />
               <span class="text-zinc-200 text-[10px] hidden sm:inline">{user.login}</span>
             </div>
-            <!-- Logout Button -->
+            <!-- Primary Header Logout Button -->
             <a 
               href="/api/auth/logout" 
               class="text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-900/50 bg-zinc-900/50 hover:bg-red-950/20 px-2.5 py-1 rounded-sm transition-all flex items-center gap-1.5 text-[10px] font-bold"
@@ -168,9 +190,19 @@ const isRepoLinked = Boolean(user?.selectedRepo);
         <!-- ==================== PHASE 2: REPO SUBMISSION ==================== -->
         <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
           <span>Phase 02 / Repository Analysis</span>
-          <span class={isPhase1Done ? "text-emerald-400 font-bold" : "text-zinc-600"}>
-            {isPhase1Done ? "UNLOCKED" : "LOCKED"}
-          </span>
+          <div class="flex items-center gap-3">
+            <span class={isPhase1Done ? "text-emerald-400 font-bold" : "text-zinc-600"}>
+              {isPhase1Done ? "UNLOCKED" : "LOCKED"}
+            </span>
+            {user && (
+              <a 
+                href="/api/auth/logout" 
+                class="text-zinc-500 hover:text-red-400 transition-colors text-[9px] uppercase font-bold border-l border-zinc-800 pl-3"
+              >
+                Disconnect Session ↳
+              </a>
+            )}
+          </div>
         </div>
 
         <div class="p-4 sm:p-6 border-b border-zinc-900 bg-black">
@@ -231,9 +263,9 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                 )}
               </div>
 
-              <!-- Trigger Analysis Action -->
+              <!-- Trigger Analysis Action & File Output -->
               {isRepoLinked && (
-                <div class="border-t border-zinc-900 pt-3">
+                <div class="border-t border-zinc-900 pt-3 space-y-3">
                   {analysisStatus === "idle" && (
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <span class="text-[11px] text-zinc-400">Ready for automated inspection.</span>
@@ -245,20 +277,6 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                       </button>
                     </div>
                   )}
-                  <!-- Container to display fetched repository files -->
-                  <!-- File List Container -->
-<div id="analysis-output" class="hidden border border-zinc-800 bg-zinc-950 p-4 mt-4 space-y-3">
-  <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
-    <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-      📁 Scanned Repository Files
-    </span>
-    <span id="file-count-badge" class="text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5">
-      0 files
-    </span>
-  </div>
-
-  <ul id="file-list" class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1"></ul>
-</div>
 
                   {analysisStatus === "running" && (
                     <div class="flex items-center gap-3 text-amber-400 text-[11px] bg-amber-950/20 border border-amber-900/40 p-3">
@@ -268,21 +286,63 @@ const isRepoLinked = Boolean(user?.selectedRepo);
                   )}
 
                   {analysisStatus === "done" && (
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950 border border-emerald-500/30 p-4">
-                      <div>
-                        <span class="text-[10px] text-emerald-400 uppercase font-bold block">
-                          Analysis Complete
-                        </span>
-                        <span class="text-2xl font-bold text-white">{user?.analysisStatus}/100</span>
+                    <div class="space-y-4">
+                      <!-- Status Banner -->
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950 border border-emerald-500/30 p-4">
+                        <div>
+                          <span class="text-[10px] text-emerald-400 uppercase font-bold block">
+                            Analysis Complete
+                          </span>
+                          <span class="text-2xl font-bold text-white">
+                            {user?.analysisStatus ?? 94}/100
+                          </span>
+                        </div>
+                        <a 
+                          href="/careers/analysis-report" 
+                          class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors text-center shrink-0"
+                        >
+                          Inspect Report →
+                        </a>
                       </div>
-                      <a 
-                        href="/careers/analysis-report" 
-                        class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors text-center shrink-0"
-                      >
-                        Inspect Report →
-                      </a>
+
+                      <!-- SSR Scanned File List -->
+                      <div class="border border-zinc-800 bg-zinc-950 p-4 space-y-3">
+                        <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
+                          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                            <span>📁</span> Scanned Repository Files ({repoFiles.length})
+                          </span>
+                        </div>
+
+                        <ul class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1">
+                          {repoFiles.length > 0 ? (
+                            repoFiles.map((filePath) => (
+                              <li class="py-1.5 px-2 text-zinc-300 hover:bg-zinc-900/60 flex items-center gap-2">
+                                <span class="text-zinc-600">📄</span>
+                                <span class="truncate">{filePath}</span>
+                              </li>
+                            ))
+                          ) : (
+                            <li class="py-2 text-zinc-500 italic">No matching source files found.</li>
+                          )}
+                        </ul>
+                      </div>
                     </div>
                   )}
+
+                  <!-- Dynamic Client File Output Container (Populated via JS on analysis trigger) -->
+                  <div id="analysis-output" class="hidden border border-zinc-800 bg-zinc-950 p-4 mt-4 space-y-3">
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+                      <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                        📁 Scanned Repository Files
+                      </span>
+                      <span id="file-count-badge" class="text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5">
+                        0 files
+                      </span>
+                    </div>
+
+                    <ul id="file-list" class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1"></ul>
+                  </div>
+
                 </div>
               )}
             </div>
@@ -321,9 +381,9 @@ const isRepoLinked = Boolean(user?.selectedRepo);
   </div>
 </BaseLayout>
 
-<script define:vars={{ slug: "effect-ts" }}>
+<script>
   // Repository Selection & Analysis Logic
-  const selectEl = document.getElementById("repo-select");
+  const selectEl = document.getElementById("repo-select") as HTMLSelectElement | null;
   const saveBtn = document.getElementById("save-repo-btn");
   const changeBtn = document.getElementById("change-repo-btn");
   const analysisBtn = document.getElementById("run-analysis-btn");
@@ -333,7 +393,7 @@ const isRepoLinked = Boolean(user?.selectedRepo);
       .then(res => res.json())
       .then(repos => {
         selectEl.innerHTML = '<option value="">-- Select GitHub Repository --</option>';
-        repos.forEach((r) => {
+        repos.forEach((r: { fullName: string; private: boolean }) => {
           const opt = document.createElement("option");
           opt.value = r.fullName;
           opt.textContent = `${r.fullName} ${r.private ? '[private]' : ''}`;
@@ -369,8 +429,8 @@ const isRepoLinked = Boolean(user?.selectedRepo);
   });
 
   analysisBtn?.addEventListener("click", async () => {
-    analysisBtn.disabled = true;
-    analysisBtn.innerText = "Fetching Repository Files...";
+    analysisBtn.setAttribute("disabled", "true");
+    analysisBtn.innerText = "Analyzing Codebase...";
 
     try {
       const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
@@ -381,15 +441,15 @@ const isRepoLinked = Boolean(user?.selectedRepo);
         const fileCountBadge = document.getElementById("file-count-badge");
         const fileList = document.getElementById("file-list");
 
-        if (outputContainer && fileList && fileCountBadge) {
+        if (outputContainer && fileList && fileCountBadge && data.files) {
           fileCountBadge.textContent = `${data.fileCount} files`;
           fileList.innerHTML = "";
 
-          // Render only file paths
-          data.files.forEach((file) => {
+          // Render scanned file paths dynamically
+          data.files.forEach((file: { path: string }) => {
             const li = document.createElement("li");
             li.className = "py-1.5 px-2 text-zinc-300 hover:bg-zinc-900/60 flex items-center gap-2";
-            li.innerHTML = `<span class="text-zinc-600">📄</span> <span>${file.path}</span>`;
+            li.innerHTML = `<span class="text-zinc-600">📄</span> <span class="truncate">${file.path}</span>`;
             fileList.appendChild(li);
           });
 
@@ -397,135 +457,18 @@ const isRepoLinked = Boolean(user?.selectedRepo);
         }
 
         analysisBtn.innerText = "Analysis Complete ✓";
+        
+        // Reload after 2 seconds to update the server session state & score banner
+        setTimeout(() => window.location.reload(), 2000);
       } else {
-        alert(data.error || "Failed to fetch repository files.");
-        analysisBtn.disabled = false;
+        alert(data.error || "Failed to execute repository analysis.");
+        analysisBtn.removeAttribute("disabled");
         analysisBtn.innerText = "Run Analysis Pipeline →";
       }
     } catch (err) {
-      alert("Error fetching repository files.");
-      analysisBtn.disabled = false;
+      alert("Error executing repository analysis pipeline.");
+      analysisBtn.removeAttribute("disabled");
       analysisBtn.innerText = "Run Analysis Pipeline →";
     }
-  });
-
-  // Quiz Attempt Validation & Enforcement Logic
-  const completeBtn = document.getElementById("complete-lesson-btn");
-  const statusEl = document.getElementById("lesson-status");
-  const errorEl = document.getElementById("quiz-error");
-  const errorTextEl = document.getElementById("quiz-error-text");
-  const successEl = document.getElementById("quiz-success");
-  const successTextEl = document.getElementById("quiz-success-text");
-  const questions = document.querySelectorAll(".quiz-question");
-
-  function setAttemptRecordedState(scorePercentage) {
-    if (!completeBtn || !statusEl) return;
-
-    const isPassed = scorePercentage >= 70;
-
-    if (isPassed) {
-      if (errorEl) {
-        errorEl.classList.add("hidden");
-        errorEl.classList.remove("flex");
-      }
-      if (successEl && successTextEl) {
-        successEl.classList.remove("hidden");
-        successEl.classList.add("flex");
-        successTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Requirement met (70%+). Attempt completed.`;
-      }
-
-      statusEl.textContent = "Assessment Completed (Passed) ✓";
-      statusEl.classList.replace("text-zinc-400", "text-emerald-400");
-    } else {
-      if (successEl) {
-        successEl.classList.add("hidden");
-        successEl.classList.remove("flex");
-      }
-      if (errorEl && errorTextEl) {
-        errorEl.classList.remove("hidden");
-        errorEl.classList.add("flex");
-        errorTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Attempt recorded (Did not meet 70% threshold).`;
-      }
-
-      statusEl.textContent = "Assessment Completed (Failed) ✗";
-      statusEl.classList.replace("text-zinc-400", "text-red-400");
-    }
-
-    completeBtn.textContent = "Return to Curriculum";
-    completeBtn.classList.remove("bg-white", "text-black", "hover:bg-zinc-200");
-    completeBtn.classList.add("bg-zinc-800", "text-zinc-100", "hover:bg-zinc-700", "border", "border-zinc-700");
-
-    localStorage.setItem(`lesson:${slug}:attempted`, "true");
-    localStorage.setItem(`lesson:${slug}:score`, scorePercentage.toString());
-
-    document.querySelectorAll("input[type='radio']").forEach(input => {
-      input.disabled = true;
-    });
-    document.querySelectorAll(".radio-label").forEach(label => {
-      label.classList.add("opacity-50", "cursor-not-allowed");
-      label.classList.remove("hover:bg-zinc-900", "hover:border-zinc-700", "cursor-pointer");
-    });
-  }
-
-  // Check attempt status on load
-  const hasAttempted = localStorage.getItem(`lesson:${slug}:attempted`) === "true";
-  const savedScore = localStorage.getItem(`lesson:${slug}:score`);
-
-  if (hasAttempted) {
-    setAttemptRecordedState(savedScore !== null ? parseFloat(savedScore) : 0);
-  }
-
-  completeBtn?.addEventListener("click", () => {
-    if (localStorage.getItem(`lesson:${slug}:attempted`) === "true") {
-      window.location.href = "/careers";
-      return;
-    }
-
-    if (questions.length === 0) {
-      setAttemptRecordedState(100);
-      return;
-    }
-
-    let unattemptedCount = 0;
-
-    // Reset visual error indicators
-    questions.forEach(q => q.classList.remove("border-red-500/50"));
-
-    // Check if every question has a selected answer
-    questions.forEach((q) => {
-      const qIndex = q.getAttribute("data-question-index");
-      const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
-
-      if (!selected) {
-        unattemptedCount++;
-        q.classList.add("border-red-500/50");
-      }
-    });
-
-    // Halt submission if any questions remain unanswered
-    if (unattemptedCount > 0) {
-      if (errorEl && errorTextEl) {
-        errorTextEl.textContent = `Please answer all questions before submitting. (${unattemptedCount} remaining)`;
-        errorEl.classList.remove("hidden");
-        errorEl.classList.add("flex");
-        errorEl.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-      return;
-    }
-
-    // Calculate score
-    let correctCount = 0;
-    questions.forEach((q) => {
-      const qIndex = q.getAttribute("data-question-index");
-      const correctIndex = q.getAttribute("data-correct-index");
-      const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`);
-
-      if (selected && selected.value === correctIndex) {
-        correctCount++;
-      }
-    });
-
-    const scorePercentage = (correctCount / questions.length) * 100;
-    setAttemptRecordedState(scorePercentage);
   });
 </script>
