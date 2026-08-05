@@ -7,7 +7,6 @@ import { getRepoTree, getFileContent } from "@/lib/github";
 
 const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
 
-// Protect route: Redirect to careers if user isn't authenticated or hasn't run analysis
 if (!user || user.analysisStatus !== "done") {
   return Astro.redirect("/careers");
 }
