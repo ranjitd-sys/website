@@ -3,6 +3,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import Navigation from "@/components/navigation/Navigation.astro";
 import Footer from "@/components/Footer.astro";
 import { parseSignedSession } from "@/lib/session";
+import { getRepoTree, getFileContent } from "@/lib/github";
 
 const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
 
@@ -13,6 +14,36 @@ if (!user || user.analysisStatus !== "done") {
 
 const repoName = user.selectedRepo || "Unknown Repository";
 const score = 94; // Score calculated during static pipeline execution
+
+// Fetch repository tree and preview contents on the server
+let scannedFiles: Array<{ path: string; content: string }> = [];
+
+if (user.selectedRepo && user.token) {
+  const [owner, repo] = user.selectedRepo.split("/");
+  try {
+    const tree = await getRepoTree(owner, repo, user.token);
+    
+    // Filter to source files
+    const sourceFiles = tree.filter(
+      (item) =>
+        item.type === "blob" &&
+        (item.size ?? 0) < 100_000 &&
+        /\.(ts|tsx|js|jsx|json|md|prisma)$/.test(item.path) &&
+        !item.path.includes("node_modules")
+    );
+
+    // Fetch contents for files (capped at top 15 files to keep load snappy)
+    const previewFiles = sourceFiles.slice(0, 15);
+    scannedFiles = await Promise.all(
+      previewFiles.map(async (file) => ({
+        path: file.path,
+        content: await getFileContent(owner, repo, file.path, user.token!),
+      }))
+    );
+  } catch (err) {
+    console.error("Failed to load repo files for analysis report:", err);
+  }
+}
 ---
 
 <BaseLayout title="Static Analysis Report" description="Automated AST and architectural evaluation report.">
@@ -104,8 +135,45 @@ const score = 94; // Score calculated during static pipeline execution
 
             <div class="flex items-start gap-2 text-amber-400">
               <span>[WARN]</span>
-              <span>Concurrency Bottleneck: Found sequential `Effect.all` iterations that can be executed in parallel using `{ "unbounded" }`.</span>
+              <span>Concurrency Bottleneck: Found sequential `Effect.all` iterations that can be executed in parallel using `{  "unbounded" }`.</span>
             </div>
+          </div>
+        </section>
+
+        <!-- Scanned File Tree & Code Inspector -->
+        <section class="p-4 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+              <span>📁</span> Repository Code Inspection ({scannedFiles.length} files)
+            </h2>
+            <span class="text-[10px] text-zinc-500 uppercase">Click file to toggle code</span>
+          </div>
+
+          <div class="border border-zinc-900 bg-zinc-950 divide-y divide-zinc-900">
+            {scannedFiles.length > 0 ? (
+              scannedFiles.map((file) => (
+                <details class="group">
+                  <summary class="cursor-pointer p-3 text-zinc-300 hover:text-emerald-400 hover:bg-zinc-900/60 font-bold select-none flex justify-between items-center text-[11px] transition-colors">
+                    <span class="flex items-center gap-2 truncate">
+                      <span class="text-zinc-500">📄</span>
+                      <span class="truncate">{file.path}</span>
+                    </span>
+                    <span class="text-[10px] text-zinc-600 group-open:rotate-180 transition-transform shrink-0 ml-2">
+                      ▼
+                    </span>
+                  </summary>
+                  <div class="p-3 bg-black border-t border-zinc-900 text-zinc-300 overflow-x-auto">
+                    <pre class="font-mono text-[10px] leading-relaxed whitespace-pre max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                      <code>{file.content}</code>
+                    </pre>
+                  </div>
+                </details>
+              ))
+            ) : (
+              <div class="p-4 text-zinc-500 italic text-[11px]">
+                No inspectable source files retrieved for this repository.
+              </div>
+            )}
           </div>
         </section>
 
