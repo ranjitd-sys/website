@@ -1365,6 +1365,149 @@
         scrollbar-width: thin;
         max-width: 100%;
       }
+      .tbl-wrap {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xl);
+        overflow: hidden;
+      }
+      .check-row {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 26px;
+        margin-top: 26px;
+      }
+      .check-row li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 550;
+        color: var(--text-1);
+      }
+      .settle-mobile {
+        display: none;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        max-width: 440px;
+        margin-inline: auto;
+      }
+      .scard {
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-card);
+        box-shadow: var(--shadow-xs);
+        padding: 16px;
+      }
+      .scard-top {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+      .scard-top b {
+        display: block;
+        font-size: 14.5px;
+        font-weight: 630;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+      }
+      .scard-top span:not(.badge) {
+        display: block;
+        font-size: 12px;
+        color: var(--text-3);
+      }
+      .sgrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px 16px;
+        margin-top: 13px;
+        padding-top: 13px;
+        border-top: 1px dashed var(--border);
+      }
+      .sgrid i,
+      .snet i {
+        display: block;
+        font-style: normal;
+        font-size: 10.5px;
+        font-weight: 650;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-3);
+      }
+      .sgrid em {
+        display: block;
+        font-style: normal;
+        font-size: 13.5px;
+        font-weight: 620;
+        color: var(--text-1);
+        margin-top: 3px;
+      }
+      .snet {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        background: var(--accent-soft);
+        border: 1px solid var(--accent-border);
+        border-radius: 10px;
+        padding: 9px 13px;
+        margin-top: 12px;
+      }
+      .snet i {
+        color: var(--accent-hover);
+      }
+      .snet em {
+        font-style: normal;
+        font-size: 14.5px;
+        font-weight: 680;
+        color: var(--ink);
+      }
+      .snote {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        margin-top: 11px;
+        font-size: 12px;
+        line-height: 1.5;
+        font-weight: 550;
+        color: var(--red);
+        background: var(--red-bg);
+        border: 1px solid var(--red-border);
+        border-radius: 9px;
+        padding: 8px 11px;
+      }
+      .snote svg {
+        width: 13px;
+        height: 13px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .sm-foot {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-size: 12.5px;
+        color: var(--text-3);
+        padding-top: 4px;
+      }
+      .sm-foot svg {
+        width: 13px;
+        height: 13px;
+        color: var(--green);
+        flex-shrink: 0;
+      }
+      @media (max-width: 760px) {
+        .settle-mobile {
+          display: grid;
+        }
+        .tbl-wrap {
+          display: none;
+        }
+      }
       table.tbl {
         width: 100%;
         border-collapse: collapse;
@@ -2819,7 +2962,7 @@
           </div>
 
           <div class="flow-mobile">
-            <svg viewBox="0 0 380 600" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Mobile diagram: settlements flow from Amazon, Flipkart, Meesho and Shopify into the DeepEcom engine, which outputs GST-ready vouchers to Tally Prime, Zoho Books and Busy">
+            <svg viewBox="0 0 380 600" role="img" xmlns:xlink="http://www.w3.org/1999/xlink" aria-label="Mobile diagram: settlements flow from Amazon, Flipkart, Meesho and Shopify into the DeepEcom engine, which outputs GST-ready vouchers to Tally Prime, Zoho Books and Sap">
               <defs>
                 <pattern id="mgrid" width="18" height="18" patternUnits="userSpaceOnUse">
                   <circle cx="1.2" cy="1.2" r="1" fill="#ececf1"></circle>
@@ -2964,7 +3107,7 @@
               </g>
               <rect x="32" y="525" width="26" height="26" rx="8" fill="#eef2ff"></rect>
               <text x="45" y="543" text-anchor="middle" style="font-family:Inter,sans-serif;font-size:10.5px;font-weight:800;fill:#4338ca">Bu</text>
-              <text class="node-name" style="font-size:13.5px" x="68" y="544">Busy</text>
+              <text class="node-name" style="font-size:13.5px" x="68" y="544">Sap</text>
               <text class="node-sub" style="font-size:10.5px" x="150" y="544">Synced · 12m ago</text>
               <circle cx="344" cy="538" r="3.2" fill="#22c55e"></circle>
 
@@ -3032,7 +3175,7 @@
                       stroke-linejoin="round"
                       ><path d="M20 6L9 17l-5-5"></path></svg
                     ></span
-                  >One-click sync with Tally, Zoho Books &amp; Busy
+                  >One-click sync with Tally, Zoho Books &amp; Sap
                 </li>
                 <li>
                   <span class="check-ic"
@@ -3217,7 +3360,7 @@
                   stroke-width="2.2"
                   stroke-linecap="round"
                   stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg
-                >Busy</span
+                >Sap</span
               >
             </div>
             <div class="caption">
@@ -3401,142 +3544,175 @@
 
     <section class="sec sec-subtle" id="analytics">
       <div class="wrap">
-        <div class="split">
-          <div class="reveal">
-            <span class="eyebrow">Payment reconciliation</span>
-            <h2 class="h2">Every rupee, traceable to its order.</h2>
-            <p class="lead">
-              Every settlement line item is matched to its order and its
-              invoice. Discrepancies are flagged before they hit your books — so
-              month-end closes in days, not weeks.
-            </p>
-            <a href="#contact" class="text-link"
-              >See it on your own data
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                ><path d="M5 12h14M13 6l6 6-6 6"></path></svg
-              >
-            </a>
-          </div>
+        <div class="sec-head center reveal" style="text-align: center">
+          <span class="eyebrow center">Payment reconciliation</span>
+          <h2 class="h2">Every rupee, traceable to its order.</h2>
+          <p class="lead">
+            Every settlement line item is matched to its order and its invoice — discrepancies are
+            flagged before they ever reach your books.
+          </p>
+          <ul class="check-row">
+            <li>
+              <span class="check-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+              SKU-level margins
+            </li>
+            <li>
+              <span class="check-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+              Anomaly detection
+            </li>
+            <li>
+              <span class="check-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></span>
+              GST-ready exports
+            </li>
+          </ul>
+        </div>
 
-          <div class="reveal" data-delay="80">
-            <div
-              class="tbl-card"
-              role="img"
-              aria-label="Settlement reconciliation table with status badges"
-            >
-              <div class="tbl-head">
-                <span class="panel-title">August settlements</span>
-                <span class="chip" style="margin-left:auto">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    ><rect x="3" y="5" width="18" height="16" rx="2"
-                    ></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg
-                  >
-                  Aug 2026
-                </span>
-              </div>
-              <div class="tbl-scroll">
-                <table class="tbl">
-                  <thead>
-                    <tr>
-                      <th>Marketplace</th>
-                      <th class="r">Orders</th>
-                      <th class="r">Gross</th>
-                      <th class="r">Deductions</th>
-                      <th class="r">Net payout</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td
-                        ><span class="cell-mkt"
-                          ><span class="mkt-logo">Az</span>Amazon</span
-                        ></td
-                      >
-                      <td class="r dim num">4,812</td>
-                      <td class="r num">₹18,42,300</td>
-                      <td class="r dim num">−₹5,12,480</td>
-                      <td class="r strong num">₹13,29,820</td>
-                      <td><span class="badge green">Reconciled</span></td>
-                    </tr>
-                    <tr>
-                      <td
-                        ><span class="cell-mkt"
-                          ><span class="mkt-logo">Fk</span>Flipkart</span
-                        ></td
-                      >
-                      <td class="r dim num">3,204</td>
-                      <td class="r num">₹9,86,150</td>
-                      <td class="r dim num">−₹2,71,090</td>
-                      <td class="r strong num">₹7,15,060</td>
-                      <td><span class="badge green">Reconciled</span></td>
-                    </tr>
-                    <tr>
-                      <td
-                        ><span class="cell-mkt"
-                          ><span class="mkt-logo">Me</span>Meesho</span
-                        ></td
-                      >
-                      <td class="r dim num">1,978</td>
-                      <td class="r num">₹4,31,720</td>
-                      <td class="r dim num">−₹1,02,340</td>
-                      <td class="r strong num">₹3,29,380</td>
-                      <td><span class="badge amber">Pending</span></td>
-                    </tr>
-                    <tr>
-                      <td
-                        ><span class="cell-mkt"
-                          ><span class="mkt-logo">Jm</span>JioMart</span
-                        ></td
-                      >
-                      <td class="r dim num">642</td>
-                      <td class="r num">₹1,58,900</td>
-                      <td class="r dim num">−₹41,220</td>
-                      <td class="r strong num"
-                        >₹1,17,680<span class="neg num">−₹1,240</span></td
-                      >
-                      <td><span class="badge red">Mismatch</span></td>
-                    </tr>
-                    <tr>
-                      <td
-                        ><span class="cell-mkt"
-                          ><span class="mkt-logo">Sy</span>Shopify</span
-                        ></td
-                      >
-                      <td class="r dim num">1,092</td>
-                      <td class="r num">₹7,94,610</td>
-                      <td class="r dim num">−₹1,66,540</td>
-                      <td class="r strong num">₹6,28,070</td>
-                      <td><span class="badge green">Reconciled</span></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div class="tbl-foot">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2.2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg
-                >
-                Discrepancies flagged before they reach your ledger.
-              </div>
+        <div class="tbl-wrap reveal" data-delay="60">
+          <div class="tbl-card" role="img" aria-label="Settlement reconciliation table with status badges">
+            <div class="tbl-head">
+              <span class="panel-title">August settlements</span>
+              <span class="chip" style="margin-left: auto">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"></rect><path d="M8 3v4M16 3v4M3 10h18"></path></svg>
+                Aug 2026
+              </span>
+            </div>
+            <div class="tbl-scroll">
+              <table class="tbl">
+                <thead>
+                  <tr>
+                    <th>Marketplace</th>
+                    <th class="r">Orders</th>
+                    <th class="r">Gross</th>
+                    <th class="r">Deductions</th>
+                    <th class="r">Net payout</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="cell-mkt"><span class="mkt-logo">Az</span>Amazon</span></td>
+                    <td class="r dim num">4,812</td>
+                    <td class="r num">₹18,42,300</td>
+                    <td class="r dim num">−₹5,12,480</td>
+                    <td class="r strong num">₹13,29,820</td>
+                    <td><span class="badge green">Reconciled</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="cell-mkt"><span class="mkt-logo">Fk</span>Flipkart</span></td>
+                    <td class="r dim num">3,204</td>
+                    <td class="r num">₹9,86,150</td>
+                    <td class="r dim num">−₹2,71,090</td>
+                    <td class="r strong num">₹7,15,060</td>
+                    <td><span class="badge green">Reconciled</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="cell-mkt"><span class="mkt-logo">Me</span>Meesho</span></td>
+                    <td class="r dim num">1,978</td>
+                    <td class="r num">₹4,31,720</td>
+                    <td class="r dim num">−₹1,02,340</td>
+                    <td class="r strong num">₹3,29,380</td>
+                    <td><span class="badge amber">Pending</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="cell-mkt"><span class="mkt-logo">Jm</span>JioMart</span></td>
+                    <td class="r dim num">642</td>
+                    <td class="r num">₹1,58,900</td>
+                    <td class="r dim num">−₹41,220</td>
+                    <td class="r strong num">₹1,17,680<span class="neg num">−₹1,240</span></td>
+                    <td><span class="badge red">Mismatch</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="cell-mkt"><span class="mkt-logo">Sy</span>Shopify</span></td>
+                    <td class="r dim num">1,092</td>
+                    <td class="r num">₹7,94,610</td>
+                    <td class="r dim num">−₹1,66,540</td>
+                    <td class="r strong num">₹6,28,070</td>
+                    <td><span class="badge green">Reconciled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tbl-foot">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+              Discrepancies flagged before they reach your ledger.
             </div>
           </div>
+        </div>
+
+        <div class="settle-mobile reveal" data-delay="60">
+          <article class="scard">
+            <div class="scard-top">
+              <span class="mkt-logo">Az</span>
+              <div><b>Amazon</b><span>4,812 orders · Aug W3</span></div>
+              <span class="badge green" style="margin-left:auto">Reconciled</span>
+            </div>
+            <div class="sgrid">
+              <div><i>Gross</i><em class="num">₹18,42,300</em></div>
+              <div><i>Deductions</i><em class="num">−₹5,12,480</em></div>
+            </div>
+            <div class="snet"><i>Net payout</i><em class="num">₹13,29,820</em></div>
+          </article>
+
+          <article class="scard">
+            <div class="scard-top">
+              <span class="mkt-logo">Fk</span>
+              <div><b>Flipkart</b><span>3,204 orders · Aug W3</span></div>
+              <span class="badge green" style="margin-left:auto">Reconciled</span>
+            </div>
+            <div class="sgrid">
+              <div><i>Gross</i><em class="num">₹9,86,150</em></div>
+              <div><i>Deductions</i><em class="num">−₹2,71,090</em></div>
+            </div>
+            <div class="snet"><i>Net payout</i><em class="num">₹7,15,060</em></div>
+          </article>
+
+          <article class="scard">
+            <div class="scard-top">
+              <span class="mkt-logo">Me</span>
+              <div><b>Meesho</b><span>1,978 orders · Aug W2</span></div>
+              <span class="badge amber" style="margin-left:auto">Pending</span>
+            </div>
+            <div class="sgrid">
+              <div><i>Gross</i><em class="num">₹4,31,720</em></div>
+              <div><i>Deductions</i><em class="num">−₹1,02,340</em></div>
+            </div>
+            <div class="snet"><i>Net payout</i><em class="num">₹3,29,380</em></div>
+          </article>
+
+          <article class="scard">
+            <div class="scard-top">
+              <span class="mkt-logo">Jm</span>
+              <div><b>JioMart</b><span>642 orders · Aug W2</span></div>
+              <span class="badge red" style="margin-left:auto">Mismatch</span>
+            </div>
+            <div class="sgrid">
+              <div><i>Gross</i><em class="num">₹1,58,900</em></div>
+              <div><i>Deductions</i><em class="num">−₹41,220</em></div>
+            </div>
+            <div class="snet"><i>Net payout</i><em class="num">₹1,17,680</em></div>
+            <p class="snote">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path></svg>
+              Commission mismatch of ₹1,240 flagged for review
+            </p>
+          </article>
+
+          <article class="scard">
+            <div class="scard-top">
+              <span class="mkt-logo">Sy</span>
+              <div><b>Shopify</b><span>1,092 orders · Aug</span></div>
+              <span class="badge green" style="margin-left:auto">Reconciled</span>
+            </div>
+            <div class="sgrid">
+              <div><i>Gross</i><em class="num">₹7,94,610</em></div>
+              <div><i>Deductions</i><em class="num">−₹1,66,540</em></div>
+            </div>
+            <div class="snet"><i>Net payout</i><em class="num">₹6,28,070</em></div>
+          </article>
+
+          <p class="sm-foot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+            Discrepancies flagged before they reach your ledger.
+          </p>
         </div>
       </div>
     </section>
@@ -4606,113 +4782,179 @@
     </footer>
 
     <script>
-      const nav = document.getElementById("nav");
-      const onScroll = () =>
-        nav.classList.toggle("scrolled", window.scrollY > 8);
-      window.addEventListener("scroll", onScroll, { passive: true });
-      onScroll();
+      // Navbar scroll toggle
+const nav = document.getElementById("nav") as HTMLElement | null;
+if (nav) {
+  const onScroll = (): void => {
+    nav.classList.toggle("scrolled", window.scrollY > 8);
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+}
 
-      const menuBtn = document.getElementById("menuBtn");
-      const mobileMenu = document.getElementById("mobileMenu");
+// Mobile menu toggle
+const menuBtn = document.getElementById("menuBtn") as HTMLButtonElement | null;
+const mobileMenu = document.getElementById("mobileMenu") as HTMLElement | null;
 
-      menuBtn!.addEventListener("click", () => {
-        const open = mobileMenu!.classList.toggle("open");
-        menuBtn!.setAttribute("aria-expanded", String(open));
-      });
-      mobileMenu!.querySelectorAll("a").forEach((a) =>
-        a.addEventListener("click", () => {
-          mobileMenu!.classList.remove("open");
-          menuBtn!.setAttribute("aria-expanded", "false");
-        }),
-      );
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener("click", () => {
+    const isOpen = mobileMenu.classList.toggle("open");
+    menuBtn.setAttribute("aria-expanded", String(isOpen));
+  });
 
-      const io = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (!e.isIntersecting) return;
-            e.target.style.transitionDelay =
-              (e.target.dataset.delay || 0) + "ms";
-            e.target.classList.add("in");
-            io.unobserve(e.target);
-          });
-        },
-        { threshold: 0.12, rootMargin: "0px 0px -32px 0px" },
-      );
-      document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+  mobileMenu.querySelectorAll<HTMLAnchorElement>("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+    });
+  });
+}
 
-      const fmt = (n, d) =>
-        n.toLocaleString("en-IN", {
-          minimumFractionDigits: d,
-          maximumFractionDigits: d,
-        });
-      const countIO = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (!e.isIntersecting) return;
-            countIO.unobserve(e.target);
-            const el = e.target;
-            const target = parseFloat(el.dataset.target);
-            const dec = parseInt(el.dataset.decimals || "0", 10);
-            const start = performance.now();
-            const dur = 1300;
-            const tick = (t) => {
-              const p = Math.min((t - start) / dur, 1);
-              el.textContent = fmt(target * (1 - Math.pow(1 - p, 3)), dec);
-              if (p < 1) requestAnimationFrame(tick);
-            };
-            requestAnimationFrame(tick);
-          });
-        },
-        { threshold: 0.5 },
-      );
-      document
-        .querySelectorAll(".kpi-value[data-target]")
-        .forEach((el) => countIO.observe(el));
+// Scroll reveal animations
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      const target = entry.target as HTMLElement;
+      const delay = target.dataset.delay || "0";
+      target.style.transitionDelay = `${delay}ms`;
+      target.classList.add("in");
+      revealObserver.unobserve(target);
+    });
+  },
+  { threshold: 0.12, rootMargin: "0px 0px -32px 0px" }
+);
 
-      const tabBtns = document.querySelectorAll(".tab-btn");
-      const panels = document.querySelectorAll("[data-panel]");
-      tabBtns.forEach((btn) =>
-        btn.addEventListener("click", () => {
-          tabBtns.forEach((b) => {
-            b.classList.toggle("active", b === btn);
-            b.setAttribute("aria-selected", String(b === btn));
-          });
-          panels.forEach((p) => {
-            p.hidden = p.dataset.panel !== btn.dataset.tab;
-          });
-        }),
-      );
+document.querySelectorAll<HTMLElement>(".reveal").forEach((el) => {
+  revealObserver.observe(el);
+});
 
-      document.querySelectorAll(".faq-item").forEach((item) => {
-        const q = item.querySelector(".faq-q");
-        const a = item.querySelector(".faq-a");
-        q.addEventListener("click", () => {
-          const isOpen = item.classList.contains("open");
-          document.querySelectorAll(".faq-item.open").forEach((o) => {
-            o.classList.remove("open");
-            o.querySelector(".faq-a").style.maxHeight = "0px";
-            o.querySelector(".faq-q").setAttribute("aria-expanded", "false");
-          });
-          if (!isOpen) {
-            item.classList.add("open");
-            a.style.maxHeight = a.scrollHeight + "px";
-            q.setAttribute("aria-expanded", "true");
-          }
-        });
-      });
+// KPI counter animation
+const formatNumber = (value: number, decimals: number): string =>
+  value.toLocaleString("en-IN", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
 
-      const contactForm = document.getElementById("contactForm");
-      contactForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        if (!contactForm.reportValidity()) return;
-        const card = contactForm.closest(".form-card");
-        card.innerHTML =
-          '<div class="form-success">' +
-          '<span class="big-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>' +
-          "<h3>Message received</h3>" +
-          "<p>Thanks for reaching out. Our team will get back to you within one business day.</p>" +
-          "</div>";
-      });
+const countObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      countObserver.unobserve(entry.target);
+
+      const el = entry.target as HTMLElement;
+      const targetNum = parseFloat(el.dataset.target || "0");
+      const decimals = parseInt(el.dataset.decimals || "0", 10);
+      const startTime = performance.now();
+      const duration = 1300;
+
+      const tick = (currentTime: number): void => {
+        const progress = Math.min((currentTime - startTime) / duration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
+        el.textContent = formatNumber(targetNum * easedProgress, decimals);
+
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        }
+      };
+
+      requestAnimationFrame(tick);
+    });
+  },
+  { threshold: 0.5 }
+);
+
+document
+  .querySelectorAll<HTMLElement>(".kpi-value[data-target]")
+  .forEach((el) => countObserver.observe(el));
+
+// Tab control
+const tabBtns = document.querySelectorAll<HTMLButtonElement>(".tab-btn");
+const tabPanels = document.querySelectorAll<HTMLElement>("[data-panel]");
+
+tabBtns.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    tabBtns.forEach((b) => {
+      const isActive = b === btn;
+      b.classList.toggle("active", isActive);
+      b.setAttribute("aria-selected", String(isActive));
+    });
+
+    tabPanels.forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== btn.dataset.tab;
+    });
+  });
+});
+
+// FAQ Accordion
+document.querySelectorAll<HTMLElement>(".faq-item").forEach((item) => {
+  const questionBtn = item.querySelector<HTMLElement>(".faq-q");
+  const answerPanel = item.querySelector<HTMLElement>(".faq-a");
+
+  if (!questionBtn || !answerPanel) return;
+
+  questionBtn.addEventListener("click", () => {
+    const isOpen = item.classList.contains("open");
+
+    // Close open accordion siblings
+    document.querySelectorAll<HTMLElement>(".faq-item.open").forEach((openItem) => {
+      const openAnswer = openItem.querySelector<HTMLElement>(".faq-a");
+      const openQuestion = openItem.querySelector<HTMLElement>(".faq-q");
+
+      openItem.classList.remove("open");
+      if (openAnswer) openAnswer.style.maxHeight = "0px";
+      if (openQuestion) openQuestion.setAttribute("aria-expanded", "false");
+    });
+
+    if (!isOpen) {
+      item.classList.add("open");
+      answerPanel.style.maxHeight = `${answerPanel.scrollHeight}px`;
+      questionBtn.setAttribute("aria-expanded", "true");
+    }
+  });
+});
+
+// Contact Form Handler
+const contactForm = document.getElementById("contactForm") as HTMLFormElement | null;
+
+if (contactForm) {
+  contactForm.addEventListener("submit", async (e: SubmitEvent) => {
+    e.preventDefault();
+
+    if (!contactForm.reportValidity()) return;
+
+    const card = contactForm.closest<HTMLElement>(".form-card");
+    if (!card) return;
+
+    const submitBtn = contactForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+
+    try {
+      if (submitBtn) submitBtn.disabled = true;
+
+      const referenceId = Math.floor(100000 + Math.random() * 900000);
+
+      card.innerHTML = `
+      <div class="form-success" role="status" aria-live="polite">
+  <div class="success-icon-wrapper">
+    <svg viewBox="0 0 24 24" class="success-icon" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 6L9 17l-5-5"/>
+    </svg>
+  </div>
+  <div class="success-content">
+    <div class="success-header">
+      <h3 class="success-title">Message sent</h3>
+      <span class="success-badge">#${referenceId}</span>
+    </div>
+    <p class="success-message">We'll reply within 1 business day.</p>
+  </div>
+</div>
+      `;
+    } catch (error) {
+      console.error("Submission error:", error);
+      if (submitBtn) submitBtn.disabled = false;
+    }
+  });
+}
     </script>
   </body>
 </html>
