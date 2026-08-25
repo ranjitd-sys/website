@@ -132,18 +132,6 @@ body {
 }
 
 
-/* ---------- landing center rail (desktop) ---------- */
-
-.landing-rails-center {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    #e4e4e7 0,
-    #e4e4e7 2px,
-    transparent 2px,
-    transparent 4px
-  );
-}
-
 /* ---------- scroll reveal (progressive enhancement) ---------- */
 
 .reveal {
