@@ -1,0 +1,166 @@
+---
+import SectionHeading from "../section-heading.astro"
+import { PieIcon, ReconcileIcon, SyncIcon, TrendIcon, AlertBellIcon } from "../icons"
+
+const noteRow =
+  "flex items-start gap-2.5 py-1 text-[13px] text-muted-foreground [&_b]:font-semibold [&_b]:text-ink"
+const okSvg =
+  "mt-0.5 size-[15px] shrink-0 text-emerald-600"
+const warnSvg = "mt-0.5 size-[15px] shrink-0 text-amber-600"
+const errSvg = "mt-0.5 size-[15px] shrink-0 text-red-600"
+const iconTile = "grid size-10 shrink-0 place-items-center rounded-xl border border-indigo-100 bg-accent text-primary"
+---
+
+<section class="py-20 md:py-28" id="features">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading
+      eyebrow="Platform"
+      title="Total control over ecommerce finances."
+      lead="From order-level reconciliation to marketplace tax tracking — every critical finance workflow in one intelligent platform."
+    />
+
+    <div class="grid gap-4 md:grid-cols-6 mt-5">
+      <!-- auto reconcile -->
+      <article class="reveal flex flex-col gap-3.5 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md md:col-span-2">
+        <div class="flex items-center gap-3">
+          <span class={iconTile}><ReconcileIcon width={18} height={18} /></span>
+          <h3 class="text-lg font-bold tracking-tight">Auto-reconcile payments</h3>
+        </div>
+        <p class="text-sm/relaxed text-muted-foreground">
+          Match settlements from Amazon, Flipkart &amp; Meesho with invoices and commissions — automatically.
+        </p>
+        <div class="mt-auto rounded-xl border border-border bg-zinc-50/60 px-4 py-3">
+          <div class={noteRow}>
+            <svg class={okSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+            <span>Settlement matched · <b>&nbsp;₹4,20,000</b></span>
+          </div>
+          <div class={noteRow}>
+            <svg class={okSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+            <span>1,284 line items reconciled</span>
+          </div>
+          <div class={noteRow}>
+            <svg class={warnSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path></svg>
+            <span>Commission mismatch of <b>&nbsp;₹310&nbsp;</b> flagged</span>
+          </div>
+        </div>
+        <p class="flex items-center gap-1.5 text-xs text-zinc-400">
+          <svg class="size-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          98.6% auto-match rate across channels
+        </p>
+      </article>
+
+      <!-- erp sync -->
+      <article class="reveal flex flex-col gap-3.5 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md md:col-span-2">
+        <div class="flex items-center gap-3">
+          <span class={iconTile}><SyncIcon width={18} height={18} /></span>
+          <h3 class="text-lg font-bold tracking-tight">Tally + Zoho + Sap Erp</h3>
+        </div>
+        <p class="text-sm/relaxed text-muted-foreground">
+          Export GST-ready reports and sync with your accounting tools — zero manual rework, mapped to your
+          chart of accounts.
+        </p>
+        <div class="mt-auto flex flex-wrap gap-2">
+          {["Tally", "Zoho Books", "Sap"].map((t) => (
+            <span class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink shadow-xs">
+              <svg class="size-3 text-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+              {t}
+            </span>
+          ))}
+        </div>
+        <p class="flex items-center gap-1.5 text-xs text-zinc-400">
+          <svg class="size-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          Last export: 214 GST-ready vouchers
+        </p>
+      </article>
+
+      <!-- profit per order -->
+      <article class="reveal flex flex-col gap-3.5 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md md:col-span-2">
+        <div class="flex items-center gap-3">
+          <span class={iconTile}><TrendIcon width={18} height={18} /></span>
+          <h3 class="text-lg font-bold tracking-tight">Profit per order</h3>
+        </div>
+        <p class="text-sm/relaxed text-muted-foreground">See gross and net profitability tracked per SKU, per order, and per channel.</p>
+        <div class="mt-auto grid grid-cols-[108px_1fr_44px] items-center gap-3 rounded-xl border border-border bg-zinc-50/60 px-4 py-3 text-xs">
+          {
+            [
+              ["AeroFit Pro", "85%", "#4f46e5"],
+              ["Glow Serum 30ml", "70%", "#4f46e5"],
+              ["Base Tee", "30%", "#fcd34d"],
+            ].map(([label, pct, color]) => (
+              <>
+                <span class="truncate font-medium text-muted-foreground">{label}</span>
+                <span class="h-2 overflow-hidden rounded-full bg-zinc-200">
+                  <span class="block h-full rounded-full" style={`width:${pct};background:${color}`} />
+                </span>
+                <span class="num text-right font-bold text-ink">{Number.parseInt(pct)}%</span>
+              </>
+            ))
+          }
+        </div>
+        <p class="flex items-center gap-1.5 text-xs text-zinc-400">
+          <svg class="size-3.5 shrink-0 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+          Updated after every settlement cycle
+        </p>
+      </article>
+
+      <!-- charges breakdown -->
+      <article class="reveal flex flex-col gap-3.5 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md md:col-span-3">
+        <div class="flex items-center gap-3">
+          <span class={iconTile}><PieIcon width={18} height={18} /></span>
+          <h3 class="text-lg font-bold tracking-tight">Marketplace charges breakdown</h3>
+          <span class="ml-auto rounded-full border border-border bg-subtle px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">Line-level</span>
+        </div>
+        <p class="text-sm/relaxed text-muted-foreground">
+          Visualize every charge — returns, logistics, commissions, ads — in one place, down to the individual
+          settlement line.
+        </p>
+        <div class="mt-auto rounded-xl border border-border bg-zinc-50/60 px-4 py-3">
+          {
+            [
+              ["Commission fee", "₹15,000", "Fees", true],
+              ["Shipping revenue", "₹8,320", "Logistics", false],
+              ["Ad spend", "₹9,600", "Marketing", false],
+              ["Refund compensation", "₹2,140", "Returns", false],
+            ].map(([pl, pv, cat, hi]) => (
+              <div class="flex items-center gap-2.5 border-b border-dashed border-border py-2 text-[13px] last:border-0 last:pb-0 first:pt-0">
+                <span class="font-normal text-muted-foreground">{pl}</span>
+                <span class="num ml-auto font-bold text-ink">{pv}</span>
+                <span
+                  class={`rounded-full px-2 py-0.5 text-[10.5px] font-bold tracking-wide uppercase ${hi ? "bg-accent text-accent-foreground" : "bg-zinc-200/70 text-muted-foreground"}`}
+                >
+                  {cat}
+                </span>
+              </div>
+            ))
+          }
+        </div>
+      </article>
+
+      <!-- dashboards & alerts -->
+      <article class="reveal flex flex-col gap-3.5 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md md:col-span-3">
+        <div class="flex items-center gap-3">
+          <span class={iconTile}><AlertBellIcon width={18} height={18} /></span>
+          <h3 class="text-lg font-bold tracking-tight">Dashboards &amp; alerts</h3>
+          <span class="ml-auto rounded-full border border-border bg-subtle px-2.5 py-1 text-[11px] font-semibold text-muted-foreground">Daily digest</span>
+        </div>
+        <p class="text-sm/relaxed text-muted-foreground">
+          Actionable ecommerce insights for finance teams and decision-makers — delivered before you ask.
+        </p>
+        <div class="mt-auto rounded-xl border border-border bg-zinc-50/60 px-4 py-3">
+          <div class={noteRow}>
+            <svg class={warnSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"></path></svg>
+            <span>Commission mismatch <b>&nbsp;₹310&nbsp;</b>· JioMart Aug W2</span>
+          </div>
+          <div class={noteRow}>
+            <svg class={errSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg>
+            <span>Payout delayed 3 days · Meesho</span>
+          </div>
+          <div class={noteRow}>
+            <svg class={okSvg} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 12.5l2.5 2.5 4.5-5"></path></svg>
+            <span>August close complete · 214 vouchers synced</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

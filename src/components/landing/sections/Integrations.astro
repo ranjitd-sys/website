@@ -1,0 +1,18 @@
+---
+import SectionHeading from "../section-heading.astro"
+import IntegrationsTabs from "../integrations-tabs"
+---
+
+<section class="py-20 md:py-28" id="integrations">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading
+      eyebrow="Integrations"
+      title="Seamlessly connect your stack."
+      lead="DeepEcom integrates with India's most-used marketplaces, ERPs, logistics providers and payment gateways."
+      center
+    />
+    <div class="reveal">
+      <IntegrationsTabs client:load />
+    </div>
+  </div>
+</section>

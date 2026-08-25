@@ -1,0 +1,67 @@
+---
+import "@/styles/landing.css"
+
+import { Font } from "astro:assets"
+import SiteNav from "@/components/landing/site-nav"
+import SiteFooter from "@/components/landing/site-footer.astro"
+
+interface Props {
+  readonly title?: string | undefined
+  readonly description?: string | undefined
+}
+
+const {
+  title = "DeepEcom — Ecommerce Finance Control Center",
+  description = "DeepEcom tracks real profits across multiple marketplaces. Automate Tally accounting, reconcile payments effortlessly, and get GST-ready exports.",
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,450;14..32,500;14..32,600;14..32,700&display=swap"
+      rel="stylesheet"
+    />
+    <Font cssVariable="--font-inter" preload />
+  </head>
+  <body class="min-h-screen overflow-x-hidden bg-background text-foreground antialiased">
+    <!-- decorative center rail, desktop only -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 z-0 hidden lg:block">
+      <div class="mx-auto h-full w-full max-w-295 border-x border-zinc-100">
+        <div class="landing-rails-center absolute inset-y-0 left-1/2 w-px -translate-x-1/2"></div>
+      </div>
+    </div>
+
+    <SiteNav client:load />
+
+    <main class="relative">
+      <slot />
+    </main>
+
+    <SiteFooter />
+
+    <script>
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue
+            const el = e.target as HTMLElement
+            el.style.transitionDelay = `${el.dataset.delay ?? 0}ms`
+            el.classList.add("in")
+            io.unobserve(el)
+          }
+        },
+        { threshold: 0.12, rootMargin: "0px -32px 0px 0px" },
+      )
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el))
+    </script>
+  </body>
+</html>

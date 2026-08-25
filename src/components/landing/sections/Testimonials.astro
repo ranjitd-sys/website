@@ -1,135 +1,75 @@
 ---
-import type { ImageMetadata } from "astro"
-import { Image } from "astro:assets"
-import { ArrowUpRight } from "@lucide/astro"
-import KitLangtonThumbnail from "@/assets/images/testimonials/kit-langton-banner-website.png"
-import DavidGolightlyThumbnail from "@/assets/images/testimonials/david-golightly-banner.webp"
-import LouisVichyThumbnail from "@/assets/images/testimonials/louis-vichy-banner_compressed.webp"
+import SectionHeading from "../section-heading.astro"
 
-type FeaturedCase = {
-  readonly headline: string
-  readonly description: string
-  readonly href: string
-  readonly alt: string
-  readonly thumbnail: ImageMetadata
-}
-
-const FEATURED_CASES: ReadonlyArray<FeaturedCase> = [
+const quotes = [
   {
-    headline: "OpenCode uses Effect",
-    description:
-      "Kit Langton shows what it takes to migrate a large TypeScript codebase to Effect.",
-    href: "https://www.youtube.com/watch?v=-mL7VVvkLGM",
-    alt: "opencode",
-    thumbnail: KitLangtonThumbnail,
+    title: "Exceptional ROI from analytics",
+    body: "The business intelligence tools have given us exceptional ROI by identifying key areas for revenue growth and cost savings. Data-driven decisions are now a reality for our company.",
+    name: "Priya D.",
+    role: "Business Analyst",
+    init: "PD",
   },
   {
-    headline: "MasterClass Cortex powered by Effect",
-    description:
-      "Building a real-time voice AI orchestration layer that powers personalized conversations with celebrity instructors like Gordon Ramsay and Mark Cuban.",
-    href: "https://www.youtube.com/watch?v=x2bUuOZ-htU&list=PLDf3uQLaK2B_jaZ5Fy7IPNq0FIViV_CQl&index=6",
-    alt: "MasterClass",
-    thumbnail: DavidGolightlyThumbnail,
+    title: "GST filing is now a breeze",
+    body: "GST filing used to be a dreaded event every quarter. Since using DeepEcom, it's literally one click and we're done. The accuracy has improved, and we haven't faced a single discrepancy since.",
+    name: "Ashok V.",
+    role: "Finance Controller",
+    init: "AV",
   },
   {
-    headline: "OpenRouter uses Effect",
-    description:
-      "Louis Vichy on how OpenRouter built their internal tooling and infrastructure with Effect.",
-    href: "https://youtu.be/AVJIqQi11lM",
-    alt: "OpenRouter",
-    thumbnail: LouisVichyThumbnail,
+    title: "Ecommerce at its finest",
+    body: "DeepEcom represents ecommerce at its finest — sophisticated, streamlined and strategic. We saw a significant improvement in our overall operations within weeks.",
+    name: "Nisha Q.",
+    role: "Digital Strategist",
+    init: "NQ",
+  },
+  {
+    title: "Revolutionized our cash flow",
+    body: "Thanks to DeepEcom, our payment reconciliation hassles are gone — which has revolutionized our cash flow management. We recognize revenue faster and with more accuracy.",
+    name: "Sanjay K.",
+    role: "CFO",
+    init: "SK",
   },
 ]
 
-const secondaryLinkClass =
-  "inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm font-medium text-white no-underline transition-colors hover:border-zinc-500 hover:bg-zinc-800 hover:no-underline"
+const star =
+  '<svg viewBox="0 0 24 24" fill="currentColor" stroke="none" width="15" height="15"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>'
 ---
 
-<section id="testimonials" class="relative w-full py-24 md:pt-40 md:pb-24">
-  <div class="mx-auto mb-12 w-full max-w-295 px-4">
-    <p class="mb-3 font-mono text-sm font-medium uppercase tracking-wider text-zinc-400">
-      // Effect in the real world
-    </p>
-    <h2 class="text-2xl font-semibold leading-tighter text-white md:text-3xl">
-      Real-world production systems
-    </h2>
+<section class="py-20 md:py-28" id="testimonials">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading eyebrow="Testimonials" title="Trusted by 2,000+ ecommerce sellers." lead="Real results from sellers across India." center />
 
-    <div class="mt-8 flex flex-wrap items-center gap-3">
-      <a
-        href="https://www.youtube.com/playlist?list=PLDf3uQLaK2B_jaZ5Fy7IPNq0FIViV_CQl"
-        target="_blank"
-        rel="noopener noreferrer"
-        class={secondaryLinkClass}
-      >
-        Cause &amp; Effect Podcast
-        <ArrowUpRight class="h-4 w-4" aria-hidden="true" />
-      </a>
-      <a
-        href="https://www.youtube.com/playlist?list=PLDf3uQLaK2B9a4tbMgGd9wFeEnMA50z4w"
-        target="_blank"
-        rel="noopener noreferrer"
-        class={secondaryLinkClass}
-      >
-        Effect Days 2024
-        <ArrowUpRight class="h-4 w-4" aria-hidden="true" />
-      </a>
-      <a
-        href="https://www.youtube.com/playlist?list=PLDf3uQLaK2B9bEBZbwMv04e_zSbRNPKH6"
-        target="_blank"
-        rel="noopener noreferrer"
-        class={secondaryLinkClass}
-      >
-        Effect Days 2025
-        <ArrowUpRight class="h-4 w-4" aria-hidden="true" />
-      </a>
-    </div>
-  </div>
-
-  <div class="mx-auto flex w-full max-w-295 flex-col gap-12 px-4 md:gap-16">
-    {
-      FEATURED_CASES.map((item, index) => {
-        const imageOnRight = index % 2 === 1
-        return (
-          <div class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center">
-            <div
-              class:list={[
-                "flex w-full flex-col gap-5 lg:mx-auto lg:max-w-104",
-                imageOnRight ? "lg:order-1" : "lg:order-2",
-              ]}
-            >
-              <h3 class="text-xl font-semibold text-white leading-tighter md:text-2xl">
-                {item.headline}
-              </h3>
-              <p class="max-w-md text-base leading-relaxed text-zinc-300">{item.description}</p>
-              <a
-                href={item.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="group inline-flex w-fit items-center gap-1.5 text-sm font-medium text-white no-underline hover:no-underline"
-              >
-                Watch the talk
-                <ArrowUpRight
-                  class="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  aria-hidden="true"
-                />
-              </a>
-            </div>
-
-            <a
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Watch ${item.headline}`}
-              class:list={["group relative", imageOnRight ? "lg:order-2" : "lg:order-1"]}
-            >
-              <div class="relative aspect-video w-full overflow-hidden rounded-md border border-zinc-800 bg-zinc-900">
-                <Image src={item.thumbnail} alt={item.alt} class="h-full w-full object-cover" />
-                <div class="absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/20" />
+    <div class="grid gap-4 mt-4 md:grid-cols-2">
+      {
+        quotes.map((q) => (
+          <figure class="reveal flex flex-col gap-4 rounded-2xl border border-border bg-white p-7 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md">
+            <div class="flex gap-1 text-primary" aria-hidden="true" set:html={star.repeat(5)} />
+            <blockquote>
+              <h3 class="mb-1.5 text-base font-bold tracking-tight">{q.title}</h3>
+              <p class="text-[14.5px]/relaxed text-muted-foreground">“{q.body}”</p>
+            </blockquote>
+            <figcaption class="mt-auto flex items-center gap-3 pt-1.5">
+              <span class="grid size-10 place-items-center rounded-full border border-border bg-subtle text-xs font-extrabold text-muted-foreground">{q.init}</span>
+              <div>
+                <div class="text-sm font-bold text-ink">{q.name}</div>
+                <div class="text-xs text-zinc-400">{q.role}</div>
               </div>
-            </a>
-          </div>
-        )
-      })
-    }
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+
+    <div class="reveal mt-16 border-t border-border pt-12 text-center md:mt-20">
+      <p class="mb-6 text-xs font-bold tracking-[0.16em] text-zinc-400 uppercase">Used by India's top ecommerce businesses</p>
+      <div class="flex flex-wrap justify-center gap-x-11 gap-y-4">
+        {
+          ["Paragon", "Amazon", "Allcargologistics", "Lykis"].map((b) => (
+            <span class="cursor-default text-[19px] font-extrabold tracking-tight text-zinc-400 transition-colors hover:text-muted-foreground">{b}</span>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>

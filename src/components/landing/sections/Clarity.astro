@@ -1,0 +1,41 @@
+---
+import { buttonVariants } from "@deepecom/ui/ui/button"
+import { CheckCircle } from "../icons"
+
+const points = [
+  "Real-time ecommerce payment reconciliation",
+  "GST-friendly reports for accountants",
+  "One-click sync with Tally, Zoho Books & Sap",
+  "Insights dashboard to track margins & profits",
+  "Works across Amazon, Flipkart, Meesho & others",
+  "Built for scale — 10 to 100,000+ orders / month",
+]
+---
+
+<section class="py-20 md:py-28" id="clarity">
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-6 md:grid-cols-2 lg:gap-20">
+    <div class="reveal">
+      <span class="eyebrow">Why DeepEcom exists</span>
+      <h2 class="h2 mt-1">Clarity, not complexity.</h2>
+      <p class="lead mt-4 max-w-xl">
+        DeepEcom isn't just a Tally sync tool — it's your ecommerce finance control center. Get complete
+        visibility into sales, refunds, commissions, payment cycles and marketplace deductions from Amazon,
+        Flipkart, Meesho and more, with powerful insights and GST-ready exports.
+      </p>
+      <a href="#contact" class={`${buttonVariants({ variant: "outline" })} mt-8`}>Schedule demo</a>
+    </div>
+
+    <div class="reveal rounded-2xl border border-border bg-white p-7 shadow-card md:p-9">
+      <ul class="flex flex-col gap-4.5">
+        {
+          points.map((p) => (
+            <li class="flex items-start gap-3 text-[15.5px] leading-snug font-semibold text-ink">
+              <CheckCircle />
+              {p}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+</section>
