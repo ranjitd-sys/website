@@ -35,229 +35,199 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
 ---
 
 <BaseLayout title="Careers & Institute" description="Master our stack. Join the team.">
-  <div class="min-h-screen bg-black text-zinc-100 font-mono text-xs selection:bg-zinc-800 selection:text-emerald-400">
+  <div class="min-h-screen bg-[#050505] text-zinc-300 font-sans selection:bg-emerald-500/30 selection:text-emerald-200 pb-20">
     
+    <!-- Ambient Background Glow -->
+    <div class="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900/20 via-[#050505] to-[#050505]"></div>
+
     <!-- Outer Container -->
-    <div class="mx-auto max-w-4xl border-x border-zinc-900 shadow-2xl">
+    <div class="relative z-10 mx-auto max-w-4xl flex flex-col gap-6 px-4 sm:px-6 py-6">
       
       <!-- Navigation -->
       <Navigation activeSlug="careers" />
       
       <!-- Sticky Glass Header -->
-      <header class="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-900/80 px-4 sm:px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/70 backdrop-blur-md transition-all">
-        <a href="/" class="font-semibold tracking-widest text-zinc-300 hover:text-white transition-colors flex items-center gap-2">
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          INSTITUTE / CAREERS
-        </a>
-        
-        {user ? (
-          <div class="flex items-center gap-2 sm:gap-3">
-            <div class="flex items-center gap-2 bg-zinc-900/80 border border-zinc-800 px-2 py-1 rounded-sm">
-              <img src={user.avatar} alt={user.login} class="w-4 h-4 rounded-full border border-zinc-700" />
-              <span class="text-zinc-200 text-[10px] hidden sm:inline">{user.login}</span>
-            </div>
-            <!-- Primary Header Logout Button -->
-            <a 
-              href="/api/auth/logout" 
-              class="text-zinc-400 hover:text-red-400 border border-zinc-800 hover:border-red-900/50 bg-zinc-900/50 hover:bg-red-950/20 px-2.5 py-1 rounded-sm transition-all flex items-center gap-1.5 text-[10px] font-bold"
-            >
-              <span>LOGOUT</span>
-              <span class="text-[9px] text-zinc-500">↳</span>
-            </a>
-          </div>
-        ) : (
-          <a 
-            href="/api/auth/github" 
-            class="text-zinc-400 hover:text-white border border-zinc-800 hover:border-zinc-600 bg-zinc-900/40 hover:bg-zinc-800/60 px-3 py-1 rounded-sm transition-all text-[10px] font-bold"
-          >
-            AUTHENTICATE →
-          </a>
-        )}
-      </header>
+      
 
       <!-- Hero & Mission -->
-      <section class="border-b border-zinc-900 px-4 sm:px-6 py-8 bg-gradient-to-b from-zinc-950/80 to-black">
-        <div class="max-w-xl">
-          <div class="inline-block border border-zinc-800 bg-zinc-900/50 px-2.5 py-1 text-[10px] text-zinc-400 uppercase tracking-widest mb-3">
-            PROOF OF CAPABILITY ENGINE
-          </div>
-          <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mb-3 uppercase leading-tight">
+      <section class="py-10 sm:py-16">
+        <div class="max-w-2xl space-y-5">
+         
+          <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white leading-[1.1]">
             Master the Stack.<br />
-            <span class="text-zinc-500">Analyze your code.</span>
+            <span class="text-zinc-500 font-light">Analyze your code.</span>
           </h1>
-          <p class="text-[11px] text-zinc-400 leading-relaxed">
+          <p class="text-base text-zinc-400 leading-relaxed max-w-xl">
             We bypass traditional resume screening. Complete our functional curriculum, submit your codebase for automated static analysis, and unlock direct interviews.
           </p>
         </div>
 
         <!-- Progress Tracker Bar -->
-        <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-2 border border-zinc-900 bg-zinc-950 p-2">
-          <div class={`px-3 py-2 border ${user ? 'border-emerald-500/30 bg-emerald-950/10' : 'border-zinc-800 bg-black'}`}>
-            <span class="text-[9px] text-zinc-500 block uppercase">Step 01</span>
-            <span class={`font-bold ${user ? 'text-emerald-400' : 'text-zinc-400'}`}>
-              {user ? '✓ GitHub Connected' : '1. Connect Account'}
+        <div class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div class={`flex flex-col gap-1.5 px-4 py-3 rounded-xl border transition-colors ${user ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-zinc-800/60 bg-zinc-900/20'}`}>
+            <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Step 01</span>
+            <span class={`text-sm font-semibold flex items-center gap-2 ${user ? 'text-emerald-400' : 'text-zinc-300'}`}>
+              {user ? '✓ GitHub Connected' : 'Connect Account'}
             </span>
           </div>
 
-          <div class={`px-3 py-2 border ${isPhase1Done ? 'border-emerald-500/30 bg-emerald-950/10' : user ? 'border-amber-500/30 bg-amber-950/10' : 'border-zinc-800 bg-black opacity-50'}`}>
-            <span class="text-[9px] text-zinc-500 block uppercase">Step 02</span>
-            <span class={`font-bold ${isPhase1Done ? 'text-emerald-400' : user ? 'text-amber-400' : 'text-zinc-500'}`}>
-              {isPhase1Done ? '✓ Track Finished' : '2. Complete Track'}
+          <div class={`flex flex-col gap-1.5 px-4 py-3 rounded-xl border transition-colors ${isPhase1Done ? 'border-emerald-500/20 bg-emerald-500/5' : user ? 'border-amber-500/20 bg-amber-500/5' : 'border-zinc-800/40 bg-zinc-900/10 opacity-60'}`}>
+            <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Step 02</span>
+            <span class={`text-sm font-semibold flex items-center gap-2 ${isPhase1Done ? 'text-emerald-400' : user ? 'text-amber-400' : 'text-zinc-500'}`}>
+              {isPhase1Done ? '✓ Track Finished' : 'Complete Track'}
             </span>
           </div>
 
-          <div class={`px-3 py-2 border ${analysisStatus === 'done' ? 'border-emerald-500/30 bg-emerald-950/10' : isPhase1Done ? 'border-zinc-700 bg-black' : 'border-zinc-800 bg-black opacity-50'}`}>
-            <span class="text-[9px] text-zinc-500 block uppercase">Step 03</span>
-            <span class={`font-bold ${analysisStatus === 'done' ? 'text-emerald-400' : isPhase1Done ? 'text-zinc-300' : 'text-zinc-500'}`}>
-              {analysisStatus === 'done' ? '✓ Code Analyzed' : '3. Submit Repo'}
+          <div class={`flex flex-col gap-1.5 px-4 py-3 rounded-xl border transition-colors ${analysisStatus === 'done' ? 'border-emerald-500/20 bg-emerald-500/5' : isPhase1Done ? 'border-zinc-700 bg-zinc-900/40' : 'border-zinc-800/40 bg-zinc-900/10 opacity-60'}`}>
+            <span class="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">Step 03</span>
+            <span class={`text-sm font-semibold flex items-center gap-2 ${analysisStatus === 'done' ? 'text-emerald-400' : isPhase1Done ? 'text-zinc-200' : 'text-zinc-500'}`}>
+              {analysisStatus === 'done' ? '✓ Code Analyzed' : 'Submit Repo'}
             </span>
           </div>
         </div>
       </section>
 
-      <main>
-        <!-- ==================== PHASE 1: CURRICULUM ==================== -->
-        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
-          <span>Phase 01 / Required Curriculum</span>
-          <span class={user ? "text-emerald-400 font-bold" : "text-zinc-600"}>
-            {user ? "UNLOCKED" : "LOCKED"}
+      <!-- ==================== PHASE 1: CURRICULUM ==================== -->
+      <section class="relative rounded-2xl border border-zinc-800/80 bg-zinc-950 overflow-hidden shadow-xl">
+        <div class="px-5 py-4 border-b border-zinc-800/80 bg-zinc-900/30 flex justify-between items-center backdrop-blur-md">
+          <span class="font-mono text-[11px] tracking-widest text-zinc-400 uppercase">Phase 01 / Required Curriculum</span>
+          <span class={`font-mono text-[11px] tracking-widest uppercase font-semibold ${user ? "text-emerald-400" : "text-zinc-600"}`}>
+            {user ? "Unlocked" : "Locked"}
           </span>
         </div>
 
-        <div class="relative border-b border-zinc-900 bg-black overflow-hidden">
-          
-          <!-- Blurred Teaser Content -->
-          <div class={`p-4 sm:p-6 transition-all duration-500 ${!user ? 'blur-md opacity-25 select-none pointer-events-none filter scale-[0.99]' : ''}`}>
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div class="max-w-xl space-y-2">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="text-zinc-500 font-bold">01.</span>
-                  <h3 class="text-xs font-bold text-white uppercase tracking-wide">
+        <div class="relative">
+          <!-- Content -->
+          <div class={`p-6 sm:p-8 transition-all duration-700 ${!user ? 'blur-[6px] opacity-30 select-none pointer-events-none scale-[0.99]' : ''}`}>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div class="max-w-xl space-y-3">
+                <div class="flex items-center gap-3 flex-wrap">
+                  <h3 class="text-lg font-bold text-white tracking-tight">
                     Functional Fundamentals with Effect-TS
                   </h3>
                   {isPhase1Done && (
-                    <span class="text-[9px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-1.5 py-0.5 font-bold">
-                      PASSED
+                    <span class="text-[10px] bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1 rounded-full font-bold uppercase tracking-wider">
+                      Passed
                     </span>
                   )}
                 </div>
-                <p class="text-[11px] text-zinc-400 leading-relaxed">
+                <p class="text-sm text-zinc-400 leading-relaxed">
                   Master algebraic data types, error management, and concurrency models in Effect-TS. Completing this module unlocks code repository submission.
                 </p>
-                <div class="flex gap-2 pt-1">
-                  <span class="border border-zinc-800 bg-zinc-900/60 text-zinc-400 text-[9px] px-2 py-0.5">3 Modules</span>
+                <div class="flex gap-2 pt-2">
+                  <span class="inline-flex items-center rounded-md border border-zinc-800 bg-zinc-900/60 text-zinc-300 text-xs font-medium px-2.5 py-1">
+                    3 Modules
+                  </span>
+                  <span class="inline-flex items-center rounded-md border border-zinc-800 bg-zinc-900/60 text-zinc-300 text-xs font-medium px-2.5 py-1">
+                    ~4 Hours
+                  </span>
                 </div>
               </div>
 
               <div class="shrink-0">
                 <a 
                   href="/careers/effect-ts" 
-                  class={`text-[10px] uppercase font-bold tracking-wider border px-3.5 py-2 transition-all inline-block w-full sm:w-auto text-center ${
+                  class={`inline-flex items-center justify-center gap-2 text-sm font-semibold rounded-lg px-6 py-3 transition-all w-full sm:w-auto shadow-sm ${
                     isPhase1Done 
-                      ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-800' 
-                      : 'border-white bg-white text-black hover:bg-zinc-200'
+                      ? 'border border-zinc-700 bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-white' 
+                      : 'bg-white text-zinc-950 hover:bg-zinc-200'
                   }`}
                 >
-                  {isPhase1Done ? "Review Track" : "Start Track →"}
+                  {isPhase1Done ? "Review Track" : "Start Track"}
+                  <span class="text-zinc-500 font-normal">→</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Glassmorphic Overlay with Lock Icon & Call-to-Action -->
+          <!-- Glass Overlay for Locked State -->
           {!user && (
-            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/70 backdrop-blur-md p-4 text-center">
-              <div class="w-8 h-8 rounded-full border border-zinc-800 flex items-center justify-center text-zinc-400 text-sm mb-2 shadow-xl">
-                🔒
+            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-zinc-950/60 backdrop-blur-sm p-6 text-center">
+              <div class="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4 shadow-2xl">
+                <svg class="w-5 h-5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
               </div>
-              <h4 class="text-xs font-bold text-zinc-200 uppercase tracking-wider mb-1">
+              <h4 class="text-sm font-bold text-white mb-2">
                 Curriculum Module Locked
               </h4>
-              <p class="text-[11px] text-zinc-400 max-w-xs sm:max-w-sm mx-auto mb-3 leading-relaxed">
+              <p class="text-sm text-zinc-400 max-w-sm mx-auto mb-6">
                 Connect your GitHub account to unlock Effect-TS Functional Fundamentals and start the assessment.
               </p>
               <a 
                 href="/api/auth/github" 
-                class="text-[10px] uppercase font-bold tracking-wider border border-white bg-white text-black hover:bg-zinc-200 px-4 py-2 inline-block transition-all shadow-xl"
+                class="text-sm font-semibold bg-white text-zinc-950 hover:bg-zinc-200 rounded-lg px-6 py-2.5 transition-all shadow-lg flex items-center gap-2"
               >
-                Authenticate via GitHub →
+                Authenticate via GitHub
               </a>
             </div>
           )}
+        </div>
+      </section>
 
+      <!-- ==================== PHASE 2: REPO SUBMISSION ==================== -->
+      <section class="rounded-2xl border border-zinc-800/80 bg-zinc-950 overflow-hidden shadow-xl">
+        <div class="px-5 py-4 border-b border-zinc-800/80 bg-zinc-900/30 flex justify-between items-center backdrop-blur-md">
+          <span class="font-mono text-[11px] tracking-widest text-zinc-400 uppercase">Phase 02 / Repository Analysis</span>
+          <span class={`font-mono text-[11px] tracking-widest uppercase font-semibold ${isPhase1Done ? "text-emerald-400" : "text-zinc-600"}`}>
+            {isPhase1Done ? "Unlocked" : "Locked"}
+          </span>
         </div>
 
-        <!-- ==================== PHASE 2: REPO SUBMISSION ==================== -->
-        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80 flex justify-between items-center">
-          <span>Phase 02 / Repository Analysis</span>
-          <div class="flex items-center gap-3">
-            <span class={isPhase1Done ? "text-emerald-400 font-bold" : "text-zinc-600"}>
-              {isPhase1Done ? "UNLOCKED" : "LOCKED"}
-            </span>
-            {user && (
-              <a 
-                href="/api/auth/logout" 
-                class="text-zinc-500 hover:text-red-400 transition-colors text-[9px] uppercase font-bold border-l border-zinc-800 pl-3"
-              >
-                Disconnect Session ↳
-              </a>
-            )}
-          </div>
-        </div>
-
-        <div class="p-4 sm:p-6 border-b border-zinc-900 bg-black">
+        <div class="p-5 sm:p-8">
           {!isPhase1Done ? (
             /* Locked State */
-            <div class="border border-dashed border-zinc-800 bg-zinc-950/50 p-6 text-center">
-              <span class="text-zinc-600 text-lg block mb-2">🔒</span>
-              <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-1">
+            <div class="flex flex-col items-center justify-center py-10 border border-dashed border-zinc-800/80 rounded-xl bg-zinc-900/20">
+              <svg class="w-8 h-8 text-zinc-600 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              <h4 class="text-sm font-semibold text-zinc-300 mb-1">
                 Repository Submission Locked
               </h4>
-              <p class="text-[11px] text-zinc-500 max-w-sm mx-auto">
-                Complete <strong class="text-zinc-400">Phase 01: Effect-TS Fundamentals</strong> above to unlock the capability evaluation engine.
+              <p class="text-sm text-zinc-500 max-w-sm text-center">
+                Complete <strong class="text-zinc-300 font-medium">Phase 01: Effect-TS Fundamentals</strong> above to unlock the capability evaluation engine.
               </p>
             </div>
           ) : (
             /* Unlocked State */
-            <div class="space-y-4">
+            <div class="space-y-6">
               <div>
-                <h4 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2 mb-1">
-                  <span class="text-emerald-400">⚡</span> Static Codebase Assessment
+                <h4 class="text-lg font-bold text-white flex items-center gap-2 mb-1">
+                  Static Codebase Assessment
                 </h4>
-                <p class="text-[11px] text-zinc-400">
-                  Select a GitHub repository that demonstrates your implementation patterns.
+                <p class="text-sm text-zinc-400">
+                  Select a GitHub repository that demonstrates your implementation patterns and architecture.
                 </p>
               </div>
 
               <!-- Repo Selection Controls -->
-              <div class="border border-zinc-800 bg-zinc-950 p-3 sm:p-4">
-                <span class="text-[10px] text-zinc-500 uppercase tracking-wider block mb-2">
-                  Target Repository:
-                </span>
+              <div class="rounded-xl border border-zinc-800/80 bg-zinc-900/30 p-4 sm:p-5">
+                <label class="block text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-3">
+                  Target Repository
+                </label>
 
                 {!isRepoLinked ? (
-                  <div class="flex flex-col sm:flex-row gap-2">
+                  <div class="flex flex-col sm:flex-row gap-3">
                     <select 
                       id="repo-select" 
-                      class="bg-black border border-zinc-800 text-zinc-200 px-3 py-2 text-xs flex-1 outline-none focus:border-zinc-500 truncate"
+                      class="flex-1 bg-black border border-zinc-700 rounded-lg text-zinc-200 px-4 py-2.5 text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all cursor-pointer appearance-none"
                     >
                       <option value="">Fetching your repositories...</option>
                     </select>
                     <button 
                       id="save-repo-btn"
-                      class="bg-white text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider hover:bg-zinc-200 transition-colors shrink-0"
+                      class="bg-white text-zinc-950 font-semibold rounded-lg px-6 py-2.5 text-sm hover:bg-zinc-200 transition-colors shrink-0 shadow-sm"
                     >
                       Link Repository
                     </button>
                   </div>
                 ) : (
-                  <div class="flex items-center justify-between gap-2 bg-black border border-zinc-900 px-3 py-2">
-                    <span class="text-zinc-200 font-bold tracking-wide truncate">{user?.selectedRepo}</span>
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-black/50 border border-zinc-800 rounded-lg px-4 py-3">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                      <svg class="w-5 h-5 text-zinc-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                      <span class="text-zinc-200 font-mono text-sm tracking-wide truncate">{user?.selectedRepo}</span>
+                    </div>
                     <button 
                       id="change-repo-btn" 
-                      class="text-[10px] text-zinc-500 hover:text-white underline uppercase transition-colors shrink-0"
+                      class="text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-md px-3 py-1.5 transition-colors shrink-0"
                     >
-                      Change Repository
+                      Change Repo
                     </button>
                   </div>
                 )}
@@ -265,22 +235,28 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
 
               <!-- Trigger Analysis Action & File Output -->
               {isRepoLinked && (
-                <div class="border-t border-zinc-900 pt-3 space-y-3">
+                <div class="space-y-4 pt-2">
                   {analysisStatus === "idle" && (
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <span class="text-[11px] text-zinc-400">Ready for automated inspection.</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/20 border border-zinc-800/80 rounded-xl p-4 sm:p-5">
+                      <div class="flex items-center gap-3 text-sm text-zinc-300">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-20"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500/50 border border-emerald-500"></span>
+                        </span>
+                        Ready for automated inspection.
+                      </div>
                       <button 
                         id="run-analysis-btn"
-                        class="bg-emerald-400 hover:bg-emerald-300 text-black font-bold uppercase px-4 py-2 text-[10px] tracking-wider transition-colors shrink-0"
+                        class="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-lg px-5 py-2.5 text-sm transition-all shadow-[0_0_15px_rgba(16,185,129,0.2)] hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] shrink-0"
                       >
-                        Run Analysis Pipeline →
+                        Run Analysis Pipeline
                       </button>
                     </div>
                   )}
 
                   {analysisStatus === "running" && (
-                    <div class="flex items-center gap-3 text-amber-400 text-[11px] bg-amber-950/20 border border-amber-900/40 p-3">
-                      <span class="animate-spin">🌀</span>
+                    <div class="flex items-center gap-4 bg-amber-500/10 border border-amber-500/20 rounded-xl p-5 text-amber-200 text-sm font-medium">
+                      <svg class="animate-spin w-5 h-5 text-amber-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                       <span>Evaluating architecture, AST patterns, and Effect-TS compliance...</span>
                     </div>
                   )}
@@ -288,41 +264,46 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
                   {analysisStatus === "done" && (
                     <div class="space-y-4">
                       <!-- Status Banner -->
-                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-zinc-950 border border-emerald-500/30 p-4">
-                        <div>
-                          <span class="text-[10px] text-emerald-400 uppercase font-bold block">
+                      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-emerald-950/20 border border-emerald-500/30 rounded-xl p-5">
+                        <div class="space-y-1">
+                          <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             Analysis Complete
                           </span>
-                          <span class="text-2xl font-bold text-white">
-                            {user?.analysisStatus ?? 94}/100
-                          </span>
+                          <div class="text-3xl font-extrabold text-white">
+                            {user?.analysisStatus ?? 94}<span class="text-lg text-emerald-500/50">/100</span>
+                          </div>
                         </div>
                         <a 
                           href="/careers/analysis-report" 
-                          class="border border-zinc-700 bg-zinc-900 hover:bg-white hover:text-black text-zinc-200 font-bold uppercase text-[10px] px-3 py-2 transition-colors text-center shrink-0"
+                          class="bg-zinc-900 hover:bg-white text-zinc-200 hover:text-black border border-zinc-700 font-semibold rounded-lg text-sm px-5 py-2.5 transition-colors text-center shrink-0"
                         >
                           Inspect Report →
                         </a>
                       </div>
 
-                      <!-- SSR Scanned File List -->
-                      <div class="border border-zinc-800 bg-zinc-950 p-4 space-y-3">
-                        <div class="flex items-center justify-between border-b border-zinc-900 pb-2">
-                          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
-                            <span>📁</span> Scanned Repository Files ({repoFiles.length})
+                      <!-- SSR Scanned File List (Terminal Look) -->
+                      <div class="rounded-xl border border-zinc-800 bg-[#0a0a0a] overflow-hidden shadow-lg">
+                        <div class="flex items-center justify-between bg-zinc-900/80 border-b border-zinc-800 px-4 py-2.5">
+                          <span class="text-xs font-semibold text-zinc-400 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            Scanned Files
+                          </span>
+                          <span class="text-[10px] font-mono bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
+                            {repoFiles.length} files
                           </span>
                         </div>
 
-                        <ul class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1">
+                        <ul class="max-h-64 overflow-y-auto divide-y divide-zinc-800/50 font-mono text-xs custom-scrollbar">
                           {repoFiles.length > 0 ? (
                             repoFiles.map((filePath) => (
-                              <li class="py-1.5 px-2 text-zinc-300 hover:bg-zinc-900/60 flex items-center gap-2">
-                                <span class="text-zinc-600">📄</span>
+                              <li class="py-2.5 px-4 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/30 transition-colors flex items-center gap-3">
+                                <svg class="w-3.5 h-3.5 text-zinc-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                                 <span class="truncate">{filePath}</span>
                               </li>
                             ))
                           ) : (
-                            <li class="py-2 text-zinc-500 italic">No matching source files found.</li>
+                            <li class="py-4 px-4 text-zinc-500 text-center">No matching source files found.</li>
                           )}
                         </ul>
                       </div>
@@ -330,17 +311,17 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
                   )}
 
                   <!-- Dynamic Client File Output Container (Populated via JS on analysis trigger) -->
-                  <div id="analysis-output" class="hidden border border-zinc-800 bg-zinc-950 p-4 mt-4 space-y-3">
-                    <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
-                      <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                        📁 Scanned Repository Files
+                  <div id="analysis-output" class="hidden rounded-xl border border-zinc-800 bg-[#0a0a0a] overflow-hidden shadow-lg mt-4">
+                    <div class="flex items-center justify-between bg-zinc-900/80 border-b border-zinc-800 px-4 py-2.5">
+                      <span class="text-xs font-semibold text-zinc-400 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        Scanning Files...
                       </span>
-                      <span id="file-count-badge" class="text-[10px] bg-zinc-900 border border-zinc-800 text-zinc-400 px-2 py-0.5">
+                      <span id="file-count-badge" class="text-[10px] font-mono bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded">
                         0 files
                       </span>
                     </div>
-
-                    <ul id="file-list" class="max-h-64 overflow-y-auto divide-y divide-zinc-900 font-mono text-[11px] pr-1"></ul>
+                    <ul id="file-list" class="max-h-64 overflow-y-auto divide-y divide-zinc-800/50 font-mono text-xs custom-scrollbar"></ul>
                   </div>
 
                 </div>
@@ -348,38 +329,62 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
             </div>
           )}
         </div>
+      </section>
 
-        <!-- ==================== OPEN ROLES ==================== -->
-        <div class="border-b border-zinc-900 px-4 sm:px-6 py-2.5 text-[10px] tracking-widest text-zinc-500 uppercase bg-zinc-950/80">
-          Open Positions
-        </div>
+      <!-- ==================== OPEN ROLES ==================== -->
+      <section class="mt-4">
+        <h2 class="font-mono text-xs tracking-widest text-zinc-500 uppercase mb-4 px-2">Open Positions</h2>
 
-        <div class="divide-y divide-zinc-900">
+        <div class="flex flex-col gap-3">
           <!-- Position 1 -->
-          <div class={`p-4 sm:p-6 transition-opacity ${analysisStatus === 'done' ? 'opacity-100' : 'opacity-50'}`}>
-            <div class="flex items-center justify-between gap-2 mb-1">
-              <h3 class="text-xs font-bold text-white uppercase tracking-wide">Systems Backend Engineer</h3>
-              <span class="text-[9px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-1.5 py-0.5 font-bold shrink-0">HIRING</span>
+          <div class={`group rounded-xl border border-zinc-800/60 bg-zinc-900/20 p-5 sm:p-6 transition-all hover:bg-zinc-900/40 hover:border-zinc-700 ${analysisStatus === 'done' ? 'opacity-100' : 'opacity-60'}`}>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+              <div>
+                <div class="flex items-center gap-3 mb-1">
+                  <h3 class="text-lg font-bold text-white tracking-tight group-hover:text-emerald-400 transition-colors">Systems Backend Engineer</h3>
+                  <span class="text-[10px] border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Hiring</span>
+                </div>
+                <p class="text-sm text-zinc-400">Focus: Effect-TS, Distributed Systems, Cloud Native Infrastructure</p>
+              </div>
             </div>
-            <p class="text-[11px] text-zinc-500 mb-3">Focus: Effect-TS, Distributed Systems, Cloud Native Infrastructure</p>
-            <div class="text-[10px] text-zinc-400 border border-zinc-900 p-2.5 bg-zinc-950/50">
+            
+            <div class="mt-4 pt-4 border-t border-zinc-800/60">
               {analysisStatus === 'done' ? (
-                <a href="/careers/apply/backend" class="text-emerald-400 hover:underline font-bold uppercase">
-                  Submit Application with Evaluation Report →
+                <a href="/careers/apply/backend" class="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 font-semibold text-sm transition-colors">
+                  Submit Application with Evaluation Report <span class="text-lg leading-none">→</span>
                 </a>
               ) : (
-                <span class="text-zinc-600">Complete curriculum and repository analysis to unlock application.</span>
+                <span class="text-sm text-zinc-500 flex items-center gap-2">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                  Complete curriculum and repository analysis to unlock application.
+                </span>
               )}
             </div>
           </div>
         </div>
-
-      </main>
+      </section>
 
     </div>
     <Footer />
   </div>
 </BaseLayout>
+
+<style>
+  /* Custom scrollbar for terminal/file windows */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #3f3f46;
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #52525b;
+  }
+</style>
 
 <script>
   // Repository Selection & Analysis Logic
@@ -396,7 +401,7 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
         repos.forEach((r: { fullName: string; private: boolean }) => {
           const opt = document.createElement("option");
           opt.value = r.fullName;
-          opt.textContent = `${r.fullName} ${r.private ? '[private]' : ''}`;
+          opt.textContent = `${r.fullName} ${r.private ? '[Private]' : ''}`;
           selectEl.appendChild(opt);
         });
       })
@@ -430,7 +435,10 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
 
   analysisBtn?.addEventListener("click", async () => {
     analysisBtn.setAttribute("disabled", "true");
-    analysisBtn.innerText = "Analyzing Codebase...";
+    analysisBtn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-black inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      Analyzing Codebase...
+    `;
 
     try {
       const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
@@ -445,30 +453,30 @@ if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
           fileCountBadge.textContent = `${data.fileCount} files`;
           fileList.innerHTML = "";
 
-          // Render scanned file paths dynamically
+          // Render scanned file paths dynamically matching the new theme
           data.files.forEach((file: { path: string }) => {
             const li = document.createElement("li");
-            li.className = "py-1.5 px-2 text-zinc-300 hover:bg-zinc-900/60 flex items-center gap-2";
-            li.innerHTML = `<span class="text-zinc-600">📄</span> <span class="truncate">${file.path}</span>`;
+            li.className = "py-2.5 px-4 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/30 transition-colors flex items-center gap-3";
+            li.innerHTML = `<svg class="w-3.5 h-3.5 text-zinc-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg> <span class="truncate">${file.path}</span>`;
             fileList.appendChild(li);
           });
 
           outputContainer.classList.remove("hidden");
         }
 
-        analysisBtn.innerText = "Analysis Complete ✓";
+        analysisBtn.innerHTML = "Analysis Complete ✓";
         
-        // Reload after 2 seconds to update the server session state & score banner
-        setTimeout(() => window.location.reload(), 2000);
+        // Reload after 2.5 seconds to update the server session state & score banner smoothly
+        setTimeout(() => window.location.reload(), 2500);
       } else {
         alert(data.error || "Failed to execute repository analysis.");
         analysisBtn.removeAttribute("disabled");
-        analysisBtn.innerText = "Run Analysis Pipeline →";
+        analysisBtn.innerText = "Run Analysis Pipeline";
       }
     } catch (err) {
       alert("Error executing repository analysis pipeline.");
       analysisBtn.removeAttribute("disabled");
-      analysisBtn.innerText = "Run Analysis Pipeline →";
+      analysisBtn.innerText = "Run Analysis Pipeline";
     }
   });
 </script>

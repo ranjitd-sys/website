@@ -12,7 +12,7 @@ if (!user || user.analysisStatus !== "done") {
 }
 
 const repoName = user.selectedRepo || "Unknown Repository";
-const score = 94; // Score calculated during static pipeline execution
+const score = 94; 
 
 // Fetch repository tree and preview contents on the server
 let scannedFiles: Array<{ path: string; content: string }> = [];
