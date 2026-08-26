@@ -1,0 +1,53 @@
+---
+import SectionHeading from "../section-heading.astro"
+import { buttonVariants } from "@deepecom/ui/ui/button"
+import { ArrowNarrowRightIcon } from "@deepecom/ui/icons"
+
+const compliance = [
+  "Read-only API access",
+  "AES-256 encryption at rest",
+  "GST-compliant exports",
+  "Your data is never resold",
+]
+
+const check =
+  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-emerald-600"><path d="M20 6L9 17l-5-5"></path></svg>'
+---
+
+<section class="py-20 md:py-28" id="get-started">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="reveal relative overflow-hidden rounded-3xl border border-blue-100 bg-accent px-7 py-16 text-center md:px-12 md:py-20">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0"
+        style="background: radial-gradient(520px 260px at 50% 0%, rgba(15, 98, 254, 0.1), transparent 70%)"
+      >
+      </div>
+
+      <div class="relative">
+        <SectionHeading
+          eyebrow="Get started"
+          title="Know exactly what you made. This month."
+          lead="Upload your first settlement at zero cost. Reconciliation ready in under two minutes — no credit card required."
+          center
+        />
+
+        <div class="mt-9 flex flex-wrap justify-center gap-3">
+          <a href="#contact" class={`${buttonVariants({ size: "lg" })} gap-2`}>
+            Start free trial
+            <ArrowNarrowRightIcon width={16} height={16} />
+          </a>
+          <a href="#contact" class={`${buttonVariants({ variant: "outline", size: "lg" })}`}>Talk to sales</a>
+        </div>
+
+        <ul class="mx-auto mt-9 flex max-w-3xl flex-wrap items-center justify-center gap-x-7 gap-y-3">
+          {
+            compliance.map((c) => (
+              <li class="flex items-center gap-2 text-[13px] font-medium text-muted-foreground" set:html={check + c} />
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

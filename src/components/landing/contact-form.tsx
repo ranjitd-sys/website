@@ -11,7 +11,7 @@ import { Download, Loader2 } from "lucide-react"
 
 const FACTS = [
   {
-    icon: ClockIcon,
+    icon: ClockIcon,  
     title: "Response within one business day",
     desc: "Real humans, no ticket black holes.",
   },

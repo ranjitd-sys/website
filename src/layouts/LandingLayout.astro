@@ -4,6 +4,8 @@ import "@/styles/landing.css"
 import { Font } from "astro:assets"
 import SiteNav from "@/components/landing/site-nav"
 import SiteFooter from "@/components/landing/site-footer.astro"
+import { buttonVariants } from "@deepecom/ui/ui/button"
+import { ArrowNarrowRightIcon } from "@deepecom/ui/icons"
 
 interface Props {
   readonly title?: string | undefined
@@ -14,6 +16,43 @@ const {
   title = "DeepEcom — Ecommerce Finance Control Center",
   description = "DeepEcom tracks real profits across multiple marketplaces. Automate Tally accounting, reconcile payments effortlessly, and get GST-ready exports.",
 } = Astro.props
+
+const site = Astro.site ?? new URL("http://localhost:4321")
+const canonical = new URL(Astro.url.pathname, site)
+const ogImage = new URL("/og/landing.png", site)
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "DeepEcom",
+    url: site.toString(),
+    logo: new URL("/favicon.svg", site).toString(),
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "Koregaon Park",
+      addressLocality: "Pune",
+      addressRegion: "Maharashtra",
+      postalCode: "411001",
+      addressCountry: "IN",
+    },
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "sales",
+      email: "sales@deepecom.com",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "DeepEcom",
+    applicationCategory: "FinanceApplication",
+    operatingSystem: "Web",
+    description,
+    offers: { "@type": "Offer", price: "1000", priceCurrency: "INR" },
+    publisher: { "@type": "Organization", name: "DeepEcom Technologies Pvt Ltd" },
+  },
+]
 ---
 
 <!doctype html>
@@ -23,6 +62,17 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -41,6 +91,23 @@ const {
 
     <SiteFooter />
 
+    <!-- spacer so the sticky mobile CTA never covers footer content -->
+    <div class="h-18 md:hidden" aria-hidden="true"></div>
+
+    <!-- sticky mobile CTA -->
+    <div
+      id="mobile-cta"
+      class="fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-border bg-white/95 backdrop-blur transition-transform duration-300 md:hidden"
+    >
+      <div class="mx-auto flex max-w-md items-center gap-2.5 px-4 py-3">
+        <a href="#contact" class={`${buttonVariants({ variant: "outline" })} flex-1`}>Schedule demo</a>
+        <a href="#pricing" class={`${buttonVariants()} flex-1 gap-1.5`}>
+          Start free trial
+          <ArrowNarrowRightIcon width={15} height={15} />
+        </a>
+      </div>
+    </div>
+
     <script>
       const io = new IntersectionObserver(
         (entries) => {
@@ -55,6 +122,14 @@ const {
         { threshold: 0.12, rootMargin: "0px -32px 0px 0px" },
       )
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el))
+
+      const mobileCta = document.getElementById("mobile-cta")
+      if (mobileCta) {
+        const toggle = () =>
+          mobileCta.classList.toggle("translate-y-full", window.scrollY < 560)
+        toggle()
+        window.addEventListener("scroll", toggle, { passive: true })
+      }
     </script>
   </body>
 </html>

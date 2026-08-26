@@ -16,9 +16,25 @@ const LINKS = [
 export default function SiteNav() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const [active, setActive] = useState("")
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    const ids = LINKS.map((l) => l.href.slice(1))
+    const onScroll = () => {
+      let current = ""
+      for (const id of ids) {
+        const el = document.getElementById(id)
+        if (el && el.getBoundingClientRect().top <= 150) current = id
+      }
+      setActive(current)
+    }
     onScroll()
     window.addEventListener("scroll", onScroll, { passive: true })
     return () => window.removeEventListener("scroll", onScroll)
@@ -42,7 +58,10 @@ export default function SiteNav() {
               <a
                 key={l.href}
                 href={l.href}
-                className="rounded-lg px-3.5 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-black/5 hover:text-ink"
+                aria-current={active === l.href.slice(1) ? "true" : undefined}
+                className={`rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors hover:bg-black/5 hover:text-ink ${
+                  active === l.href.slice(1) ? "bg-accent text-primary" : "text-muted-foreground"
+                }`}
               >
                 {l.label}
               </a>

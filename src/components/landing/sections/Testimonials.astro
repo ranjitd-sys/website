@@ -38,7 +38,13 @@ const star =
 
 <section class="py-20 md:py-28" id="testimonials">
   <div class="mx-auto max-w-6xl px-6">
-    <SectionHeading eyebrow="Testimonials" title="Trusted by 2,000+ ecommerce sellers." lead="Real results from sellers across India." center />
+    <SectionHeading eyebrow="Testimonials" title="Trusted by 2,000+ ecommerce sellers." lead="Real results from sellers across India." center>
+      <div class="reveal mt-5 flex items-center justify-center gap-2">
+        <span class="flex gap-0.5 text-primary" aria-hidden="true" set:html={star.repeat(5)} />
+        <b class="text-sm text-ink">4.9/5</b>
+        <span class="text-sm text-muted-foreground">average rating from finance teams</span>
+      </div>
+    </SectionHeading>
 
     <div class="grid gap-4 mt-4 md:grid-cols-2">
       {

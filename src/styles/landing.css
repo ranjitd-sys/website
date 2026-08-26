@@ -59,6 +59,13 @@ body {
   overflow-x: hidden;
 }
 
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
 [id] {
   scroll-margin-top: 92px;
 }
@@ -126,6 +133,13 @@ body {
   border-block: 1px solid var(--border);
 }
 
+
+
+.hero-glow {
+  background:
+    radial-gradient(620px 320px at 50% 6%, rgba(15, 98, 254, 0.09), transparent 70%),
+    radial-gradient(420px 260px at 82% -4%, rgba(15, 98, 254, 0.05), transparent 70%);
+}
 
 /* ---------- scroll reveal (progressive enhancement) ---------- */
 
