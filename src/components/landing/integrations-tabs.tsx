@@ -31,7 +31,7 @@ const GROUPS: Record<string, { init: string; name: string }[]> = {
 const tile =
   "flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3.5 text-[14.5px] font-semibold tracking-tight text-ink shadow-xs transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-sm"
 const tileLogo =
-  "grid size-8 shrink-0 place-items-center rounded-lg border border-indigo-100 bg-accent text-xs font-extrabold text-accent-foreground"
+  "grid size-8 shrink-0 place-items-center rounded-lg border border-blue-100 bg-accent text-xs font-extrabold text-accent-foreground"
 
 export default function IntegrationsTabs() {
   return (

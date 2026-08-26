@@ -42,7 +42,7 @@ export default function ContactForm() {
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
               <h3 className="text-lg font-bold tracking-tight text-ink">Message sent</h3>
-              <span className="rounded-full border border-indigo-100 bg-accent px-2.5 py-0.5 text-xs font-bold text-accent-foreground num">
+              <span className="rounded-full border border-blue-100 bg-accent px-2.5 py-0.5 text-xs font-bold text-accent-foreground num">
                 #{refId}
               </span>
             </div>
@@ -67,7 +67,7 @@ export default function ContactForm() {
         <div className="mt-9">
           {facts.map((f) => (
             <div key={f.t} className="flex items-start gap-3.5 border-b border-subtle py-3.5 last:border-0">
-              <span className="grid size-9.5 shrink-0 place-items-center rounded-xl border border-indigo-100 bg-accent text-primary">
+              <span className="grid size-9.5 shrink-0 place-items-center rounded-xl border border-blue-100 bg-accent text-primary">
                 <f.icon  />
               </span>
               <div>

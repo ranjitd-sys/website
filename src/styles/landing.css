@@ -1,11 +1,6 @@
 @import "tailwindcss";
 @import "@deepecom/ui/theme.css";
 
-/* ------------------------------------------------------------------
-   DeepEcom landing — brand overrides on top of @deepecom/ui tokens.
-   Light-mode fintech: white surfaces, near-black ink, indigo accent.
-------------------------------------------------------------------- */
-
 :root,
 .light {
   --background: #ffffff;
@@ -15,14 +10,14 @@
   --popover: #ffffff;
   --popover-foreground: #09090b;
 
-  --primary: #4f46e5;
+  --primary: #0f62fe;
   --primary-foreground: #ffffff;
   --secondary: #f4f4f6;
   --secondary-foreground: #18181b;
   --muted: #f7f8fa;
   --muted-foreground: #52525b;
-  --accent: #eef2ff;
-  --accent-foreground: #4338ca;
+  --accent: #edf5ff;
+  --accent-foreground: #0043ce;
 
   --destructive: #dc2626;
   --destructive-foreground: #b91c1c;
@@ -30,12 +25,12 @@
   --success-foreground: #15803d;
   --warning: #d97706;
   --warning-foreground: #b45309;
-  --info: #2563eb;
-  --info-foreground: #1d4ed8;
+  --info: #0f62fe;
+  --info-foreground: #0043ce;
 
   --border: #e6e6ea;
   --input: #d9d9de;
-  --ring: #4f46e5;
+  --ring: #0f62fe;
   --radius: 0.75rem;
 }
 
@@ -154,7 +149,7 @@ body {
   fill: none;
 }
 .flowline-dash {
-  stroke: #4f46e5;
+  stroke: #0f62fe;
   stroke-opacity: 0.5;
   stroke-width: 1.5;
   fill: none;
@@ -269,7 +264,7 @@ body {
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
-  fill: #4338ca;
+  fill: #0043ce;
 }
 
 @media (prefers-reduced-motion: reduce) {
