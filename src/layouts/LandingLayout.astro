@@ -27,7 +27,7 @@ const jsonLd = [
     "@type": "Organization",
     name: "DeepEcom",
     url: site.toString(),
-    logo: new URL("/favicon.svg", site).toString(),
+    logo: new URL("/favicon.ico", site).toString(),
     address: {
       "@type": "PostalAddress",
       streetAddress: "Koregaon Park",
@@ -73,7 +73,7 @@ const jsonLd = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -103,7 +103,7 @@ const jsonLd = [
         <a href="#contact" class={`${buttonVariants({ variant: "outline" })} flex-1`}>Schedule demo</a>
         <a href="#pricing" class={`${buttonVariants()} flex-1 gap-1.5`}>
           Start free trial
-          <ArrowNarrowRightIcon width={15} height={15} />
+          <ArrowNarrowRightIcon size={15} />
         </a>
       </div>
     </div>
