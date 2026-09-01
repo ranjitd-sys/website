@@ -3,13 +3,15 @@ import { fileURLToPath } from "node:url"
 import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
 import mdx from "@astrojs/mdx"
+import vercel from "@astrojs/vercel"
 
 
 const GoogleFontProvider = fontProviders.google()
 
 export default defineConfig({
   site: "https://website-lovat-six-11.vercel.app",
-
+   output: "server",
+  adapter: vercel(),
   fonts: [
     {
       provider: GoogleFontProvider,
