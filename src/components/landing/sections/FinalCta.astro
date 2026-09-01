@@ -1,7 +1,7 @@
 ---
 import SectionHeading from "../section-heading.astro"
-import { buttonVariants } from "@deepecom/ui/ui/button"
-import { ArrowNarrowRightIcon } from "@deepecom/ui/icons"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
 
 const compliance = [
   "Read-only API access",
@@ -35,7 +35,7 @@ const check =
         <div class="mt-9 flex flex-wrap justify-center gap-3">
           <a href="#contact" class={`${buttonVariants({ size: "lg" })} gap-2`}>
             Start free trial
-            <ArrowNarrowRightIcon width={16} height={16} />
+            <ArrowRight width={16} height={16} />
           </a>
           <a href="#contact" class={`${buttonVariants({ variant: "outline", size: "lg" })}`}>Talk to sales</a>
         </div>

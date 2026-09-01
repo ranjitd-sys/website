@@ -1,5 +1,4 @@
-import { Accordion, AccordionItem, AccordionTrigger, AccordionPanel } from "@deepecom/ui/ui/accordion"
-import { PlusIcon } from "@deepecom/ui/icons"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionPanel } from "@/components/landing/ui/accordion"
 
 const FAQS: [string, string][] = [
   [
@@ -46,18 +45,11 @@ const FAQS: [string, string][] = [
 
 export default function FaqAccordion() {
   return (
-    <Accordion multiple={false} className="mx-auto max-w-3xl">
+    <Accordion className="mx-auto max-w-3xl">
       {FAQS.map(([q, a], i) => (
-        <AccordionItem
-          key={i}
-          value={`faq-${i}`}
-          className="mb-2.5 overflow-hidden rounded-[13px] border border-border bg-white transition-shadow data-open:border-zinc-300 data-open:shadow-xs"
-        >
-          <AccordionTrigger className="flex w-full items-center justify-between gap-4 px-5 py-4.5 text-left text-[15.5px] font-semibold tracking-tight text-ink">
-            {q}
-            
-          </AccordionTrigger>
-          <AccordionPanel className="px-5 pb-5 text-sm/relaxed text-muted-foreground">
+        <AccordionItem key={i} value={`faq-${i}`}>
+          <AccordionTrigger>{q}</AccordionTrigger>
+          <AccordionPanel className="text-sm/relaxed text-muted-foreground">
             <div className="max-w-2xl">{a}</div>
           </AccordionPanel>
         </AccordionItem>

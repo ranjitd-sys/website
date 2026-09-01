@@ -1,4 +1,4 @@
-import { Tabs, TabsList, TabsTab, TabsPanel } from "@deepecom/ui/ui/tabs"
+import { Tabs, TabsList, TabsTab, TabsPanel } from "@/components/landing/ui/tabs"
 
 const GROUPS: Record<string, { init: string; name: string }[]> = {
   marketplace: [
@@ -29,14 +29,14 @@ const GROUPS: Record<string, { init: string; name: string }[]> = {
 }
 
 const tile =
-  "flex items-center gap-3 rounded-xl border border-border bg-white px-4 py-3.5 text-[14.5px] font-semibold tracking-tight text-ink shadow-xs transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-sm"
+  "flex items-center gap-3 rounded-xl border border-ink-200 bg-white px-4 py-3.5 text-[14.5px] font-semibold tracking-tight text-ink-900 shadow-xs transition-all hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-sm"
 const tileLogo =
-  "grid size-8 shrink-0 place-items-center rounded-lg border border-blue-100 bg-accent text-xs font-extrabold text-accent-foreground"
+  "grid size-8 shrink-0 place-items-center rounded-lg bg-ink-100 text-xs font-extrabold text-ink-600"
 
 export default function IntegrationsTabs() {
   return (
     <Tabs defaultValue="marketplace">
-      <div className="mb-9 flex mt-9 justify-center">
+      <div className="flex justify-center">
         <TabsList className="flex-wrap">
           <TabsTab value="marketplace">Marketplaces</TabsTab>
           <TabsTab value="erp">ERP</TabsTab>
@@ -45,16 +45,18 @@ export default function IntegrationsTabs() {
         </TabsList>
       </div>
 
-      {Object.entries(GROUPS).map(([key, items]) => (
-        <TabsPanel key={key} value={key} keepMounted className="grid grid-cols-[repeat(auto-fill,minmax(168px,1fr))] gap-3">
-          {items.map((it) => (
-            <div key={it.name} className={tile}>
-              <span className={tileLogo}>{it.init}</span>
-              {it.name}
-            </div>
-          ))}
-        </TabsPanel>
-      ))}
+      <div className="mt-8">
+        {Object.entries(GROUPS).map(([key, items]) => (
+          <TabsPanel key={key} value={key} keepMounted className="grid grid-cols-[repeat(auto-fill,minmax(168px,1fr))] gap-3">
+            {items.map((it) => (
+              <div key={it.name} className={tile}>
+                <span className={tileLogo}>{it.init}</span>
+                {it.name}
+              </div>
+            ))}
+          </TabsPanel>
+        ))}
+      </div>
     </Tabs>
   )
 }

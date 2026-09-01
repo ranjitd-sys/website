@@ -1,6 +1,6 @@
 ---
-import { buttonVariants } from "@deepecom/ui/ui/button"
-import { ArrowNarrowRightIcon, CalendarIcon, CircleCheckIcon } from "@deepecom/ui/icons"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, Calendar, CircleCheck } from "lucide-react"
 ---
 
 <header class="relative isolate pt-36 text-center md:pt-44">
@@ -12,7 +12,7 @@ import { ArrowNarrowRightIcon, CalendarIcon, CircleCheckIcon } from "@deepecom/u
     >
       <span class="rounded-full bg-primary px-2 py-0.5 text-[11px] font-bold tracking-wide text-white">New</span>
       One-click Tally &amp; Sap sync is live
-      <ArrowNarrowRightIcon size={14} />
+      <ArrowRight size={14} />
     </a>
 
     <h1
@@ -29,16 +29,16 @@ import { ArrowNarrowRightIcon, CalendarIcon, CircleCheckIcon } from "@deepecom/u
     <div class="reveal mt-9 flex flex-wrap justify-center gap-3">
       <a href="#contact" class={`${buttonVariants({ size: "lg" })} gap-2`}>
         Start free trial
-        <ArrowNarrowRightIcon size={16} />
+        <ArrowRight size={16} />
       </a>
       <a href="#contact" class={`${buttonVariants({ variant: "outline", size: "lg" })} gap-2`}>
-        <CalendarIcon size={16} />
+        <Calendar size={16} />
         Schedule demo
       </a>
     </div>
 
     <p class="reveal mt-6 flex items-center justify-center gap-2 text-sm text-muted-foreground/80">
-      <CircleCheckIcon size={16} className="text-emerald-600" />
+      <CircleCheck size={16} className="text-emerald-600" />
       Free for your first 100 orders · No credit card required
     </p>
 

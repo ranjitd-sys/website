@@ -1,22 +1,17 @@
 import { useState, useId, type FormEvent } from "react"
-import { Button } from "@deepecom/ui/ui/button"
-import { Label } from "@deepecom/ui/ui/label"
-import {
-  ArrowNarrowRightIcon,
-  CircleCheckIcon,
-  ClockIcon,
-  CalendarIcon,
-} from "@deepecom/ui/icons"
+import { Button } from "@/components/landing/ui/button"
+import { Label } from "@/components/landing/ui/label"
+import { ArrowRight, Calendar, CircleCheck, Clock } from "lucide-react"
 import { Download, Loader2 } from "lucide-react"
 
 const FACTS = [
   {
-    icon: ClockIcon,  
+    icon: Clock,  
     title: "Response within one business day",
     desc: "Real humans, no ticket black holes.",
   },
   {
-    icon: CalendarIcon,
+    icon: Calendar,
     title: "Free guided demo",
     desc: "See reconciliation running on sample settlements.",
   },
@@ -69,7 +64,7 @@ export default function ContactForm() {
       >
         <div className="flex items-start gap-4 sm:items-center">
           <span className="grid size-13 shrink-0 place-items-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
-            <CircleCheckIcon size={26} />
+            <CircleCheck size={26} />
           </span>
           <div>
             <div className="flex flex-wrap items-center gap-2.5">
@@ -175,7 +170,7 @@ export default function ContactForm() {
           ) : (
             <>
               Submit
-              <ArrowNarrowRightIcon size={16} />
+              <ArrowRight size={16} />
             </>
           )}
         </Button>

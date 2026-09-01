@@ -1,0 +1,445 @@
+/* =============================================================
+   DeepEcom — Design Tokens
+   =============================================================
+   Single source of truth for the DeepEcom visual design system.
+
+   Layers:
+     1. Fonts & typography
+     2. Color palette (brand, neutrals, semantic)
+     3. Light & dark theme surfaces
+     4. Gradients
+     5. Spacing scale
+     6. Container widths
+     7. Border radius
+     8. Shadows
+     9. Transitions & animation
+    10. Breakpoints
+    11. Z-index scale
+    12. Tailwind v4 @theme mapping (utilities resolve to these tokens)
+   =============================================================
+*/
+
+/* =============================================================
+   1. Fonts & typography
+   ============================================================= */
+:root {
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Type scale — display → caption (Inter) */
+  --text-display: clamp(2.5rem, 5.5vw, 4.5rem);
+  --text-heading-1: clamp(2rem, 4vw, 3.25rem);
+  --text-heading-2: clamp(1.5rem, 3vw, 2.5rem);
+  --text-heading-3: clamp(1.25rem, 2vw, 1.75rem);
+  --text-heading-4: clamp(1.125rem, 1.5vw, 1.375rem);
+  --text-lead: clamp(1.0625rem, 1.25vw, 1.25rem);
+  --text-body: 1rem;
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
+  --text-eyebrow: 0.75rem;
+
+  --line-height-display: 1.05;
+  --line-height-heading: 1.15;
+  --line-height-lead: 1.6;
+  --line-height-body: 1.7;
+  --line-height-tight: 1.3;
+
+  --tracking-display: -0.04em;
+  --tracking-heading: -0.02em;
+  --tracking-body: -0.01em;
+  --tracking-eyebrow: 0.16em;
+
+  /* Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+/* =============================================================
+   2. Color palette
+   ============================================================= */
+:root {
+/* Brand — Stripe-style violet/indigo accent (core: #635BFF) */
+  --brand-50: #f0eeff;
+  --brand-100: #e4e2ff;
+  --brand-200: #cbc6ff;
+  --brand-300: #aba4ff;
+  --brand-400: #857cff;
+  --brand-500: #635bff;
+  --brand-600: #4f46e5;
+  --brand-700: #3b36c8;
+  --brand-800: #2f2a9e;
+  --brand-900: #221d6f;
+
+  /* Neutrals — cool, ink-leaning grays (Stripe-inspired) */
+  --ink-50: #f8fafc;
+  --ink-100: #f1f5f9;
+  --ink-200: #e2e8f0;
+  --ink-300: #cbd5e1;
+  --ink-400: #94a3b8;
+  --ink-500: #64748b;
+  --ink-600: #475569;
+  --ink-700: #334155;
+  --ink-800: #1e293b;
+  --ink-900: #0f172a;
+  --ink-950: #0b1120;
+
+  /* Semantic */
+  --success-50: #f0fdf4;
+  --success-500: #22c55e;
+  --success-600: #16a34a;
+  --warning-50: #fffbeb;
+  --warning-500: #f59e0b;
+  --warning-600: #d97706;
+  --danger-50: #fef2f2;
+  --danger-500: #ef4444;
+  --danger-600: #dc2626;
+  --info-50: var(--brand-50);
+  --info-500: var(--brand-500);
+}
+
+/* =============================================================
+   3. Theme surfaces (light / dark)
+   ============================================================= */
+:root,
+.light {
+  --background: #ffffff;
+  --foreground: var(--ink-900);
+
+  --surface: #ffffff;
+  --surface-subtle: var(--ink-50);
+  --surface-muted: var(--ink-100);
+  --surface-raised: #ffffff;
+
+  --card: #ffffff;
+  --card-foreground: var(--ink-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink-900);
+
+  --primary: var(--brand-600);
+  --primary-foreground: #ffffff;
+  --secondary: var(--ink-100);
+  --secondary-foreground: var(--ink-900);
+  --muted: var(--ink-100);
+  --muted-foreground: var(--ink-500);
+  --accent: var(--brand-50);
+  --accent-foreground: var(--brand-800);
+
+  --destructive: var(--danger-600);
+  --destructive-foreground: #ffffff;
+  --success: var(--success-600);
+  --success-foreground: #ffffff;
+  --warning: var(--warning-600);
+  --warning-foreground: #ffffff;
+  --info: var(--info-500);
+  --info-foreground: #ffffff;
+
+  --border: var(--ink-200);
+  --input: var(--ink-300);
+  --ring: var(--brand-500);
+  --ring-offset: #ffffff;
+
+  /* Code / data surfaces */
+  --code-bg: var(--ink-950);
+  --code-fg: var(--ink-100);
+}
+
+.dark {
+  --background: var(--ink-950);
+  --foreground: var(--ink-100);
+
+  --surface: var(--ink-900);
+  --surface-subtle: var(--ink-900);
+  --surface-muted: var(--ink-800);
+  --surface-raised: var(--ink-900);
+
+  --card: var(--ink-900);
+  --card-foreground: var(--ink-100);
+  --popover: var(--ink-900);
+  --popover-foreground: var(--ink-100);
+
+  --primary: var(--brand-500);
+  --primary-foreground: #ffffff;
+  --secondary: var(--ink-800);
+  --secondary-foreground: var(--ink-100);
+  --muted: var(--ink-800);
+  --muted-foreground: var(--ink-400);
+  --accent: var(--brand-900);
+  --accent-foreground: var(--brand-200);
+
+  --destructive: var(--danger-500);
+  --destructive-foreground: #ffffff;
+  --success: var(--success-500);
+  --success-foreground: #ffffff;
+  --warning: var(--warning-500);
+  --warning-foreground: #101013;
+  --info: var(--info-500);
+  --info-foreground: #ffffff;
+
+  --border: var(--ink-800);
+  --input: var(--ink-700);
+  --ring: var(--brand-400);
+  --ring-offset: var(--ink-950);
+
+  --code-bg: var(--ink-950);
+  --code-fg: var(--ink-200);
+}
+
+/* =============================================================
+   4. Gradients
+   ============================================================= */
+:root {
+  --gradient-hero:
+    radial-gradient(42rem 20rem at 74% -8%, rgba(99, 102, 241, 0.16), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(129, 140, 248, 0.12), transparent 58%),
+    radial-gradient(80rem 40rem at 50% 130%, rgba(79, 70, 229, 0.08), transparent 60%);
+  --gradient-hero-dark:
+    radial-gradient(42rem 20rem at 74% -8%, rgba(129, 140, 248, 0.2), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(99, 102, 241, 0.16), transparent 58%);
+  --gradient-section:
+    linear-gradient(180deg, transparent 0%, var(--surface-muted) 46%, var(--background) 100%);
+  --gradient-brand: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-700) 100%);
+  --gradient-surface: linear-gradient(180deg, var(--surface-raised) 0%, var(--surface-subtle) 100%);
+}
+
+/* =============================================================
+   5. Spacing scale
+   ============================================================= */
+:root {
+  --space-0: 0rem;
+  --space-px: 0.0625rem;
+  --space-1: 0.25rem;
+  --space-1\.5: 0.375rem;
+  --space-2: 0.5rem;
+  --space-2\.5: 0.625rem;
+  --space-3: 0.75rem;
+  --space-3\.5: 0.875rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-9: 2.25rem;
+  --space-10: 2.5rem;
+  --space-11: 2.75rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-28: 7rem;
+  --space-32: 8rem;
+  --space-40: 10rem;
+  --space-48: 12rem;
+  --space-56: 14rem;
+  --space-64: 16rem;
+
+  /* Layout rhythm */
+  --space-gutter: clamp(1rem, 4vw, 2rem);
+  --space-section-y: clamp(4rem, 9vw, 8rem);
+  --space-stack: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* =============================================================
+   6. Container widths
+   ============================================================= */
+:root {
+  --container-narrow: 44rem;
+  --container-base: 64rem;
+  --container-content: 72rem;
+  --container-wide: 80rem;
+  --container-max: 88rem;
+}
+
+/* =============================================================
+   7. Border radius
+   ============================================================= */
+:root {
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --radius-3xl: 1.75rem;
+  --radius-full: 9999px;
+}
+
+/* =============================================================
+   8. Shadows
+   ============================================================= */
+:root {
+  --shadow-xs: 0 1px 2px 0 rgb(9 17 32 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(9 17 32 / 0.06), 0 1px 2px -1px rgb(9 17 32 / 0.06);
+  --shadow-md: 0 4px 6px -1px rgb(9 17 32 / 0.07), 0 2px 4px -2px rgb(9 17 32 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(9 17 32 / 0.09), 0 4px 6px -4px rgb(9 17 32 / 0.06);
+  --shadow-xl: 0 20px 25px -5px rgb(9 17 32 / 0.12), 0 8px 10px -6px rgb(9 17 32 / 0.06);
+  --shadow-2xl: 0 25px 50px -12px rgb(9 17 32 / 0.18);
+  --shadow-card:
+    0 1px 3px rgb(16 24 40 / 0.05),
+    0 32px 64px -24px rgb(16 24 40 / 0.16);
+  --shadow-popover:
+    0 0 0 1px rgb(9 17 32 / 0.05),
+    0 8px 24px -8px rgb(9 17 32 / 0.14);
+}
+
+/* =============================================================
+   9. Transitions & animation
+   ============================================================= */
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --duration-slower: 560ms;
+
+  --transition-fast: var(--duration-fast) var(--ease-standard);
+  --transition-base: var(--duration-base) var(--ease-standard);
+  --transition-slow: var(--duration-slow) var(--ease-out);
+  --transition-spring: var(--duration-slow) var(--ease-spring);
+
+  --reveal-distance: 1rem;
+}
+
+/* =============================================================
+   10. Breakpoints
+   ============================================================= */
+:root {
+  --breakpoint-sm: 40rem; /* 640px  */
+  --breakpoint-md: 48rem; /* 768px  */
+  --breakpoint-lg: 64rem; /* 1024px */
+  --breakpoint-xl: 80rem; /* 1280px */
+  --breakpoint-2xl: 96rem; /* 1536px */
+}
+
+/* =============================================================
+   11. Z-index scale
+   ============================================================= */
+:root {
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-dropdown: 200;
+  --z-nav: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+}
+
+/* =============================================================
+   12. Tailwind v4 @theme mapping
+   ============================================================= */
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  /* Brand */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+
+  /* Neutrals (ink) */
+  --color-ink-50: var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-900: var(--ink-900);
+  --color-ink-950: var(--ink-950);
+
+  /* Semantic surface roles */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset: var(--ring-offset);
+
+  /* Surfaces */
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-muted: var(--surface-muted);
+  --color-surface-raised: var(--surface-raised);
+
+  /* Semantic states */
+  --color-success-50: var(--success-50);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-warning-50: var(--warning-50);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-danger-50: var(--danger-50);
+  --color-danger-500: var(--danger-500);
+  --color-danger-600: var(--danger-600);
+
+  /* Code / data */
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+
+  /* Radii */
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-3xl: var(--radius-3xl);
+  --radius-full: var(--radius-full);
+
+  /* Shadows */
+  --shadow-xs: var(--shadow-xs);
+  --shadow-sm: var(--shadow-sm);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+  --shadow-xl: var(--shadow-xl);
+  --shadow-2xl: var(--shadow-2xl);
+  --shadow-card: var(--shadow-card);
+  --shadow-popover: var(--shadow-popover);
+
+  /* Easing + durations */
+  --ease-out: var(--ease-out);
+  --ease-in-out: var(--ease-in-out);
+  --ease-standard: var(--ease-standard);
+  --ease-spring: var(--ease-spring);
+  --duration-fast: var(--duration-fast);
+  --duration-base: var(--duration-base);
+  --duration-slow: var(--duration-slow);
+  --duration-slower: var(--duration-slower);
+}

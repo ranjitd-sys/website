@@ -1,0 +1,65 @@
+/* =============================================================
+   DeepEcom — Navigation styles
+   =============================================================
+   Mega-menu panel behavior, focused states and mobile drawer.
+   Values resolve to tokens — no raw colors.
+   =============================================================
+*/
+
+/* Top notch pointing to the active trigger */
+.nav-panel-notch {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--surface-raised);
+  border-top: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  z-index: 60;
+}
+
+/* Panel entrance — soft rise + fade */
+.nav-panel {
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+/* Trigger chevron rotation is handled inline; keep a smooth transition there */
+.nav-trigger-chevron {
+  transition: transform var(--transition-fast);
+}
+
+/* Keyboard focus inside panels */
+.nav-panel a:focus-visible,
+.nav-trigger:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Sticky/frosted bar */
+.nav-header {
+  transition:
+    border-color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    backdrop-filter var(--transition-fast);
+}
+
+/* Mobile drawer uses token surfaces */
+.mobile-nav-panel {
+  background-color: var(--surface-raised);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+/* Slight preference for the animated wrapper, untouched by reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .nav-panel {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

@@ -1,44 +1,13 @@
 @import "tailwindcss";
-@import "@deepecom/ui/theme.css";
-
-:root,
-.light {
-  --background: #ffffff;
-  --foreground: #09090b;
-  --card: #ffffff;
-  --card-foreground: #09090b;
-  --popover: #ffffff;
-  --popover-foreground: #09090b;
-
-  --primary: #0f62fe;
-  --primary-foreground: #ffffff;
-  --secondary: #f4f4f6;
-  --secondary-foreground: #18181b;
-  --muted: #f7f8fa;
-  --muted-foreground: #52525b;
-  --accent: #edf5ff;
-  --accent-foreground: #0043ce;
-
-  --destructive: #dc2626;
-  --destructive-foreground: #b91c1c;
-  --success: #16a34a;
-  --success-foreground: #15803d;
-  --warning: #d97706;
-  --warning-foreground: #b45309;
-  --info: #0f62fe;
-  --info-foreground: #0043ce;
-
-  --border: #e6e6ea;
-  --input: #d9d9de;
-  --ring: #0f62fe;
-  --radius: 0.75rem;
-}
+@import "./tokens.css";
+@import "./base.css";
+@import "./navigation.css";
 
 @theme inline {
-  /* brand extras usable as utilities */
-  --color-ink: #09090b;
-  --color-subtle: #f7f8fa;
-  --color-hairline: #e6e6ea;
+  /* brand extras usable as utilities — resolve to design tokens */
+  --color-ink: var(--ink-950);
+  --color-subtle: var(--ink-50);
+  --color-hairline: var(--ink-200);
 }
 
 html {
@@ -122,9 +91,7 @@ body {
 
 /* soft card shadow used across sections */
 .shadow-card {
-  box-shadow:
-    0 1px 3px rgb(16 24 40 / 0.05),
-    0 32px 64px -24px rgb(16 24 40 / 0.16);
+  box-shadow: var(--shadow-card);
 }
 
 /* hero stage: white top fading into subtle gray band behind dashboard */
@@ -136,9 +103,7 @@ body {
 
 
 .hero-glow {
-  background:
-    radial-gradient(620px 320px at 50% 6%, rgba(15, 98, 254, 0.09), transparent 70%),
-    radial-gradient(420px 260px at 82% -4%, rgba(15, 98, 254, 0.05), transparent 70%);
+  background: var(--gradient-hero);
 }
 
 /* ---------- scroll reveal (progressive enhancement) ---------- */
@@ -163,7 +128,7 @@ body {
   fill: none;
 }
 .flowline-dash {
-  stroke: #0f62fe;
+  stroke: var(--primary);
   stroke-opacity: 0.5;
   stroke-width: 1.5;
   fill: none;

@@ -4,8 +4,8 @@ import "@/styles/landing.css"
 import { Font } from "astro:assets"
 import SiteNav from "@/components/landing/site-nav"
 import SiteFooter from "@/components/landing/site-footer.astro"
-import { buttonVariants } from "@deepecom/ui/ui/button"
-import { ArrowNarrowRightIcon } from "@deepecom/ui/icons"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
 
 interface Props {
   readonly title?: string | undefined
@@ -103,7 +103,7 @@ const jsonLd = [
         <a href="#contact" class={`${buttonVariants({ variant: "outline" })} flex-1`}>Schedule demo</a>
         <a href="#pricing" class={`${buttonVariants()} flex-1 gap-1.5`}>
           Start free trial
-          <ArrowNarrowRightIcon size={15} />
+          <ArrowRight size={15} />
         </a>
       </div>
     </div>
