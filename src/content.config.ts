@@ -1,7 +1,7 @@
 import { file, glob } from "astro/loaders"
 import { z } from "astro/zod"
 import { defineCollection, reference } from "astro:content"
-import { PodcastEpisodeEntry } from "./features/podcast/collection"
+
 
 const blog = defineCollection({
   loader: glob({
@@ -47,7 +47,6 @@ const blogTags = defineCollection({
 
 const podcasts = defineCollection({
   loader: glob({ base: "./src/content/podcasts", pattern: "**/*.{md,mdx}" }),
-  schema: PodcastEpisodeEntry,
 })
 
 const merch = defineCollection({

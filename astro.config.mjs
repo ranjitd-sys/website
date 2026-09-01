@@ -3,12 +3,16 @@ import { fileURLToPath } from "node:url"
 import react from "@astrojs/react"
 import tailwindcss from "@tailwindcss/vite"
 import mdx from "@astrojs/mdx"
+import vercel from "@astrojs/vercel"
+
 const GoogleFontProvider = fontProviders.google()
+
 export default defineConfig({
-    site: "http://localhost:4321",
-    output:"server",
-   
-     fonts: [
+  site: "http://localhost:4321",
+  output: "server",
+  adapter: vercel(),
+
+  fonts: [
     {
       provider: GoogleFontProvider,
       name: "Inter",
@@ -25,8 +29,8 @@ export default defineConfig({
       fallbacks: ["ui-monospace", "SFMono-Regular", "monospace"],
     },
   ],
+
   vite: {
-    
     plugins: [tailwindcss()],
     resolve: {
       alias: {
@@ -34,6 +38,6 @@ export default defineConfig({
       },
     },
   },
+
   integrations: [react(), mdx()],
-  // ...fonts, etc.
 })

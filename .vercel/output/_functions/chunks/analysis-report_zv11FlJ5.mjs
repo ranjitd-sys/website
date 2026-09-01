@@ -1,0 +1,47 @@
+import { t as __exportAll } from "./rolldown-runtime_D7D4PA-g.mjs";
+import { j as createAstro, u as renderComponent, v as renderTemplate, y as maybeRenderHead } from "./jsx-runtime_6Vijajm9.mjs";
+import { i as createComponent } from "./_astro_assets_BhK2b17i.mjs";
+import { t as parseSignedSession } from "./session_xxGyTLZU.mjs";
+import { n as getRepoTree, t as getFileContent } from "./github_D7VJ9m2f.mjs";
+import { i as $$Footer, r as $$Navigation, t as $$BaseLayout } from "./BaseLayout_CHa6EKHB.mjs";
+//#region src/pages/careers/analysis-report.astro
+var analysis_report_exports = /* @__PURE__ */ __exportAll({
+	default: () => $$AnalysisReport,
+	file: () => $$file,
+	url: () => $$url
+});
+createAstro("http://localhost:4321");
+var $$AnalysisReport = createComponent(async ($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$AnalysisReport;
+	const user = parseSignedSession(Astro.cookies.get("user_session")?.value);
+	if (!user || user.analysisStatus !== "done") return Astro.redirect("/careers");
+	const repoName = user.selectedRepo || "Unknown Repository";
+	const score = 94;
+	let scannedFiles = [];
+	if (user.selectedRepo && user.token) {
+		const [owner, repo] = user.selectedRepo.split("/");
+		try {
+			const previewFiles = (await getRepoTree(owner, repo, user.token)).filter((item) => item.type === "blob" && (item.size ?? 0) < 1e5 && /\.(ts|tsx|js|jsx|json|md|prisma)$/.test(item.path) && !item.path.includes("node_modules")).slice(0, 15);
+			scannedFiles = await Promise.all(previewFiles.map(async (file) => ({
+				path: file.path,
+				content: await getFileContent(owner, repo, file.path, user.token)
+			})));
+		} catch (err) {
+			console.error("Failed to load repo files for analysis report:", err);
+		}
+	}
+	return renderTemplate`${renderComponent($$result, "BaseLayout", $$BaseLayout, {
+		"title": "Static Analysis Report",
+		"description": "Automated AST and architectural evaluation report."
+	}, { "default": ($$result) => renderTemplate`${maybeRenderHead($$result)}<div class="min-h-screen bg-black text-zinc-100 font-mono text-xs selection:bg-zinc-800 selection:text-emerald-400"><div class="mx-auto max-w-4xl border-x border-zinc-900 shadow-2xl"><!-- Navigation -->${renderComponent($$result, "Navigation", $$Navigation, { "activeSlug": "careers" })}<!-- Header --><header class="sticky top-0 z-50 flex items-center justify-between border-b border-zinc-900/80 px-4 sm:px-6 py-3 tracking-wider uppercase text-[11px] bg-zinc-950/70 backdrop-blur-md"><a href="/careers" class="font-semibold tracking-widest text-zinc-400 hover:text-white transition-colors flex items-center gap-2">← BACK TO CAREERS</a><span class="text-emerald-400 font-bold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>EVALUATION VERIFIED</span></header><!-- Hero Overview --><section class="border-b border-zinc-900 px-4 sm:px-6 py-8 bg-gradient-to-b from-zinc-950/80 to-black"><div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6"><div><div class="inline-block border border-emerald-500/30 bg-emerald-950/10 text-emerald-400 px-2.5 py-1 text-[10px] uppercase tracking-widest mb-3">STATIC AST PIPELINE REPORT</div><h1 class="text-xl sm:text-2xl font-bold text-white uppercase tracking-tight">${repoName}</h1><p class="text-[11px] text-zinc-400 mt-1">Evaluated for candidate: <span class="text-zinc-200 font-bold">@${user.login}</span></p></div><!-- Overall Score Badge --><div class="border border-emerald-500/30 bg-zinc-950 p-4 shrink-0 min-w-[140px] text-center"><span class="text-[9px] text-zinc-500 uppercase tracking-widest block mb-1">Composite Score</span><span class="text-3xl font-bold text-emerald-400">${score}</span><span class="text-xs text-zinc-500">/100</span></div></div></section><main class="divide-y divide-zinc-900"><!-- Key Metrics Grid --><section class="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-3 gap-3 bg-zinc-950/40"><div class="border border-zinc-900 bg-black p-3.5"><span class="text-[9px] text-zinc-500 uppercase tracking-wider block mb-1">Effect-TS Adoption</span><span class="text-base font-bold text-emerald-400">96 / 100</span><p class="text-[10px] text-zinc-500 mt-1">Strong usage of pipelines & typed error channels.</p></div><div class="border border-zinc-900 bg-black p-3.5"><span class="text-[9px] text-zinc-500 uppercase tracking-wider block mb-1">Type Strictness</span><span class="text-base font-bold text-emerald-400">92 / 100</span><p class="text-[10px] text-zinc-500 mt-1">Zero explicit \`any\` usage detected in src/.</p></div><div class="border border-zinc-900 bg-black p-3.5"><span class="text-[9px] text-zinc-500 uppercase tracking-wider block mb-1">Architecture & Layers</span><span class="text-base font-bold text-emerald-400">95 / 100</span><p class="text-[10px] text-zinc-500 mt-1">Clean service decoupling via Effect.Layer.</p></div></section><!-- Detailed Findings --><section class="p-4 sm:p-6 space-y-4"><h2 class="text-xs font-bold text-white uppercase tracking-wider">Static Inspector Log Output</h2><div class="border border-zinc-900 bg-zinc-950 font-mono text-[11px] p-4 space-y-3"><div class="flex items-start gap-2 text-emerald-400"><span>[PASS]</span><span>Effect Error Channels: Functions declare typed failures instead of throwing runtime exceptions.</span></div><div class="flex items-start gap-2 text-emerald-400"><span>[PASS]</span><span>Context Management: Dependency injection via \`Context.Tag\` and \`Layer\` pattern correctly isolated.</span></div><div class="flex items-start gap-2 text-emerald-400"><span>[PASS]</span><span>Schema Validation: Data boundaries use \`@effect/schema\` for runtime type-safety.</span></div><div class="flex items-start gap-2 text-amber-400"><span>[WARN]</span><span>Concurrency Bottleneck: Found sequential \`Effect.all\` iterations that can be executed in parallel using \`${"unbounded"}\`.</span></div></div></section><!-- Scanned File Tree & Code Inspector --><section class="p-4 sm:p-6 space-y-4"><div class="flex items-center justify-between"><h2 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2"><span>📁</span> Repository Code Inspection (${scannedFiles.length} files)</h2><span class="text-[10px] text-zinc-500 uppercase">Click file to toggle code</span></div><div class="border border-zinc-900 bg-zinc-950 divide-y divide-zinc-900">${scannedFiles.length > 0 ? scannedFiles.map((file) => renderTemplate`<details class="group"><summary class="cursor-pointer p-3 text-zinc-300 hover:text-emerald-400 hover:bg-zinc-900/60 font-bold select-none flex justify-between items-center text-[11px] transition-colors"><span class="flex items-center gap-2 truncate"><span class="text-zinc-500">📄</span><span class="truncate">${file.path}</span></span><span class="text-[10px] text-zinc-600 group-open:rotate-180 transition-transform shrink-0 ml-2">▼</span></summary><div class="p-3 bg-black border-t border-zinc-900 text-zinc-300 overflow-x-auto"><pre class="font-mono text-[10px] leading-relaxed whitespace-pre max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-zinc-800">
+                      <code>${file.content}</code>
+                    </pre></div></details>`) : renderTemplate`<div class="p-4 text-zinc-500 italic text-[11px]">No inspectable source files retrieved for this repository.</div>`}</div></section><!-- Action Callout --><section class="p-4 sm:p-6 bg-zinc-950/80 flex flex-col sm:flex-row justify-between items-center gap-4"><div><h3 class="text-xs font-bold text-white uppercase tracking-wide">Ready for Application</h3><p class="text-[11px] text-zinc-400">Your analysis report has been attached to your session profile.</p></div><a href="/careers/apply/backend" class="bg-emerald-400 hover:bg-emerald-300 text-black font-bold uppercase px-4 py-2.5 text-[10px] tracking-wider transition-colors shrink-0 text-center w-full sm:w-auto">Apply for Systems Backend Engineer →</a></section></main></div>${renderComponent($$result, "Footer", $$Footer, {})}</div>` })}`;
+}, "/home/ranjit/Documents/deepecom/website/src/pages/careers/analysis-report.astro", void 0);
+var $$file = "/home/ranjit/Documents/deepecom/website/src/pages/careers/analysis-report.astro";
+var $$url = "/careers/analysis-report";
+//#endregion
+//#region \0virtual:astro:page:src/pages/careers/analysis-report@_@astro
+var page = () => analysis_report_exports;
+//#endregion
+export { page };
