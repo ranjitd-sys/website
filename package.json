@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "prepare": "effect-tsgo patch",
-    "dev": "astro dev",
+    "dev": "astro dev --host",
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
