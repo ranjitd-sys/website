@@ -1,13 +1,13 @@
 ---
-import SectionHeading from "../section-heading.astro"
+import FlowDiagram from "./FlowDiagram.astro"
 ---
 
 <style is:global>
   .layer {
     position: relative;
-    padding: clamp(4.5rem, 10vh, 7.5rem) 0;
+    padding: clamp(5.5rem, 12vh, 9rem) 0;
     background:
-      radial-gradient(60rem 30rem at 50% 0%, rgba(99, 91, 255, 0.06), transparent 60%),
+      radial-gradient(60rem 30rem at 50% 0%, rgba(83, 58, 253, 0.06), transparent 60%),
       linear-gradient(180deg, var(--background) 0%, var(--ink-50) 100%);
   }
   .layer-inner {
@@ -16,353 +16,74 @@ import SectionHeading from "../section-heading.astro"
     padding-inline: var(--space-gutter);
   }
 
-  .layer-diagram {
-    margin-top: clamp(2.5rem, 6vh, 4rem);
-  }
-  .layer-svg {
-    width: 100%;
-    height: auto;
-    display: block;
-    animation: layer-in 0.8s var(--ease-out) both;
-  }
-  @keyframes layer-in {
-    from { opacity: 0; transform: translateY(1rem); }
-    to { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .layer-svg { animation: none; }
-  }
-
-  /* node cards */
-  .node-card {
-    fill: #fff;
-    stroke: var(--ink-200);
-    stroke-width: 1.5;
-  }
-  .node-title {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    fill: var(--ink-500);
-  }
-  .tile {
-    fill: var(--ink-50);
-    stroke: var(--ink-200);
-    stroke-width: 1;
-    rx: 8px;
-  }
-  .tile-letter {
-    font-family: var(--font-sans);
-    font-size: 11px;
-    font-weight: 700;
-    fill: var(--ink-600);
-  }
-  .tile-name {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    font-weight: 600;
-    fill: var(--ink-800);
-  }
-
-  /* core */
-  .core-rect {
-    fill: var(--brand-500);
-    stroke: var(--brand-500);
-    stroke-width: 1.5;
-  }
-  .core-glow {
-    fill: var(--brand-500);
-    opacity: 0.18;
-    animation: core-pulse 2.8s ease-in-out infinite;
-  }
-  @keyframes core-pulse {
-    0%, 100% { opacity: 0.1; }
-    50% { opacity: 0.3; }
-  }
-  .core-label {
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 700;
-    fill: #fff;
-    letter-spacing: -0.01em;
-  }
-
-  /* capability nodes */
-  .cap-icon {
-    stroke: var(--brand-600);
-    stroke-width: 1.8;
-    fill: none;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-  .cap-title {
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 700;
-    fill: var(--ink-900);
-    letter-spacing: -0.01em;
-  }
-
-  /* connectors */
-  .connector {
-    stroke: var(--ink-200);
-    stroke-width: 2;
-    fill: none;
-  }
-  .connector-active {
-    stroke: var(--brand-400);
-    stroke-width: 2;
-    fill: none;
-    stroke-dasharray: 3 9;
-    stroke-linecap: round;
-    animation: layer-dash 1.4s linear infinite;
-  }
-  @keyframes layer-dash {
-    to { stroke-dashoffset: -24; }
-  }
-  .packet {
-    fill: var(--brand-500);
-    filter: drop-shadow(0 0 4px rgba(99, 91, 255, 0.55));
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .connector-active { animation: none; }
-    .core-glow { animation: none; }
-    .packet { opacity: 0; }
-  }
-
-  /* mobile fallback (vertical stack) */
-  .layer-stack-mobile {
-    margin-top: 2.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .layer-tier-m {
-    width: min(100%, 22rem);
+  /* centered, well-measured header */
+  .layer-head {
+    max-width: 56rem;
+    margin-inline: auto;
     text-align: center;
   }
-  .layer-tier-m .tier-node-m {
+  .layer-eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    padding: 0.8rem 1.4rem;
-    border: 1px solid var(--ink-200);
-    border-radius: var(--radius-full);
-    background: #fff;
-    box-shadow: var(--shadow-sm);
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--ink-800);
+    font-size: 0.8125rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-500);
   }
-  .layer-tier-m.is-core-m .tier-node-m {
+  .layer-eyebrow::before,
+  .layer-eyebrow::after {
+    content: "";
+    width: 1.5rem;
+    height: 2px;
+    border-radius: 2px;
     background: var(--brand-500);
-    border-color: var(--brand-500);
-    color: #fff;
-    font-weight: 700;
-    box-shadow: 0 16px 40px -16px rgba(99, 91, 255, 0.65);
   }
-  .layer-tier-m .tier-sub-m {
-    display: block;
-    margin-top: 0.5rem;
-    font-size: 0.8125rem;
-    color: var(--ink-400);
+  .layer-title {
+    margin: 1.25rem auto 0;
+    max-width: 100rem;
+    font-size: clamp(2rem, 4vw, 3.125rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+    font-weight: var(--font-weight-bold);
+    text-wrap: balance;
+    color: var(--ink-950);
   }
-  .layer-link-m {
-    width: 2px;
-    height: 2.25rem;
-    background: linear-gradient(180deg, var(--ink-300), var(--brand-400));
-  }
-  .layer-trio-m {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-    width: min(100%, 22rem);
-  }
-  .layer-trio-m .tier-node-m {
-    border-radius: 1rem;
-    padding: 0.7rem 1rem;
-    font-size: 0.8125rem;
+  .layer-lead {
+    margin: 1.2rem auto 0;
+    max-width: 44rem;
+    font-size: clamp(1.0625rem, 1.4vw, 1.25rem);
+    line-height: 1.7;
+    color: var(--ink-500);
+    text-wrap: pretty;
   }
 
-  @media (max-width: 48rem) {
-    .layer-svg-wrap { display: none; }
+  .layer-flow {
+    margin-top: clamp(2rem, 4vh, 3.5rem);
   }
-  @media (min-width: 48rem) {
-    .layer-stack-mobile { display: none; }
+  .layer-flow :global(.flow-shell) {
+    border-color: var(--ink-200);
+    background: #fff;
   }
 </style>
 
 <section class="layer" id="layer">
   <div class="layer-inner">
-    <SectionHeading
-      eyebrow="The DeepEcom layer"
-      title="One layer between your ecommerce business and your books."
-      lead="DeepEcom sits between the marketplaces you sell on and the ERP you close your books in — turning raw ecommerce activity into intelligence, reconciliation and accounting."
-      center
-    />
+    <div class="layer-head reveal">
+      <span class="layer-eyebrow">The DeepEcom layer</span>
+      
+      <h2 class="layer-title w-full">One layer between your ecommerce business and your books.</h2>
+      <p class="layer-lead">
+        DeepEcom sits between the marketplaces you sell on and the ERP you close your books in — turning raw
+        ecommerce activity into intelligence, reconciliation and accounting.
+      </p>
 
-    <!-- Desktop / tablet SVG data-flow -->
-    <div class="layer-diagram layer-svg-wrap">
-      <svg class="layer-svg" viewBox="0 0 960 460" fill="none" role="img" aria-label="Marketplace data flows through DeepEcom, which turns it into business intelligence, reconciliation and accounting before posting to your ERP">
-        <defs>
-          <filter id="coreShadow" x="-40%" y="-40%" width="180%" height="180%">
-            <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#635bff" flood-opacity="0.35" />
-          </filter>
-        </defs>
-
-        <!-- connectors -->
-        <g>
-          <path class="connector" d="M240 230 H352" />
-          <path class="connector" d="M448 230 C 505 230, 505 120, 560 120" />
-          <path class="connector" d="M448 230 L560 230" />
-          <path class="connector" d="M448 230 C 505 230, 505 340, 560 340" />
-          <path class="connector" d="M760 120 C 795 120, 795 230, 820 230" />
-          <path class="connector" d="M760 230 L820 230" />
-          <path class="connector" d="M760 340 C 795 340, 795 230, 820 230" />
-        </g>
-
-        <!-- active (animated) connector overlay -->
-        <g>
-          <path class="connector-active" d="M240 230 H352" />
-          <path class="connector-active" d="M448 230 C 505 230, 505 120, 560 120" />
-          <path class="connector-active" d="M448 230 L560 230" />
-          <path class="connector-active" d="M448 230 C 505 230, 505 340, 560 340" />
-          <path class="connector-active" d="M760 120 C 795 120, 795 230, 820 230" />
-          <path class="connector-active" d="M760 230 L820 230" />
-          <path class="connector-active" d="M760 340 C 795 340, 795 230, 820 230" />
-        </g>
-
-        <!-- flowing data packets -->
-        <g class="packets">
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite"><mpath href="#p-mp-core" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="0.3s" repeatCount="indefinite"><mpath href="#p-core-bi" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="0.6s" repeatCount="indefinite"><mpath href="#p-core-rec" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="0.9s" repeatCount="indefinite"><mpath href="#p-core-acc" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#p-bi-erp" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="1.5s" repeatCount="indefinite"><mpath href="#p-rec-erp" /></animateMotion></circle>
-          <circle class="packet" r="4"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#p-acc-erp" /></animateMotion></circle>
-        </g>
-
-        <!-- hidden path definitions for mpath -->
-        <path id="p-mp-core" d="M240 230 H352" />
-        <path id="p-core-bi" d="M448 230 C 505 230, 505 120, 560 120" />
-        <path id="p-core-rec" d="M448 230 L560 230" />
-        <path id="p-core-acc" d="M448 230 C 505 230, 505 340, 560 340" />
-        <path id="p-bi-erp" d="M760 120 C 795 120, 795 230, 820 230" />
-        <path id="p-rec-erp" d="M760 230 L820 230" />
-        <path id="p-acc-erp" d="M760 340 C 795 340, 795 230, 820 230" />
-
-        <!-- LEFT: Marketplaces -->
-        <g>
-          <rect class="node-card" x="40" y="150" width="200" height="160" rx="16" />
-          <text class="node-title" x="140" y="180" text-anchor="middle">Marketplaces</text>
-          <g transform="translate(56, 196)">
-            <rect class="tile" x="0" y="0" width="168" height="30" />
-            <text class="tile-letter" x="14" y="19">Am</text>
-            <text class="tile-name" x="34" y="19">Amazon</text>
-          </g>
-          <g transform="translate(56, 236)">
-            <rect class="tile" x="0" y="0" width="168" height="30" />
-            <text class="tile-letter" x="14" y="19">Fk</text>
-            <text class="tile-name" x="34" y="19">Flipkart</text>
-          </g>
-          <g transform="translate(56, 276)">
-            <rect class="tile" x="0" y="0" width="168" height="30" />
-            <text class="tile-letter" x="14" y="19">Sy</text>
-            <text class="tile-name" x="34" y="19">Shopify</text>
-          </g>
-        </g>
-
-        <!-- CENTER: DeepEcom core -->
-        <g>
-          <circle class="core-glow" cx="400" cy="230" r="72" />
-          <rect class="core-rect" x="352" y="182" width="96" height="96" rx="24" filter="url(#coreShadow)" />
-          <g transform="translate(400, 230)">
-            <rect x="-22" y="-16" width="8" height="32" rx="2" fill="#fff" />
-            <rect x="-7" y="-26" width="8" height="52" rx="2" fill="#fff" />
-            <rect x="8" y="-34" width="8" height="68" rx="2" fill="#fff" opacity="0.95" />
-          </g>
-          <text class="core-label" x="400" y="308" text-anchor="middle">DeepEcom</text>
-        </g>
-
-        <!-- MID-RIGHT: capabilities -->
-        <g>
-          <g transform="translate(560, 84)">
-            <rect class="node-card" x="0" y="0" width="200" height="72" rx="14" />
-            <g transform="translate(18, 36)">
-              <path class="cap-icon" d="M3 3v16a2 2 0 0 0 2 2h16M7 13l4-4 4 3 5-6" transform="scale(1.4)" />
-            </g>
-            <text class="cap-title" x="52" y="40" text-anchor="middle">Business</text>
-            <text class="cap-title" x="52" y="56" text-anchor="middle">Intelligence</text>
-          </g>
-
-          <g transform="translate(560, 194)">
-            <rect class="node-card" x="0" y="0" width="200" height="72" rx="14" />
-            <g transform="translate(18, 34)">
-              <circle class="cap-icon" cx="0" cy="0" r="8" transform="scale(1.4)" />
-              <path class="cap-icon" d="M-3.5 0h7M0 -3.5v7" />
-            </g>
-            <text class="cap-title" x="52" y="40" text-anchor="middle">Reconciliation</text>
-          </g>
-
-          <g transform="translate(560, 304)">
-            <rect class="node-card" x="0" y="0" width="200" height="72" rx="14" />
-            <g transform="translate(18, 34)">
-              <path class="cap-icon" d="M6 2h8a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V4a2 2 0 0 1 2-2zM8 7h6M8 11h6" transform="scale(1.1)" />
-            </g>
-            <text class="cap-title" x="52" y="40" text-anchor="middle">Accounting</text>
-          </g>
-        </g>
-
-        <!-- RIGHT: ERP -->
-        <g>
-          <rect class="node-card" x="820" y="150" width="100" height="160" rx="16" />
-          <text class="node-title" x="870" y="180" text-anchor="middle">ERP</text>
-          <g transform="translate(836, 196)">
-            <rect class="tile" x="0" y="0" width="68" height="30" />
-            <text class="tile-letter" x="12" y="19">Tp</text>
-            <text class="tile-name" x="30" y="19">Tally</text>
-          </g>
-          <g transform="translate(836, 236)">
-            <rect class="tile" x="0" y="0" width="68" height="30" />
-            <text class="tile-letter" x="12" y="19">Se</text>
-            <text class="tile-name" x="30" y="19">SAP</text>
-          </g>
-          <g transform="translate(836, 276)">
-            <rect class="tile" x="0" y="0" width="68" height="30" />
-            <text class="tile-letter" x="12" y="19">Zo</text>
-            <text class="tile-name" x="30" y="19">Zoho</text>
-          </g>
-        </g>
-      </svg>
+      
     </div>
 
-    <!-- Mobile vertical stack -->
-    <div class="layer-stack-mobile" role="img" aria-label="Marketplaces connect through DeepEcom into business intelligence, reconciliation and accounting, then into your ERP">
-      <div class="layer-tier-m">
-        <span class="tier-node-m">Marketplaces</span>
-        <span class="tier-sub-m">Amazon · Flipkart · Shopify · and more</span>
-      </div>
-      <span class="layer-link-m" aria-hidden="true"></span>
-      <div class="layer-tier-m is-core-m">
-        <span class="tier-node-m">DeepEcom</span>
-      </div>
-      <span class="layer-link-m" aria-hidden="true"></span>
-      <div class="layer-tier-m">
-        <div class="layer-trio-m">
-          <span class="tier-node-m">Business Intelligence</span>
-          <span class="tier-node-m">Reconciliation</span>
-          <span class="tier-node-m">Accounting</span>
-        </div>
-      </div>
-      <span class="layer-link-m" aria-hidden="true"></span>
-      <div class="layer-tier-m">
-        <span class="tier-node-m">ERP</span>
-        <span class="tier-sub-m">Tally · SAP · Zoho</span>
-      </div>
+    <div class="layer-flow">
+      <FlowDiagram />
     </div>
   </div>
 </section>

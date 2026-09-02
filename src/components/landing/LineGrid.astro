@@ -1,0 +1,70 @@
+---
+interface Props {
+  /** spacing between repeated boundary lines */
+  size?: string
+  /** only draw vertical column lines */
+  vertical?: boolean
+  /** only draw horizontal boundary lines */
+  horizontal?: boolean
+  /** draw boundary lines at the left/right edges of the content column */
+  side?: boolean
+  /** inline style (e.g. --side-inset override) */
+  style?: string
+  /** additional class for the wrapper */
+  class?: string
+}
+
+const { size = "clamp(7rem, 11vw, 11rem)", vertical = false, horizontal = false, side = false, style, class: className } = Astro.props
+const both = !vertical && !horizontal && !side
+---
+
+<style is:global>
+  .boundary-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  /* vertical column boundary lines */
+  .boundary-lines.v {
+    background-image: linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: var(--grid-size, 10rem) 100%;
+    mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 70%, transparent 100%);
+  }
+  /* horizontal boundary lines */
+  .boundary-lines.h {
+    background-image: linear-gradient(var(--grid-line) 1px, transparent 1px);
+    background-size: 100% var(--grid-size, 10rem);
+    mask-image: linear-gradient(90deg, transparent 5%, #000 20%, #000 80%, transparent 95%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 5%, #000 20%, #000 80%, transparent 95%);
+  }
+  /* side boundary lines — frame the content column */
+  .boundary-lines .side-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--grid-line);
+  }
+  .boundary-lines .side-line--l {
+    left: var(--side-inset, calc(50% - min(var(--container-content), 100%) / 2 + var(--space-gutter)));
+  }
+  .boundary-lines .side-line--r {
+    right: var(--side-inset, calc(50% - min(var(--container-content), 100%) / 2 + var(--space-gutter)));
+  }
+</style>
+
+<div
+  class:list={[
+    "boundary-lines",
+    (both || vertical) && "v",
+    (both || horizontal) && "h",
+    className,
+  ]}
+  aria-hidden="true"
+  style={`--grid-size:${size}${style ? `;${style}` : ""}`}
+>
+  {side && <span class="side-line side-line--l"></span>}
+  {side && <span class="side-line side-line--r"></span>}
+</div>

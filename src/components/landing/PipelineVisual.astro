@@ -1,0 +1,456 @@
+---
+interface Props {
+  /** additional class applied to the wrapper */
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+const markets = ["Amazon", "Flipkart", "Shopify"]
+const intelligence = ["Profitability", "Reports", "Business visibility"]
+const reconciliation = ["Expected", "Received", "Matched", "Difference"]
+const accounting = ["Order", "GST", "Fees", "Receivable", "Inventory", "Stock Transfer"]
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<style is:global>
+  .pv {
+    position: relative;
+    width: 100%;
+  }
+  .pv svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ---------- surfaces & type ---------- */
+  .pv-card {
+    fill: var(--card);
+    stroke: var(--border);
+    stroke-width: 1.5;
+  }
+  .pv-head {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    fill: var(--ink-500);
+  }
+  .pv-headline {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--ink-800);
+    letter-spacing: -0.01em;
+  }
+  .pv-row-tile {
+    fill: var(--surface-subtle);
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .pv-row-label {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    fill: var(--ink-800);
+  }
+  .pv-row-note {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    font-weight: 500;
+    fill: var(--ink-400);
+  }
+  .pv-chip {
+    fill: var(--surface-subtle);
+    stroke: var(--border);
+    stroke-width: 1;
+  }
+  .pv-chip-label {
+    font-family: var(--font-sans);
+    font-size: 10.5px;
+    font-weight: 600;
+    fill: var(--ink-700);
+  }
+  .pv-grid-dot {
+    fill: var(--ink-300);
+  }
+
+  /* ---------- core ---------- */
+  .pv-glow {
+    fill: var(--brand-500);
+    opacity: 0.16;
+    animation: pv-pulse 2.8s ease-in-out infinite;
+  }
+  @keyframes pv-pulse {
+    0%, 100% { opacity: 0.08; }
+    50% { opacity: 0.24; }
+  }
+  .pv-core {
+    fill: var(--brand-500);
+    stroke: var(--brand-500);
+    stroke-width: 1.5;
+  }
+  .pv-core-bar {
+    fill: #fff;
+  }
+  .pv-core-name {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 700;
+    fill: #fff;
+    letter-spacing: -0.01em;
+  }
+  .pv-core-sub {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    fill: var(--ink-500);
+  }
+  .pv-cap {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    fill: var(--ink-400);
+  }
+
+  /* ---------- connectors ---------- */
+  .pv-track {
+    stroke: var(--ink-300);
+    stroke-width: 1.5;
+    fill: none;
+  }
+  .pv-track-live {
+    stroke: var(--brand-400);
+    stroke-width: 1.5;
+    fill: none;
+    stroke-dasharray: 3 9;
+    stroke-linecap: round;
+    animation: pv-dash 1.5s linear infinite;
+  }
+  @keyframes pv-dash {
+    to { stroke-dashoffset: -24; }
+  }
+  .pv-dot {
+    fill: var(--brand-500);
+    filter: drop-shadow(0 0 5px rgba(83, 58, 253, 0.6));
+  }
+
+  /* ---------- matched / status ---------- */
+  .pv-ok {
+    fill: var(--success-500);
+    animation: pv-ok 2.2s ease-in-out infinite;
+  }
+  @keyframes pv-ok {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  .pv-ok-label {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 700;
+    fill: var(--success-600);
+  }
+
+  /* ---------- accounting entrance ---------- */
+  .pv-enter {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: pv-enter 0.7s var(--ease-out) both;
+  }
+  @keyframes pv-enter {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pv-track-live, .pv-glow, .pv-ok, .pv-enter { animation: none !important; }
+    .pv-dot { opacity: 0; }
+  }
+</style>
+
+<div class:list={["pv", className]}>
+  <!-- ===================== DESKTOP (horizontal hub) ===================== -->
+  <div class="hidden lg:block" role="img" aria-label="Marketplaces flow into DeepEcom, which turns them into intelligence, reconciliation and accounting, and finally posts to your ERP">
+    <svg viewBox="0 0 1200 640" fill="none" xmlns="http://www.w3.org/2000/svg" class="pv-svg">
+      <defs>
+        <pattern id="pv-grid" width="22" height="22" patternUnits="userSpaceOnUse">
+          <circle class="pv-grid-dot" cx="1.2" cy="1.2" r="1.1" />
+        </pattern>
+      </defs>
+
+      <!-- faint grid backdrop -->
+      <rect x="0" y="0" width="1200" height="640" fill="url(#pv-grid)" opacity="0.5" />
+
+      <!-- connector tracks + live overlay -->
+      <g>
+        <path class="pv-track" d="M250 280 H342" />
+        <path class="pv-track" d="M458 255 C 515 255, 515 120, 570 120" />
+        <path class="pv-track" d="M458 280 H570" />
+        <path class="pv-track" d="M458 305 C 515 305, 515 545, 570 545" />
+        <path class="pv-track" d="M790 120 C 860 120, 860 270, 930 270" />
+        <path class="pv-track" d="M790 335 C 850 335, 850 320, 930 320" />
+        <path class="pv-track" d="M790 545 C 860 545, 860 370, 930 370" />
+      </g>
+      <g>
+        <path class="pv-track-live" d="M250 280 H342" />
+        <path class="pv-track-live" d="M458 255 C 515 255, 515 120, 570 120" />
+        <path class="pv-track-live" d="M458 280 H570" />
+        <path class="pv-track-live" d="M458 305 C 515 305, 515 545, 570 545" />
+        <path class="pv-track-live" d="M790 120 C 860 120, 860 270, 930 270" />
+        <path class="pv-track-live" d="M790 335 C 850 335, 850 320, 930 320" />
+        <path class="pv-track-live" d="M790 545 C 860 545, 860 370, 930 370" />
+      </g>
+
+      <!-- mpath targets -->
+      <path id="pv-p1" d="M250 280 H342" />
+      <path id="pv-p2" d="M458 255 C 515 255, 515 120, 570 120" />
+      <path id="pv-p3" d="M458 280 H570" />
+      <path id="pv-p4" d="M458 305 C 515 305, 515 545, 570 545" />
+      <path id="pv-p5" d="M790 120 C 860 120, 860 270, 930 270" />
+      <path id="pv-p6" d="M790 335 C 850 335, 850 320, 930 320" />
+      <path id="pv-p7" d="M790 545 C 860 545, 860 370, 930 370" />
+
+      <!-- data dots -->
+      <g class="pv-dots">
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="0s" repeatCount="indefinite"><mpath href="#pv-p1" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="0.4s" repeatCount="indefinite"><mpath href="#pv-p2" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite"><mpath href="#pv-p3" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite"><mpath href="#pv-p4" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="1.6s" repeatCount="indefinite"><mpath href="#pv-p5" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="2s" repeatCount="indefinite"><mpath href="#pv-p6" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.4s" begin="2.4s" repeatCount="indefinite"><mpath href="#pv-p7" /></animateMotion></circle>
+      </g>
+
+      <!-- MARKETPLACES -->
+      <g transform="translate(40, 170)">
+        <rect class="pv-card" x="0" y="0" width="210" height="260" rx="16" />
+        <text class="pv-head" x="18" y="32">Marketplaces</text>
+        <line x1="18" y1="46" x2="192" y2="46" stroke="var(--border)" stroke-width="1" />
+        {markets.map((m, i) => (
+          <g transform={`translate(18, ${64 + i * 38})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="40" height="26" rx="7" />
+            <text class="pv-row-note" x="20" y="17" text-anchor="middle">{m.slice(0, 2)}</text>
+            <text class="pv-row-label" x="52" y="17">{m}</text>
+          </g>
+        ))}
+        <text class="pv-cap" x="105" y="238" text-anchor="middle">→ Data</text>
+      </g>
+
+      <!-- DEEPECOM (core) -->
+      <g transform="translate(342, 222)">
+        <circle class="pv-glow" cx="58" cy="58" r="70" />
+        <rect class="pv-core" x="0" y="0" width="116" height="116" rx="28" />
+        <g transform="translate(58, 58)">
+          <rect class="pv-core-bar" x="-22" y="-14" width="9" height="34" rx="2" />
+          <rect class="pv-core-bar" x="-6.5" y="-24" width="9" height="52" rx="2" />
+          <rect class="pv-core-bar" x="9" y="-32" width="9" height="68" rx="2" opacity="0.92" />
+        </g>
+        <text class="pv-core-name" x="58" y="150" text-anchor="middle">DeepEcom</text>
+        <text class="pv-core-sub" x="58" y="170" text-anchor="middle">Your Accounting Layer</text>
+        <text class="pv-core-sub" x="58" y="184" text-anchor="middle">for Ecommerce</text>
+      </g>
+
+      <!-- INTELLIGENCE -->
+      <g transform="translate(570, 30)">
+        <rect class="pv-card" x="0" y="0" width="220" height="190" rx="16" />
+        <text class="pv-head" x="18" y="32">Intelligence</text>
+        <line x1="18" y1="46" x2="202" y2="46" stroke="var(--border)" stroke-width="1" />
+        {intelligence.map((item, i) => (
+          <g transform={`translate(18, ${64 + i * 40})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="40" height="26" rx="7" />
+            <text class="pv-row-label" x="52" y="17">{item}</text>
+          </g>
+        ))}
+      </g>
+
+      <!-- RECONCILIATION -->
+      <g transform="translate(570, 240)">
+        <rect class="pv-card" x="0" y="0" width="220" height="190" rx="16" />
+        <text class="pv-head" x="18" y="32">Reconciliation</text>
+        <line x1="18" y1="46" x2="202" y2="46" stroke="var(--border)" stroke-width="1" />
+        {reconciliation.map((r, i) => (
+          <g transform={`translate(18, ${60 + i * 34})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="40" height="26" rx="7" />
+            <text class="pv-row-note" x="20" y="17" text-anchor="middle">{r.slice(0, 2)}</text>
+            <text class={r === "Matched" ? "pv-ok-label" : "pv-row-label"} x="52" y="17">{r}</text>
+            {r === "Matched" && (
+              <>
+                <circle class="pv-ok" cx="160" cy="13" r="4" />
+                <path class="pv-ok" d="M157.5 13 l2 2 3.5-3.5" stroke="var(--success-500)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              </>
+            )}
+          </g>
+        ))}
+      </g>
+
+      <!-- ACCOUNTING -->
+      <g transform="translate(570, 450)">
+        <rect class="pv-card" x="0" y="0" width="220" height="190" rx="16" />
+        <text class="pv-head" x="18" y="32">Accounting</text>
+        <line x1="18" y1="46" x2="202" y2="46" stroke="var(--border)" stroke-width="1" />
+        {accounting.map((a, i) => {
+          const col = i % 2
+          const row = Math.floor(i / 2)
+          return (
+            <g transform={`translate(${18 + col * 100}, ${62 + row * 42})`} class="pv-enter" style={`animation-delay: ${i * 90}ms`}>
+              <rect class="pv-chip" x="0" y="0" width="86" height="30" rx="8" />
+              <text class="pv-chip-label" x="43" y="19" text-anchor="middle">{a}</text>
+            </g>
+          )
+        })}
+      </g>
+
+      <!-- ERP -->
+      <g transform="translate(930, 200)">
+        <rect class="pv-card" x="0" y="0" width="230" height="240" rx="16" />
+        <text class="pv-head" x="18" y="32">ERP</text>
+        <line x1="18" y1="46" x2="212" y2="46" stroke="var(--border)" stroke-width="1" />
+        {erps.map((e, i) => (
+          <g transform={`translate(18, ${66 + i * 40})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="40" height="26" rx="7" />
+            <text class="pv-row-note" x="20" y="17" text-anchor="middle">{e.slice(0, 2)}</text>
+            <text class="pv-row-label" x="52" y="17">{e}</text>
+          </g>
+        ))}
+        <circle class="pv-ok" cx="18" cy="204" r="4" />
+        <path class="pv-ok" d="M15.5 204 l2 2 3.5-3.5" stroke="var(--success-500)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        <text class="pv-row-note" x="30" y="208">Vouchers posted</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ===================== MOBILE (vertical) ===================== -->
+  <div class="lg:hidden" role="img" aria-label="Vertical pipeline: marketplaces to DeepEcom to intelligence, reconciliation, accounting, then ERP">
+    <svg viewBox="0 0 360 1120" fill="none" xmlns="http://www.w3.org/2000/svg" class="pv-svg">
+      <defs>
+        <pattern id="pv-grid-m" width="20" height="20" patternUnits="userSpaceOnUse">
+          <circle class="pv-grid-dot" cx="1.1" cy="1.1" r="1" />
+        </pattern>
+      </defs>
+
+      <rect x="0" y="0" width="360" height="1120" fill="url(#pv-grid-m)" opacity="0.5" />
+
+      <!-- vertical connector tracks -->
+      <g>
+        <path class="pv-track" d="M180 170 V202" />
+        <path class="pv-track" d="M180 302 V390" />
+        <path class="pv-track" d="M180 532 V570" />
+        <path class="pv-track" d="M180 722 V760" />
+        <path class="pv-track" d="M180 912 V950" />
+      </g>
+      <g>
+        <path class="pv-track-live" d="M180 170 V202" />
+        <path class="pv-track-live" d="M180 302 V390" />
+        <path class="pv-track-live" d="M180 532 V570" />
+        <path class="pv-track-live" d="M180 722 V760" />
+        <path class="pv-track-live" d="M180 912 V950" />
+      </g>
+
+      <path id="pv-m1" d="M180 170 V202" />
+      <path id="pv-m2" d="M180 302 V390" />
+      <path id="pv-m3" d="M180 532 V570" />
+      <path id="pv-m4" d="M180 722 V760" />
+      <path id="pv-m5" d="M180 912 V950" />
+
+      <g class="pv-dots">
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.2s" begin="0s" repeatCount="indefinite"><mpath href="#pv-m1" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.2s" begin="0.5s" repeatCount="indefinite"><mpath href="#pv-m2" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.2s" begin="1s" repeatCount="indefinite"><mpath href="#pv-m3" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.2s" begin="1.5s" repeatCount="indefinite"><mpath href="#pv-m4" /></animateMotion></circle>
+        <circle class="pv-dot" r="3.5"><animateMotion dur="2.2s" begin="2s" repeatCount="indefinite"><mpath href="#pv-m5" /></animateMotion></circle>
+      </g>
+
+      <!-- MARKETPLACES -->
+      <g transform="translate(40, 20)">
+        <rect class="pv-card" x="0" y="0" width="280" height="150" rx="16" />
+        <text class="pv-head" x="18" y="32">Marketplaces</text>
+        <line x1="18" y1="46" x2="262" y2="46" stroke="var(--border)" stroke-width="1" />
+        {markets.map((m, i) => (
+          <g transform={`translate(18, ${62 + i * 30})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="34" height="22" rx="6" />
+            <text class="pv-row-note" x="17" y="14" text-anchor="middle">{m.slice(0, 2)}</text>
+            <text class="pv-row-label" x="44" y="15">{m}</text>
+          </g>
+        ))}
+      </g>
+
+      <!-- DEEPECOM core -->
+      <g transform="translate(130, 202)">
+        <circle class="pv-glow" cx="50" cy="50" r="64" />
+        <rect class="pv-core" x="0" y="0" width="100" height="100" rx="26" />
+        <g transform="translate(50, 50)">
+          <rect class="pv-core-bar" x="-19" y="-12" width="8" height="29" rx="2" />
+          <rect class="pv-core-bar" x="-5.5" y="-21" width="8" height="45" rx="2" />
+          <rect class="pv-core-bar" x="8" y="-28" width="8" height="59" rx="2" opacity="0.92" />
+        </g>
+        <text class="pv-core-name" x="50" y="128" text-anchor="middle">DeepEcom</text>
+        <text class="pv-core-sub" x="50" y="146" text-anchor="middle">Your Accounting Layer for Ecommerce</text>
+      </g>
+
+      <!-- INTELLIGENCE -->
+      <g transform="translate(40, 390)">
+        <rect class="pv-card" x="0" y="0" width="280" height="142" rx="16" />
+        <text class="pv-head" x="18" y="30">Intelligence</text>
+        <line x1="18" y1="42" x2="262" y2="42" stroke="var(--border)" stroke-width="1" />
+        {intelligence.map((item, i) => (
+          <g transform={`translate(18, ${56 + i * 30})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="34" height="22" rx="6" />
+            <text class="pv-row-label" x="44" y="15">{item}</text>
+          </g>
+        ))}
+      </g>
+
+      <!-- RECONCILIATION -->
+      <g transform="translate(40, 570)">
+        <rect class="pv-card" x="0" y="0" width="280" height="152" rx="16" />
+        <text class="pv-head" x="18" y="30">Reconciliation</text>
+        <line x1="18" y1="42" x2="262" y2="42" stroke="var(--border)" stroke-width="1" />
+        {reconciliation.map((r, i) => (
+          <g transform={`translate(18, ${54 + i * 26})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="34" height="22" rx="6" />
+            <text class="pv-row-note" x="17" y="14" text-anchor="middle">{r.slice(0, 2)}</text>
+            <text class={r === "Matched" ? "pv-ok-label" : "pv-row-label"} x="44" y="15">{r}</text>
+            {r === "Matched" && (
+              <path class="pv-ok" d="M244 15 l2 2 3.5-3.5" stroke="var(--success-500)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            )}
+          </g>
+        ))}
+      </g>
+
+      <!-- ACCOUNTING -->
+      <g transform="translate(40, 760)">
+        <rect class="pv-card" x="0" y="0" width="280" height="152" rx="16" />
+        <text class="pv-head" x="18" y="30">Accounting</text>
+        <line x1="18" y1="42" x2="262" y2="42" stroke="var(--border)" stroke-width="1" />
+        {accounting.map((a, i) => {
+          const col = i % 2
+          const row = Math.floor(i / 2)
+          return (
+            <g transform={`translate(${18 + col * 132}, ${56 + row * 34})`} class="pv-enter" style={`animation-delay: ${i * 90}ms`}>
+              <rect class="pv-chip" x="0" y="0" width="116" height="26" rx="7" />
+              <text class="pv-chip-label" x="58" y="17" text-anchor="middle">{a}</text>
+            </g>
+          )
+        })}
+      </g>
+
+      <!-- ERP -->
+      <g transform="translate(40, 950)">
+        <rect class="pv-card" x="0" y="0" width="280" height="140" rx="16" />
+        <text class="pv-head" x="18" y="30">ERP</text>
+        <line x1="18" y1="42" x2="262" y2="42" stroke="var(--border)" stroke-width="1" />
+        {erps.map((e, i) => (
+          <g transform={`translate(18, ${56 + i * 30})`}>
+            <rect class="pv-row-tile" x="0" y="0" width="34" height="22" rx="6" />
+            <text class="pv-row-note" x="17" y="14" text-anchor="middle">{e.slice(0, 2)}</text>
+            <text class="pv-row-label" x="44" y="15">{e}</text>
+          </g>
+        ))}
+      </g>
+    </svg>
+  </div>
+</div>

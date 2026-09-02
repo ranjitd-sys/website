@@ -60,17 +60,17 @@
    2. Color palette
    ============================================================= */
 :root {
-/* Brand — Stripe-style violet/indigo accent (core: #635BFF) */
-  --brand-50: #f0eeff;
-  --brand-100: #e4e2ff;
-  --brand-200: #cbc6ff;
-  --brand-300: #aba4ff;
-  --brand-400: #857cff;
-  --brand-500: #635bff;
-  --brand-600: #4f46e5;
-  --brand-700: #3b36c8;
-  --brand-800: #2f2a9e;
-  --brand-900: #221d6f;
+/* Brand — DeepEcom violet (primary: #533AFD, light: #7F7DFC) */
+  --brand-50: #f1efff;
+  --brand-100: #e0dcff;
+  --brand-200: #c4beff;
+  --brand-300: #a29bff;
+  --brand-400: #7f7dfc;
+  --brand-500: #533afd;
+  --brand-600: #4a2ef0;
+  --brand-700: #3d25c9;
+  --brand-800: #32209f;
+  --brand-900: #241775;
 
   /* Neutrals — cool, ink-leaning grays (Stripe-inspired) */
   --ink-50: #f8fafc;
@@ -140,6 +140,9 @@
   --ring: var(--brand-500);
   --ring-offset: #ffffff;
 
+  /* Stripe-style boundary / separator lines */
+  --grid-line: rgba(15, 23, 42, 0.08);
+
   /* Code / data surfaces */
   --code-bg: var(--ink-950);
   --code-fg: var(--ink-100);
@@ -182,6 +185,9 @@
   --ring: var(--brand-400);
   --ring-offset: var(--ink-950);
 
+  /* Stripe-style boundary / separator lines (dark) */
+  --grid-line: rgba(226, 232, 240, 0.09);
+
   --code-bg: var(--ink-950);
   --code-fg: var(--ink-200);
 }
@@ -193,7 +199,7 @@
   --gradient-hero:
     radial-gradient(42rem 20rem at 74% -8%, rgba(99, 102, 241, 0.16), transparent 60%),
     radial-gradient(38rem 18rem at 18% -4%, rgba(129, 140, 248, 0.12), transparent 58%),
-    radial-gradient(80rem 40rem at 50% 130%, rgba(79, 70, 229, 0.08), transparent 60%);
+    radial-gradient(80rem 40rem at 50% 130%, rgba(83, 58, 253, 0.08), transparent 60%);
   --gradient-hero-dark:
     radial-gradient(42rem 20rem at 74% -8%, rgba(129, 140, 248, 0.2), transparent 60%),
     radial-gradient(38rem 18rem at 18% -4%, rgba(99, 102, 241, 0.16), transparent 58%);
@@ -236,9 +242,9 @@
   --space-64: 16rem;
 
   /* Layout rhythm */
-  --space-gutter: clamp(1rem, 4vw, 2rem);
-  --space-section-y: clamp(4rem, 9vw, 8rem);
-  --space-stack: clamp(1.5rem, 3vw, 2.5rem);
+  --space-gutter: clamp(1.25rem, 5vw, 2.75rem);
+  --space-section-y: clamp(4.5rem, 10vw, 8.5rem);
+  --space-stack: clamp(1.5rem, 3vw, 2.75rem);
 }
 
 /* =============================================================

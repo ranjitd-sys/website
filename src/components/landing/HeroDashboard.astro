@@ -1,0 +1,575 @@
+---
+import { ArrowRight, Bell, ChevronDown, LayoutDashboard, ShoppingBag, DollarSign, CreditCard, ShieldCheck, FileText, BarChart3, Settings } from "lucide-react"
+
+interface Metric {
+  label: string;
+  value: string;
+  change: string;
+  color: string;
+  path: string;
+}
+
+const metrics: Metric[] = [
+  { label: "Total Sales", value: "₹ 1.26 Cr", change: "↑ 18.6%", color: "#3b82f6", path: "M0 20 Q 25 18, 50 12 T 75 10 T 100 4" },
+  { label: "Net Profit", value: "₹ 18.7 L", change: "↑ 24.3%", color: "#2563eb", path: "M0 20 Q 25 17, 50 14 T 75 8 T 100 3" },
+  { label: "Orders", value: "12,542", change: "↑ 15.4%", color: "#f59e0b", path: "M0 16 Q 25 18, 50 14 T 75 12 T 100 8" },
+  { label: "Pending Payout", value: "₹ 12.4 L", change: "↑ 8.7%", color: "#a855f7", path: "M0 22 Q 25 16, 50 18 T 75 10 T 100 6" }
+];
+
+interface Marketplace {
+  initial: string;
+  name: string;
+  color: string;
+  profit: string;
+  margin: string;
+  width: string;
+}
+
+const marketplaces: Marketplace[] = [
+  { initial: "a", name: "Amazon", color: "#0f172a", profit: "₹ 12.6 L", margin: "18.3%", width: "85%" },
+  { initial: "f", name: "Flipkart", color: "#2874f0", profit: "₹ 4.8 L", margin: "16.2%", width: "45%" },
+  { initial: "s", name: "Shopify", color: "#96bf48", profit: "₹ 1.3 L", margin: "22.1%", width: "18%" }
+];
+---
+
+<style is:global>
+  .dash-3d-stage {
+    position: relative;
+    width: 100%;
+    perspective: 2200px;
+    perspective-origin: 50% 0%;
+    padding: 0.5rem 0.25rem 1rem;
+  }
+
+  .dash-3d-stage::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 82%;
+    height: 1.5rem;
+    transform: translateX(-50%);
+    background: radial-gradient(60% 100% at 50% 100%, rgba(15, 23, 42, 0.18), transparent 70%);
+    filter: blur(6px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .dash-container {
+    --dash-border: #e2e8f0;
+    --dash-text-main: #0f172a;
+    --dash-text-sub: #64748b;
+    --dash-bg-subtle: #fafbfc;
+    
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 850px;
+    margin-inline: auto;
+    background: #ffffff;
+    border: 1px solid var(--dash-border);
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+    transform: rotateX(14deg) rotateY(-12deg);
+    transform-origin: 50% 100%;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .dash-float-card {
+    position: absolute;
+    z-index: 2;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 24px 40px -16px rgba(15, 23, 42, 0.35);
+    padding: 0.65rem 0.85rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    transform: translateZ(60px) translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .dash-float-card .fc-ic {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .dash-float-card .fc-k {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+  .dash-float-card .fc-v {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.15;
+  }
+  .dash-float-card.fc-a {
+    top: 12%;
+    left: -1.25rem;
+  }
+  .dash-float-card.fc-b {
+    top: 42%;
+    right: -1.25rem;
+  }
+  .dash-float-card.fc-c {
+    bottom: -1.75rem;
+    left: 14%;
+    transform: translateZ(48px);
+  }
+
+  .dash-layout {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    min-height: 300px;
+  }
+
+  .dash-sidebar {
+    background: #ffffff;
+    border-right: 1px solid #f1f5f9;
+    padding: 1.25rem 0.6rem;
+  }
+
+  .dash-brand {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--dash-text-main);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+    padding-left: 0.4rem;
+  }
+
+  .dash-brand-icon {
+    background: #2563eb;
+    color: #ffffff;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    display: grid;
+    place-items: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+  }
+
+  .dash-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .dash-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
+    font-size: 0.7rem;
+    color: #475569;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+  }
+
+  .dash-nav-link:hover {
+    background: #f8fafc;
+  }
+
+  .dash-nav-link.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  .dash-content {
+    padding: 1rem;
+    background: var(--dash-bg-subtle);
+  }
+
+  .dash-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+  }
+
+  .dash-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--dash-text-main);
+  }
+
+  .dash-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .dash-select {
+    font-size: 0.675rem;
+    background: #ffffff;
+    border: 1px solid var(--dash-border);
+    border-radius: 8px;
+    padding: 0.35rem 0.65rem;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #475569;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .dash-avatar {
+    background: #dbeafe;
+    color: #1d4ed8;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 0.6rem;
+    font-weight: 700;
+  }
+
+  .dash-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .metric-card {
+    background: #ffffff;
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    padding: 0.75rem;
+  }
+
+  .metric-header {
+    font-size: 0.6rem;
+    color: var(--dash-text-sub);
+    margin-bottom: 0.35rem;
+    font-weight: 500;
+  }
+
+  .metric-body {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .metric-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--dash-text-main);
+  }
+
+  .metric-trend {
+    font-size: 0.575rem;
+    color: #10b981;
+    font-weight: 600;
+  }
+
+  .dash-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.65rem;
+  }
+
+  .chart-card {
+    border: 1px solid var(--dash-border);
+    border-radius: 12px;
+    padding: 0.75rem;
+    background: #ffffff;
+  }
+
+  .chart-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--dash-text-main);
+  }
+
+  .chart-subtitle {
+    font-size: 0.6rem;
+    color: #94a3b8;
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+
+  .donut-container {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .donut-wrapper {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex-shrink: 0;
+  }
+
+  .donut-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    width: 100%;
+  }
+
+  .donut-value {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--dash-text-main);
+    line-height: 1;
+  }
+
+  .donut-caption {
+    font-size: 0.45rem;
+    color: var(--dash-text-sub);
+  }
+
+  .legend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.6rem;
+    color: #475569;
+  }
+
+  .legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .legend-value {
+    margin-left: auto;
+    font-size: 0.575rem;
+    color: #334155;
+    font-weight: 600;
+  }
+
+  .chart-action {
+    margin-top: 0.85rem;
+    font-size: 0.6rem;
+    color: #2563eb;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+  }
+
+  .table-header {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.8rem;
+    font-size: 0.55rem;
+    color: #94a3b8;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  .mp-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .mp-item-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.65rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .mp-badge {
+    font-weight: 700;
+    font-size: 0.65rem;
+    width: 14px;
+  }
+
+  .mp-bar-track {
+    width: 100%;
+    height: 4px;
+    background: #f1f5f9;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .mp-bar-fill {
+    height: 100%;
+    background: #2563eb;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .dash-layout {
+      grid-template-columns: 1fr;
+    }
+    .dash-sidebar {
+      display: none;
+    }
+    .dash-metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .dash-charts-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<div class="dash-3d-stage">
+  <div class="dash-container">
+    <div class="dash-layout">
+    
+    <aside class="dash-sidebar">
+      <div class="dash-brand">
+        <span class="dash-brand-icon">D</span>
+        <span>DeepEcom</span>
+      </div>
+      <nav class="dash-nav">
+        <a href="#" class="dash-nav-link active"><LayoutDashboard size={12} /> Overview</a>
+        <a href="#" class="dash-nav-link"><ShoppingBag size={12} /> Sales</a>
+        <a href="#" class="dash-nav-link"><DollarSign size={12} /> Profitability</a>
+        <a href="#" class="dash-nav-link"><CreditCard size={12} /> Payments</a>
+        <a href="#" class="dash-nav-link"><ShieldCheck size={12} /> Reconciliation</a>
+        <a href="#" class="dash-nav-link"><FileText size={12} /> Accounting</a>
+        <a href="#" class="dash-nav-link"><BarChart3 size={12} /> Reports</a>
+        <a href="#" class="dash-nav-link"><Settings size={12} /> Settings</a>
+      </nav>
+    </aside>
+
+    <main class="dash-content">
+      <header class="dash-header">
+        <h1 class="dash-title">Business Overview</h1>
+        <div class="dash-controls">
+          <button class="dash-select" type="button">
+            All Marketplaces
+            <ChevronDown size={10} color="#64748b" />
+          </button>
+          <button class="dash-select" type="button">
+            01 Apr - 30 Apr
+            <ChevronDown size={10} color="#64748b" />
+          </button>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-left: 0.2rem;">
+            <Bell size={13} color="#64748b" className="cursor: pointer;" />
+            <div class="dash-avatar">A</div>
+          </div>
+        </div>
+      </header>
+
+      <section class="dash-metrics-grid">
+        {metrics.map(metric => (
+          <div class="metric-card">
+            <span class="metric-header">{metric.label}</span>
+            <div class="metric-body">
+              <span class="metric-value">{metric.value}</span>
+              <span class="metric-trend">{metric.change}</span>
+            </div>
+            <svg class="metric-sparkline" viewBox="0 0 100 24" preserveAspectRatio="none" style="width: 100%; height: 28px;">
+              <path d={metric.path} fill="none" stroke={metric.color} stroke-width="1.5"/>
+            </svg>
+          </div>
+        ))}
+      </section>
+
+      <div class="dash-charts-grid">
+        <section class="chart-card">
+          <h2 class="chart-title">Payment Reconciliation</h2>
+          <p class="chart-subtitle">April 2025</p>
+
+          <div class="donut-container">
+            <div class="donut-wrapper">
+              <svg width="64" height="64" viewBox="0 0 42 42">
+                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#e2e8f0" stroke-width="5.5"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#2563eb" stroke-width="5.5" stroke-dasharray="91.5 8.5" stroke-dashoffset="25"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#f59e0b" stroke-width="5.5" stroke-dasharray="3.3 96.7" stroke-dashoffset="33.5"></circle>
+                <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#ef4444" stroke-width="5.5" stroke-dasharray="3.1 96.9" stroke-dashoffset="30.2"></circle>
+              </svg>
+              <div class="donut-center-text">
+                <div class="donut-value">₹ 1.26 Cr</div>
+                <div class="donut-caption">Total Payout</div>
+              </div>
+            </div>
+
+            <div class="legend-list">
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #2563eb;"></span>
+                <span>Matched</span>
+                <strong class="legend-value">₹ 1.18 Cr (93.6%)</strong>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #f59e0b;"></span>
+                <span>Partial</span>
+                <strong class="legend-value">₹ 4.2 L (3.3%)</strong>
+              </div>
+              <div class="legend-item">
+                <span class="legend-dot" style="background: #ef4444;"></span>
+                <span>Mismatched</span>
+                <strong class="legend-value">₹ 3.8 L (3.1%)</strong>
+              </div>
+            </div>
+          </div>
+
+          <a href="#" class="chart-action">
+            View Reconciliation
+            <ArrowRight size={10} />
+          </a>
+        </section>
+
+        <section class="chart-card">
+          <h2 class="chart-title">Top Marketplaces by Profit</h2>
+          <p class="chart-subtitle">April 2025</p>
+
+          <div class="table-header">
+            <span>Net Profit</span>
+            <span>Margin</span>
+          </div>
+
+          <div class="mp-list">
+            {marketplaces.map(mp => (
+              <div>
+                <div class="mp-item-info">
+                  <span class="mp-badge" style={`color: ${mp.color};`}>{mp.initial}</span>
+                  <span style="flex: 1; font-weight: 500; color: #334155;">{mp.name}</span>
+                  <strong style="color: #0f172a; font-size: 0.625rem;">{mp.profit}</strong>
+                  <span style="color: #475569; width: 32px; text-align: right; font-size: 0.6rem;">{mp.margin}</span>
+                </div>
+                <div class="mp-bar-track">
+                  <div class="mp-bar-fill" style={`width: ${mp.width};`}></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
+
+  </div>
+  </div>
+</div>

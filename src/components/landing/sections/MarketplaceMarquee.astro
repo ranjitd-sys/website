@@ -1,0 +1,96 @@
+---
+const row = [
+  { label: "Amazon", icon: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM5 10l2 2 5-6" },
+  { label: "Flipkart", icon: "M3 5h14v14H3zM7 9h6M7 13h4" },
+  { label: "Shopify", icon: "M12 2 3 6v12l9 4 9-4V6zM7 9h2l1-2h3l1 2h3" },
+  { label: "Meesho", icon: "M12 3 5 8v8l7 5 7-5V8z" },
+  { label: "Myntra", icon: "M5 3l2 18h10L19 3M8 7h8" },
+  { label: "Nykaa", icon: "M12 3 5 8v8l7 5 7-5V8zM12 3v20" },
+  { label: "JioMart", icon: "M3 5h18v14H3zM3 9h18M9 9v10" },
+  { label: "Tally", icon: "M3 4h18v16H3zM7 8h10M7 12h10M7 16h6" },
+  { label: "SAP", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
+  { label: "Zoho", icon: "M3 6h18M3 12h18M3 18h12" },
+]
+---
+
+<style is:global>
+  .marquee-band {
+    padding: 0 0 clamp(3rem, 7vh, 5rem);
+  }
+  .marquee-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .marquee-label {
+    text-align: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .marquee-track {
+    margin-top: 1.4rem;
+    position: relative;
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  }
+  .marquee-row {
+    display: flex;
+    gap: 1rem;
+    width: max-content;
+    animation: marquee-scroll 32s linear infinite;
+  }
+  .marquee-band:hover .marquee-row { animation-play-state: paused; }
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-full);
+    background: #fff;
+    box-shadow: var(--shadow-xs);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-700);
+    white-space: nowrap;
+  }
+  .marquee-item svg {
+    width: 1rem;
+    height: 1rem;
+    stroke: var(--ink-400);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-row { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
+  }
+</style>
+
+<section class="marquee-band" aria-label="DeepEcom connects to marketplaces and ERPs">
+  <div class="marquee-inner">
+    <p class="marquee-label">Connects the marketplaces you sell on to the ERP you close in</p>
+    <div class="marquee-track">
+      <div class="marquee-row">
+        {row.map((r) => (
+          <span class="marquee-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            {r.label}
+          </span>
+        ))}
+        {row.map((r) => (
+          <span class="marquee-item" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            {r.label}
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
