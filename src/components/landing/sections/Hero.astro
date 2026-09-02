@@ -1,267 +1,199 @@
 ---
-import { ArrowRight, Check, Play } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import HeroDiagram from "@/components/landing/HeroDiagram.astro"
 import HeroDashboard from "@/components/landing/HeroDashboard.astro"
-
-interface BrandLogo {
-  name: string;
-  style: string;
-  html?: string;
-}
-
-const brands: BrandLogo[] = [
-  { name: "boAt", style: "font-weight: 800; font-size: 1.1rem; color: #0f172a;", html: 'bo<span style="color: #ef4444;">A</span>t' },
-  { name: "SAMPATTI GROUP", style: "font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; color: #334155; line-height: 1.1;", html: 'SAMPATTI<br/><small style="font-size: 0.55rem; letter-spacing: 0.1em;">GROUP</small>' },
-  { name: "AGARO", style: "font-weight: 800; font-size: 0.95rem; letter-spacing: 0.1em; color: #0f172a;" },
-  { name: "VAHDAM INDIA", style: "font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; color: #15803d; line-height: 1.1;", html: 'VAHDAM<br/><small style="font-size: 0.55rem; color: #475569;">INDIA</small>' },
- 
-];
 ---
 
 <style is:global>
   .hero-section {
-    --hero-blue: #2563eb;
-    --hero-btn-blue: #1652f0;
-    --hero-btn-blue-hover: #0d42d4;
-    --hero-text-dark: #0f172a;
-    --hero-text-sub: #475569;
-    --hero-border: #e2e8f0;
-
     position: relative;
-    background: linear-gradient(180deg, #f3f6fc 0%, #ffffff 100%);
-    padding-top: clamp(5rem, 8vh, 7rem);
-    padding-bottom: clamp(2rem, 5vh, 3.5rem);
-   
+    background:
+      radial-gradient(48rem 22rem at 78% -10%, rgba(83, 58, 253, 0.14), transparent 60%),
+      radial-gradient(36rem 18rem at 12% -6%, rgba(127, 125, 252, 0.1), transparent 58%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+    padding-top: clamp(6rem, 9vh, 7.5rem);
+    padding-bottom: clamp(2.5rem, 6vh, 4rem);
     overflow: hidden;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   .hero-container {
-    max-width: 1320px;
+    max-width: 80rem;
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: var(--space-gutter);
   }
 
   .hero-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    gap: 3rem;
     align-items: center;
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 64rem) {
     .hero-grid {
-      grid-template-columns: 0.85fr 1.15fr;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 2.5rem;
     }
   }
 
-  /* Left Column: Copywriting */
+  /* ---------- Left column ---------- */
   .hero-copy {
-    max-width: 520px;
+    max-width: 34rem;
   }
 
-  .hero-badge-pill {
+  .hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.9rem;
-    background: #eef4ff;
-    border-radius: 999px;
-    font-size: 0.825rem;
-    font-weight: 600;
-    color: #3563e9;
-    margin-bottom: 1.1rem;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
   }
-
-  .pill-dot {
+  .hero-eyebrow .dot {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background-color: #3563e9;
+    background: var(--brand-500);
   }
 
-  .hero-main-title {
-    font-size: clamp(2.2rem, 3.8vw, 3.6rem);
-    line-height: 1.05;
-    letter-spacing: -0.035em;
+  .hero-title {
+    margin-top: 1.4rem;
+    font-size: clamp(2.5rem, 4.6vw, 4rem);
+    line-height: 1.03;
+    letter-spacing: -0.04em;
     font-weight: 800;
-    color: var(--hero-text-dark);
-    margin-bottom: 0.8rem;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .hero-title .dot {
+    color: var(--brand-500);
   }
 
-  .dot-blue {
-    color: var(--hero-blue);
+  .hero-lead {
+    margin-top: 1.25rem;
+    max-width: 32rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
   }
 
-  .hero-lead-text {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    color: var(--hero-text-sub);
-    margin-bottom: 1.4rem;
-  }
-
-  /* Action Buttons */
-  .hero-action-group {
+  .hero-actions {
+    margin-top: 1.9rem;
     display: flex;
-    align-items: center;
-    gap: 1rem;
     flex-wrap: wrap;
-    margin-bottom: 1.1rem;
+    gap: 0.75rem;
   }
-
-  .btn-blue {
-    background-color: var(--hero-btn-blue);
-    color: #ffffff;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
+  .btn-primary-de {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-  }
-
-  .btn-blue:hover {
-    background-color: var(--hero-btn-blue-hover);
-  }
-
-  .btn-outline-play {
-    background-color: #ffffff;
-    border: 1px solid var(--hero-border);
-    color: var(--hero-text-dark);
-    border-radius: 8px;
-    padding: 0.75rem 1.25rem;
+    padding: 0.75rem 1.35rem;
+    border-radius: 10px;
+    background: var(--brand-500);
+    color: #fff;
+    font-size: 0.9375rem;
     font-weight: 600;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm), 0 0 0 1px rgba(83, 58, 253, 0.2);
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .btn-primary-de:hover {
+    background: var(--brand-600);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+    color: #fff;
+  }
+  .btn-secondary-de {
     display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.35rem;
+    border-radius: 10px;
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    color: var(--ink-900);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .btn-secondary-de:hover {
+    border-color: var(--brand-300);
+    background: var(--brand-50);
+    box-shadow: var(--shadow-sm);
+    color: var(--ink-900);
+  }
+
+  .hero-note {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.6rem;
-    text-decoration: none;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-    transition: background-color 0.2s ease;
-  }
-
-  .btn-outline-play:hover {
-    background-color: #f8fafc;
-  }
-
-  .play-icon-bubble {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Trust Indicators */
-  .hero-trust-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
-    color: var(--hero-text-sub);
+    font-size: 0.8125rem;
     font-weight: 500;
-    margin-bottom: 2.2rem;
+    color: var(--ink-400);
+  }
+  .hero-note svg {
+    color: var(--brand-500);
   }
 
-  .trust-check-icon {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 1.5px solid #10b981;
-    color: #10b981;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hero-brand-section p {
-    font-size: 0.75rem;
-    color: #64748b;
-    margin-bottom: 0.9rem;
-  }
-
-  .brand-logo-grid {
-    display: flex;
-    align-items: center;
-    gap: 1.75rem;
-    flex-wrap: wrap;
-  }
-
-  /* Right Column: Visual Architecture Overlay */
-  .hero-visual-wrapper {
+  /* ---------- Right column ---------- */
+  .hero-visual {
     position: relative;
     width: 100%;
   }
 
-  .hero-visual-wrapper .dash-3d-stage {
-    margin-top: 0;
-  }
-  .hero-visual-wrapper .hero-diagram-wrap {
-    position: relative;
-    z-index: 0;
+  @media (prefers-reduced-motion: reduce) {
+    .hero-section {
+      background: linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+    }
   }
 </style>
 
 <section class="hero-section" id="hero">
   <div class="hero-container">
     <div class="hero-grid">
-      
-      <!-- Left Column: Copy & CTAs -->
+      <!-- Left column: copy + CTAs -->
       <div class="hero-copy">
-        <div class="hero-badge-pill">
-          <span class="pill-dot" aria-hidden="true"></span>
-          Your Accounting Layer for Ecommerce
-        </div>
+        <span class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>The accounting layer built for ecommerce business</span>
 
-        <h1 class="hero-main-title">
-          Your accounting<br />layer for ecommerce<span class="dot-blue">.</span>
+        <h1 class="hero-title">
+          The accounting layer built for ecommerce businesses<span class="dot">.</span>
         </h1>
 
-        <p class="hero-lead-text">
-          Connect your marketplaces, understand your business, reconcile your payments and automatically account every transaction in your ERP.
+        <p class="hero-lead">
+          Connect your marketplaces, understand your profitability, reconcile your payments, and
+          automatically account every transaction in your ERP.
         </p>
 
-        <div class="hero-action-group">
-          <a href="/contact" class="btn-blue">
+        <div class="hero-actions">
+          <a href="/contact" class="btn-primary-de">
             Book a Demo
             <ArrowRight size={16} aria-hidden="true" />
           </a>
-          <a href="#how-it-works" class="btn-outline-play">
-            <span class="play-icon-bubble" aria-hidden="true">
-              <Play size={10} fill="#0f172a" />
-            </span>
-            See How It Works
+          <a href="/platform" class="btn-secondary-de">
+            Explore Platform
           </a>
         </div>
 
-        <div class="hero-trust-bar">
-          <div class="trust-check-icon" aria-hidden="true">
-            <Check size={12} strokeWidth={3} />
-          </div>
-          <span>Trusted by 1000+ ecommerce businesses</span>
-        </div>
-
-        <div class="hero-brand-section">
-          <p>Loved by finance teams across India</p>
-          <div class="brand-logo-grid">
-            {brands.map((brand) => (
-              <span style={brand.style}>
-                {brand.html ? <Fragment set:html={brand.html} /> : brand.name}
-              </span>
-            ))}
-          </div>
-        </div>
+        <p class="hero-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+          Marketplace data in. ERP-ready accounting out.
+        </p>
       </div>
 
-      <!-- Right Column: Visual Component Overlay -->
-      <div class="hero-visual-wrapper">
+      <!-- Right column: pipeline + dashboard composition -->
+      <div class="hero-visual">
         <HeroDiagram />
         <HeroDashboard />
       </div>
-
     </div>
   </div>
 </section>

@@ -1,0 +1,88 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const channels = [
+  { name: "Amazon", href: "/integrations/amazon", desc: "Settlements, fees, GST and TCS/TDS accounted" },
+  { name: "Flipkart", href: "/integrations/flipkart", desc: "Settlements, commissions and GST-ready accounting" },
+  { name: "Shopify", href: "/integrations/shopify", desc: "Store sales and payouts brought into one financial picture" },
+  { name: "Meesho", href: "/integrations", desc: "Channel data aggregated into the same layer" },
+]
+---
+
+<PageLayout
+  title="Marketplace Integrations — Amazon, Flipkart, Shopify and more"
+  description="DeepEcom connects Amazon, Flipkart, Shopify, Meesho and other marketplaces to your business intelligence and ERP accounting."
+>
+  <PageHero
+    eyebrow="INTEGRATIONS · MARKETPLACES"
+    title="Your marketplaces, connected."
+    lead="DeepEcom pulls order, settlement, fee and tax data from the marketplaces you sell on — and turns it into intelligence, reconciliation and ERP-ready accounting."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/integrations" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        All Integrations
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <SectionHeading
+      eyebrow="CHANNELS"
+      title="Marketplace data, in one layer."
+      lead="Each marketplace sends orders, settlements, fees and taxes differently. DeepEcom brings them together so you see one financial picture."
+      center
+    />
+    <div class="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2">
+      {
+        channels.map((c) => (
+          <a
+            href={c.href}
+            class="group flex items-start gap-4 rounded-2xl border border-ink-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md"
+          >
+            <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-sm font-bold text-brand-600">
+              {c.name[0]}
+            </span>
+            <span>
+              <span class="flex items-center gap-2 text-lg font-semibold tracking-tight text-ink-900">
+                {c.name}
+                <span class="text-brand-500 transition-transform group-hover:translate-x-0.5">→</span>
+              </span>
+              <span class="mt-1 block text-sm text-muted-foreground">{c.desc}</span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <FeatureGrid
+    eyebrow="CAPABILITIES"
+    title="Built for multi-channel ecommerce."
+    lead="Whatever combination of channels you sell on, the accounting layer stays the same."
+    features={[
+      { title: "Settlement Reconciliation", description: "Match marketplace settlements to your bank, order by order.", icon: "wallet" },
+      { title: "Fee Extraction", description: "Commissions, shipping, storage and advertising, line by line.", icon: "receipt" },
+      { title: "GST & TCS/TDS", description: "Output GST and withholding tax, accounted correctly.", icon: "calculator" },
+      { title: "Order-wise Accounting", description: "Every order accounted individually, ready for your ERP.", icon: "layers" },
+      { title: "Channel Profitability", description: "Net profit per channel, SKU and order.", icon: "trend" },
+      { title: "ERP Posting", description: "Detailed entries posted into Tally, SAP or Zoho.", icon: "building" },
+    ]}
+    columns={3}
+    center
+  />
+
+  <CtaBand
+    title="Connect your marketplaces to your books."
+    lead="See how DeepEcom brings every channel into one accounting layer."
+  />
+</PageLayout>

@@ -1,0 +1,50 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Shopify Accounting — DeepEcom"
+  description="Bring Shopify store sales, payouts and fees into one financial picture with DeepEcom — profitability, reconciliation and ERP accounting."
+>
+  <PageHero
+    eyebrow="INTEGRATIONS · SHOPIFY"
+    title="Your store, accounted like every other channel."
+    lead="DeepEcom connects your Shopify store and brings website sales, payouts and fees into the same accounting layer as your marketplaces."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/integrations/marketplaces" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        All Marketplaces
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="SHOPIFY · CAPABILITIES"
+    title="What DeepEcom handles for D2C stores."
+    lead="Website and marketplace financial data, brought together."
+    features={[
+      { title: "Order & Payout Reconciliation", description: "Match Shopify payouts to orders and flag discrepancies.", icon: "wallet" },
+      { title: "Fee Extraction", description: "Payment gateway fees, shipping and discounts, line by line.", icon: "receipt" },
+      { title: "GST Accounting", description: "Output GST on store sales, accounted correctly.", icon: "calculator" },
+      { title: "Order-wise Accounting", description: "Every store order accounted individually, ERP-ready.", icon: "layers" },
+      { title: "Channel Profitability", description: "Compare your store against marketplace channels.", icon: "trend" },
+      { title: "ERP Posting", description: "Detailed entries posted into Tally, SAP or Zoho.", icon: "building" },
+    ]}
+    columns={3}
+    center
+  />
+
+  <CtaBand
+    title="Bring your store and your books together."
+    lead="See how DeepEcom accounts your Shopify sales alongside your marketplaces."
+  />
+</PageLayout>

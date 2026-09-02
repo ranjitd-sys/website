@@ -20,6 +20,14 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/about/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/careers/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/contact/?$",
 			"dest": "_render"
 		},
@@ -44,7 +52,43 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/integrations/amazon/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/flipkart/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/marketplaces/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/sap/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/shopify/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/tally/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/integrations/zoho/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/integrations/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/login/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/partners/?$",
 			"dest": "_render"
 		},
 		{
@@ -69,6 +113,10 @@
 		},
 		{
 			"src": "^/pricing/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/privacy/?$",
 			"dest": "_render"
 		},
 		{
@@ -108,6 +156,10 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/security/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/solutions/accountants/?$",
 			"dest": "_render"
 		},
@@ -133,6 +185,10 @@
 		},
 		{
 			"src": "^/solutions/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/terms/?$",
 			"dest": "_render"
 		},
 		{

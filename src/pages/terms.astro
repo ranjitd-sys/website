@@ -1,0 +1,48 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+---
+
+<PageLayout
+  title="Terms of Service — DeepEcom"
+  description="The terms that apply when you use DeepEcom."
+>
+  <PageHero
+    eyebrow="LEGAL"
+    title="Terms of Service"
+    lead="The terms that govern your use of DeepEcom and the services we provide."
+  />
+
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <div class="space-y-8">
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">The service</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          DeepEcom provides marketplace data aggregation, profitability, payment reconciliation and
+          detailed ERP accounting. Use of the service is subject to the agreement entered into with
+          DeepEcom when your account is set up.
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Your accounts</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          You are responsible for maintaining the marketplace and ERP credentials used to operate your
+          account, and for the accuracy of the information you provide.
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Contact</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          For any question about these terms, write to{" "}
+          <a href="mailto:legal@deepecom.com" class="font-semibold text-brand-600">legal@deepecom.com</a>.
+        </p>
+      </div>
+      <p class="rounded-xl border border-ink-200 bg-brand-50/40 px-4 py-3 text-sm text-muted-foreground">
+        TODO: Full legal terms text to be provided by the DeepEcom legal team.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand title="Questions about using DeepEcom?" cta="Talk to Us" ctaHref="/contact" />
+</PageLayout>

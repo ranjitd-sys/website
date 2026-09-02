@@ -4,34 +4,22 @@ const GROUPS: Record<string, { init: string; name: string }[]> = {
   marketplace: [
     { init: "Az", name: "Amazon" },
     { init: "Fk", name: "Flipkart" },
-    { init: "My", name: "Myntra" },
-    { init: "Me", name: "Meesho" },
-    { init: "Ny", name: "Nykaa" },
     { init: "Sy", name: "Shopify" },
-    { init: "Jm", name: "JioMart" },
+    { init: "Me", name: "Meesho" },
+    { init: "+", name: "More channels" },
   ],
   erp: [
-    { init: "Tp", name: "Tally Prime" },
+    { init: "Tp", name: "Tally" },
+    { init: "Sap", name: "SAP" },
     { init: "Zb", name: "Zoho Books" },
-    { init: "MD", name: "MS Dynamics" },
-    { init: "SE", name: "Sap Erp" },
-  ],
-  logistics: [
-    { init: "Dt", name: "DTDC" },
-    { init: "Sr", name: "Shiprocket" },
-    { init: "Dv", name: "Delhivery" },
-  ],
-  payments: [
-    { init: "Rz", name: "Razorpay" },
-    { init: "Cf", name: "Cashfree" },
-    { init: "Ph", name: "PhonePe" },
+    { init: "+", name: "More ERP systems" },
   ],
 }
 
 const tile =
-  "flex items-center gap-3 rounded-xl border border-ink-200 bg-white px-4 py-3.5 text-[14.5px] font-semibold tracking-tight text-ink-900 shadow-xs transition-all hover:-translate-y-0.5 hover:border-ink-300 hover:shadow-sm"
+  "flex items-center gap-3 rounded-xl border border-ink-200 bg-white px-4 py-3.5 text-[14.5px] font-semibold tracking-tight text-ink-900 shadow-xs transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-sm"
 const tileLogo =
-  "grid size-8 shrink-0 place-items-center rounded-lg bg-ink-100 text-xs font-extrabold text-ink-600"
+  "grid size-8 shrink-0 place-items-center rounded-lg bg-brand-50 text-xs font-extrabold text-brand-600"
 
 export default function IntegrationsTabs() {
   return (
@@ -40,8 +28,6 @@ export default function IntegrationsTabs() {
         <TabsList className="flex-wrap">
           <TabsTab value="marketplace">Marketplaces</TabsTab>
           <TabsTab value="erp">ERP</TabsTab>
-          <TabsTab value="logistics">Logistics</TabsTab>
-          <TabsTab value="payments">Payment gateway</TabsTab>
         </TabsList>
       </div>
 

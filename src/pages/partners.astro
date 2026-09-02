@@ -1,0 +1,38 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Partners — DeepEcom"
+  description="Partner with DeepEcom to bring ecommerce accounting to the businesses you serve."
+>
+  <PageHero
+    eyebrow="PARTNERS"
+    title="Bring ecommerce accounting to the businesses you serve."
+    lead="Accountants, CAs, consultants and ecommerce agencies — work with DeepEcom to give your clients a connected accounting layer."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Talk to Us
+        <ArrowRight size={16} />
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <p class="text-center text-[15px]/relaxed text-muted-foreground">
+      If you help ecommerce businesses close their books, reach out at{" "}
+      <a href="mailto:partners@deepecom.com" class="font-semibold text-brand-600">partners@deepecom.com</a>{" "}
+      and we will share how we can work together.
+    </p>
+  </section>
+
+  <CtaBand
+    title="Partner with the accounting layer."
+    lead="Let's talk about what we can build together for your clients."
+  />
+</PageLayout>

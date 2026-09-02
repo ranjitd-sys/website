@@ -1,0 +1,48 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+---
+
+<PageLayout
+  title="Privacy Policy — DeepEcom"
+  description="How DeepEcom handles the data it connects across your marketplaces and ERP."
+>
+  <PageHero
+    eyebrow="LEGAL"
+    title="Privacy Policy"
+    lead="DeepEcom connects marketplace data, payment data and accounting information on your behalf. This page describes how that data is handled."
+  />
+
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <div class="space-y-8">
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">What we connect</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          DeepEcom connects the marketplaces you sell on and the ERP you close your books in. We access
+          marketplace data through secure, read-only APIs and process it into intelligence, reconciliation
+          and accounting on your behalf.
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Your data</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          Your business data is used to operate the product and is never resold. Access permissions are
+          scoped to what the product needs to function.
+        </p>
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Contact</h2>
+        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
+          For any privacy question, write to{" "}
+          <a href="mailto:privacy@deepecom.com" class="font-semibold text-brand-600">privacy@deepecom.com</a>.
+        </p>
+      </div>
+      <p class="rounded-xl border border-ink-200 bg-brand-50/40 px-4 py-3 text-sm text-muted-foreground">
+        TODO: Full legal privacy policy text to be provided by the DeepEcom legal team.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand title="Questions about how DeepEcom works?" cta="Talk to Us" ctaHref="/contact" />
+</PageLayout>

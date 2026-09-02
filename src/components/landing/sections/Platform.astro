@@ -1,84 +1,81 @@
 ---
-import SectionHeading from "../section-heading.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
 import DashboardPreview from "./DashboardPreview.astro"
-
-const pillars = [
-  { title: "Dashboard", desc: "Your ecommerce business at a glance.", href: "/platform/dashboard" },
-  { title: "Profitability", desc: "Margins by SKU, order and channel.", href: "/platform/profitability" },
-  { title: "Payment Reconciliation", desc: "Expected vs actual, matched line-by-line.", href: "/platform/payment-reconciliation" },
-  { title: "Reports", desc: "GST-ready exports for your finance team.", href: "/platform/reports" },
-]
 ---
 
 <style is:global>
-  .platform-section {
-    padding: clamp(5.5rem, 12vh, 9rem) 0;
+  .showcase {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    background:
+      radial-gradient(36rem 20rem at 90% -12%, rgba(127, 125, 252, 0.18), transparent 60%),
+      linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
+    color: var(--ink-100);
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: clamp(2rem, 4vw, 2.75rem);
+    height: 100%;
   }
-  .platform-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
+  .showcase .kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-300);
   }
-  .platform-pillars {
-    margin-top: 3rem;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
+  .showcase h3 {
+    margin-top: 0.9rem;
+    max-width: 24rem;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-bold);
+    color: #fff;
+    text-wrap: balance;
   }
-  @media (min-width: 48rem) {
-    .platform-pillars { grid-template-columns: repeat(4, 1fr); }
+  .showcase p {
+    margin-top: 0.9rem;
+    max-width: 28rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink-400);
   }
-  .platform-pillar {
-    display: block;
-    padding: 1.1rem 1.15rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 1rem;
-    background: #fff;
-    text-decoration: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
-  }
-  .platform-pillar:hover {
-    border-color: var(--brand-300);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  .platform-pillar strong {
-    display: block;
+  .showcase-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--ink-900);
-    letter-spacing: -0.01em;
+    color: var(--brand-300);
+    text-decoration: none;
+    transition: gap var(--transition-base), color var(--transition-base);
   }
-  .platform-pillar span {
-    display: block;
-    margin-top: 0.2rem;
-    font-size: 0.8125rem;
-    color: var(--ink-500);
+  .showcase-cta:hover {
+    gap: 0.75rem;
+    color: #fff;
+  }
+  .showcase-media {
+    margin-top: auto;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
   }
 </style>
 
-<section class="platform-section" id="platform">
-  <div class="platform-inner">
-    <SectionHeading
-      eyebrow="Platform"
-      title="Understand your ecommerce business."
-      lead="DeepEcom Platform brings every marketplace into one place — so you see real profitability, reconciled payments, and reports your team can act on."
-    />
-
-    <div class="reveal">
-      <DashboardPreview />
-    </div>
-
-    <div class="platform-pillars reveal">
-      {
-        pillars.map((p) => (
-          <a href={p.href} class="platform-pillar">
-            <strong>{p.title}</strong>
-            <span>{p.desc}</span>
-          </a>
-        ))
-      }
-    </div>
+<section class="showcase" id="platform" aria-label="DeepEcom Platform">
+  <div>
+    <span class="kicker">Platform</span>
+    <h3>Understand your business. In real time.</h3>
+    <p>
+      Bring marketplace data together and see the numbers that actually matter — revenue, costs
+      and profitability per channel.
+    </p>
+    <a href="/platform" class="showcase-cta">
+      Explore Platform
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
+  </div>
+  <div class="showcase-media">
+    <DashboardPreview compact />
   </div>
 </section>

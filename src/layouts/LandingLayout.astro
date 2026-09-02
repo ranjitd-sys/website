@@ -49,7 +49,6 @@ const jsonLd = [
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
     description,
-    offers: { "@type": "Offer", price: "1000", priceCurrency: "INR" },
     publisher: { "@type": "Organization", name: "DeepEcom Technologies Pvt Ltd" },
   },
 ]
@@ -100,9 +99,9 @@ const jsonLd = [
       class="fixed inset-x-0 bottom-0 z-40 translate-y-full border-t border-border bg-white/95 backdrop-blur transition-transform duration-300 md:hidden"
     >
       <div class="mx-auto flex max-w-md items-center gap-2.5 px-4 py-3">
-        <a href="#contact" class={`${buttonVariants({ variant: "outline" })} flex-1`}>Schedule demo</a>
-        <a href="#pricing" class={`${buttonVariants()} flex-1 gap-1.5`}>
-          Start free trial
+        <a href="/platform" class={`${buttonVariants({ variant: "outline" })} flex-1`}>Explore Platform</a>
+        <a href="/contact" class={`${buttonVariants()} flex-1 gap-1.5`}>
+          Book a Demo
           <ArrowRight size={15} />
         </a>
       </div>

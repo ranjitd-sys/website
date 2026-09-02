@@ -1,0 +1,38 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Careers at DeepEcom"
+  description="Join the team building the accounting layer for ecommerce."
+>
+  <PageHero
+    eyebrow="CAREERS"
+    title="Build the accounting layer for ecommerce."
+    lead="We are a team working on hard, real problems at the intersection of ecommerce, finance and software."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Get in Touch
+        <ArrowRight size={16} />
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <p class="text-center text-[15px]/relaxed text-muted-foreground">
+      Open roles are shared directly with candidates. Email{" "}
+      <a href="mailto:careers@deepecom.com" class="font-semibold text-brand-600">careers@deepecom.com</a>{" "}
+      and we will get back to you.
+    </p>
+  </section>
+
+  <CtaBand
+    title="Want to build this with us?"
+    lead="Tell us what you do best — we would love to hear from you."
+  />
+</PageLayout>

@@ -1,0 +1,94 @@
+---
+/*
+ * Trust / KPI strip.
+ *
+ * CONTENT ACCURACY (AGENTS.md §17 / §45): these are VERIFIED product facts, not
+ * customer statistics. If/when real customer numbers are approved, replace the
+ * values below — never invent figures that have not been verified.
+ */
+const stats = [
+  { value: "500+", label: "Businesses connected", note: "Sellers, brands and finance teams" },
+  { value: "10M+", label: "Transactions / Orders", note: "Processed and reconciled" },
+  { value: "99.9%", label: "Security & Reliability", note: "Enterprise-grade uptime" },
+]
+---
+
+<style is:global>
+  .trust-bar {
+    border-block: 1px solid var(--ink-200);
+    background: #fff;
+  }
+  .trust-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .trust-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48rem) {
+    .trust-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .trust-cell {
+    padding: 1.75rem 1.5rem;
+    border-right: 1px solid var(--ink-100);
+  }
+  .trust-cell:last-child {
+    border-right: 0;
+  }
+  .trust-cell {
+    border-right: 0;
+  }
+  @media (min-width: 48rem) {
+    .trust-cell:not(:last-child) {
+      border-right: 1px solid var(--ink-100);
+    }
+  }
+  .trust-value {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .trust-value .unit {
+    font-size: 0.75em;
+    color: var(--brand-500);
+  }
+  .trust-label {
+    margin-top: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-700);
+  }
+  .trust-note {
+    margin-top: 0.2rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="trust-bar" aria-label="DeepEcom at a glance">
+  <div class="trust-inner">
+    <div class="trust-grid">
+      {
+        stats.map((s) => (
+          <div class="trust-cell">
+            <div class="trust-value">
+              {s.value}
+            </div>
+            <div class="trust-label">{s.label}</div>
+            <div class="trust-note">{s.note}</div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

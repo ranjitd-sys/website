@@ -1,201 +1,1010 @@
-# DeepEcom Website — AGENTS.md
+# DeepEcom Marketing Website — AGENTS.md
 
-## 1. Project Overview
+## 0. PRIMARY INSTRUCTION
 
-This repository contains the marketing website for **DeepEcom**, built with **Astro**.
+Build the DeepEcom marketing website in Astro.
 
-DeepEcom is positioned as:
+The uploaded reference screenshot is the PRIMARY visual and structural reference for the homepage.
 
-# **Your Accounting Layer for Ecommerce**
+The target result should closely match the reference in:
 
-DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting.
+- overall composition
+- page rhythm
+- spacing
+- typography hierarchy
+- section density
+- border treatment
+- product-card treatment
+- navigation structure
+- CTA placement
+- visual hierarchy
+- use of white space
+- use of soft gradients
+- use of DeepEcom blue-violet accents
+- premium fintech / enterprise SaaS feeling
 
-The website should communicate a simple core journey:
+IMPORTANT:
 
-**CONNECT → UNDERSTAND → RECONCILE → ACCOUNT**
+Do NOT copy Stripe's assets, text, illustrations, branding or exact layouts.
 
-The central product architecture is:
+The target is:
 
-**Marketplaces → DeepEcom → Business Intelligence + Reconciliation → ERP Accounting → ERP**
+**Stripe-level visual polish + DeepEcom-specific product storytelling.**
 
----
-
-# 2. Current Product Scope
-
-The website must represent the **current product accurately**.
-
-DeepEcom currently has two primary products.
-
-## 2.1 DeepEcom Platform
-
-The Platform connects ecommerce marketplaces and helps sellers understand their business.
-
-Current capabilities:
-
-* Marketplace data aggregation
-* Profitability analysis
-* Payment reconciliation
-* Business dashboards
-* Marketplace performance visibility
-* Reports and exports
-
-The Platform should be positioned as the place where sellers:
-
-> **Understand what's happening in their ecommerce business.**
-
-### Platform personality
-
-**Clear + Intelligent**
-
-Primary visual language:
-
-* dashboards
-* charts
-* profitability
-* reconciliation
-* business metrics
-* reporting
-* clean data visualization
+The website must feel like an original DeepEcom website.
 
 ---
 
-## 2.2 DeepEcom ERP Connector
-
-The ERP Connector connects ecommerce marketplace transactions to ERP systems and provides detailed ecommerce accounting.
-
-Current capabilities include:
-
-* Order-wise accounting
-* GST-wise accounting
-* Warehouse-wise accounting
-* Marketplace charges
-* Returns and refunds
-* TCS/TDS-related accounting
-* Inventory accounting
-* Stock transfers
-* Detailed accounting entries
-* ERP posting
-* Tally connectivity
-* SAP connectivity
-* Zoho connectivity
-
-The ERP Connector must be positioned as more than a generic integration.
-
-Core positioning:
-
-> **Make your ERP ecommerce-ready.**
-
-The product converts complex ecommerce transactions into detailed accounting inside the ERP.
-
-### ERP Connector personality
-
-**Precise + Technical**
-
-Primary visual language:
-
-* transactions
-* accounting entries
-* ledgers
-* GST
-* warehouse data
-* stock transfers
-* ERP structures
-* tables
-* structured financial information
-
----
-
-# 3. Future Products
-
-Future capabilities may include areas such as:
-
-* Order Management
-* Inventory Management
-* AI Automation
-* Autonomous Operations
-* Additional workflow products
-
-These are **not current core products**.
-
-Do not present future products as launched functionality.
-
-Do not invent capabilities, workflows or features that are not explicitly documented.
-
-Future capabilities may be referenced as roadmap/vision content only when explicitly instructed.
-
----
-
-# 4. Brand Positioning
+# 1. BRAND POSITIONING
 
 Primary positioning:
 
-# **Your Accounting Layer for Ecommerce**
+# Your Accounting Layer for Ecommerce
 
-The website should explain DeepEcom as the layer between ecommerce channels and the ERP.
+Core message:
 
-Conceptually:
+DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting.
 
-**Amazon / Flipkart / Shopify / Marketplaces**
+Core journey:
 
+CONNECT → UNDERSTAND → RECONCILE → ACCOUNT
+
+Core infrastructure story:
+
+MARKETPLACES
 ↓
-
-# **DeepEcom**
-
+DEEPECOM
 ↓
-
-**Profitability / Reconciliation / Reports / Accounting**
-
+INTELLIGENCE
 ↓
+RECONCILIATION
+↓
+ACCOUNTING
+↓
+ERP
 
-**Tally / SAP / Zoho**
+Important positioning:
 
-The core message is:
-
-> Ecommerce creates complexity across marketplaces, payments, GST, returns, inventory and accounting. DeepEcom brings that complexity into one layer and makes it understandable and accountable.
-
-Another important positioning statement:
-
-> **DeepEcom does not replace your ERP. DeepEcom makes your ERP ecommerce-ready.**
+> DeepEcom does not replace the ERP.
+> DeepEcom makes the ERP ecommerce-ready.
 
 ---
 
-# 5. Core Website Narrative
+# 2. CURRENT PRODUCT SCOPE
 
-The entire website should revolve around one consistent story:
+Only represent currently available functionality.
 
-## 01 — CONNECT
+## Platform
 
-Connect ecommerce marketplaces and channels.
+The DeepEcom Platform connects marketplace data and helps sellers understand their business.
 
-## 02 — UNDERSTAND
+Current capabilities:
 
-Turn marketplace data into usable business information.
+- marketplace data aggregation
+- dashboard
+- profitability
+- payment reconciliation
+- reports
+- marketplace performance visibility
 
-## 03 — RECONCILE
+Primary personality:
 
-Understand expected vs actual payments and identify discrepancies.
-
-## 04 — ACCOUNT
-
-Convert ecommerce activity into detailed ERP accounting.
-
-The visual narrative should repeatedly reinforce:
-
-**Marketplace Data → DeepEcom → Intelligence → Reconciliation → Accounting → ERP**
+CLEAR + INTELLIGENT
 
 ---
 
-# 6. Website Sitemap
+## ERP Connector
 
-This sitemap is the current source of truth for the website.
+The ERP Connector converts ecommerce transactions into detailed accounting inside ERP systems.
 
-```text
+Current capabilities:
+
+- order-wise accounting
+- GST-wise accounting
+- warehouse-wise accounting
+- marketplace charges
+- returns
+- refunds
+- TCS / TDS
+- inventory accounting
+- stock transfers
+- detailed ERP accounting
+- ERP posting
+- Tally
+- SAP
+- Zoho
+
+Primary personality:
+
+PRECISE + TECHNICAL
+
+---
+
+# 3. FUTURE PRODUCTS
+
+Future products may include:
+
+- Order Management
+- Inventory Management
+- AI automation
+- Autonomous operations
+
+These are NOT current primary products.
+
+Do NOT present future products as launched functionality.
+
+Do NOT invent capabilities.
+
+---
+
+# 4. REFERENCE VISUAL LANGUAGE
+
+Use the uploaded reference screenshot as the visual target.
+
+The screenshot demonstrates:
+
+- compact top navigation
+- white / near-white canvas
+- large black typography
+- blue-violet accent
+- extremely subtle borders
+- large rounded containers
+- compact feature cards
+- real product UI as the primary visual
+- soft gradients
+- restrained shadows
+- product/data compositions
+- sections separated by generous whitespace
+- strong horizontal rhythm
+- very high information density without looking cluttered
+
+The visual style should feel:
+
+- premium
+- modern
+- technical
+- financial
+- trustworthy
+- enterprise-ready
+
+Avoid:
+
+- generic SaaS template appearance
+- excessive rounded cards
+- excessive gradients
+- neon aesthetics
+- cyberpunk aesthetics
+- cryptocurrency aesthetics
+- cartoon illustrations
+- generic stock photography
+- excessive glassmorphism
+- excessive dark mode
+- excessive animation
+- giant decorative blobs
+
+---
+
+# 5. TYPOGRAPHY
+
+Primary typeface:
+
+**Inter**
+
+Use:
+
+- 400 body
+- 500 secondary text
+- 600 emphasis / buttons
+- 700 major headings
+
+Do not introduce another display font.
+
+Typography hierarchy should resemble premium fintech SaaS.
+
+Hero headline should be large, bold and compact.
+
+Use short headlines.
+
+Avoid long headline paragraphs.
+
+Recommended heading style:
+
+- tight line-height
+- slightly negative letter spacing
+- strong black/dark ink color
+- large desktop display size
+- responsive scaling
+
+Body copy should be compact and highly readable.
+
+---
+
+# 6. COLOR SYSTEM
+
+Primary accent:
+
+**#533AFD**
+
+This is the primary DeepEcom CTA/accent color.
+
+Secondary accent:
+
+Use a lighter blue-violet/lavender derived from #533AFD.
+
+Core palette:
+
+- near-black / dark navy for typography
+- white
+- very light gray
+- subtle cool-gray border
+- DeepEcom violet-blue accent
+- soft lavender backgrounds
+- subtle indigo atmospheric gradients
+
+Do NOT turn the whole site purple.
+
+Color hierarchy:
+
+80–90% neutral
+10–20% accent
+
+Use accent color primarily for:
+
+- primary CTA
+- highlighted links
+- selected states
+- pipeline signals
+- important product states
+- subtle illustration accents
+
+---
+
+# 7. GLOBAL VISUAL CHARACTER
+
+The website should feel approximately like:
+
+Stripe
++
+modern financial infrastructure
++
+enterprise SaaS
++
+ecommerce intelligence
++
+accounting software
+
+Do NOT make it feel like:
+
+- ERP vendor website
+- accounting software from 2015
+- generic Indian SaaS template
+- analytics-only startup
+- AI startup
+
+---
+
+# 8. PAGE WIDTH AND GRID
+
+Use a wide desktop container.
+
+Recommended:
+
+max-width approximately 1180–1240px
+
+The page should use generous left/right margins.
+
+Use a consistent grid.
+
+Primary desktop layout:
+
+- 12-column conceptual grid
+- large gutters
+- strong horizontal alignment
+
+Do not allow sections to drift independently.
+
+Maintain consistent content edges across the page.
+
+---
+
+# 9. NAVIGATION
+
+Desktop navigation should be compact and minimal.
+
+Structure:
+
+DEEPECOM logo
+
+Products
+Solutions
+Integrations
+Customers
+Resources
+Pricing
+
+Right:
+
+Login
+Book a Demo
+
+Primary CTA:
+
+DeepEcom purple-blue button.
+
+Navigation should resemble the compactness and elegance of premium fintech websites.
+
+Do NOT create an oversized navigation bar.
+
+---
+
+# 10. PRODUCTS MEGA MENU
+
+Products contains:
+
+## Platform
+
+Understand your ecommerce business
+
+- Overview
+- Profitability
+- Payment Reconciliation
+- Dashboard
+- Reports
+
+## ERP Connector
+
+Make your ERP ecommerce-ready
+
+- Overview
+- Accounting
+- GST
+- Inventory & Stock Transfers
+- Tally
+- SAP
+- Zoho
+
+---
+
+# 11. SOLUTIONS MEGA MENU
+
+Solutions contains two categories.
+
+## BY BUSINESS
+
+- Amazon Sellers
+- D2C Brands
+- Enterprise
+
+## BY ROLE
+
+- CFOs
+- Accountants
+- Business Owners
+
+The two categories must be visually distinct.
+
+---
+
+# 12. RESOURCES MEGA MENU
+
+Resources:
+
+- Blog
+- Guides
+- Ecommerce Accounting
+- Reconciliation
+- GST
+- ERP
+- FAQs
+- Help Center
+
+---
+
+# 13. HOMEPAGE STRUCTURE
+
+The homepage should follow this exact high-level sequence.
+
+1. Navbar
+2. Hero
+3. Trust / KPI strip
+4. Ecommerce accounting problem
+5. Core DeepEcom data flow
+6. Platform product section
+7. ERP Connector product section
+8. Accounting capability strip
+9. Solutions
+10. Integrations
+11. Customers / proof
+12. Final CTA
+13. Footer
+
+Do not randomly add additional sections.
+
+---
+
+# 14. HERO
+
+The hero should visually resemble the uploaded reference.
+
+Desktop composition:
+
+LEFT:
+- small eyebrow
+- large headline
+- body copy
+- two CTAs
+
+RIGHT:
+- marketplace → DeepEcom → ERP composition
+- actual product UI
+- marketplace logos
+- ERP logos
+- central DeepEcom card
+- dashboard/product preview
+
+Hero should occupy a large amount of vertical space.
+
+---
+
+## Hero eyebrow
+
+THE ACCOUNTING LAYER FOR ECOMMERCE
+
+---
+
+## Hero headline
+
+Use:
+
+# Your ecommerce business, connected.
+
+Alternative copy can be tested, but do not change the positioning.
+
+---
+
+## Hero supporting text
+
+Use:
+
+Connect your marketplaces, understand your profitability, reconcile your payments, and automatically account every transaction in your ERP.
+
+---
+
+## Hero CTAs
+
+Primary:
+
+Book a Demo
+
+Secondary:
+
+Explore Platform
+
+---
+
+# 15. HERO VISUAL
+
+The right-hand composition is extremely important.
+
+Create:
+
+MARKETPLACES
+- Amazon
+- Flipkart
+- Shopify
+- Meesho
+- More
+
+↓
+
+DEEPECOM
+
+Inside the DeepEcom card:
+
+- Understand
+- Reconcile
+- Account
+
+↓
+
+ERP SYSTEMS
+
+- Tally
+- SAP
+- Zoho Books
+- More
+
+Behind / below this composition:
+
+A cropped DeepEcom dashboard.
+
+The visual should make the data pipeline understandable in 2–3 seconds.
+
+Do not use generic architecture diagrams.
+
+Use:
+
+- product UI
+- logos
+- thin connectors
+- subtle arrows
+- light shadows
+- subtle lavender/blue gradients
+- small UI labels
+
+---
+
+# 16. HERO PRODUCT UI
+
+The dashboard preview should look like the actual product.
+
+Show a realistic product interface containing:
+
+- sidebar
+- navigation
+- KPI cards
+- revenue
+- costs
+- profitability
+- trend chart
+- category/channel breakdown
+
+Do not invent unsupported product functionality.
+
+Use approved placeholder/example values only when real product data is unavailable.
+
+---
+
+# 17. HERO TRUST STRIP
+
+Immediately below the hero, create a compact KPI/trust strip.
+
+Visual treatment:
+
+white background
+very subtle top/bottom border
+small icons
+compact numbers
+
+Possible structure:
+
+500+
+Businesses connected
+
+10M+
+Transactions / Orders
+ONLY IF VERIFIED
+
+99.9%
+Security / Reliability
+ONLY IF VERIFIED
+
+IMPORTANT:
+
+Never invent statistics.
+
+Use placeholders until actual numbers are provided.
+
+---
+
+# 18. PROBLEM SECTION
+
+Create a horizontal bordered section similar to the reference.
+
+Headline:
+
+# Ecommerce accounting is complicated.
+
+Supporting concept:
+
+An ecommerce order is not just an order.
+
+It creates:
+
+- Order
+- Sale
+- Fees
+- GST
+- TCS / TDS
+- Returns
+- Inventory
+- Settlements
+- Payouts
+- Stock transfers
+
+The section should communicate:
+
+ONE ORDER → MANY ACCOUNTING EVENTS
+
+This is an important DeepEcom visual concept.
+
+---
+
+# 19. ACCOUNTING EVENTS STRIP
+
+Create a compact horizontal feature strip.
+
+Use small icons and labels.
+
+Suggested items:
+
+Orders
+GST
+Fees
+TCS / TDS
+Returns
+Inventory
+Settlements
+Payouts
+Stock Transfers
+And more
+
+At the end:
+
+Multiply this by thousands or millions of orders.
+
+Do NOT use an exact number unless verified.
+
+The visual should create the feeling of complexity at scale.
+
+---
+
+# 20. CORE DEEPECOM DIFFERENCE
+
+Create a section similar in visual treatment to the reference:
+
+LEFT:
+headline
+description
+
+CENTER:
+marketplace data input
+
+MIDDLE:
+DeepEcom
+
+RIGHT:
+business-ready output
+
+Headline direction:
+
+# We turn all of it into one financial picture.
+
+Explain:
+
+DeepEcom connects ecommerce data, payment data and accounting information to create a single, structured financial view.
+
+Keep the copy short.
+
+---
+
+# 21. CORE PIPELINE VISUAL
+
+This is a signature visual.
+
+Show:
+
+MARKETPLACE DATA
+↓
+DEEPECOM
+↓
+BUSINESS-READY DATA
+
+Marketplace side:
+
+Amazon
+Flipkart
+Shopify
+Meesho
+Payments
+Returns
+Inventory
+TCS / TDS
+
+DeepEcom center:
+
+Understand
+Reconcile
+Account
+
+Output side:
+
+Profitability
+Reports
+ERP-ready Accounting
+
+Use curved SVG paths.
+
+Do NOT use a generic straight-line architecture diagram.
+
+---
+
+# 22. PLATFORM PRODUCT SECTION
+
+Create a dark or high-contrast product card similar to the reference.
+
+Headline:
+
+# Understand your business.
+
+Supporting copy:
+
+Bring marketplace data together and see the numbers that actually matter.
+
+Show:
+
+- dashboard
+- profitability
+- sales trend
+- marketplace/channel breakdown
+- business metrics
+
+Primary link:
+
+Explore Platform →
+
+Visual emphasis:
+
+70% product UI
+30% marketing copy
+
+Do NOT create a simple feature-card grid.
+
+---
+
+# 23. ERP CONNECTOR PRODUCT SECTION
+
+Create a second premium product card.
+
+Headline:
+
+# Account every transaction. Automatically.
+
+Supporting copy:
+
+Convert ecommerce transactions into detailed accounting inside your ERP.
+
+Show a product UI resembling accounting entries.
+
+Show fields such as:
+
+- order
+- invoice
+- GST
+- marketplace charges
+- receivable
+- payment
+- warehouse
+- stock transfer
+
+Do not invent actual product fields beyond verified functionality.
+
+Primary link:
+
+Explore ERP Connector →
+
+---
+
+# 24. ACCOUNTING CAPABILITY STRIP
+
+Create a full-width compact capability band.
+
+Capabilities:
+
+Order-wise
+GST-wise
+Warehouse-wise
+Marketplace-wise
+Returns
+Stock Transfers
+TCS / TDS
+
+Each capability should have:
+
+small icon
+short title
+one-line description
+
+Use subtle borders and lots of whitespace.
+
+---
+
+# 25. SOLUTIONS SECTION
+
+Headline:
+
+# Built around how your business works.
+
+Create two rows/groups.
+
+## BY BUSINESS
+
+Amazon Sellers
+D2C Brands
+Enterprise
+
+## BY ROLE
+
+CFOs
+Accountants
+Business Owners
+
+Use compact cards with:
+
+- subtle border
+- small icon
+- title
+- one-line description
+- small arrow
+
+Do not make the section overly colorful.
+
+---
+
+# 26. SOLUTIONS COPY
+
+## Amazon Sellers
+
+Understand profitability, reconcile marketplace payments and automate accounting.
+
+## D2C Brands
+
+Bring website and marketplace financial data together.
+
+## Enterprise
+
+Handle high-volume ecommerce accounting across warehouses, marketplaces and ERP systems.
+
+## CFOs
+
+Get financial visibility, reconciliation and control.
+
+## Accountants
+
+Automate detailed ecommerce accounting and ERP posting.
+
+## Business Owners
+
+Know what you sold, what you received and what you actually made.
+
+---
+
+# 27. INTEGRATIONS SECTION
+
+Create a compact ecosystem section.
+
+Headline:
+
+# Works with the systems you already use.
+
+Marketplace logos:
+
+Amazon
+Flipkart
+Shopify
+Meesho
+Other supported channels
+
+ERP logos:
+
+Tally
+SAP
+Zoho Books
+Other supported ERP systems
+
+Do not create a dense logo wall.
+
+Use structured groups and subtle connectors.
+
+---
+
+# 28. CUSTOMER / PROOF SECTION
+
+Create a light, high-trust section.
+
+Use:
+
+- customer logos
+- one strong case study
+- one customer quote
+- product/result visual
+- real customer photography only when available
+
+Do not invent testimonials.
+
+Do not invent performance claims.
+
+Case study pattern:
+
+PROBLEM
+→
+DEEPECOM
+→
+OUTCOME
+
+---
+
+# 29. FINAL CTA
+
+Use a dark / rich DeepEcom blue-violet section.
+
+This should be one of the strongest visual sections on the page.
+
+Headline:
+
+# Bring your ecommerce business and your books together.
+
+Supporting text:
+
+Connect your marketplaces, understand your business and automate ecommerce accounting.
+
+Buttons:
+
+Book a Demo
+Talk to an Expert
+
+Use a subtle gradient.
+
+Keep the section compact and premium.
+
+---
+
+# 30. FOOTER
+
+Footer should be light and minimal.
+
+Left:
+
+DeepEcom logo
+short one-line descriptor
+
+Columns:
+
+Products
+- Platform
+- ERP Connector
+
+Solutions
+- Amazon Sellers
+- D2C Brands
+- Enterprise
+- CFOs
+- Accountants
+- Business Owners
+
+Resources
+- Blog
+- Guides
+- Ecommerce Accounting
+- Reconciliation
+- GST
+- ERP
+- FAQs
+
+Company
+- About
+- Careers
+- Contact
+- Partners
+
+Legal
+- Privacy
+- Terms
+- Security
+
+Newsletter / email signup if approved.
+
+---
+
+# 31. PAGE SITEMAP
+
+The website structure is:
+
 DEEPECOM
 │
 ├── Home
 │
 ├── Products
-│   │
 │   ├── Platform
 │   │   ├── Overview
 │   │   ├── Profitability
@@ -213,7 +1022,6 @@ DEEPECOM
 │       └── Inventory & Stock Transfers
 │
 ├── Solutions
-│   │
 │   ├── By Business
 │   │   ├── Amazon Sellers
 │   │   ├── D2C Brands
@@ -247,1173 +1055,553 @@ DEEPECOM
     ├── ERP
     ├── FAQs
     └── Help Center
-```
 
 ---
 
-# 7. Primary Navigation
+# 32. COMPONENT SYSTEM
 
-The visible desktop navigation should be:
+Create reusable components.
 
-**Products | Solutions | Integrations | Customers | Resources | Pricing**
+At minimum:
 
-Right side:
-
-**Login | Book a Demo**
-
-Do not add additional top-level navigation items without explicit instruction.
-
----
-
-# 8. Navigation Mega Menus
-
-## Products
-
-Group the products clearly.
-
-### PLATFORM
-
-**Understand your ecommerce business**
-
-* Overview
-* Profitability
-* Payment Reconciliation
-* Dashboard
-* Reports
-
-### ERP CONNECTOR
-
-**Make your ERP ecommerce-ready**
-
-* Overview
-* Accounting
-* GST
-* Inventory & Stock Transfers
-* Tally
-* SAP
-* Zoho
-
----
-
-## Solutions
-
-Solutions have two dimensions.
-
-### BY BUSINESS
-
-* Amazon Sellers
-* D2C Brands
-* Enterprise
-
-### BY ROLE
-
-* CFOs
-* Accountants
-* Business Owners
-
-The business and role categories should be visually distinct inside the mega menu.
+components/
+├── layout/
+│   ├── Navbar.astro
+│   ├── MegaMenu.astro
+│   ├── Footer.astro
+│   └── Container.astro
+│
+├── ui/
+│   ├── Button.astro
+│   ├── Badge.astro
+│   ├── LinkArrow.astro
+│   ├── SectionHeading.astro
+│   └── Logo.astro
+│
+├── hero/
+│   └── Hero.astro
+│
+├── product/
+│   ├── DashboardPreview.astro
+│   ├── ProfitabilityPreview.astro
+│   ├── ReconciliationPreview.astro
+│   └── AccountingPreview.astro
+│
+├── diagrams/
+│   ├── EcommerceFlow.astro
+│   ├── AccountingFlow.astro
+│   └── ERPFlow.astro
+│
+└── sections/
+    ├── TrustBar.astro
+    ├── ProblemSection.astro
+    ├── PlatformShowcase.astro
+    ├── ERPConnectorShowcase.astro
+    ├── CapabilityStrip.astro
+    ├── Solutions.astro
+    ├── Integrations.astro
+    ├── Customers.astro
+    └── FinalCTA.astro
 
 ---
 
-## Resources
+# 33. CSS ARCHITECTURE
 
-* Blog
-* Guides
-* Ecommerce Accounting
-* Reconciliation
-* GST
-* ERP
-* FAQs
-* Help Center
+Create:
 
-Mega menus should feel premium, editorial and intentional.
+styles/
+├── tokens.css
+├── global.css
+└── animations.css
 
-Do not create standard generic dropdowns.
+All global design decisions must be defined here.
 
----
+Create CSS variables for:
 
-# 9. Visual Foundation — Stripe Inspired
+- colors
+- font
+- type scale
+- spacing
+- container widths
+- border radius
+- shadows
+- transitions
+- breakpoints
 
-Use the current Stripe India website:
-
-**https://stripe.com/in**
-
-as the primary visual reference for the DeepEcom marketing site.
-
-Reference Stripe for:
-
-* visual hierarchy
-* typography scale
-* spacing
-* editorial composition
-* navigation
-* gradients
-* use of whitespace
-* product storytelling
-* enterprise/fintech visual language
-* subtle motion
-* interaction quality
-
-### Important
-
-Do not copy Stripe.
-
-The final implementation must use:
-
-* original DeepEcom layouts
-* original DeepEcom content
-* original product visuals
-* original compositions
-* original interaction patterns
-
-Use Stripe as **design inspiration**, not as a template or clone.
-
-Never copy Stripe's:
-
-* copywriting
-* layouts
-* illustrations
-* branding
-* visual assets
-* exact components
-
-The resulting website must feel unmistakably like **DeepEcom**.
+Do not scatter random values throughout components.
 
 ---
 
-# 10. Brand Personality
+# 34. BUTTON SYSTEM
 
-The DeepEcom website should feel:
+Primary button:
 
-* Premium
-* Intelligent
-* Precise
-* Technical
-* Trustworthy
-* Modern
-* Enterprise-ready
-* Financial infrastructure
+Background:
+#533AFD
 
-It should not feel:
+Text:
+white
 
-* generic SaaS
-* cartoonish
-* childish
-* overly playful
-* overly colorful
-* crypto-like
-* neon cyberpunk
-* excessively AI-themed
-* template-driven
+Style:
 
----
+- compact
+- strong
+- polished
+- moderate radius
+- subtle hover
+- subtle shadow/border
+- arrow on selected CTAs where visually appropriate
 
-# 11. Typography
+Secondary button:
 
-Use **Inter** as the primary typeface throughout the website.
+White/light background
+Subtle border
+Dark text
 
-Typography weights:
-
-* 400 — body
-* 500 — labels / secondary emphasis
-* 600 — buttons / subheadings
-* 700 — major headings
-
-Use large display typography for:
-
-* hero
-* major section headings
-* important statements
-
-Typography should feel:
-
-* precise
-* modern
-* highly legible
-* editorial
-* confident
-
-Avoid excessive font-weight variation.
-
-Do not introduce a second display font unless explicitly instructed.
+Buttons should not be oversized.
 
 ---
 
-# 12. Color Direction
+# 35. BORDER SYSTEM
 
-Use a **Stripe-inspired color language**.
-
-Primary visual characteristics:
-
-* deep navy / ink text
-* white and near-white backgrounds
-* subtle cool-gray surfaces
-* vibrant blue / indigo / violet accents
-* atmospheric gradients
-* occasional dark sections
-* strong contrast
-* restrained accent usage
-
-The overall appearance should feel like premium financial infrastructure.
-
-Do not use:
-
-* generic SaaS blue everywhere
-* rainbow gradients
-* neon cyberpunk palettes
-* excessive purple
-* excessive green
-* childish multi-color cards
-
-All colors must be defined through centralized design tokens.
-
-Do not scatter raw hex values across individual components.
-
----
-
-# 13. Gradient Direction
-
-Gradients are an important part of the visual language.
+Borders are important to the visual identity.
 
 Use:
 
-* large-scale gradients
-* atmospheric transitions
-* subtle color movement
-* gradients behind hero/product compositions
-* soft visual depth
+- very subtle neutral borders
+- 1px borders
+- slightly darker borders for product UI
+- minimal emphasis
 
-Avoid:
-
-* tiny gradient buttons
-* gradients on every card
-* high-saturation rainbow effects
-* noisy gradient backgrounds
-
-Gradients should support composition rather than become the composition.
+Avoid thick borders.
 
 ---
 
-# 14. Surface Design
+# 36. SHADOW SYSTEM
+
+Use extremely restrained shadows.
+
+Prefer layered, soft shadows.
+
+Avoid heavy black drop shadows.
+
+Product UI should have more depth than regular content cards.
+
+---
+
+# 37. CORNER RADIUS
+
+Use moderate corner radii.
+
+Recommended visual range:
+
+- small controls: 6–8px
+- cards/panels: 10–16px
+- large sections: 16–20px
+
+Do not make everything pill-shaped.
+
+Pills are only for:
+
+- eyebrow labels
+- compact tags
+- selected states
+- small metadata
+
+---
+
+# 38. PRODUCT UI DESIGN
+
+Product UI must visually feel like actual DeepEcom software.
 
 Use:
 
-* large whitespace
-* subtle borders
-* restrained shadows
-* moderate corner radii
-* clean white product surfaces
-* occasional dark panels
+- real product hierarchy
+- sidebar
+- tables
+- charts
+- KPIs
+- accounting rows
+- financial states
+- realistic information density
 
-Avoid turning every section into a grid of floating rounded cards.
-
-Use a combination of:
-
-* editorial layouts
-* full-width sections
-* large product compositions
-* structured data panels
-* occasional cards
+Product screenshots should not look like generic fake SaaS dashboards.
 
 ---
 
-# 15. Product Visuals
+# 39. SVG / DATA FLOW RULES
 
-The actual DeepEcom product interface is the primary visual asset.
+For major pipeline visuals:
 
-Priority:
-
-**Real DeepEcom product UI**
-
-over:
-
-**Generic illustrations**
-
-over:
-
-**Stock photography**
-
-Product screenshots should not appear as plain rectangular images.
-
-Present them as designed visual compositions using:
-
-* depth
-* layering
-* subtle shadows
-* cropped UI
-* floating panels
-* data overlays
-* atmospheric gradients
-* controlled perspective
-
-Do not fabricate functionality that does not exist.
-
-Do not show fake dashboard numbers unless they are explicitly approved placeholder content.
-
----
-
-# 16. Core Visual Metaphor
-
-The visual identity should repeatedly reinforce:
-
-# **Marketplace → DeepEcom → Intelligence → Reconciliation → Accounting → ERP**
-
-Possible visual elements:
-
-* connector lines
-* nodes
-* data flows
-* transaction states
-* accounting entries
-* marketplace logos
-* ERP logos
-* ledger structures
-* report previews
-
-These should feel like **financial infrastructure**, not decorative diagrams.
-
----
-
-# 17. Homepage Design Structure
-
-The homepage should be a continuous visual story rather than a sequence of unrelated feature blocks.
-
-Recommended structure:
-
-## 01 — Hero
-
-Eyebrow:
-
-**THE ACCOUNTING LAYER FOR ECOMMERCE**
-
-Headline direction:
-
-# **Your ecommerce business, connected.**
-
-Supporting message:
-
-> Connect your marketplaces, understand your profitability, reconcile your payments, and automatically account every transaction in your ERP.
-
-Primary CTA:
-
-**Book a Demo**
-
-Secondary CTA:
-
-**Explore Platform**
-
-Hero visual:
-
-**Marketplace → DeepEcom → Intelligence → Accounting → ERP**
-
-Use a sophisticated product/data composition instead of a generic illustration.
-
----
-
-## 02 — The Problem
-
-Communicate that ecommerce data is fragmented across:
-
-* marketplaces
-* payments
-* returns
-* GST
-* inventory
-* ERP
-
-The section should visually communicate complexity before introducing DeepEcom as the layer that brings it together.
-
----
-
-## 03 — The DeepEcom Layer
-
-Headline direction:
-
-# **One layer between your ecommerce business and your books.**
-
-Show:
-
-**Marketplaces**
-
-↓
-
-**DeepEcom**
-
-↓
-
-**Business Intelligence + Reconciliation + Accounting**
-
-↓
-
-**ERP**
-
-This should become one of the website's signature visual sections.
-
----
-
-## 04 — Platform
-
-Position:
-
-# **Understand your ecommerce business.**
-
-Show:
-
-* Dashboard
-* Profitability
-* Payment Reconciliation
-* Reports
-
-Use product UI as the main visual asset.
-
-Avoid generic three- or four-card feature grids.
-
----
-
-## 05 — ERP Connector
-
-Position:
-
-# **Make your ERP ecommerce-ready.**
-
-Show detailed flow:
-
-**Order**
-
-→ **Sale**
-
-→ **GST**
-
-→ **Marketplace Charges**
-
-→ **TCS/TDS**
-
-→ **Receivable**
-
-→ **Payment**
-
-→ **Return**
-
-→ **Inventory**
-
-→ **Stock Transfer**
-
-→ **ERP**
-
-Emphasize detailed accounting rather than generic integration.
-
----
-
-## 06 — Solutions
-
-Introduce:
-
-### BY BUSINESS
-
-* Amazon Sellers
-* D2C Brands
-* Enterprise
-
-### BY ROLE
-
-* CFOs
-* Accountants
-* Business Owners
-
-The solutions section should explain outcomes rather than simply repeating product features.
-
----
-
-## 07 — Integrations
-
-Show the ecosystem as a connected infrastructure:
-
-**Amazon / Flipkart / Shopify / Other Channels**
-
-↓
-
-**DeepEcom**
-
-↓
-
-**Tally / SAP / Zoho**
-
-Do not simply create a wall of logos.
-
-Explain the relationship between systems.
-
----
-
-## 08 — Customers
+Use SVG.
 
 Use:
 
-* customer logos
-* testimonials
-* customer stories
-* case studies
-* measurable outcomes
+- curved Bézier paths
+- thin strokes
+- subtle gradients
+- small moving particles
+- restrained opacity
+- small nodes
+- clear labels
 
-Do not invent customer metrics or claims.
+Do not use giant glowing straight rails.
 
----
+Do not make the flow look like a sci-fi energy tunnel.
 
-## 09 — Final CTA
+Data movement should feel like:
 
-The final CTA should reinforce:
+FINANCIAL INFRASTRUCTURE
 
-> **Bring your ecommerce business and accounting together.**
+not:
 
-Primary CTA:
-
-**Book a Demo**
-
----
-
-# 18. Solutions Page Principles
-
-Solutions should answer:
-
-> **Why should someone like me use DeepEcom?**
-
-They must not simply duplicate product pages.
-
-## Amazon Sellers
-
-Focus on:
-
-* Amazon profitability
-* settlement/payment reconciliation
-* detailed accounting
-* GST
-* marketplace deductions
-* warehouse accounting
-* reports
-
-## D2C Brands
-
-Focus on:
-
-* multi-channel visibility
-* website + marketplace data
-* consolidated profitability
-* payment reconciliation
-* returns
-* GST
-* ERP accounting
-
-## Enterprise
-
-Focus on:
-
-* high transaction volume
-* multi-entity complexity
-* multi-warehouse operations
-* multiple marketplaces
-* GST complexity
-* enterprise ERP
-* SAP
-* controls and auditability
-
-## CFOs
-
-Focus on:
-
-* profitability
-* cash realization
-* financial visibility
-* reconciliation
-* controls
-* reporting
-* ERP integrity
-
-## Accountants
-
-Focus on:
-
-* detailed accounting
-* order-level accounting
-* GST
-* marketplace fees
-* TCS/TDS
-* returns
-* warehouse accounting
-* stock transfers
-* ERP posting
-
-## Business Owners
-
-Focus on:
-
-* actual profitability
-* marketplace performance
-* money received vs expected
-* product/channel performance
-* business visibility
-* reducing finance dependency
+CYBERPUNK TECHNOLOGY.
 
 ---
 
-# 19. Integrations
+# 40. ANIMATION SYSTEM
 
-Main integration categories:
+Use subtle animation.
 
-### Marketplaces
+Good:
 
-* Amazon
-* Flipkart
-* Shopify
-* Other supported channels
+- line drawing
+- slow data particles
+- fade/translate reveals
+- product UI transitions
+- number transitions
+- hover states
+- subtle gradient motion
 
-### ERP
+Bad:
 
-* Tally
-* SAP
-* Zoho
+- aggressive parallax
+- bouncing cards
+- random floating objects
+- giant animated blobs
+- excessive 3D
+- constant movement
 
-Individual integration pages may be created as needed for SEO and conversion.
+Support:
 
-Potential URL examples:
-
-* `/integrations/amazon`
-* `/integrations/flipkart`
-* `/integrations/shopify`
-* `/integrations/tally`
-* `/integrations/sap`
-* `/integrations/zoho`
-
-Only create dedicated pages when sufficient accurate content exists.
+prefers-reduced-motion
 
 ---
 
-# 20. Customers
+# 41. RESPONSIVE DESIGN
 
-Customer pages should use:
+The screenshot is desktop-oriented, but mobile must be intentionally designed.
 
-**Problem → Existing Process → DeepEcom → Outcome**
+Desktop:
 
-Case studies should show how DeepEcom solved real ecommerce accounting/reconciliation problems.
+- two-column hero
+- wide product compositions
+- horizontal flows
+- dense but readable sections
 
-Avoid generic testimonials without context.
+Tablet:
 
-Never invent:
+- reduce spacing
+- simplify visual compositions
+- maintain hierarchy
 
-* customer numbers
-* GMV
-* order volume
-* percentage improvements
-* time savings
-* ROI
+Mobile:
 
-Use placeholders when verified information has not been supplied.
+- stacked hero
+- marketplace → DeepEcom → ERP becomes vertical
+- product UI becomes scrollable/cropped carefully
+- feature bands become horizontal-scroll or stacked when necessary
+- navigation becomes a polished mobile drawer
+- CTAs remain prominent
 
----
-
-# 21. Pricing
-
-Pricing should explain the two primary products:
-
-### Platform
-
-Marketplace intelligence, profitability and payment reconciliation.
-
-### ERP Connector
-
-Automated ecommerce accounting and ERP posting.
-
-### Enterprise
-
-Custom requirements, high-volume operations and enterprise ERP needs.
-
-Do not invent pricing.
-
-Use placeholders or clearly marked TODO values where required.
+Do not simply shrink desktop SVGs.
 
 ---
 
-# 22. Resources
+# 42. PERFORMANCE
 
-Resources should support both SEO and education.
-
-Categories:
-
-* Blog
-* Guides
-* Ecommerce Accounting
-* Reconciliation
-* GST
-* ERP
-* FAQs
-* Help Center
-
-Potential SEO themes include:
-
-* ecommerce accounting
-* marketplace reconciliation
-* Amazon accounting
-* Amazon Tally integration
-* Flipkart accounting
-* ecommerce GST
-* marketplace settlement reconciliation
-* ecommerce profitability
-
-Do not keyword-stuff.
-
----
-
-# 23. Animation
-
-Use subtle, premium motion.
-
-Preferred:
-
-* slow data-flow animations
-* product UI transitions
-* scroll-triggered product reveals
-* number transitions
-* understated hover states
-* smooth navigation transitions
-* progressive transaction/accounting flows
-
-Animation should communicate:
-
-* relationships
-* data flow
-* hierarchy
-* product functionality
-
-Avoid:
-
-* excessive parallax
-* random floating objects
-* constant motion
-* decorative blobs
-* unnecessary 3D
-* animation on every element
-
-Support reduced-motion preferences.
-
----
-
-# 24. Data Visualization
-
-Charts and tables should look like real financial software.
+Astro-first.
 
 Prefer:
 
-* clean line charts
-* bar charts
-* tables
-* KPI panels
-* reconciliation states
-* ledger-like structures
-* accounting flows
+- static HTML
+- optimized images
+- minimal JS
+- CSS/SVG animations
+- lazy-loaded below-fold images
+- responsive image sizes
+- font optimization
 
-Use real ecommerce/accounting terminology such as:
+Do not introduce heavy frontend libraries unless necessary.
 
-* Orders
-* Settlements
-* Revenue
-* GST
-* TCS
-* TDS
-* Returns
-* Marketplace Fees
-* Receivables
-* Warehouses
-* Stock Transfers
-* Ledger
-* Profitability
-
-Avoid vague visualizations labelled simply:
-
-* Data
-* Intelligence
-* Insights
-
-when a more specific business term can be used.
+Do not introduce React unnecessarily.
 
 ---
 
-# 25. Responsive Design
-
-Mobile must be deliberately designed.
-
-Do not simply collapse the desktop layout.
-
-Prioritize on mobile:
-
-1. Navigation
-2. Headline hierarchy
-3. Product visual readability
-4. Marketplace → DeepEcom → ERP narrative
-5. CTA visibility
-6. Data readability
-
-All core content must remain understandable without hover.
-
----
-
-# 26. Technical Architecture
-
-Use:
-
-* Astro
-* Astro components
-* semantic HTML
-* responsive CSS
-* CSS variables
-* reusable components
-* minimal JavaScript
-* accessible interactions
-* optimized assets
-
-Prefer static/server-rendered Astro components.
-
-Use client-side JavaScript only when necessary for interaction.
-
-Do not introduce React or another framework unnecessarily.
-
----
-
-# 27. Suggested Project Structure
-
-```text
-src/
-├── components/
-│   ├── layout/
-│   │   ├── Navbar.astro
-│   │   ├── MegaMenu.astro
-│   │   ├── Footer.astro
-│   │   └── Container.astro
-│   │
-│   ├── ui/
-│   │   ├── Button.astro
-│   │   ├── Badge.astro
-│   │   ├── Logo.astro
-│   │   └── SectionHeading.astro
-│   │
-│   ├── hero/
-│   │   └── Hero.astro
-│   │
-│   ├── product/
-│   │   ├── DashboardPreview.astro
-│   │   ├── ProfitabilityPreview.astro
-│   │   ├── ReconciliationPreview.astro
-│   │   └── AccountingFlow.astro
-│   │
-│   ├── sections/
-│   │   ├── DataFlow.astro
-│   │   ├── PlatformShowcase.astro
-│   │   ├── ERPConnector.astro
-│   │   ├── Solutions.astro
-│   │   ├── Integrations.astro
-│   │   ├── Customers.astro
-│   │   └── FinalCTA.astro
-│   │
-│   └── cards/
-│       ├── SolutionCard.astro
-│       ├── IntegrationCard.astro
-│       └── CaseStudyCard.astro
-│
-├── layouts/
-│   └── MainLayout.astro
-│
-├── pages/
-│   ├── index.astro
-│   ├── platform/
-│   ├── erp-connector/
-│   ├── solutions/
-│   ├── integrations/
-│   ├── customers/
-│   ├── pricing.astro
-│   └── resources/
-│
-├── styles/
-│   ├── tokens.css
-│   ├── global.css
-│   └── animations.css
-│
-└── assets/
-    ├── product/
-    ├── logos/
-    └── illustrations/
-```
-
----
-
-# 28. Design Tokens
-
-Create centralized tokens for:
-
-* font families
-* font sizes
-* font weights
-* colors
-* spacing
-* container widths
-* border radius
-* shadows
-* transitions
-* breakpoints
-
-No arbitrary design values should be scattered throughout components without reason.
-
----
-
-# 29. Component Rules
-
-Build reusable components.
-
-At minimum, create reusable components for:
-
-* Navbar
-* MegaMenu
-* Footer
-* Container
-* Buttons
-* Badges
-* Section headings
-* Product showcases
-* Product UI previews
-* Data flows
-* Integration logos
-* Case studies
-* CTA sections
-
-Do not create duplicate versions of the same component.
-
----
-
-# 30. SEO
-
-Each page should have:
-
-* unique title
-* unique meta description
-* semantic heading hierarchy
-* canonical URL
-* Open Graph metadata
-* Twitter/X metadata where appropriate
-* structured data where useful
-
-Important solution and integration pages should be SEO-friendly.
-
-Do not keyword-stuff.
-
----
-
-# 31. Accessibility
-
-Follow accessibility best practices.
+# 43. ACCESSIBILITY
 
 Requirements:
 
-* semantic HTML
-* keyboard navigation
-* visible focus states
-* sufficient contrast
-* accessible mobile menu
-* accessible mega menus
-* alt text
-* reduced-motion support
-* screen-reader-friendly interactive elements
+- semantic HTML
+- keyboard navigation
+- focus states
+- accessible mega menus
+- accessible mobile navigation
+- correct heading hierarchy
+- alt text
+- reduced-motion support
+- sufficient contrast
+
+SVG diagrams must have meaningful accessible labels.
 
 ---
 
-# 32. Performance
+# 44. SEO
 
-Prioritize:
+Each page must have:
 
-* fast initial load
-* optimized images
-* responsive images
-* minimal JavaScript
-* lazy loading where appropriate
-* font optimization
-* efficient animations
+- unique title
+- meta description
+- canonical URL
+- Open Graph metadata
+- semantic headings
+- appropriate structured data
 
-Avoid heavy libraries unless there is a clear need.
+Important SEO pages:
 
----
+- Amazon
+- Flipkart
+- Tally
+- SAP
+- Ecommerce Accounting
+- Payment Reconciliation
+- GST
+- D2C
+- Enterprise
 
-# 33. Copywriting Rules
-
-Copy must be:
-
-* clear
-* confident
-* concise
-* specific
-* intelligent
-* outcome-oriented
-
-Prefer:
-
-> **Make your ERP ecommerce-ready.**
-
-over:
-
-> Empower your ecommerce business with our comprehensive accounting automation solution.
-
-Prefer real terminology:
-
-* Orders
-* Payments
-* GST
-* TCS
-* TDS
-* Returns
-* Fees
-* Profitability
-* Warehouses
-* Stock Transfers
-* Accounting
-* ERP
-
-Avoid generic SaaS language such as:
-
-* transform your business
-* unlock possibilities
-* revolutionary platform
-* next-generation solution
-* seamless digital transformation
-
-unless explicitly justified.
+Do not keyword stuff.
 
 ---
 
-# 34. Content Accuracy Rules
+# 45. CONTENT ACCURACY
 
 Never invent:
 
-* customer numbers
-* transaction counts
-* GMV
-* percentages
-* ROI
-* integrations
-* product capabilities
-* customer names
-* testimonials
-* case-study results
+- customer counts
+- GMV
+- order counts
+- revenue metrics
+- percentages
+- customer logos
+- customer quotes
+- integrations
+- capabilities
+- case study results
 
-When information is missing, use a clear placeholder.
+When information is missing, use:
 
-Do not turn placeholders into fake production claims.
+TODO
+or
+PLACEHOLDER
+
+Do not silently fabricate data.
 
 ---
 
-# 35. Development Workflow
+# 46. DEVELOPMENT WORKFLOW
 
-Do not attempt to build the entire website in one step.
+Do NOT generate the entire website in one task.
 
-Use this sequence:
+Follow this sequence.
 
-## Phase 1 — Inspect
+## PHASE 1 — AUDIT
 
-Read AGENTS.md.
+Inspect the existing repository.
 
-Inspect the existing Astro repository.
+Do not redesign immediately.
 
 Understand:
 
-* current pages
-* existing components
-* CSS architecture
-* dependencies
-* assets
-* existing product screenshots
-
-Do not make major changes before understanding the current implementation.
-
-## Phase 2 — Foundation
-
-Build:
-
-* design tokens
-* typography
-* colors
-* spacing
-* responsive system
-* button system
-* navigation
-* mega menus
-* animation primitives
-
-## Phase 3 — Homepage
-
-Build in this order:
-
-1. Navbar
-2. Hero
-3. Marketplace → DeepEcom → ERP visual
-4. Platform showcase
-5. ERP Connector showcase
-6. Solutions
-7. Integrations
-8. Customers
-9. Final CTA
-10. Footer
-
-## Phase 4 — Secondary Pages
-
-Build:
-
-* Platform
-* ERP Connector
-* Solutions
-* Integrations
-* Customers
-* Pricing
-* Resources
-
-## Phase 5 — Polish
-
-Review:
-
-* typography
-* spacing
-* hierarchy
-* responsive behavior
-* animations
-* performance
-* accessibility
-* visual consistency
+- Astro version
+- dependencies
+- existing pages
+- components
+- styles
+- assets
+- product screenshots
+- current routing
 
 ---
 
-# 36. Quality Bar
+## PHASE 2 — DESIGN FOUNDATION
+
+Implement:
+
+- typography
+- colors
+- design tokens
+- spacing
+- containers
+- buttons
+- borders
+- shadows
+- radii
+- responsive system
+- animation primitives
+
+---
+
+## PHASE 3 — NAVIGATION
+
+Build:
+
+- Navbar
+- Products mega menu
+- Solutions mega menu
+- Resources mega menu
+- mobile navigation
+
+---
+
+## PHASE 4 — HOMEPAGE HERO
+
+Build ONLY:
+
+- Navbar
+- Hero
+- marketplace pipeline
+- DeepEcom card
+- ERP card
+- product dashboard composition
+- CTA
+
+Then inspect visually before continuing.
+
+---
+
+## PHASE 5 — CORE HOMEPAGE
+
+Build:
+
+- trust strip
+- problem section
+- order complexity band
+- DeepEcom difference section
+- pipeline visual
+- Platform section
+- ERP Connector section
+- accounting capability strip
+
+---
+
+## PHASE 6 — LOWER HOMEPAGE
+
+Build:
+
+- Solutions
+- Integrations
+- Customers
+- Final CTA
+- Footer
+
+---
+
+## PHASE 7 — DESIGN REVIEW
+
+Stop adding features.
+
+Review the homepage as a senior product designer.
+
+Check:
+
+- Does it look premium?
+- Is the typography strong?
+- Is spacing consistent?
+- Is the page too card-heavy?
+- Does the website feel like financial infrastructure?
+- Is the DeepEcom purple-blue accent used correctly?
+- Is the product UI dominant?
+- Is the accounting-layer positioning immediately clear?
+- Is the Marketplace → DeepEcom → ERP story obvious?
+- Does the page feel visually close to the uploaded reference?
+- Are sections rhythmically consistent?
+- Are gradients restrained?
+- Are shadows subtle?
+- Is mobile good?
+
+Then refine.
+
+---
+
+# 47. IMPORTANT DESIGN DECISIONS
+
+When choosing between two designs, prefer:
+
+PRODUCT UI
+over
+GENERIC ILLUSTRATION
+
+EDITORIAL LAYOUT
+over
+3-COLUMN CARD GRID
+
+WHITESPACE
+over
+MORE DECORATION
+
+REAL DATA STRUCTURE
+over
+GENERIC MARKETING GRAPHICS
+
+SUBTLE MOTION
+over
+VISUAL EFFECTS
+
+CLARITY
+over
+COMPLEXITY
+
+PREMIUM
+over
+FLASHY
+
+---
+
+# 48. FINAL QUALITY BAR
 
 The final website should feel like:
 
-> **Stripe's level of polish + DeepEcom's ecommerce accounting expertise.**
+**Stripe-level polish**
++
+**DeepEcom ecommerce expertise**
++
+**financial infrastructure**
++
+**real enterprise product UI**
 
-It should communicate within seconds:
+The first impression should be:
 
-> **DeepEcom connects ecommerce marketplaces to business intelligence, reconciliation and detailed ERP accounting.**
+> DeepEcom understands ecommerce finance, connects the fragmented data, and turns it into clean business intelligence and complete ERP accounting.
 
-The website must feel:
+The website must NOT feel like:
 
-**premium, precise, financial, technically credible and product-led.**
-
-It should never feel like:
-
-> **a Stripe clone + generic SaaS copy.**
+- a Stripe clone
+- an accounting software template
+- a generic SaaS landing page
+- an AI startup website
+- an enterprise ERP brochure
 
 ---
 
-# 37. Default Decision Rule for Agents
+# 49. FINAL AGENT RULE
 
-When there is ambiguity, prioritize in this order:
+When uncertain:
 
-1. Accuracy of DeepEcom's current product
-2. Clarity of the accounting-layer positioning
-3. Product UI over generic imagery
-4. Visual hierarchy over content density
-5. Premium design over decorative complexity
-6. Reusable components over one-off implementations
-7. Performance over unnecessary JavaScript
-8. Accessibility over visual gimmicks
-
-When uncertain about a product capability, **do not invent it**. Use a placeholder or leave the capability out until verified.
+1. Follow this AGENTS.md.
+2. Preserve product accuracy.
+3. Preserve the visual system.
+4. Prefer existing reusable components.
+5. Do not invent capabilities.
+6. Do not introduce unnecessary dependencies.
+7. Inspect the rendered result before declaring a visual section complete.
+8. Optimize for visual quality, not number of sections.

@@ -1,0 +1,116 @@
+---
+const sections = [
+  { label: "Platform", href: "/platform", items: ["Overview", "Profitability", "Payment Reconciliation", "Dashboard", "Reports"] },
+  { label: "ERP Connector", href: "/erp-connector", items: ["Overview", "Accounting", "GST", "Inventory & Stock Transfers", "Tally", "SAP", "Zoho"] },
+  { label: "Solutions", href: "/solutions", items: ["Amazon Sellers", "D2C Brands", "Enterprise", "CFOs", "Accountants", "Business Owners"] },
+  { label: "Resources", href: "/resources", items: ["Blog", "Guides", "Ecommerce Accounting", "Reconciliation", "GST", "ERP", "FAQs", "Help Center"] },
+  { label: "Company", href: "/about", items: ["About", "Careers", "Contact", "Partners"] },
+  { label: "Legal", href: "/privacy", items: ["Privacy", "Terms", "Security"] },
+]
+---
+
+<style is:global>
+  .erp-table {
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--ink-300);
+    background: #fff;
+  }
+  .erp-table .t-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-700);
+  }
+  .erp-table .t-head .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .erp-table .t-head .sub {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .erp-table .t-col {
+    display: grid;
+    grid-template-columns: 2.2fr 1.4fr 1fr 1.2fr;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+    color: var(--ink-600);
+  }
+  .erp-table .t-col:last-child {
+    border-bottom: 0;
+  }
+  .erp-table .t-col .strong {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .erp-table .t-col .num {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-700);
+  }
+  .erp-table .t-col .debit {
+    color: var(--danger-600);
+  }
+  .erp-table .t-col .credit {
+    color: var(--success-600);
+  }
+  .erp-table .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--success-600);
+    white-space: nowrap;
+  }
+  .erp-table .status .ic {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success-500);
+  }
+</style>
+
+<div class="erp-table" role="img" aria-label="DeepEcom accounting entry preview showing order-wise GST and ledger details">
+  <div class="t-head">
+    <span class="dot" aria-hidden="true"></span>
+    Journal entries · Order #458921
+    <span class="sub">GST-ready · Posted to Tally</span>
+  </div>
+  <div class="t-col">
+    <span class="strong">Sales — Amazon</span>
+    <span class="num">₹2,499.00</span>
+    <span class="credit">₹2,499.00</span>
+    <span class="status"><span class="ic"></span>Posted</span>
+  </div>
+  <div class="t-col">
+    <span class="strong">Output GST</span>
+    <span class="num">₹381.20</span>
+    <span class="credit">₹381.20</span>
+    <span class="status"><span class="ic"></span>Posted</span>
+  </div>
+  <div class="t-col">
+    <span class="strong">Marketplace charges</span>
+    <span class="num">₹312.00</span>
+    <span class="debit">₹312.00</span>
+    <span class="status"><span class="ic"></span>Posted</span>
+  </div>
+  <div class="t-col">
+    <span class="strong">Receivable — Amazon</span>
+    <span class="num">₹2,087.80</span>
+    <span class="debit">₹2,087.80</span>
+    <span class="status"><span class="ic"></span>Pending</span>
+  </div>
+</div>

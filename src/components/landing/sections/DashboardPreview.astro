@@ -88,10 +88,10 @@ const prev =
   "M72,159 C112,159 120,151 160,151 C200,151 208,156 248,156 C288,156 296,140 336,140 C376,140 384,135 424,135 C464,135 472,119 512,119 C552,119 560,99 600,99 C640,99 648,79 688,79";
 ---
 
-<div class="dash-stage mt-14 border-y border-border py-14 md:mt-20 md:py-20">
+<div class:list={["dash-stage", !Astro.props.compact && "mt-14 border-y border-border py-14 md:mt-20 md:py-20"]}>
   <div class="mx-auto max-w-6xl px-6">
     <div
-      class="reveal overflow-hidden rounded-2xl border border-border bg-card text-left shadow-card"
+      class:list={["overflow-hidden rounded-2xl border border-border bg-card text-left shadow-card", Astro.props.compact ? "" : "reveal"]}
       role="img"
       aria-label="DeepEcom dashboard preview showing revenue metrics and recent marketplace settlements"
     >
@@ -360,7 +360,7 @@ const prev =
             </div>
             <a
               href="#analytics"
-              class="flex items-center gap-1.5 border-t border-border bg-zinc-50/70 px-4 py-2.5 text-[12.5px] font-semibold text-primary no-underline hover:text-indigo-700"
+              class="flex items-center gap-1.5 border-t border-border bg-zinc-50/70 px-4 py-2.5 text-[12.5px] font-semibold text-primary no-underline hover:text-brand-700"
             >
               View all settlements
               <svg

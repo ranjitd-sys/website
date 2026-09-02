@@ -1,348 +1,81 @@
 ---
-import SectionHeading from "../section-heading.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
-
-const steps = [
-  { label: "Order Intake", sub: "Sync sales orders", icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z", color: "#533afd", desc: "Pull orders from all channels in real-time" },
-  { label: "Sales Entry", sub: "Generate invoices", icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z", color: "#7f7dfc", desc: "Auto-create GST-compliant invoices" },
-  { label: "GST Split", sub: "IGST · CGST · SGST", icon: "M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z", color: "#a29bff", desc: "Split taxes by state & type automatically" },
-  { label: "Fee Deduction", sub: "Marketplace fees", icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", color: "#7f7dfc", desc: "Deduct platform commissions & charges" },
-  { label: "TCS / TDS", sub: "Tax compliance", icon: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z", color: "#a29bff", desc: "Apply withholding tax rules per vendor" },
-  { label: "Receivables", sub: "Ledger mapping", icon: "M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z", color: "#7f7dfc", desc: "Map to correct ledger accounts" },
-  { label: "Settlement", sub: "Bank reconciliation", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", color: "#22c55e", desc: "Match settlements to bank statements" },
-  { label: "Returns / RTO", sub: "Credit notes", icon: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15", color: "#7f7dfc", desc: "Generate credit notes for returns" },
-  { label: "Inventory", sub: "COGS adjustment", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4", color: "#a29bff", desc: "Adjust stock & cost of goods sold" },
-  { label: "Stock Transfers", sub: "Inter-state FCs", icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4", color: "#7f7dfc", desc: "Track stock movement between warehouses" },
-  { label: "ERP Posting", sub: "Automated sync", icon: "M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4", color: "#22c55e", desc: "Push everything to your ERP in one click" },
-]
-
-const N = steps.length
-
-/* generous, evenly-spaced geometry */
-const LINE_Y = 210
-const START_X = 250
-const END_X = 990
-const SPACING = (END_X - START_X) / (N - 1)
-const SOURCE_X = 155
-const TARGET_X = 1085
-const RAIL_START = 185
-const RAIL_END = 1055
-const position = (i: number) => START_X + i * SPACING
+import AccountingPreview from "@/components/landing/AccountingPreview.astro"
 ---
 
 <style is:global>
-  .erp-section {
-    padding: clamp(4rem, 10vh, 8rem) 0;
-    background:
-      radial-gradient(56rem 26rem at 50% -6%, rgba(83, 58, 253, 0.1), transparent 62%),
-      linear-gradient(180deg, var(--ink-950) 0%, #07090e 100%);
-    color: var(--ink-100);
-    overflow: hidden;
-  }
-  .erp-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
-  }
-  .erp-diagram {
-    margin-top: clamp(2.75rem, 5vh, 4rem);
+  .showcase {
     position: relative;
-    width: 100%;
-  }
-  .erp-svg {
-    width: 100%;
-    height: auto;
-    display: block;
-    overflow: visible;
-  }
-
-  /* Rail */
-  .erp-pipe-track { stroke: #1e293b; stroke-width: 8; stroke-linecap: round; }
-  .erp-pipe-glow { stroke: url(#pipe-glow); stroke-width: 4; stroke-linecap: round; opacity: 0.9; }
-  .erp-pulse {
-    stroke: url(#pipe-glow);
-    stroke-width: 4;
-    stroke-linecap: round;
-    stroke-dasharray: 18 42;
-    filter: drop-shadow(0 0 10px rgba(127, 125, 252, 0.6));
-    animation: erp-pulse 2s linear infinite;
-  }
-  @keyframes erp-pulse {
-    from { stroke-dashoffset: 60; }
-    to { stroke-dashoffset: 0; }
-  }
-
-  .erp-packet { fill: #fff; filter: drop-shadow(0 0 8px rgba(127, 125, 252, 0.8)); }
-
-  /* Nodes */
-  .erp-node-bg { fill: #0f172a; }
-  .erp-node-ring { fill: none; }
-  .erp-icon { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-  .erp-tick { stroke: #334155; stroke-width: 1.5; stroke-dasharray: 3 3; opacity: 0.6; }
-
-  /* Labels — anchored cleanly to their node */
-  .erp-label {
-    font-family: var(--font-sans);
-    font-size: 11.5px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    fill: var(--ink-100);
-  }
-  .erp-label-sub {
-    font-family: var(--font-sans);
-    font-size: 9.5px;
-    font-weight: 500;
-    fill: var(--ink-500);
-  }
-  .erp-num {
-    font-family: var(--font-sans);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    opacity: 0.75;
-  }
-
-  /* Endpoints */
-  .erp-system-box {
-    fill: #0b1120;
-    stroke: var(--ink-700);
-    stroke-width: 1.5;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
-  }
-  .erp-end-title {
-    font-family: var(--font-sans);
-    font-size: 10.5px;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-  }
-  .erp-end-sub {
-    font-family: var(--font-sans);
-    font-size: 9px;
-    font-weight: 500;
-    fill: var(--ink-500);
-  }
-  .erp-badge { font-family: var(--font-sans); font-size: 7px; font-weight: 800; fill: #fff; }
-  .erp-header {
-    font-family: var(--font-sans);
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    fill: var(--ink-500);
-  }
-
-  /* Legend */
-  .erp-legend-text {
-    font-family: var(--font-sans);
-    font-size: 9.5px;
-    font-weight: 500;
-    fill: var(--ink-500);
-  }
-
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.25rem;
-    margin-top: 3.5rem;
-  }
-  .feature-card {
-    background: rgba(15, 23, 42, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    padding: 1.5rem;
-    backdrop-filter: blur(12px);
-    transition: border-color 0.3s ease;
-  }
-  .feature-card:hover { border-color: rgba(83, 58, 253, 0.4); }
-  .feature-card .title {
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 700;
+    overflow: hidden;
+    border-radius: var(--radius-2xl);
+    background:
+      radial-gradient(36rem 20rem at 10% -12%, rgba(83, 58, 253, 0.2), transparent 60%),
+      linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
     color: var(--ink-100);
-    margin-bottom: 0.5rem;
     display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding: clamp(2rem, 4vw, 2.75rem);
+    height: 100%;
+  }
+  .showcase .kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-300);
+  }
+  .showcase h3 {
+    margin-top: 0.9rem;
+    max-width: 26rem;
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-bold);
+    color: #fff;
+    text-wrap: balance;
+  }
+  .showcase p {
+    margin-top: 0.9rem;
+    max-width: 28rem;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--ink-400);
+  }
+  .showcase-cta {
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    margin-top: 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--brand-300);
+    text-decoration: none;
+    transition: gap var(--transition-base), color var(--transition-base);
   }
-  .feature-card .desc {
-    font-family: var(--font-sans);
-    font-size: 0.875rem;
-    color: var(--ink-500);
-    line-height: 1.6;
+  .showcase-cta:hover {
+    gap: 0.75rem;
+    color: #fff;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .erp-pulse { animation: none; }
-    .erp-packet { opacity: 0; }
+  .showcase-media {
+    margin-top: auto;
+    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
   }
-
-  .erp-cta { margin-top: 3.5rem; text-align: center; }
 </style>
 
-<section class="erp-section" id="erp-connector">
-  <div class="erp-inner">
-    <SectionHeading
-      eyebrow="ERP Connector"
-      title="Make your ERP ecommerce-ready."
-      lead="DeepEcom converts complex ecommerce transactions into detailed accounting inside your ERP — order by order, GST by GST, warehouse by warehouse."
-      center
-    />
-
-    <div class="erp-diagram reveal" role="img" aria-label="The detailed accounting flow from order to ERP: order intake, sales entry, GST split, fee deduction, TCS TDS, receivables, settlement, returns, inventory, stock transfers, ERP posting">
-      <svg class="erp-svg" viewBox="0 0 1240 430" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="pipe-glow" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#533afd" stop-opacity="0.1" />
-            <stop offset="30%" stop-color="#533afd" stop-opacity="0.9" />
-            <stop offset="70%" stop-color="#7f7dfc" stop-opacity="0.9" />
-            <stop offset="100%" stop-color="#a29bff" stop-opacity="0.1" />
-          </linearGradient>
-          <linearGradient id="node-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stop-color="#1e293b" />
-            <stop offset="100%" stop-color="#0f172a" />
-          </linearGradient>
-          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-          <marker id="arrowhead" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
-            <polygon points="0 0, 9 3.5, 0 7" fill="#7f7dfc" opacity="0.55" />
-          </marker>
-        </defs>
-
-        <!-- header -->
-        <text class="erp-header" x="620" y="30" text-anchor="middle">DETAILED ACCOUNTING · ORDER TO ERP</text>
-
-        <!-- rail -->
-        <line class="erp-pipe-track" x1={RAIL_START} y1={LINE_Y} x2={RAIL_END} y2={LINE_Y} stroke-linecap="round" />
-        <line class="erp-pipe-glow" x1={RAIL_START} y1={LINE_Y} x2={RAIL_END} y2={LINE_Y} stroke-linecap="round" />
-        <line class="erp-pulse" x1={RAIL_START} y1={LINE_Y} x2={RAIL_END} y2={LINE_Y} stroke-linecap="round" />
-
-        <!-- flow packets -->
-        <g>
-          {[0, 0.9, 1.8, 2.7].map((b) => (
-            <circle class="erp-packet" r="3">
-              <animate attributeName="cx" values={`${RAIL_START};${RAIL_END}`} dur="3.2s" begin={`${b}s`} repeatCount="indefinite" />
-            </circle>
-          ))}
-        </g>
-
-        <!-- source: SALES CHANNELS -->
-        <g transform={`translate(${SOURCE_X}, ${LINE_Y})`}>
-          <rect class="erp-system-box" x="-70" y="-96" width="140" height="50" rx="12" />
-          <text class="erp-end-title" x="0" y="-74" text-anchor="middle" fill="#a29bff">SALES CHANNELS</text>
-          <text class="erp-end-sub" x="0" y="-60" text-anchor="middle">Amazon · Shopify · FK</text>
-          <circle cx="-22" cy="-40" r="9" fill="#ff9900" opacity="0.85" />
-          <text class="erp-badge" x="-22" y="-37" text-anchor="middle">A</text>
-          <circle cx="0" cy="-40" r="9" fill="#96bf48" opacity="0.85" />
-          <text class="erp-badge" x="0" y="-37" text-anchor="middle">S</text>
-          <circle cx="22" cy="-40" r="9" fill="#2874f0" opacity="0.85" />
-          <text class="erp-badge" x="22" y="-37" text-anchor="middle">F</text>
-
-          <line x1="0" y1="-26" x2="0" y2="-14" stroke="#7f7dfc" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
-          <circle cx="0" cy="0" r="22" fill="#0f172a" stroke="#7f7dfc" stroke-width="2.5" filter="url(#glow)" />
-          <circle cx="0" cy="0" r="17" fill="none" stroke="#533afd" stroke-width="1" opacity="0.5" />
-          <path d="M-7 -5 h13 l2 9 h-17 z M-5 -5 v-4 M3 -5 v-4 M-8 7 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0 M3 7 a2 2 0 1 0 4 0 a2 2 0 1 0 -4 0" stroke="#a29bff" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-        </g>
-
-        <!-- connection into rail -->
-        <line x1={SOURCE_X + 22} y1={LINE_Y} x2={RAIL_START} y2={LINE_Y} stroke="#334155" stroke-width="1.5" opacity="0.5" marker-end="url(#arrowhead)" />
-
-        <!-- nodes -->
-        {
-          steps.map((step, i) => {
-            const x = position(i)
-            const isFinal = i === N - 1
-            const isEven = i % 2 === 0
-            const up = isEven
-            /* label block sits adjacent to the node, connected by a short tick */
-            const blockY = up ? -64 : 64
-            const numY = up ? -92 : 92
-            const labelY = up ? -76 : 76
-            const subY = up ? -64 : 64
-            const tickY = up ? -38 : 38
-
-            return (
-              <g transform={`translate(${x}, ${LINE_Y})`}>
-                <line class="erp-tick" x1="0" y1="0" x2="0" y2={tickY} />
-
-                <circle class="erp-node-ring" cx="0" cy="0" r="24" stroke={step.color} stroke-width="1" opacity="0.25" />
-                <circle class="erp-node-bg" cx="0" cy="0" r="18" fill="url(#node-grad)" stroke={isFinal ? "#7f7dfc" : step.color} stroke-width="2" />
-                <path class="erp-icon" d={step.icon} transform="translate(-6.5, -6.5) scale(0.55)" stroke={isFinal ? "#fff" : "#e2e8f0"} stroke-width="1.8" />
-
-                <text class="erp-num" x="0" y={numY} text-anchor="middle" fill={step.color}>STEP {String(i + 1).padStart(2, "0")}</text>
-                <text class="erp-label" x="0" y={labelY} text-anchor="middle">{step.label}</text>
-                <text class="erp-label-sub" x="0" y={subY} text-anchor="middle">{step.sub}</text>
-              </g>
-            )
-          })
-        }
-
-        <!-- connection out of rail -->
-        <line x1={RAIL_END} y1={LINE_Y} x2={TARGET_X - 22} y2={LINE_Y} stroke="#334155" stroke-width="1.5" opacity="0.5" marker-end="url(#arrowhead)" />
-
-        <!-- target: ERP CORE -->
-        <g transform={`translate(${TARGET_X}, ${LINE_Y})`}>
-          <rect class="erp-system-box" x="-70" y="-96" width="140" height="50" rx="12" stroke="#7f7dfc" stroke-width="1.5" />
-          <text class="erp-end-title" x="0" y="-74" text-anchor="middle" fill="#7f7dfc">ERP CORE</text>
-          <text class="erp-end-sub" x="0" y="-60" text-anchor="middle">Tally · SAP · Zoho</text>
-          <circle cx="-20" cy="-40" r="9" fill="#1e3a5f" opacity="0.9" />
-          <text class="erp-badge" x="-20" y="-37" text-anchor="middle" fill="#7f7dfc">T</text>
-          <circle cx="0" cy="-40" r="9" fill="#1e3a5f" opacity="0.9" />
-          <text class="erp-badge" x="0" y="-37" text-anchor="middle" fill="#7f7dfc">S</text>
-          <circle cx="20" cy="-40" r="9" fill="#1e3a5f" opacity="0.9" />
-          <text class="erp-badge" x="20" y="-37" text-anchor="middle" fill="#7f7dfc">Z</text>
-
-          <line x1="0" y1="-26" x2="0" y2="-14" stroke="#7f7dfc" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" />
-          <circle cx="0" cy="0" r="22" fill="#0f172a" stroke="#533afd" stroke-width="2.5" filter="url(#glow)" />
-          <circle cx="0" cy="0" r="17" fill="none" stroke="#7f7dfc" stroke-width="1" opacity="0.5" />
-          <ellipse cx="0" cy="-4" rx="8" ry="4" stroke="#a29bff" stroke-width="1.7" fill="none" />
-          <path d="M-8 -4 v8 M8 -4 v8" stroke="#a29bff" stroke-width="1.7" fill="none" />
-          <ellipse cx="0" cy="4" rx="8" ry="4" stroke="#a29bff" stroke-width="1.7" fill="none" />
-          <path d="M-8 4 v4 a8 4 0 0 0 16 0 v-4" stroke="#a29bff" stroke-width="1.7" fill="none" />
-        </g>
-
-        <!-- legend -->
-        <g transform="translate(620, 400)">
-          <circle cx="-160" cy="0" r="4" fill="#533afd" />
-          <text class="erp-legend-text" x="-150" y="3">Data Ingestion</text>
-          <circle cx="-50" cy="0" r="4" fill="#7f7dfc" />
-          <text class="erp-legend-text" x="-40" y="3">Processing</text>
-          <circle cx="60" cy="0" r="4" fill="#a29bff" />
-          <text class="erp-legend-text" x="70" y="3">Tax & Compliance</text>
-          <circle cx="165" cy="0" r="4" fill="#22c55e" opacity="0.7" />
-          <text class="erp-legend-text" x="175" y="3">ERP Sync</text>
-        </g>
-      </svg>
-    </div>
-
-    <div class="feature-grid">
-      <div class="feature-card">
-        <div class="title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7f7dfc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Order-Level Precision
-        </div>
-        <div class="desc">Every order is synced individually instead of lumped into monthly summaries, maintaining audit trails for SKU-level profitability.</div>
-      </div>
-      <div class="feature-card">
-        <div class="title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#533afd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Automated Tax Deductions
-        </div>
-        <div class="desc">Automatically calculate and record state-wise IGST/CGST/SGST splits alongside marketplace TCS/TDS withholdings.</div>
-      </div>
-      <div class="feature-card">
-        <div class="title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a29bff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
-          Multi-Warehouse Sync
-        </div>
-        <div class="desc">Handle complex stock transfers, inter-state FC allocations, and return stock reconciliations seamlessly across enterprise ERPs.</div>
-      </div>
-    </div>
-
-    <div class="erp-cta reveal">
-      <a href="/erp-connector" class={buttonVariants({ variant: "white", size: "lg" })}>
-        Explore ERP Connector
-      </a>
-    </div>
+<section class="showcase" id="erp-connector" aria-label="DeepEcom ERP Connector">
+  <div>
+    <span class="kicker">ERP Connector</span>
+    <h3>Account every transaction. Automatically.</h3>
+    <p>
+      Convert ecommerce orders into detailed, GST-ready accounting entries and post them into
+      your ERP — order by order, warehouse by warehouse.
+    </p>
+    <a href="/erp-connector" class="showcase-cta">
+      Explore ERP Connector
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
+  </div>
+  <div class="showcase-media">
+    <AccountingPreview />
   </div>
 </section>

@@ -1,0 +1,58 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const facts = [
+  {
+    title: "The problem we exist for",
+    body: "Ecommerce sellers operate across fragmented marketplaces, payment channels and ERPs. Each order creates many accounting events, and none of them line up by default.",
+  },
+  {
+    title: "What DeepEcom does",
+    body: "DeepEcom is the accounting layer for ecommerce. It connects marketplace data, reconciles payments and posts detailed, GST-ready accounting into the ERP your finance team already runs on.",
+  },
+  {
+    title: "What we believe",
+    body: "DeepEcom does not replace your ERP. DeepEcom makes your ERP ecommerce-ready — order by order, GST by GST, warehouse by warehouse.",
+  },
+]
+---
+
+<PageLayout
+  title="About DeepEcom — Your Accounting Layer for Ecommerce"
+  description="DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting."
+>
+  <PageHero
+    eyebrow="ABOUT"
+    title="The accounting layer for ecommerce."
+    lead="DeepEcom connects the marketplaces you sell on to the ERP you close your books in — turning fragmented ecommerce activity into intelligence, reconciliation and accounting."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <div class="divide-y divide-border">
+      {
+        facts.map((f) => (
+          <div class="grid gap-3 py-8 sm:grid-cols-[1fr_2fr] sm:gap-10">
+            <h2 class="text-lg font-semibold tracking-tight text-ink-900">{f.title}</h2>
+            <p class="text-[15px]/relaxed text-muted-foreground">{f.body}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <CtaBand
+    title="See DeepEcom on your own marketplace data."
+    lead="Book a walkthrough with the team behind the accounting layer."
+  />
+</PageLayout>

@@ -1,11 +1,11 @@
 ---
 import Hero from "@/components/landing/sections/Hero.astro"
-import MarketplaceMarquee from "@/components/landing/sections/MarketplaceMarquee.astro"
+import TrustBar from "@/components/landing/sections/TrustBar.astro"
 import Problem from "@/components/landing/sections/Problem.astro"
 import DeepEcomLayer from "@/components/landing/sections/DeepEcomLayer.astro"
 import Platform from "@/components/landing/sections/Platform.astro"
 import ErpConnector from "@/components/landing/sections/ErpConnector.astro"
-import BackboneBand from "@/components/landing/sections/BackboneBand.astro"
+import CapabilityStrip from "@/components/landing/sections/CapabilityStrip.astro"
 import Solutions from "@/components/landing/sections/Solutions.astro"
 import Integrations from "@/components/landing/sections/Integrations.astro"
 import Customers from "@/components/landing/sections/Customers.astro"
@@ -16,13 +16,17 @@ import LandingLayout from "@/layouts/LandingLayout.astro"
 
 <LandingLayout>
   <Hero />
-  <MarketplaceMarquee />
+  <TrustBar />
   <SectionDivider />
   <Problem />
+  <SectionDivider />
   <DeepEcomLayer />
   <SectionDivider />
-  <Platform />
-  <BackboneBand />
+  <div class="showcase-grid">
+    <Platform />
+    <ErpConnector />
+  </div>
+  <CapabilityStrip />
   <SectionDivider />
   <Solutions />
   <SectionDivider />

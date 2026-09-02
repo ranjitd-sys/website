@@ -1,85 +1,198 @@
 ---
 import { LogoMark } from "./icons"
+
+const columns = [
+  {
+    title: "Products",
+    links: [
+      ["/platform", "Platform"],
+      ["/erp-connector", "ERP Connector"],
+    ],
+  },
+  {
+    title: "Solutions",
+    links: [
+      ["/solutions/amazon-sellers", "Amazon Sellers"],
+      ["/solutions/d2c-brands", "D2C Brands"],
+      ["/solutions/enterprise", "Enterprise"],
+      ["/solutions/cfos", "CFOs"],
+      ["/solutions/accountants", "Accountants"],
+      ["/solutions/business-owners", "Business Owners"],
+    ],
+  },
+  {
+    title: "Resources",
+    links: [
+      ["/resources/blog", "Blog"],
+      ["/resources/guides", "Guides"],
+      ["/resources/ecommerce-accounting", "Ecommerce Accounting"],
+      ["/resources/reconciliation", "Reconciliation"],
+      ["/resources/gst", "GST"],
+      ["/resources/erp", "ERP"],
+      ["/resources/faqs", "FAQs"],
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      ["/about", "About"],
+      ["/careers", "Careers"],
+      ["/contact", "Contact"],
+      ["/partners", "Partners"],
+    ],
+  },
+  {
+    title: "Legal",
+    links: [
+      ["/privacy", "Privacy"],
+      ["/terms", "Terms"],
+      ["/security", "Security"],
+    ],
+  },
+]
 ---
 
-<footer class="border-t border-border bg-muted">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.7fr_1fr_1fr_1fr] lg:gap-12 lg:py-20">
-      <div>
-        <a href="/" class="inline-flex items-center gap-2.5 text-[17.5px] font-extrabold tracking-tight text-ink no-underline">
+<style is:global>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    background: var(--surface-subtle);
+  }
+  .site-footer-inner {
+    max-width: var(--container-wide);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-block: clamp(3.5rem, 8vh, 5rem) 2.5rem;
+  }
+  @media (min-width: 48rem) {
+    .footer-grid {
+      grid-template-columns: 1.6fr repeat(5, 1fr);
+      gap: 2rem;
+    }
+  }
+  .footer-brand {
+    max-width: 20rem;
+  }
+  .footer-brand .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    text-decoration: none;
+  }
+  .footer-brand .logo:hover {
+    color: var(--ink-950);
+  }
+  .footer-brand p {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+  }
+  .footer-brand .foot-note {
+    margin-top: 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--brand-600);
+  }
+  .footer-col h4 {
+    margin-bottom: 1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+  .footer-col a {
+    display: block;
+    padding-block: 0.3rem;
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .footer-col a:hover {
+    color: var(--ink-950);
+  }
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    border-top: 1px solid var(--border);
+    padding-block: 1.4rem;
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+  }
+  .footer-social {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .footer-social a {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted-foreground);
+    transition: border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  }
+  .footer-social a:hover {
+    border-color: var(--brand-200);
+    color: var(--brand-600);
+    transform: translateY(-1px);
+  }
+</style>
+
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="logo">
           <LogoMark />
-          DEEPECOM.
+          DeepEcom
         </a>
-        <p class="mt-4 max-w-xs text-sm/relaxed text-muted-foreground">
-          DeepEcom is your accounting layer for ecommerce — marketplace data, profitability, payment reconciliation
-          and detailed ERP accounting.
+        <p>
+          Your accounting layer for ecommerce — marketplace data, profitability, payment
+          reconciliation and detailed ERP accounting.
         </p>
-        <p class="mt-3 text-[13px] font-semibold text-muted-foreground">Get connected with us on social networks:</p>
-        <div class="mt-5 flex gap-2">
-          <a href="#" aria-label="X (Twitter)" class="grid size-9 place-items-center rounded-lg border border-border bg-white text-muted-foreground transition hover:-translate-y-0.5 hover:border-blue-200 hover:text-primary hover:shadow-xs">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-6.8 7.8L23.3 22h-6.3l-4.9-6.4L6.5 22H3.4l7.3-8.3L1 2h6.4l4.4 5.9L18.9 2zm-1.1 18h1.7L6.5 3.9H4.7L17.8 20z"></path></svg>
-          </a>
-          <a href="https://www.linkedin.com/company/deepecom/posts/?feedView=all" target="_blank"  rel="noopener noreferrer" aria-label="LinkedIn" class="grid size-9 place-items-center rounded-lg border border-border bg-white text-muted-foreground transition hover:-translate-y-0.5 hover:border-blue-200 hover:text-primary hover:shadow-xs">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.31h4.52V23H.24V8.31zM8.34 8.31h4.33v2h.06c.6-1.14 2.08-2.34 4.28-2.34 4.58 0 5.42 3.01 5.42 6.92V23h-4.51v-7.13c0-1.7-.03-3.89-2.37-3.89-2.37 0-2.73 1.85-2.73 3.76V23H8.34V8.31z"></path></svg>
-          </a>
-        </div>
+        <p class="foot-note">Marketplace data in. ERP-ready accounting out.</p>
       </div>
 
-      <nav aria-label="Products">
-        <h4 class="mb-4 text-xs font-bold tracking-[0.1em] text-zinc-400 uppercase">Products</h4>
-        {
-          [
-            ["/platform", "Platform"],
-            ["/platform/profitability", "Profitability"],
-            ["/platform/payment-reconciliation", "Payment Reconciliation"],
-            ["/erp-connector", "ERP Connector"],
-            ["/erp-connector/accounting", "Accounting"],
-          ].map(([href, label]) => (
-            <a href={href} class="block py-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-ink">
-              {label}
-            </a>
-          ))
-        }
-      </nav>
-
-      <nav aria-label="Company">
-        <h4 class="mb-4 text-xs font-bold tracking-[0.1em] text-zinc-400 uppercase">Company</h4>
-        {
-          [
-            ["/solutions", "Solutions"],
-            ["/integrations", "Integrations"],
-            ["/customers", "Customers"],
-            ["/pricing", "Pricing"],
-            ["/contact", "Contact"],
-          ].map(([href, label]) => (
-            <a href={href} class="block py-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-ink">
-              {label}
-            </a>
-          ))
-        }
-      </nav>
-
-      <nav aria-label="Resources">
-        <h4 class="mb-4 text-xs font-bold tracking-[0.1em] text-zinc-400 uppercase">Resources</h4>
-        {
-          [
-            ["/resources", "Resources"],
-            ["/resources/blog", "Blog"],
-            ["/resources/guides", "Guides"],
-            ["/resources/faqs", "FAQs"],
-            ["/resources/help-center", "Help Center"],
-          ].map(([href, label]) => (
-            <a href={href} class="block py-1.5 text-sm text-muted-foreground no-underline transition-colors hover:text-ink">
-              {label}
-            </a>
-          ))
-        }
-      </nav>
+      {
+        columns.map((col) => (
+          <nav class="footer-col" aria-label={col.title}>
+            <h4>{col.title}</h4>
+            {
+              col.links.map(([href, label]) => (
+                <a href={href}>{label}</a>
+              ))
+            }
+          </nav>
+        ))
+      }
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border py-5 text-[13px] text-zinc-400">
+    <div class="footer-bottom">
       <span>© 2026 DeepEcom Technologies Pvt Ltd. All rights reserved.</span>
-      <span>Koregaon Park, Pune, Maharashtra 411001</span>
+      <div class="footer-social">
+        <a href="https://www.linkedin.com/company/deepecom/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.31h4.52V23H.24V8.31zM8.34 8.31h4.33v2h.06c.6-1.14 2.08-2.34 4.28-2.34 4.58 0 5.42 3.01 5.42 6.92V23h-4.51v-7.13c0-1.7-.03-3.89-2.37-3.89-2.37 0-2.73 1.85-2.73 3.76V23H8.34V8.31z"></path></svg>
+        </a>
+        <a href="/contact" aria-label="Contact">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
+        </a>
+      </div>
     </div>
   </div>
 </footer>

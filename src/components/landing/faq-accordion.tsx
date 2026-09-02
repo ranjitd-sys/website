@@ -3,7 +3,7 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionPanel } from "@/co
 const FAQS: [string, string][] = [
   [
     "Can DeepEcom integrate with Amazon, Flipkart and other marketplaces?",
-    "Yes. DeepEcom integrates with Amazon, Flipkart, Meesho, Myntra, Nykaa, Shopify and JioMart through secure read-only APIs. New marketplaces are added regularly based on customer demand — tell us which one you need.",
+    "Yes. DeepEcom integrates with Amazon, Flipkart, Shopify, Meesho and other supported channels through secure read-only APIs. New marketplaces are added based on customer demand — tell us which one you need.",
   ],
   [
     "Is it possible to integrate multiple warehouses into Tally using DeepEcom?",
@@ -11,7 +11,7 @@ const FAQS: [string, string][] = [
   ],
   [
     "My business operates in multiple states with different GST numbers. Can DeepEcom accommodate this?",
-    "Yes. The Emerging and Scaling plans support two or more GST numbers with state-wise reporting, so multi-state operations stay compliant without extra spreadsheets.",
+    "Yes. DeepEcom supports multiple GST numbers with state-wise reporting, so multi-state operations stay compliant without extra spreadsheets.",
   ],
   [
     "Will I need to manually upload files for accounting purposes?",
