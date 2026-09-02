@@ -1,126 +1,317 @@
 ---
-import SectionHeading from "../section-heading.astro"
+const clientLogos = [
+  { name: "GlobalBees", logo: "globalbees" },
+  { name: "Shiprocket", logo: "shiprocket" },
+  { name: "Sampatti", logo: "sampatti" },
+  { name: "Shree Maa Group", logo: "shreemaa" },
+  { name: "PEE SAFE", logo: "peesafe" },
+];
 
-const studies = [
-  {
-    label: "A multi-marketplace seller",
-    problem: "Settlements from three channels never matched the bank.",
-    process: "Monthly reconciliation in spreadsheets, days of manual matching.",
-    outcome: "Every settlement reconciled to its orders, automatically.",
-  },
-  {
-    label: "A D2C brand",
-    problem: "Website and marketplace sales lived in separate systems.",
-    process: "Profitability was guessed, not measured, across channels.",
-    outcome: "One consolidated view of profit across every channel.",
-  },
-  {
-    label: "A finance team",
-    problem: "Ecommerce entries had to be re-keyed into the ERP by hand.",
-    process: "GST and marketplace charges were mapped manually each close.",
-    outcome: "Detailed accounting posts straight into the ERP.",
-  },
-]
+const caseStudy = {
+  title: "How GlobalBees automated accounting across marketplaces and warehouses.",
+  stats: [
+    { num: 90, suffix: "%", label: "Reduction in manual accounting" },
+    { num: 100, suffix: "%", label: "Orders accounted accurately" },
+    { num: 3, suffix: "x", label: "Faster month-end closing" },
+  ],
+  href: "/case-studies/globalbees",
+  image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800",
+};
 ---
 
-<style is:global>
-  .customers-section {
-    padding: clamp(5.5rem, 12vh, 9rem) 0;
-    background: linear-gradient(180deg, var(--background) 0%, var(--ink-50) 100%);
+<section class="customers-strip-wrapper" id="customers" aria-label="Customer Success & Case Studies">
+  <div class="customers-card">
+    
+    <div class="logos-group reveal">
+      <span class="kicker">TRUSTED BY GROWING BUSINESSES</span>
+      
+      <div class="logo-row">
+        {clientLogos.map((item) => (
+          <div class="logo-item">
+            {item.logo === 'globalbees' && (
+              <div class="brand-text globalbees">
+                <span class="gb-icon">🐝</span>
+                <div class="gb-title">
+                  <strong>GlobalBees</strong>
+                  <small>BRANDS DELIVERED</small>
+                </div>
+              </div>
+            )}
+            {item.logo === 'shiprocket' && (
+              <div class="brand-text shiprocket">
+                <span class="sr-icon">📦</span> Shiprocket
+              </div>
+            )}
+            {item.logo === 'sampatti' && (
+              <div class="brand-text sampatti">
+                <span class="sp-logo">C</span>
+                <strong>Sampatti</strong>
+              </div>
+            )}
+            {item.logo === 'shreemaa' && (
+              <div class="brand-text shreemaa">
+                <span class="sm-icon">☀️</span>
+                <div class="sm-title">
+                  <strong>Shree Maa</strong>
+                  <small>Group</small>
+                </div>
+              </div>
+            )}
+            {item.logo === 'peesafe' && (
+              <div class="brand-text peesafe">
+                PEE SAFE
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="case-study-card reveal" data-delay="120">
+      <div class="case-study-content">
+        <h3>{caseStudy.title}</h3>
+        
+        <div class="stats-grid">
+          {caseStudy.stats.map((stat) => (
+            <div class="stat-item">
+              <span class="stat-value"><span class="count-num" data-count={stat.num}>{stat.num}</span>{stat.suffix}</span>
+              <span class="stat-label">{stat.label}</span>
+            </div>
+          ))}
+        </div>
+
+        <a href={caseStudy.href} class="case-study-link">
+          Read Case Study <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="case-study-image">
+        <img src={caseStudy.image} alt="Warehouse Operations Manager" />
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .customers-strip-wrapper {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
   }
-  .customers-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
-  }
-  .case-grid {
-    margin-top: 2.5rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  @media (min-width: 48rem) {
-    .case-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  .case-card {
+
+  /* Outer Container Card */
+  .customers-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.1rem;
-    padding: 1.5rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 1rem;
-    background: #fff;
+    gap: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   }
-  .case-card .case-tag {
-    align-self: flex-start;
-    font-size: 0.72rem;
+
+  @media (min-width: 64rem) {
+    .customers-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+  }
+
+  /* Left Column: Logos */
+  .logos-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .kicker {
+    display: block;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--brand-600);
-    background: var(--brand-50);
-    padding: 0.3rem 0.7rem;
-    border-radius: var(--radius-full);
+    color: #4f46e5;
+    margin-bottom: 1.25rem;
   }
-  .case-step strong {
-    display: block;
-    font-size: 0.72rem;
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.85rem;
+    border-right: 1px solid #f1f5f9;
+    height: 40px;
+  }
+
+  .logo-item:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  /* Brand Typography Specs */
+  .brand-text {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .globalbees {
+    color: #0f172a;
+  }
+  .gb-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .gb-title small {
+    font-size: 0.45rem;
+    letter-spacing: 0.05em;
+    color: #64748b;
+  }
+
+  .shiprocket {
+    font-weight: 800;
+    color: #0f172a;
+    font-size: 0.95rem;
+  }
+
+  .sampatti {
+    color: #1d4ed8;
+  }
+  .sp-logo {
+    background: #f59e0b;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: bold;
+  }
+
+  .shreemaa {
+    color: #1e3a8a;
+  }
+  .sm-title {
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+  }
+  .sm-title small {
+    font-size: 0.55rem;
+    color: #dc2626;
+  }
+
+  .peesafe {
+    border: 1.5px solid #0f172a;
+    padding: 2px 6px;
+    font-weight: 800;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: #0f172a;
+  }
+
+  /* Right Column: Case Study Card */
+  .case-study-card {
+    flex: 1.2;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 40rem) {
+    .case-study-card {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .case-study-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .case-study-content h3 {
+    font-size: 0.875rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-400);
+    color: #0f172a;
+    line-height: 1.35;
+    margin: 0 0 1rem 0;
   }
-  .case-step p {
+
+  .stats-grid {
+    display: flex;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat-value {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #4f46e5;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    line-height: 1.25;
     margin-top: 0.25rem;
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--ink-600);
   }
-  .case-step.is-outcome p {
-    color: var(--ink-900);
-    font-weight: 500;
+
+  .case-study-link {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #4f46e5;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
   }
-  .customers-note {
-    margin-top: 2rem;
-    text-align: center;
-    font-size: 0.8125rem;
-    color: var(--ink-400);
+
+  .case-study-image {
+    width: 100%;
+    height: 140px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: 40rem) {
+    .case-study-image {
+      width: 160px;
+      height: 140px;
+    }
+  }
+
+  .case-study-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 </style>
-
-<section class="customers-section" id="customers">
-  <div class="customers-inner">
-    <SectionHeading
-      eyebrow="Customers"
-      title="How teams bring ecommerce and accounting together."
-      lead="Every business is different — but the pattern is the same: fragmented data in, one connected layer out."
-      center
-    />
-
-    <div class="case-grid reveal">
-      {
-        studies.map((s) => (
-          <article class="case-card">
-            <span class="case-tag">{s.label}</span>
-            <div class="case-step">
-              <strong>Problem</strong>
-              <p>{s.problem}</p>
-            </div>
-            <div class="case-step">
-              <strong>Existing process</strong>
-              <p>{s.process}</p>
-            </div>
-            <div class="case-step is-outcome">
-              <strong>DeepEcom</strong>
-              <p>{s.outcome}</p>
-            </div>
-          </article>
-        ))
-      }
-    </div>
-
-    <p class="customers-note reveal">
-      Case studies use illustrative scenarios — specific customer names and metrics are added as they are verified.
-    </p>
-  </div>
-</section>

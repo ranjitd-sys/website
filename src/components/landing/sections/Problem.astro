@@ -2,212 +2,220 @@
 const points = [
   {
     title: "An order isn't just an order.",
-    icon: "M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0",
+    // Shopping Cart Icon
+    icon: "M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z",
   },
   {
     title: "A payment isn't just a payment.",
-    icon: "M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6",
+    // Credit Card Icon
+    icon: "M2 5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5zm0 5h20M6 15h2",
   },
   {
-    title: "And your settlement isn't just a payout.",
-    icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3z",
+    title: "And your settlement isn't your revenue.",
+    // Bank Building Icon
+    icon: "M3 21h18M3 10h18M5 10v11M9 10v11M13 10v11M17 10v11M12 3L2 7h20l-10-4z",
   },
-]
+];
 
-const events = ["Order", "GST", "Fee", "TCS / TDS", "Returns", "Inventory", "Settlements", "Payouts"]
+const events = [
+  "Orders",
+  "GST",
+  "Fees",
+  "TCS / TDS",
+  "Returns",
+  "Inventory",
+  "Settlements",
+  "Payouts",
+  "And more",
+];
 ---
 
-<style is:global>
-  .problem {
-    padding: var(--space-section-y) 0;
-    background: var(--background);
-  }
-  .problem-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
-  }
-
-  /* --- bordered header band --- */
-  .problem-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-    align-items: center;
-    border: 1px solid var(--ink-200);
-    border-radius: var(--radius-2xl);
-    background: var(--surface-subtle);
-    padding: clamp(2.25rem, 5vw, 3.5rem);
-  }
-  @media (min-width: 48rem) {
-    .problem-grid {
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
-      gap: 3rem;
-    }
-  }
-
-  .problem-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: var(--text-eyebrow);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--primary);
-  }
-  .problem-eyebrow::before {
-    content: "";
-    width: 1.5rem;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--brand-500);
-  }
-  .problem-title {
-    margin-top: 1.25rem;
-    font-size: clamp(2rem, 4vw, 3rem);
-    line-height: 1.1;
-    letter-spacing: var(--tracking-heading);
-    font-weight: var(--font-weight-bold);
-    text-wrap: balance;
-    color: var(--ink-950);
-  }
-  .problem-copy {
-    margin-top: 1.1rem;
-    max-width: 30rem;
-    font-size: clamp(1rem, 1.3vw, 1.125rem);
-    line-height: 1.7;
-    color: var(--ink-500);
-  }
-
-  /* --- 3 points --- */
-  .problem-points {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  @media (min-width: 48rem) {
-    .problem-points {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .problem-point {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 1.5rem 1.4rem;
-    border: 1px solid var(--ink-200);
-    border-radius: var(--radius-lg);
-    background: var(--card);
-    box-shadow: var(--shadow-xs);
-  }
-  .problem-point .ic {
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: var(--radius-md);
-    background: var(--brand-50);
-    color: var(--brand-600);
-  }
-  .problem-point .ic svg {
-    width: 1.4rem;
-    height: 1.4rem;
-  }
-  .problem-point p {
-    margin: 0;
-    font-size: 1.0625rem;
-    line-height: 1.45;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    text-wrap: balance;
-    color: var(--ink-900);
-  }
-
-  /* --- accounting events strip --- */
-  .problem-events {
-    margin-top: 1.25rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 1.5rem;
-    padding: 1.1rem 1.4rem;
-    border: 1px solid var(--ink-200);
-    border-radius: var(--radius-xl);
-    background: var(--card);
-    box-shadow: var(--shadow-xs);
-  }
-  .problem-events .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--ink-700);
-    white-space: nowrap;
-  }
-  .problem-events .sep {
-    width: 1px;
-    height: 1.1rem;
-    background: var(--ink-200);
-  }
-  .problem-events .multiply {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--brand-600);
-    white-space: nowrap;
-  }
-  .problem-events .multiply svg {
-    color: var(--brand-500);
-  }
-</style>
-
-<div class="problem">
-  <div class="problem-inner">
-    <div class="problem-grid reveal">
-      <!-- Left: title -->
-      <div>
-        <span class="problem-eyebrow">The problem</span>
-        <h2 class="problem-title">Ecommerce accounting is complicated.</h2>
-        <p class="problem-copy">
-          An order doesn't just create a sale. It creates fees, taxes, returns, inventory
-          movements and settlements — all of which have to reach your books.
-        </p>
+<div class="problem-wrapper">
+  <div class="problem-card reveal">
+    <!-- Top Grid Section -->
+    <div class="problem-top">
+      <div class="problem-header">
+        <span class="problem-eyebrow">THE PROBLEM</span>
+        <h2 class="problem-title">
+          Ecommerce accounting<br />is complicated.
+        </h2>
       </div>
 
-      <!-- Right: 3 points -->
       <div class="problem-points">
         {
           points.map((p) => (
             <div class="problem-point">
-              <span class="ic">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={p.icon}></path></svg>
-              </span>
-              <p>{p.title}</p>
+              <svg
+                class="point-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d={p.icon} />
+              </svg>
+              <p class="point-title">{p.title}</p>
             </div>
           ))
         }
       </div>
     </div>
 
-    <!-- accounting events strip -->
-    <div class="problem-events reveal">
-      {
-        events.map((e, i) => (
-          <>
-            <span class="chip">{e}</span>
-            {i < events.length - 1 && <span class="sep" aria-hidden="true"></span>}
-          </>
-        ))
-      }
-      <span class="multiply">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 17l-10-10M17 7L7 17" /></svg>
-        Multiply this by 100,000 orders
-      </span>
+    <!-- Divider Line -->
+    <div class="problem-divider" aria-hidden="true"></div>
+
+    <!-- Bottom Events & Multiplier Strip -->
+    <div class="problem-bottom">
+      <div class="problem-events">
+        {
+          events.map((e, i) => (
+            <>
+              <span class="event-item">{e}</span>
+              {i < events.length - 1 && <span class="event-dot">•</span>}
+            </>
+          ))
+        }
+      </div>
+
+      <div class="problem-multiply">
+        Multiply that by <span class="highlight">100,000 orders.</span>
+      </div>
     </div>
   </div>
 </div>
+
+<style>
+  .problem-wrapper {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin-inline: auto;
+    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+    background: transparent;
+  }
+
+  /* Single unified container matching image */
+  .problem-card {
+    width: 100%;
+    background: #f6f7fd;
+    border: 1px solid #eaeeed;
+    border-radius: 20px;
+    padding: 3rem 3.5rem 2.25rem;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Top Section Grid */
+  .problem-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (min-width: 52rem) {
+    .problem-top {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr);
+    }
+  }
+
+  .problem-eyebrow {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    margin-bottom: 0.75rem;
+  }
+
+  .problem-title {
+    margin: 0;
+    font-size: clamp(1.85rem, 3vw, 2.5rem);
+    line-height: 1.15;
+    font-weight: 800;
+    color: #0b132a;
+    letter-spacing: -0.02em;
+  }
+
+  /* 3 Points Column Grid */
+  .problem-points {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 40rem) {
+    .problem-points {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .problem-point {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  /* Frameless clean SVG icons */
+  .point-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    color: #4f46e5;
+    stroke-width: 1.8;
+  }
+
+  .point-title {
+    margin: 0;
+    font-size: 1.125rem;
+    line-height: 1.35;
+    font-weight: 700;
+    color: #0b132a;
+    letter-spacing: -0.01em;
+  }
+
+  /* Thin separator line */
+  .problem-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 2.5rem 0 1.5rem;
+    opacity: 0.8;
+  }
+
+  /* Bottom Strip */
+  .problem-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+  }
+
+  .problem-events {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #717d96;
+  }
+
+  .event-dot {
+    color: #a0aec0;
+    font-size: 0.75rem;
+  }
+
+  .problem-multiply {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #0b132a;
+    letter-spacing: -0.01em;
+  }
+
+  .problem-multiply .highlight {
+    color: #4f46e5;
+  }
+</style>

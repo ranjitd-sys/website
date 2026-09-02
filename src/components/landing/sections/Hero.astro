@@ -1,7 +1,7 @@
 ---
 import { ArrowRight } from "lucide-react"
 import HeroDiagram from "@/components/landing/HeroDiagram.astro"
-import HeroDashboard from "@/components/landing/HeroDashboard.astro"
+import DashboardPreview from "./DashboardPreview.astro"
 ---
 
 <style is:global>
@@ -11,13 +11,17 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
       radial-gradient(48rem 22rem at 78% -10%, rgba(83, 58, 253, 0.14), transparent 60%),
       radial-gradient(36rem 18rem at 12% -6%, rgba(127, 125, 252, 0.1), transparent 58%),
       linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
-    padding-top: clamp(6rem, 9vh, 7.5rem);
-    padding-bottom: clamp(2.5rem, 6vh, 4rem);
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-top: clamp(4.5rem, 6vh, 5.5rem);
+    padding-bottom: clamp(2rem, 4vh, 3rem);
     overflow: hidden;
   }
 
   .hero-container {
-    max-width: 80rem;
+    width: 100%;
+    max-width: 86rem;
     margin-inline: auto;
     padding-inline: var(--space-gutter);
   }
@@ -25,14 +29,21 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
   .hero-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
     align-items: center;
   }
 
   @media (min-width: 64rem) {
     .hero-grid {
-      grid-template-columns: 0.92fr 1.08fr;
+      grid-template-columns: 0.84fr 1.16fr;
       gap: 2.5rem;
+    }
+  }
+
+  /* Tighter stacking gap on single-column (tablet) hero */
+  @media (min-width: 48rem) and (max-width: 63.99rem) {
+    .hero-grid {
+      gap: 2rem;
     }
   }
 
@@ -63,7 +74,7 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
   }
 
   .hero-title {
-    margin-top: 1.4rem;
+    margin-top: 1.1rem;
     font-size: clamp(2.5rem, 4.6vw, 4rem);
     line-height: 1.03;
     letter-spacing: -0.04em;
@@ -71,12 +82,13 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
     color: var(--ink-950);
     text-wrap: balance;
   }
-  .hero-title .dot {
+  .hero-title .dot,
+  .hero-title .accent {
     color: var(--brand-500);
   }
 
   .hero-lead {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     max-width: 32rem;
     font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
     line-height: 1.65;
@@ -84,7 +96,7 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
   }
 
   .hero-actions {
-    margin-top: 1.9rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -131,7 +143,7 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
   }
 
   .hero-note {
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -150,6 +162,62 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
     width: 100%;
   }
 
+  /* On desktop the visual is viewport-height so the dashboard preview
+     bleeds off the bottom edge — the editorial "product peek" crop */
+  @media (min-width: 64rem) {
+    .hero-visual {
+      height: calc(100svh - clamp(4.5rem, 6vh, 5.5rem) - clamp(2rem, 4vh, 3rem));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    /* keep the diagram compact so the dashboard's KPIs + charts are in view */
+    .hero-diagram-wrap {
+      flex-shrink: 0;
+      padding: 0 0 0.5rem;
+    }
+  }
+
+  /* Dashboard preview inside the hero: strip the section band so it reads
+     as a floating product card, and drop the settlements feed for a clear
+     overview (it's cropped by the hero edge anyway) */
+  .hero-visual .dash-stage {
+    background: transparent;
+    border: none;
+  }
+  .hero-visual .dash-stage aside {
+    display: none !important;
+  }
+  .hero-visual .dash-stage [class*="grid-cols-[1fr_340px]"] {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---------- Mobile & tablet tightening ---------- */
+  @media (max-width: 48rem) {
+    .hero-section {
+      padding-top: 4.25rem;
+      padding-bottom: 2.5rem;
+    }
+    .hero-grid {
+      gap: 2.25rem;
+    }
+    .hero-title {
+      font-size: clamp(2.05rem, 8vw, 2.55rem);
+      line-height: 1.08;
+    }
+    .hero-lead {
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .hero-actions {
+      margin-top: 1.5rem;
+    }
+    .hero-note {
+      margin-top: 1.5rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .hero-section {
       background: linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
@@ -161,16 +229,15 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
   <div class="hero-container">
     <div class="hero-grid">
       <!-- Left column: copy + CTAs -->
-      <div class="hero-copy">
-        <span class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>The accounting layer built for ecommerce business</span>
+      <div class="hero-copy reveal">
+        <span class="hero-eyebrow"><span class="dot" aria-hidden="true"></span>Your accounting layer for ecommerce</span>
 
         <h1 class="hero-title">
-          The accounting layer built for ecommerce businesses<span class="dot">.</span>
+          The <span class="accent">accounting layer</span> built for ecommerce businesses<span class="dot">.</span>
         </h1>
 
         <p class="hero-lead">
-          Connect your marketplaces, understand your profitability, reconcile your payments, and
-          automatically account every transaction in your ERP.
+          Connect your marketplaces. Understand your profitability. Reconcile every payment. And automatically account transactions in your ERP.
         </p>
 
         <div class="hero-actions">
@@ -190,9 +257,9 @@ import HeroDashboard from "@/components/landing/HeroDashboard.astro"
       </div>
 
       <!-- Right column: pipeline + dashboard composition -->
-      <div class="hero-visual">
+      <div class="hero-visual reveal" data-delay="140">
         <HeroDiagram />
-        <HeroDashboard />
+        <DashboardPreview compact />
       </div>
     </div>
   </div>

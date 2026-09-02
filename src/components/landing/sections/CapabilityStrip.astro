@@ -2,156 +2,184 @@
 const capabilities = [
   {
     title: "Order-wise",
-    desc: "Every order accounted individually, never lumped into summaries",
+    desc: "Every order accounted for",
     icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4",
   },
   {
     title: "GST-wise",
-    desc: "IGST, CGST, SGST split by type and state, ERP-ready",
+    desc: "Tax-level accounting",
     icon: "M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z",
   },
   {
     title: "Warehouse-wise",
-    desc: "Stock and values tracked per warehouse and fulfilment centre",
+    desc: "Across locations and warehouses",
     icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4",
   },
   {
     title: "Marketplace-wise",
-    desc: "Fees, charges and payouts handled separately per marketplace",
+    desc: "Separate channel accounting",
     icon: "M3 21V8l9-5 9 5v13M9 21v-6h6v6M9 10h.01M15 10h.01M9 14h.01M15 14h.01",
   },
   {
     title: "Returns",
-    desc: "Returns and refunds flow into your books automatically",
+    desc: "Sales & return accounting",
     icon: "M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15",
   },
   {
     title: "Stock Transfers",
-    desc: "Inter-warehouse movement accounted without inventory drift",
+    desc: "Inventory movements accounted for",
     icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4",
   },
   {
     title: "TCS / TDS",
-    desc: "Withholding tax captured and posted exactly where it belongs",
+    desc: "Auto calculation and accounting",
     icon: "M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z",
   },
-]
+];
 ---
 
-<style is:global>
-  .capability-band {
-    border-block: 1px solid var(--ink-200);
-    background: var(--surface-subtle);
-    padding: clamp(3.5rem, 8vh, 5.5rem) 0;
-  }
-  .capability-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
-  }
-  .capability-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 0.5rem 1rem;
-    margin-bottom: 2.25rem;
-  }
-  .capability-title {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    font-weight: var(--font-weight-bold);
-    color: var(--ink-950);
-  }
-  .capability-note {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--ink-400);
-  }
-  .capability-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border: 1px solid var(--ink-200);
-    border-radius: var(--radius-xl);
-    background: #fff;
-    overflow: hidden;
-    box-shadow: var(--shadow-xs);
-  }
-  @media (min-width: 48rem) {
-    .capability-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  .capability-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding: 1.4rem 1.25rem;
-    border-right: 1px solid var(--ink-100);
-    border-bottom: 1px solid var(--ink-100);
-  }
-  @media (max-width: 47.99rem) {
-    .capability-cell:nth-child(2n) {
-      border-right: 0;
-    }
-  }
-  @media (min-width: 48rem) {
-    .capability-cell:nth-child(4n) {
-      border-right: 0;
-    }
-    .capability-cell:nth-last-child(-n + 3) {
-      border-bottom: 0;
-    }
-  }
-  .capability-cell:last-child {
-    border-bottom: 0;
-  }
-  .capability-icon {
-    display: grid;
-    place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-md);
-    background: var(--brand-50);
-    color: var(--brand-600);
-  }
-  .capability-icon svg {
-    width: 1.1rem;
-    height: 1.1rem;
-  }
-  .capability-cell strong {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--ink-900);
-    letter-spacing: -0.01em;
-  }
-  .capability-cell span {
-    font-size: 0.8125rem;
-    line-height: 1.55;
-    color: var(--ink-500);
-  }
-</style>
+<section class="capability-strip-wrapper" aria-label="Capabilities Overview">
+  <div class="capability-card">
+    
+    <!-- Header Kicker -->
+    <span class="kicker">COMPLETE ECOMMERCE ACCOUNTING</span>
 
-<section class="capability-band" id="capabilities" aria-label="Accounting capabilities">
-  <div class="capability-inner">
-    <div class="capability-head reveal">
-      <h2 class="capability-title">Complete accounting, built to match ecommerce complexity.</h2>
-      <span class="capability-note">Detailed, line-by-line — ready for your ERP</span>
-    </div>
-
-    <div class="capability-grid reveal">
+    <!-- 7-Column Grid -->
+    <div class="capability-grid">
       {
-        capabilities.map((c) => (
-          <div class="capability-cell">
-            <span class="capability-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={c.icon} /></svg>
-            </span>
-            <strong>{c.title}</strong>
-            <span>{c.desc}</span>
+        capabilities.map((c, i) => (
+          <div class="capability-item reveal" data-delay={i * 60}>
+            <div class="icon-bubble">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d={c.icon} />
+              </svg>
+            </div>
+            <div class="item-text">
+              <strong>{c.title}</strong>
+              <p>{c.desc}</p>
+            </div>
           </div>
         ))
       }
     </div>
+
   </div>
 </section>
+
+<style>
+  .capability-strip-wrapper {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+  }
+
+  /* Single Outer White Card Container */
+  .capability-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Blue Header Text */
+  .kicker {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Grid Layout: Stacks on mobile, 7 columns on large desktop */
+  .capability-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 40rem) {
+    .capability-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .capability-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .capability-grid {
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+    }
+  }
+
+  /* Individual Item Layout */
+  .capability-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  /* Subtle vertical divider between items on full screen */
+  @media (min-width: 80rem) {
+    .capability-item {
+      border-right: 1px solid #f1f5f9;
+      padding-left: 0.75rem;
+    }
+    .capability-item:first-child {
+      padding-left: 0;
+    }
+    .capability-item:last-child {
+      border-right: none;
+      padding-right: 0;
+    }
+  }
+
+  /* Circular Icon Avatar */
+  .icon-bubble {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: #e0e7ff; /* Very light purple/blue tint */
+    color: #4338ca;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .icon-bubble svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  /* Text Content */
+  .item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .item-text strong {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .item-text p {
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    color: #64748b;
+    margin: 0;
+  }
+</style>

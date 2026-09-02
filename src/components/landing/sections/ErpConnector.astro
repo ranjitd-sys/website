@@ -1,81 +1,262 @@
 ---
-import AccountingPreview from "@/components/landing/AccountingPreview.astro"
+const accountingEntries = [
+  { date: "11 May 2023", txn: "Order - HZ89 898...", ledger: "Sales", debit: "₹1,249.50", credit: "-" },
+  { date: "11 May 2023", txn: "CGST 9%", ledger: "Output CGST", debit: "₹112.45", credit: "-" },
+  { date: "11 May 2023", txn: "SGST 9%", ledger: "Output SGST", debit: "₹112.45", credit: "-" },
+  { date: "11 May 2023", txn: "Amazon Fee", ledger: "Vendor A/c", debit: "-", credit: "₹275.00" },
+  { date: "11 May 2023", txn: "TCS", ledger: "TCS Payable", debit: "-", credit: "₹13.00" },
+];
 ---
 
-<style is:global>
-  .showcase {
-    position: relative;
+<section class="erp-showcase" id="erp-connector" aria-label="DeepEcom ERP Connector">
+  <div class="erp-card">
+    <div class="showcase-row row-flip">
+
+      <!-- Copy -->
+      <div class="showcase-copy reveal">
+      <span class="kicker">DEEPECOM ERP CONNECTOR</span>
+      <h3 class="title">
+        Account every transaction.<br />Automatically.
+      </h3>
+      
+      <p class="desc">
+        Automatically post detailed, order-level accounting entries in Tally, SAP or Zoho Books with complete accuracy.
+      </p>
+
+      <a href="/erp-connector" class="cta-link">
+        Explore ERP Connector
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12h14M12 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Right Side Dashboard UI -->
+    <div class="preview-wrapper reveal" data-delay="120">
+      <div class="accounting-card">
+        
+        <div class="card-header">
+          <h4 class="card-title">Accounting Entries</h4>
+        </div>
+
+        <div class="table-container">
+          <!-- Table Header -->
+          <div class="table-header">
+            <span>Date</span>
+            <span>Transaction</span>
+            <span>Ledger</span>
+            <span class="align-right">Debit</span>
+            <span class="align-right">Credit</span>
+          </div>
+
+          <!-- Table Rows -->
+          <div class="table-body">
+            {accountingEntries.map((entry) => (
+              <div class="table-row">
+                <span class="col-text faint">{entry.date}</span>
+                <span class="col-text">{entry.txn}</span>
+                <span class="col-text">{entry.ledger}</span>
+                <span class="col-text align-right bold">{entry.debit}</span>
+                <span class="col-text align-right bold">{entry.credit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Card Footer -->
+        <div class="card-footer">
+          <div class="status-badge">
+            <span class="status-text">Posted to Tally</span>
+            <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span class="voucher-text">Voucher No. 1568</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Card — single dark surface with a soft cyan-tinted radial glow */
+  .erp-card {
+    background-color: #0b1120;
+    background-image: radial-gradient(circle at 10% 0%, #083344 0%, #0b1120 62%);
+    border-radius: 24px;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem);
     overflow: hidden;
-    border-radius: var(--radius-2xl);
-    background:
-      radial-gradient(36rem 20rem at 10% -12%, rgba(83, 58, 253, 0.2), transparent 60%),
-      linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
-    color: var(--ink-100);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Left Copy */
+  .showcase-copy {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
-    padding: clamp(2rem, 4vw, 2.75rem);
-    height: 100%;
   }
-  .showcase .kicker {
-    font-size: 0.7rem;
+
+  .kicker {
+    font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.16em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--brand-300);
+    color: #06b6d4;
   }
-  .showcase h3 {
-    margin-top: 0.9rem;
-    max-width: 26rem;
-    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    font-weight: var(--font-weight-bold);
-    color: #fff;
-    text-wrap: balance;
+
+  .title {
+    margin-top: 0.875rem;
+    font-size: clamp(1.85rem, 2.5vw, 2.35rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: #ffffff;
   }
-  .showcase p {
-    margin-top: 0.9rem;
-    max-width: 28rem;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--ink-400);
+
+  .desc {
+    margin-top: 1rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    max-width: 32rem;
   }
-  .showcase-cta {
+
+  .cta-link {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 0.25rem;
+    margin-top: 1.5rem;
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--brand-300);
+    color: #67e8f9;
     text-decoration: none;
-    transition: gap var(--transition-base), color var(--transition-base);
+    transition: gap 0.2s ease, color 0.2s ease;
   }
-  .showcase-cta:hover {
+
+  .cta-link:hover {
     gap: 0.75rem;
-    color: #fff;
+    color: #a5f3fc;
   }
-  .showcase-media {
+
+  /* Right Accounting Card */
+  .preview-wrapper {
+    width: 100%;
+    filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.3));
+  }
+
+  .accounting-card {
+    background: #ffffff;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem) clamp(1.25rem, 2.5vw, 1.75rem) 0.75rem;
+  }
+
+  .card-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+  }
+
+  /* Table Styles */
+  .table-container {
+    padding: 0 clamp(1.25rem, 2.5vw, 1.75rem);
+    margin-top: 1rem;
+  }
+
+  .table-header {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr 1.5fr 1fr 1fr;
+    gap: 0.875rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #64748b;
+  }
+
+  .table-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr 1.5fr 1fr 1fr;
+    gap: 0.875rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px dashed #f1f5f9;
+    align-items: center;
+  }
+
+  .table-row:last-child {
+    border-bottom: none;
+  }
+
+  .col-text {
+    font-size: 0.75rem;
+    color: #334155;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .col-text.faint {
+    color: #64748b;
+  }
+
+  .col-text.bold {
+    font-weight: 600;
+    color: #0f172a;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.7rem;
+  }
+
+  .align-right {
+    text-align: right;
+  }
+
+  /* Footer Badge */
+  .card-footer {
+    background: #f8fafc;
+    padding: 1.1rem clamp(1.25rem, 2.5vw, 1.75rem);
+    border-top: 1px solid #f1f5f9;
     margin-top: auto;
-    filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.4));
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 0.4rem 0.85rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .status-text {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #475569;
+  }
+
+  .check-icon {
+    width: 14px;
+    height: 14px;
+    color: #10b981;
+  }
+
+  .voucher-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-left: 0.25rem;
   }
 </style>
-
-<section class="showcase" id="erp-connector" aria-label="DeepEcom ERP Connector">
-  <div>
-    <span class="kicker">ERP Connector</span>
-    <h3>Account every transaction. Automatically.</h3>
-    <p>
-      Convert ecommerce orders into detailed, GST-ready accounting entries and post them into
-      your ERP — order by order, warehouse by warehouse.
-    </p>
-    <a href="/erp-connector" class="showcase-cta">
-      Explore ERP Connector
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-    </a>
-  </div>
-  <div class="showcase-media">
-    <AccountingPreview />
-  </div>
-</section>

@@ -1,144 +1,213 @@
 ---
-import { buttonVariants } from "@/components/landing/ui/button"
-import { ArrowRight } from "lucide-react"
-
-const trust = [
-  "Read-only API access",
-  "GST-compliant exports",
-  "Your data is never resold",
-]
+const microNotes = [
+  "No credit card required",
+  "Set up in minutes",
+];
 ---
 
-<style is:global>
-  .final-cta {
-    padding: clamp(5.5rem, 12vh, 9rem) 0;
-  }
-  .final-cta-card {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    border-radius: 1.75rem;
-    background:
-      radial-gradient(48rem 26rem at 85% -10%, rgba(127, 125, 252, 0.28), transparent 60%),
-      radial-gradient(36rem 20rem at 8% 115%, rgba(83, 58, 253, 0.3), transparent 60%),
-      linear-gradient(180deg, var(--ink-900) 0%, var(--ink-950) 100%);
-    box-shadow: var(--shadow-2xl);
-    padding: clamp(3.5rem, 8vw, 6rem) var(--space-gutter);
-    text-align: center;
-    color: #fff;
-  }
-  .final-cta-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0.5;
-    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-    background-size: 22px 22px;
-    mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(60% 60% at 50% 40%, #000 0%, transparent 100%);
-    pointer-events: none;
-  }
-  .final-cta-eyebrow {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--brand-300);
-  }
-  .final-cta-title {
-    margin-top: 1rem;
-    font-size: clamp(2rem, 4.4vw, 3.25rem);
-    line-height: 1.08;
-    letter-spacing: -0.035em;
-    font-weight: var(--font-weight-bold);
-    color: #fff;
-    max-width: 46rem;
-    margin-inline: auto;
-    text-wrap: balance;
-  }
-  .final-cta-lead {
-    margin: 1.1rem auto 0;
-    max-width: 36rem;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    color: var(--ink-300);
-  }
-  .final-cta-actions {
-    margin-top: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-  .final-cta-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.8125rem 1.5rem;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    background: rgba(255, 255, 255, 0.04);
-    color: #fff;
-    font-size: var(--text-lead);
-    font-weight: var(--font-weight-semibold);
-    line-height: 1.2;
-    text-decoration: none;
-    white-space: nowrap;
-    transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .final-cta-secondary:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: var(--shadow-sm);
-    color: #fff;
-  }
-  .final-cta-trust {
-    margin-top: 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.25rem;
-    justify-content: center;
-  }
-  .final-cta-trust li {
-    display: flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--ink-300);
-  }
-  .final-cta-trust svg {
-    color: var(--brand-300);
-  }
-</style>
+<section class="cta-banner-wrapper" id="get-started">
+  <div class="cta-banner">
+    
+    <!-- Left Group: Logo + Typography -->
+    <div class="cta-content-left">
+      <!-- Circular Logo Avatar -->
+      <div class="logo-avatar">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="brand-icon">
+          <path d="M16 4L6 9.5V22.5L16 28L26 22.5V9.5L16 4Z" stroke="#2563eb" stroke-width="2.5" stroke-linejoin="round"/>
+          <path d="M10 12L16 15.5L22 12" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 16.5L16 20L22 16.5" stroke="#2563eb" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
 
-<section class="final-cta" id="get-started">
-  <div class="final-cta-card reveal">
-    <span class="final-cta-eyebrow">The accounting layer for ecommerce</span>
-    <h2 class="final-cta-title">Bring your ecommerce business and your books together.</h2>
-    <p class="final-cta-lead">
-      Connect your marketplaces, understand your business and automate ecommerce accounting.
-    </p>
-    <div class="final-cta-actions">
-      <a href="/contact" class={buttonVariants({ variant: "white", size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/contact" class="final-cta-secondary">
-        Talk to an Expert
-      </a>
+      <!-- Text Container -->
+      <div class="text-group">
+        <h2 class="banner-title">
+          Bring your ecommerce business<br />and your books together.
+        </h2>
+        <p class="banner-lead">
+          Connect your marketplaces. Understand your business.<br />Automate your accounting.
+        </p>
+      </div>
     </div>
-    <ul class="final-cta-trust">
-      {
-        trust.map((t) => (
-          <li>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
-            {t}
-          </li>
-        ))
-      }
-    </ul>
+
+    <!-- Right Group: Buttons + Micro Copy -->
+    <div class="cta-content-right">
+      <div class="button-group">
+        <a href="/contact" class="btn-primary">
+          Book a Demo <span class="arrow">→</span>
+        </a>
+        <a href="/contact" class="btn-secondary">
+          Talk to an Expert
+        </a>
+      </div>
+
+      <div class="micro-notes">
+        <span>{microNotes[0]}</span>
+        <span class="dot">•</span>
+        <span>{microNotes[1]}</span>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<style>
+  .cta-banner-wrapper {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Main Container Card with Dark Blue Gradient */
+  .cta-banner {
+    background: linear-gradient(135deg, #07091e 0%, #0d1238 50%, #171d54 100%);
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    box-shadow: 0 10px 30px rgba(7, 9, 30, 0.35);
+  }
+
+  @media (min-width: 64rem) {
+    .cta-banner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  /* Left Section Layout */
+  .cta-content-left {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  /* Circular White Logo Avatar */
+  .logo-avatar {
+    width: 4.25rem;
+    height: 4.25rem;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+  }
+
+  .brand-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  /* Text Styles */
+  .text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .banner-title {
+    color: #ffffff;
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  @media (min-width: 48rem) {
+    .banner-title {
+      font-size: 1.875rem;
+    }
+  }
+
+  .banner-lead {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Right Section Layout */
+  .cta-content-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    align-items: flex-start;
+  }
+
+  @media (min-width: 64rem) {
+    .cta-content-right {
+      align-items: flex-start;
+    }
+  }
+
+  /* Button Group */
+  .button-group {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  /* Solid Blue Primary Button */
+  .btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.75rem 1.35rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: background 0.2s ease, transform 0.15s ease;
+  }
+
+  .btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+  }
+
+  .btn-primary .arrow {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  /* Outlined Secondary Button */
+  .btn-secondary {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.75rem 1.35rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Micro Copy Footer Notes */
+  .micro-notes {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.725rem;
+    color: #64748b;
+  }
+
+  .micro-notes .dot {
+    font-size: 0.6rem;
+  }
+</style>

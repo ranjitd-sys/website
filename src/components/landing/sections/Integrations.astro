@@ -1,220 +1,287 @@
 ---
-import SectionHeading from "../section-heading.astro"
-import IntegrationsTabs from "../integrations-tabs"
+const marketplaces = [
+  { name: "Amazon", logo: "amazon" },
+  { name: "Flipkart", logo: "flipkart" },
+  { name: "Shopify", logo: "shopify" },
+  { name: "Meesho", logo: "meesho" },
+  { name: "Myntra", logo: "myntra" },
+];
+
+const erps = [
+  { name: "Tally", logo: "tally" },
+  { name: "SAP", logo: "sap" },
+  { name: "Zoho Books", logo: "zoho" },
+  { name: "Busy", logo: "busy" },
+];
 ---
 
-<style is:global>
-  .integrations-section {
-    padding: clamp(4rem, 8vh, 6rem) 0;
-  }
-  .integrations-inner {
-    max-width: 64rem;
-    margin-inline: auto;
-    padding-inline: 1.5rem;
-  }
-  
-  /* Minimal Flow Architecture */
-  .int-flow-container {
-    margin-top: 3.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
+<section class="integrations-strip-wrapper" aria-label="Supported Integrations">
+  <div class="integrations-card reveal">
+    
+    <!-- Left Section: Marketplaces -->
+    <div class="int-group">
+      <span class="kicker">WORKS WITH THE SYSTEMS YOU USE</span>
+      
+      <div class="logo-row">
+        {marketplaces.map((item) => (
+          <div class="logo-item">
+            {item.logo === 'amazon' && (
+              <span class="brand-text amazon">amazon</span>
+            )}
+            {item.logo === 'flipkart' && (
+              <span class="brand-text flipkart">Flipkart <span class="fk-box">f</span></span>
+            )}
+            {item.logo === 'shopify' && (
+              <span class="brand-text shopify"><span class="sp-icon">🛍️</span> shopify</span>
+            )}
+            {item.logo === 'meesho' && (
+              <span class="brand-text meesho">meesho</span>
+            )}
+            {item.logo === 'myntra' && (
+              <span class="brand-text myntra"><span class="m-icon">M</span> Myntra</span>
+            )}
+          </div>
+        ))}
+        
+        <div class="logo-item more-badge">
+          <span>+ More</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Divider Line -->
+    <div class="center-divider"></div>
+
+    <!-- Right Section: ERPs & Accounting -->
+    <div class="int-group">
+      <span class="kicker">ERPs & ACCOUNTING</span>
+      
+      <div class="logo-row">
+        {erps.map((item) => (
+          <div class="logo-item">
+            {item.logo === 'tally' && (
+              <div class="tally-box">
+                <span class="tally-title">Tally</span>
+                <span class="tally-sub">POWER OF SIMPLICITY</span>
+              </div>
+            )}
+            {item.logo === 'sap' && (
+              <span class="sap-badge">SAP</span>
+            )}
+            {item.logo === 'zoho' && (
+              <span class="brand-text zoho"><span class="zh-box">Z</span> Zoho Books</span>
+            )}
+            {item.logo === 'busy' && (
+              <span class="brand-text busy">busy</span>
+            )}
+          </div>
+        ))}
+
+        <div class="logo-item more-badge">
+          <span>+ More</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .integrations-strip-wrapper {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
   }
 
-  @media (min-width: 48rem) {
-    .int-flow-container {
+  /* Outer White Container Card */
+  .integrations-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.75rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  @media (min-width: 64rem) {
+    .integrations-card {
       flex-direction: row;
+      align-items: center;
       justify-content: space-between;
-      align-items: stretch;
-      gap: 1rem;
+      gap: 2rem;
     }
   }
 
-  .int-card {
+  /* Sub Group Layout */
+  .int-group {
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 1.75rem 1.25rem;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 0.75rem;
-    background: #ffffff;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Vertical Divider */
+  .center-divider {
     width: 100%;
+    height: 1px;
+    background-color: #f1f5f9;
   }
 
-  .int-card:hover {
-    border-color: rgba(0, 0, 0, 0.15);
-    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
-  }
-
-  .int-card.is-core {
-    border-color: var(--brand-500);
-    background: var(--brand-500);
-    color: #ffffff;
-  }
-
-  .int-icon-wrapper {
-    width: 2.75rem;
-    height: 2.75rem;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: #f4f4f5;
-    color: #18181b;
-    margin-bottom: 1rem;
-  }
-
-  .int-card.is-core .int-icon-wrapper {
-    background: rgba(255, 255, 255, 0.15);
-    color: #ffffff;
-  }
-
-  .int-icon-wrapper svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-
-  .int-card .c-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.75rem;
-  }
-
-  .int-card .c-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.375rem;
-    justify-content: center;
-  }
-
-  .int-card .pill {
-    font-size: 0.75rem;
-    font-weight: 500;
-    padding: 0.25rem 0.625rem;
-    border-radius: 9999px;
-    background: #f4f4f5;
-    color: #52525b;
-  }
-
-  .int-card.is-core .pill {
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  /* Connection Arrow */
-  .int-connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #a1a1aa;
-    padding: 0.5rem;
-  }
-
-  .int-connector svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    transform: rotate(90deg);
-  }
-
-  @media (min-width: 48rem) {
-    .int-connector svg {
-      transform: rotate(0deg);
+  @media (min-width: 64rem) {
+    .center-divider {
+      width: 1px;
+      height: 60px;
     }
   }
 
-  .int-tabs {
-    margin-top: 3.5rem;
+  /* Header Kicker */
+  .kicker {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Logo Items Row */
+  .logo-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .logo-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.85rem;
+    border-right: 1px solid #f1f5f9;
+    height: 36px;
+  }
+
+  .logo-item:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  /* Brand Typography & Badges */
+  .brand-text {
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-text.amazon {
+    color: #000000;
+    font-family: Arial, sans-serif;
+  }
+
+  .brand-text.flipkart {
+    color: #2874f0;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .fk-box {
+    background: #ff9f00;
+    color: #fff;
+    font-size: 0.65rem;
+    padding: 1px 4px;
+    border-radius: 2px;
+    font-style: normal;
+  }
+
+  .brand-text.shopify {
+    color: #000000;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .brand-text.meesho {
+    color: #f43f5e;
+    font-weight: 700;
+  }
+
+  .brand-text.myntra {
+    color: #000000;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.9rem;
+  }
+
+  .m-icon {
+    color: #ff3f6c;
+    font-weight: 900;
+  }
+
+  .tally-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .tally-title {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    font-size: 1.15rem;
+    color: #000000;
+    font-style: italic;
+  }
+
+  .tally-sub {
+    font-size: 0.4rem;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+  }
+
+  .sap-badge {
+    background: #008fd3;
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .brand-text.zoho {
+    color: #000000;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .zh-box {
+    border: 1.5px solid #22c55e;
+    color: #22c55e;
+    font-size: 0.65rem;
+    padding: 0 3px;
+    border-radius: 3px;
+  }
+
+  .brand-text.busy {
+    color: #1d4ed8;
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  .more-badge {
+    font-size: 0.725rem;
+    font-weight: 600;
+    color: #64748b;
   }
 </style>
-
-<section class="integrations-section" id="integrations">
-  <div class="integrations-inner">
-    <SectionHeading
-      eyebrow="Integrations"
-      title="Works with the systems you already use."
-      lead="Marketplace activity flows into DeepEcom, and DeepEcom posts detailed accounting into your ERP — no walls of disconnected logos."
-      center
-    />
-
-    <div class="int-flow-container reveal" role="img" aria-label="Data flow integration diagram from Marketplaces to DeepEcom to ERPs">
-      <!-- Input Node -->
-      <div class="int-card">
-        <div class="int-icon-wrapper">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <path d="M16 10a4 4 0 0 1-8 0"></path>
-          </svg>
-        </div>
-        <span class="c-title">Marketplaces</span>
-        <div class="c-items">
-          <span class="pill">Amazon</span>
-          <span class="pill">Flipkart</span>
-          <span class="pill">Shopify</span>
-          <span class="pill">Meesho</span>
-          <span class="pill">More</span>
-        </div>
-      </div>
-
-      <!-- Connector 1 -->
-      <div class="int-connector" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="13 6 19 12 13 18"></polyline>
-        </svg>
-      </div>
-
-      <!-- Central Engine Node -->
-      <div class="int-card is-core">
-        <div class="int-icon-wrapper">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-            <line x1="6" y1="6" x2="6.01" y2="6"></line>
-            <line x1="6" y1="18" x2="6.01" y2="18"></line>
-          </svg>
-        </div>
-        <span class="c-title">DeepEcom</span>
-        <div class="c-items">
-          <span class="pill">Intelligence</span>
-          <span class="pill">Reconciliation</span>
-          <span class="pill">Accounting</span>
-        </div>
-      </div>
-
-      <!-- Connector 2 -->
-      <div class="int-connector" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="13 6 19 12 13 18"></polyline>
-        </svg>
-      </div>
-
-      <!-- Output Node -->
-      <div class="int-card">
-        <div class="int-icon-wrapper">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-        </div>
-        <span class="c-title">ERP & Financials</span>
-        <div class="c-items">
-          <span class="pill">Tally</span>
-          <span class="pill">SAP</span>
-          <span class="pill">Zoho</span>
-          <span class="pill">More</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="int-tabs reveal">
-      <IntegrationsTabs client:load />
-    </div>
-  </div>
-</section>

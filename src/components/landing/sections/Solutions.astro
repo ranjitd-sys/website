@@ -1,221 +1,230 @@
 ---
-import SectionHeading from "../section-heading.astro"
-
-const business = [
+const solutions = [
   {
     label: "Amazon Sellers",
-    desc: "Understand profitability, reconcile marketplace payments and automate accounting.",
+    desc: "End-to-end visibility into Amazon business and settlements.",
     href: "/solutions/amazon-sellers",
-    icon: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM5 10l2 2 5-6M12 8v6M10 11h4",
+    type: "brand",
+    icon: "amazon",
   },
   {
     label: "D2C Brands",
-    desc: "Bring website and marketplace financial data together.",
+    desc: "Unify marketplace, D2C sales and ERP in one financial view.",
     href: "/solutions/d2c-brands",
-    icon: "M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 21v-6h6v6",
+    type: "brand",
+    icon: "shopify",
   },
   {
     label: "Enterprise",
-    desc: "Handle high-volume ecommerce accounting across warehouses, marketplaces and ERP systems.",
+    desc: "High volume, multi-warehouse operations with complex accounting needs.",
     href: "/solutions/enterprise",
-    icon: "M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6M9 10h.01M15 10h.01",
+    type: "svg",
+    path: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4",
   },
-]
-const roles = [
   {
-    label: "CFOs",
-    desc: "Get financial visibility, reconciliation and control.",
+    label: "For CFOs",
+    desc: "Get accurate numbers, faster close and better control.",
     href: "/solutions/cfos",
-    icon: "M3 3v16a2 2 0 0 0 2 2h16M7 13l4-4 4 3 5-6",
+    type: "svg",
+    path: "M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z",
   },
   {
-    label: "Accountants",
-    desc: "Automate detailed ecommerce accounting and ERP posting.",
+    label: "For Accountants",
+    desc: "Automate entries, reduce effort and stay audit ready.",
     href: "/solutions/accountants",
-    icon: "M6 2h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V4a2 2 0 0 1 2-2zM9 8h6M9 12h6",
+    type: "svg",
+    path: "M13 10V3L4 14h7v7l9-11h-7z",
   },
   {
-    label: "Business Owners",
-    desc: "Know what you sold, what you received and what you actually made.",
+    label: "For Business Owners",
+    desc: "Make confident decisions with real-time financial clarity.",
     href: "/solutions/business-owners",
-    icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z",
+    type: "svg",
+    path: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z",
   },
-]
+];
 ---
 
-<style is:global>
-  .solutions-section {
-    padding: clamp(5.5rem, 12vh, 9rem) 0;
-  }
-  .solutions-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
-  }
+<section class="solutions-strip-wrapper" id="solutions" aria-label="Solutions Overview">
+  <div class="solutions-card">
+    
+    <!-- Kicker Header -->
+    <span class="kicker">BUILT FOR EVERY KIND OF ECOMMERCE BUSINESS</span>
 
-  .sol-group {
-    margin-top: 2.75rem;
-  }
-  .sol-group-label {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--brand-600);
-  }
-  .sol-group-label::after {
-    content: "";
-    height: 1px;
-    flex: 1;
-    background: var(--ink-200);
-  }
+    <!-- 6-Column Grid Layout -->
+    <div class="solutions-grid">
+      {
+        solutions.map((s, i) => (
+          <a href={s.href} class="solution-item-card reveal" data-delay={(i % 3) * 90}>
+            
+            <div class="item-header">
+              <!-- Icon Avatar -->
+              <div class="icon-avatar">
+                {s.icon === 'amazon' && (
+                  <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path fill="#FF9900" d="M13.7 15.3c-2.3 1.7-5.6 2.6-8.5 2.6-4 0-7.5-1.5-10.2-4.1-.2-.2 0-.5.2-.3 3.1 2.7 7.2 4.3 11.5 4.3 2.6 0 5.6-.7 8.2-2.1.4-.2.7.2.3.5z"/>
+                    <path fill="#000000" d="M15.9 14.1c-.2-.3-1.4-.2-2 .1-.2.1-.2.3 0 .4.8.6 2.1.4 2.4.1.2-.2 0-1.2-.4-.6z"/>
+                  </svg>
+                )}
+                {s.icon === 'shopify' && (
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="#95BF47">
+                    <path d="M20.6 6.3s-1.7-.5-3-.3c0 0-.8-2.3-2.6-3.3 0 0-1.8-.1-3.2 1.2 0 0-1.2 1.1-1.6 3.2 0 0-2 .6-2.1.7L6 19.3l12.4 2.2 3.6-14.2-1.4-1zm-6.2-.9c.6-.6 1.4-.7 1.4-.7s.3 1.2-.2 2.2c-.5 Matrix 1.3-1.6 1.6-1.6 1.6s-.2-1.7.4-3.1z"/>
+                  </svg>
+                )}
+                {s.type === 'svg' && (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d={s.path} />
+                  </svg>
+                )}
+              </div>
 
-  .sol-list {
-    margin-top: 1.1rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
-  }
-  @media (min-width: 48rem) {
-    .sol-list { grid-template-columns: repeat(3, 1fr); }
-  }
-
-  /* By Business — icon-tile cards */
-  .sol-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 1.4rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 1rem;
-    background: #fff;
-    text-decoration: none;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
-  }
-  .sol-card:hover {
-    border-color: var(--brand-300);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
-  }
-  .sol-card .ic {
-    display: grid;
-    place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: var(--radius-md);
-    background: var(--brand-50);
-    color: var(--brand-600);
-    margin-bottom: 0.35rem;
-  }
-  .sol-card .ic svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-  .sol-card strong {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--ink-900);
-    letter-spacing: -0.01em;
-  }
-  .sol-card span {
-    font-size: 0.875rem;
-    line-height: 1.55;
-    color: var(--ink-500);
-  }
-  .sol-card .go {
-    margin-top: 0.5rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--brand-600);
-  }
-
-  /* By Role — numbered editorial rows */
-  .sol-role {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.2rem 0.25rem;
-    border-bottom: 1px solid var(--ink-100);
-    text-decoration: none;
-    transition: background-color var(--transition-fast), padding var(--transition-fast);
-  }
-  .sol-role:hover {
-    padding-inline: 1rem;
-    background: var(--brand-50);
-    border-radius: var(--radius-lg);
-  }
-  .sol-role .num {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--brand-500);
-    font-variant-numeric: tabular-nums;
-  }
-  .sol-role .body strong {
-    display: block;
-    font-size: 1.0625rem;
-    font-weight: 600;
-    color: var(--ink-900);
-    letter-spacing: -0.01em;
-  }
-  .sol-role .body span {
-    display: block;
-    margin-top: 0.25rem;
-    font-size: 0.875rem;
-    color: var(--ink-500);
-  }
-  .sol-role .arr {
-    font-size: 1rem;
-    color: var(--brand-500);
-  }
-</style>
-
-<section class="solutions-section" id="solutions">
-  <div class="solutions-inner">
-    <SectionHeading
-      eyebrow="Solutions"
-      title="Built around how your business works."
-      lead="DeepEcom is designed for the specific problems of ecommerce sellers and the finance teams behind them."
-    />
-
-    <div class="sol-group reveal">
-      <span class="sol-group-label">By business</span>
-      <div class="sol-list">
-        {
-          business.map((s) => (
-            <a href={s.href} class="sol-card">
-              <span class="ic">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={s.icon} /></svg>
-              </span>
+              <!-- Title -->
               <strong>{s.label}</strong>
-              <span>{s.desc}</span>
-              <span class="go">Learn more →</span>
-            </a>
-          ))
-        }
-      </div>
+            </div>
+
+            <!-- Description -->
+            <p>{s.desc}</p>
+
+            <!-- Link -->
+            <span class="explore-link">
+              Explore 
+              <span class="arrow">→</span>
+            </span>
+
+          </a>
+        ))
+      }
     </div>
 
-    <div class="sol-group reveal">
-      <span class="sol-group-label">By role</span>
-      <div class="sol-role-list">
-        {
-          roles.map((r, i) => (
-            <a href={r.href} class="sol-role">
-              <span class="num">{String(i + 1).padStart(2, "0")}</span>
-              <span class="body">
-                <strong>{r.label}</strong>
-                <span>{r.desc}</span>
-              </span>
-              <span class="arr" aria-hidden="true">→</span>
-            </a>
-          ))
-        }
-      </div>
-    </div>
   </div>
 </section>
+
+<style>
+  .solutions-strip-wrapper {
+    width: 100%;
+    max-width: var(--container-wide);
+    margin: 0 auto;
+    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+  }
+
+  /* Outer White Container Card */
+  .solutions-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  }
+
+  /* Header Kicker */
+  .kicker {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4f46e5;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Grid Layout: Stacks on mobile, 6 columns on desktop */
+  .solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .solutions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .solutions-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    .solutions-grid {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+    }
+  }
+
+  /* Individual Sub-card Styles */
+  .solution-item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .solution-item-card:hover {
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Top row containing Icon and Title */
+  .item-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .icon-avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .icon-avatar svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+
+  .item-header strong {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+  }
+
+  /* Description Body */
+  .solution-item-card p {
+    font-size: 0.725rem;
+    line-height: 1.45;
+    color: #64748b;
+    margin: 0 0 1.25rem 0;
+    flex-grow: 1;
+  }
+
+  /* Explore Link at Bottom */
+  .explore-link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4f46e5;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    transition: gap 0.2s ease;
+  }
+
+  .solution-item-card:hover .explore-link {
+    gap: 0.4rem;
+  }
+</style>

@@ -7,9 +7,9 @@
  * values below — never invent figures that have not been verified.
  */
 const stats = [
-  { value: "500+", label: "Businesses connected", note: "Sellers, brands and finance teams" },
-  { value: "10M+", label: "Transactions / Orders", note: "Processed and reconciled" },
-  { value: "99.9%", label: "Security & Reliability", note: "Enterprise-grade uptime" },
+  { num: 500, suffix: "+", label: "Businesses connected", note: "Sellers, brands and finance teams" },
+  { num: 10, suffix: "M+", label: "Transactions / Orders", note: "Processed and reconciled" },
+  { num: 99.9, suffix: "%", label: "Security & Reliability", note: "Enterprise-grade uptime" },
 ]
 ---
 
@@ -79,10 +79,10 @@ const stats = [
   <div class="trust-inner">
     <div class="trust-grid">
       {
-        stats.map((s) => (
-          <div class="trust-cell">
+        stats.map((s, i) => (
+          <div class="trust-cell reveal" data-delay={i * 120}>
             <div class="trust-value">
-              {s.value}
+              <span class="count-num" data-count={s.num}>{s.num}</span><span class="unit">{s.suffix}</span>
             </div>
             <div class="trust-label">{s.label}</div>
             <div class="trust-note">{s.note}</div>

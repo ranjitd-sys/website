@@ -36,9 +36,10 @@ const marketplaces: Marketplace[] = [
   .dash-3d-stage {
     position: relative;
     width: 100%;
+    container-type: inline-size;
     perspective: 2200px;
     perspective-origin: 50% 0%;
-    padding: 0.5rem 0.25rem 1rem;
+    padding: 0.25rem 0.25rem 0.5rem;
   }
 
   .dash-3d-stage::before {
@@ -69,13 +70,23 @@ const marketplaces: Marketplace[] = [
     background: #ffffff;
     border: 1px solid var(--dash-border);
     border-radius: 16px;
-    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.08);
+    box-shadow:
+      0 1px 2px rgba(15, 23, 42, 0.05),
+      0 24px 48px -12px rgba(15, 23, 42, 0.18);
     overflow: hidden;
-    font-family: system-ui, -apple-system, sans-serif;
-    transform: rotateX(8deg) rotateY(-6deg);
+    transform: rotateX(5deg) rotateY(-3deg);
     transform-origin: 50% 100%;
     transform-style: preserve-3d;
     will-change: transform;
+  }
+  .dash-container::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(83, 58, 253, 0.35), transparent);
+    z-index: 3;
+    pointer-events: none;
   }
 
   .dash-float-card {
@@ -86,7 +97,6 @@ const marketplaces: Marketplace[] = [
     border-radius: 12px;
     box-shadow: 0 24px 40px -16px rgba(15, 23, 42, 0.35);
     padding: 0.65rem 0.85rem;
-    font-family: system-ui, -apple-system, sans-serif;
     transform: translateZ(60px) translateY(-50%);
     display: flex;
     align-items: center;
@@ -132,7 +142,7 @@ const marketplaces: Marketplace[] = [
   .dash-layout {
     display: grid;
     grid-template-columns: 140px 1fr;
-    min-height: 300px;
+    min-height: 280px;
   }
 
   .dash-sidebar {
@@ -195,7 +205,9 @@ const marketplaces: Marketplace[] = [
 
   .dash-content {
     padding: 1rem;
-    background: var(--dash-bg-subtle);
+    background:
+      radial-gradient(140% 70% at 100% 0%, rgba(99, 102, 241, 0.06), transparent 55%),
+      var(--dash-bg-subtle);
   }
 
   .dash-header {
@@ -255,6 +267,13 @@ const marketplaces: Marketplace[] = [
     border: 1px solid var(--dash-border);
     border-radius: 12px;
     padding: 0.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .metric-card:hover {
+    transform: translateY(-2px);
+    border-color: #dbe2f5;
+    box-shadow: 0 10px 24px -10px rgba(15, 23, 42, 0.14);
   }
 
   .metric-header {
@@ -278,9 +297,13 @@ const marketplaces: Marketplace[] = [
   }
 
   .metric-trend {
-    font-size: 0.575rem;
-    color: #10b981;
-    font-weight: 600;
+    font-size: 0.55rem;
+    color: #059669;
+    font-weight: 700;
+    background: #ecfdf5;
+    padding: 0.15rem 0.4rem;
+    border-radius: 6px;
+    white-space: nowrap;
   }
 
   .dash-charts-grid {
@@ -294,6 +317,13 @@ const marketplaces: Marketplace[] = [
     border-radius: 12px;
     padding: 0.75rem;
     background: #ffffff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .chart-card:hover {
+    transform: translateY(-2px);
+    border-color: #dbe2f5;
+    box-shadow: 0 10px 24px -10px rgba(15, 23, 42, 0.14);
   }
 
   .chart-title {
@@ -423,11 +453,46 @@ const marketplaces: Marketplace[] = [
 
   .mp-bar-fill {
     height: 100%;
-    background: var(--brand-500);
+    background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
     border-radius: 2px;
   }
 
-  @media (max-width: 768px) {
+  /* Container-based responsiveness: the dashboard adapts to its own
+     width so it always fits the hero column at every screen size. */
+  @container (max-width: 760px) {
+    .dash-layout {
+      grid-template-columns: 56px 1fr;
+    }
+    .dash-sidebar {
+      padding: 1rem 0.5rem;
+    }
+    .dash-brand {
+      justify-content: center;
+      padding-left: 0;
+      margin-bottom: 1rem;
+    }
+    .dash-brand > span:not(.dash-brand-icon) {
+      display: none;
+    }
+    .dash-nav-link {
+      justify-content: center;
+      padding: 0.5rem 0;
+    }
+    .dash-nav-link span {
+      display: none;
+    }
+    .dash-content {
+      padding: 0.875rem;
+    }
+    .dash-header {
+      margin-bottom: 0.75rem;
+    }
+    .dash-select {
+      padding: 0.3rem 0.55rem;
+    }
+  }
+
+  @container (max-width: 520px) {
     .dash-layout {
       grid-template-columns: 1fr;
     }
@@ -436,9 +501,23 @@ const marketplaces: Marketplace[] = [
     }
     .dash-metrics-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
     }
+  }
+
+  @container (max-width: 420px) {
     .dash-charts-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  @container (max-width: 360px) {
+    .dash-charts-grid {
+      display: none;
+    }
+    .dash-header {
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
   }
 </style>
@@ -453,14 +532,14 @@ const marketplaces: Marketplace[] = [
         <span>DeepEcom</span>
       </div>
       <nav class="dash-nav">
-        <a href="#" class="dash-nav-link active"><LayoutDashboard size={12} /> Overview</a>
-        <a href="#" class="dash-nav-link"><ShoppingBag size={12} /> Sales</a>
-        <a href="#" class="dash-nav-link"><DollarSign size={12} /> Profitability</a>
-        <a href="#" class="dash-nav-link"><CreditCard size={12} /> Payments</a>
-        <a href="#" class="dash-nav-link"><ShieldCheck size={12} /> Reconciliation</a>
-        <a href="#" class="dash-nav-link"><FileText size={12} /> Accounting</a>
-        <a href="#" class="dash-nav-link"><BarChart3 size={12} /> Reports</a>
-        <a href="#" class="dash-nav-link"><Settings size={12} /> Settings</a>
+        <a href="#" class="dash-nav-link active"><LayoutDashboard size={12} /><span>Overview</span></a>
+        <a href="#" class="dash-nav-link"><ShoppingBag size={12} /><span>Sales</span></a>
+        <a href="#" class="dash-nav-link"><DollarSign size={12} /><span>Profitability</span></a>
+        <a href="#" class="dash-nav-link"><CreditCard size={12} /><span>Payments</span></a>
+        <a href="#" class="dash-nav-link"><ShieldCheck size={12} /><span>Reconciliation</span></a>
+        <a href="#" class="dash-nav-link"><FileText size={12} /><span>Accounting</span></a>
+        <a href="#" class="dash-nav-link"><BarChart3 size={12} /><span>Reports</span></a>
+        <a href="#" class="dash-nav-link"><Settings size={12} /><span>Settings</span></a>
       </nav>
     </aside>
 

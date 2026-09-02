@@ -73,6 +73,9 @@ const jsonLd = [
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <script is:inline>
+      document.documentElement.classList.add("js")
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -108,6 +111,9 @@ const jsonLd = [
     </div>
 
     <script>
+      const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+
+      // Scroll reveal — fades + slides content in as it enters the viewport
       const io = new IntersectionObserver(
         (entries) => {
           for (const e of entries) {
@@ -121,6 +127,41 @@ const jsonLd = [
         { threshold: 0.12, rootMargin: "0px -32px 0px 0px" },
       )
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el))
+
+      // Count-up — animates numeric values when they scroll into view
+      const count = (el: HTMLElement, target: number, decimals: number) => {
+        if (prefersReduced) {
+          el.textContent = target.toFixed(decimals)
+          return
+        }
+        const duration = 1300
+        const start = performance.now()
+        const tick = (now: number) => {
+          const p = Math.min((now - start) / duration, 1)
+          const eased = 1 - Math.pow(1 - p, 3)
+          const value = target * eased
+          el.textContent = decimals > 0 ? value.toFixed(decimals) : Math.round(value).toLocaleString("en-IN")
+          if (p < 1) requestAnimationFrame(tick)
+        }
+        requestAnimationFrame(tick)
+      }
+      const countIO = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue
+            const el = e.target as HTMLElement
+            const raw = el.dataset.count ?? "0"
+            const decimals = raw.includes(".") ? raw.split(".")[1]!.length : 0
+            count(el, parseFloat(raw), decimals)
+            countIO.unobserve(el)
+          }
+        },
+        { threshold: 0.4 },
+      )
+      document.querySelectorAll("[data-count]").forEach((el) => {
+        ;(el as HTMLElement).textContent = "0"
+        countIO.observe(el)
+      })
 
       const mobileCta = document.getElementById("mobile-cta")
       if (mobileCta) {
