@@ -1,0 +1,86 @@
+---
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+interface Props {
+  title: string
+  lead?: string
+  cta?: string
+  ctaHref?: string
+  secondary?: string
+  secondaryHref?: string
+}
+const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secondaryHref } = Astro.props
+---
+
+<style is:global>
+  .cta-band {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(4rem, 9vh, 6.5rem) 0;
+  }
+  .cta-band-card {
+    position: relative;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    padding: clamp(2.5rem, 6vw, 4.5rem) var(--space-gutter);
+    text-align: center;
+  }
+  .cta-band-card::before {
+    content: "";
+    position: absolute;
+    inset: -8rem -6rem auto;
+    height: 22rem;
+    background: radial-gradient(50% 55% at 50% 0%, rgba(99, 91, 255, 0.14), transparent 70%);
+    pointer-events: none;
+  }
+  .cta-band-title {
+    position: relative;
+    font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-bold);
+    color: var(--ink-950);
+    max-width: 46rem;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+  .cta-band-lead {
+    position: relative;
+    margin: 1rem auto 0;
+    max-width: 38rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+  .cta-band-actions {
+    position: relative;
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+</style>
+
+<section class="cta-band">
+  <div class="cta-band-card">
+    <h2 class="cta-band-title">{title}</h2>
+    {lead && <p class="cta-band-lead">{lead}</p>}
+    <div class="cta-band-actions">
+      <a href={ctaHref} class={buttonVariants({ size: "lg" })}>
+        {cta}
+        <ArrowRight size={16} />
+      </a>
+      {secondary && secondaryHref && (
+        <a href={secondaryHref} class={buttonVariants({ variant: "outline", size: "lg" })}>
+          {secondary}
+        </a>
+      )}
+    </div>
+  </div>
+</section>

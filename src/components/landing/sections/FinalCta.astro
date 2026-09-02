@@ -3,51 +3,104 @@ import SectionHeading from "../section-heading.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const compliance = [
+const trust = [
   "Read-only API access",
-  "AES-256 encryption at rest",
   "GST-compliant exports",
   "Your data is never resold",
 ]
-
-const check =
-  '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 text-emerald-600"><path d="M20 6L9 17l-5-5"></path></svg>'
 ---
 
-<section class="py-20 md:py-28" id="get-started">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="reveal relative overflow-hidden rounded-3xl border border-blue-100 bg-accent px-7 py-16 text-center md:px-12 md:py-20">
-      <div
-        aria-hidden="true"
-        class="pointer-events-none absolute inset-0"
-        style="background: radial-gradient(520px 260px at 50% 0%, rgba(15, 98, 254, 0.1), transparent 70%)"
-      >
-      </div>
+<style is:global>
+  .final-cta {
+    padding: clamp(4rem, 9vh, 6.5rem) 0;
+  }
+  .final-cta-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
+    box-shadow: var(--shadow-card);
+    padding: clamp(2.75rem, 7vw, 5rem) var(--space-gutter);
+    text-align: center;
+  }
+  .final-cta-card::before {
+    content: "";
+    position: absolute;
+    inset: -8rem -6rem auto;
+    height: 22rem;
+    background: radial-gradient(50% 55% at 50% 0%, rgba(99, 91, 255, 0.16), transparent 70%);
+    pointer-events: none;
+  }
+  .final-cta-title {
+    position: relative;
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: var(--font-weight-bold);
+    color: var(--ink-950);
+    max-width: 46rem;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+  .final-cta-lead {
+    position: relative;
+    margin: 1rem auto 0;
+    max-width: 36rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+  .final-cta-actions {
+    position: relative;
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .final-cta-trust {
+    position: relative;
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+  .final-cta-trust li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-500);
+  }
+  .final-cta-trust svg {
+    color: var(--success-600);
+  }
+</style>
 
-      <div class="relative">
-        <SectionHeading
-          eyebrow="Get started"
-          title="Know exactly what you made. This month."
-          lead="Upload your first settlement at zero cost. Reconciliation ready in under two minutes — no credit card required."
-          center
-        />
-
-        <div class="mt-9 flex flex-wrap justify-center gap-3">
-          <a href="#contact" class={`${buttonVariants({ size: "lg" })} gap-2`}>
-            Start free trial
-            <ArrowRight width={16} height={16} />
-          </a>
-          <a href="#contact" class={`${buttonVariants({ variant: "outline", size: "lg" })}`}>Talk to sales</a>
-        </div>
-
-        <ul class="mx-auto mt-9 flex max-w-3xl flex-wrap items-center justify-center gap-x-7 gap-y-3">
-          {
-            compliance.map((c) => (
-              <li class="flex items-center gap-2 text-[13px] font-medium text-muted-foreground" set:html={check + c} />
-            ))
-          }
-        </ul>
-      </div>
+<section class="final-cta" id="get-started">
+  <div class="final-cta-card reveal">
+    <h2 class="final-cta-title">Bring your ecommerce business and accounting together.</h2>
+    <p class="final-cta-lead">
+      See your marketplaces, profitability, reconciliation and ERP accounting — all in one layer.
+    </p>
+    <div class="final-cta-actions">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
     </div>
+    <ul class="final-cta-trust">
+      {
+        trust.map((t) => (
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+            {t}
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </section>

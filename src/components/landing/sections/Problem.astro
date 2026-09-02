@@ -1,0 +1,130 @@
+---
+import SectionHeading from "../section-heading.astro"
+
+const fragments = [
+  { label: "Marketplaces", note: "Orders, fees, deductions" },
+  { label: "Payments", note: "Settlements, payouts" },
+  { label: "Returns", note: "Refunds, cancellations" },
+  { label: "GST", note: "Rates, filing, credits" },
+  { label: "Inventory", note: "Warehouses, stock" },
+  { label: "ERP", note: "Tally · SAP · Zoho" },
+]
+---
+
+<style is:global>
+  .problem {
+    padding: clamp(4rem, 9vh, 7rem) 0;
+  }
+  .problem-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .problem-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-stack);
+    align-items: start;
+  }
+  @media (min-width: 64rem) {
+    .problem-grid {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+      gap: var(--space-16);
+    }
+  }
+
+  .fragments {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+  }
+  @media (min-width: 40rem) {
+    .fragments {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .fragment {
+    position: relative;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    padding: 1.1rem 1.15rem;
+    text-align: left;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .fragment:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+  }
+  .fragment::before {
+    content: "";
+    position: absolute;
+    top: 0.9rem;
+    left: 1.1rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--ink-300);
+  }
+  .fragment strong {
+    display: block;
+    padding-left: 1.1rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    letter-spacing: -0.01em;
+  }
+  .fragment span {
+    display: block;
+    padding-left: 1.1rem;
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+  }
+  .problem-note {
+    margin-top: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink-600);
+  }
+  .problem-note svg {
+    flex-shrink: 0;
+    color: var(--brand-500);
+  }
+</style>
+
+<section class="problem" id="problem">
+  <div class="problem-inner">
+    <div class="problem-grid">
+      <div class="reveal">
+        <SectionHeading
+          eyebrow="The problem"
+          title="Ecommerce data is scattered."
+          lead="Orders live in marketplaces, payouts in payment providers, returns in one place, GST in another, inventory in yet another — and your ERP is disconnected from all of it."
+        />
+        <div class="problem-note">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 8v4M12 16h.01" />
+          </svg>
+          <span>Every month, finance teams stitch this together by hand.</span>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="fragments">
+          {
+            fragments.map((f) => (
+              <div class="fragment">
+                <strong>{f.label}</strong>
+                <span>{f.note}</span>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

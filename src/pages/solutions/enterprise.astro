@@ -1,0 +1,91 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Enterprise — Ecommerce accounting at scale | DeepEcom"
+  description="DeepEcom Enterprise handles high transaction volume, multi-entity and multi-warehouse complexity, GST and enterprise ERP — with the controls and auditability finance requires."
+>
+  <PageHero
+    eyebrow="SOLUTIONS · BY BUSINESS"
+    title="Ecommerce accounting engineered for scale."
+    lead="High volume, multiple entities, warehouses and marketplaces, and enterprise ERP. DeepEcom brings order to the complexity and the controls finance depends on."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore ERP Connector
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="ENTERPRISE"
+    title="Built for the complexity that breaks generic tools."
+    lead="Enterprise ecommerce is a matter of scale, entities and control. DeepEcom is designed around that reality."
+    columns={3}
+    center
+    features={[
+      {
+        title: "High transaction volume",
+        description: "Detailed accounting that holds up at enterprise order volumes.",
+        icon: "zap",
+      },
+      {
+        title: "Multi-entity complexity",
+        description: "Account across entities with the structure and separation you need.",
+        icon: "building",
+      },
+      {
+        title: "Multi-warehouse operations",
+        description: "Warehouse-wise accounting and stock transfers across locations.",
+        icon: "boxes",
+      },
+      {
+        title: "Multiple marketplaces",
+        description: "Consolidate many marketplaces into one accountable financial layer.",
+        icon: "globe",
+      },
+      {
+        title: "GST complexity",
+        description: "GST-wise accounting that keeps tax reporting accurate and auditable.",
+        icon: "scale",
+      },
+      {
+        title: "Enterprise ERP & SAP",
+        description: "Post detailed accounting into enterprise ERP, including SAP connectivity.",
+        icon: "bank",
+      },
+      {
+        title: "Controls and auditability",
+        description: "Structured entries and clear records that support your control environment.",
+        icon: "shield",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="THE ENTERPRISE OUTCOME"
+        title="Your ERP, ecommerce-ready at scale."
+        lead="DeepEcom makes your ERP ecommerce-ready — with the detail, controls and auditability an enterprise finance team expects."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Bring enterprise-scale ecommerce into your books."
+    lead="Detailed accounting and control across entities, warehouses, marketplaces and your ERP."
+  />
+</PageLayout>

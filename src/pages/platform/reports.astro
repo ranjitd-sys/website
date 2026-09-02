@@ -1,0 +1,84 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const title = "Reports your finance team can actually use."
+const features = [
+  {
+    title: "Structured Reports",
+    description: "Clean, structured reports on orders, settlements, profitability and reconciliation.",
+    icon: "file",
+  },
+  {
+    title: "GST-Ready Data",
+    description: "Exports structured for GST reporting so finance can move faster.",
+    icon: "grid",
+  },
+  {
+    title: "Ledger-Ready Exports",
+    description: "Transaction-level exports your accounting workflow can consume.",
+    icon: "receipt",
+  },
+  {
+    title: "Customizable Views",
+    description: "Reports tailored to the channels, periods and metrics you care about.",
+    icon: "book",
+  },
+  {
+    title: "Consistent Format",
+    description: "A consistent structure across every marketplace you sell on.",
+    icon: "table",
+  },
+  {
+    title: "Fresh Data",
+    description: "Exports and reports built from current, aggregated marketplace data.",
+    icon: "refresh2",
+  },
+]
+---
+
+<PageLayout title={`Reports — ${title}`} description="DeepEcom Platform reports and exports turn marketplace data into structured, GST-ready reports your finance team can use.">
+  <PageHero
+    eyebrow="PLATFORM · REPORTS"
+    title={title}
+    lead="Download clean, structured reports and GST-ready exports built from your marketplace data — no more re-keying numbers out of raw marketplace files."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="REPORTS & EXPORTS"
+    title="Move from raw files to usable reports."
+    lead="Raw marketplace files are hard to use. DeepEcom turns them into structured reports and exports your finance team can work with directly."
+    features={features}
+    columns={3}
+    center
+  />
+
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <SectionHeading
+      eyebrow="READY TO USE"
+      title="Export data once, in a format that works."
+      lead="Whether it is GST-ready data or transaction-level exports for your books, reports come out structured and consistent across every marketplace."
+      center
+    />
+  </section>
+
+  <CtaBand
+    title="Bring your ecommerce business and accounting together."
+    lead="Get structured, GST-ready reports from your marketplace data."
+  />
+</PageLayout>

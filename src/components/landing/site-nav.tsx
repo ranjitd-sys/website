@@ -167,65 +167,100 @@ function NavPanel({
         <span aria-hidden="true" className="nav-panel-notch" />
 
         {item.id === "products" && (
-          <div className="grid grid-cols-2 divide-x divide-border/70">
-            {item.groups.map((g) => (
-              <div key={g.title} className="p-6">
-                <p className="text-xs font-semibold tracking-wide text-muted-foreground">{g.description ?? g.title}</p>
-                <h3 className="mt-0.5 text-[15px] font-bold text-foreground">{g.description ? g.title : ""}</h3>
-                <ul className="mt-3 space-y-0.5">
-                  {g.links.map((l) => (
-                    <li key={l.href}>
-                      <a
-                        href={l.href}
-                        className="group/link flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-brand-50 hover:text-foreground"
-                      >
-                        <span aria-hidden="true" className="size-1.5 rounded-full bg-brand-500 opacity-0 transition-opacity group-hover/link:opacity-100" />
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            <div className="col-span-2 flex items-center justify-between gap-4 border-t border-border/70 bg-brand-50/60 px-6 py-4">
-              <span className="text-sm font-semibold text-foreground">{item.featured?.label}</span>
-              {item.featured && (
-                <a
-                  href={item.featured.href}
-                  className="group inline-flex items-center gap-1.5 text-[13px] font-semibold text-primary transition-colors hover:text-brand-700"
-                >
-                  {item.featured.description}
-                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">→</span>
-                </a>
-              )}
-            </div>
-          </div>
-        )}
+  <div className="grid grid-cols-2 divide-x divide-border/60 bg-popover">
+    {item.groups.map((g) => (
+      <div key={g.title} className="p-5">
+        {/* Category Header */}
+        <div className="px-2 pb-1.5">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+            {g.description ?? g.title}
+          </p>
+          {g.description && (
+            <h3 className="mt-0.5 text-sm font-semibold text-foreground">
+              {g.title}
+            </h3>
+          )}
+        </div>
+
+        {/* Links List - Aligned with Header Text */}
+        <ul className="mt-1 space-y-0.5">
+          {g.links.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="group/link -mx-2 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-150 hover:bg-muted/60 hover:text-foreground"
+              >
+                <span
+                  aria-hidden="true"
+                  className="size-1.5 shrink-0 rounded-full bg-primary opacity-0 scale-0 transition-all duration-150 group-hover/link:scale-100 group-hover/link:opacity-100"
+                />
+                <span className="truncate">{l.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+
+    {/* Featured Footer Bar */}
+    <div className="col-span-2 flex items-center justify-between gap-4 border-t border-border/60 bg-muted/40 px-5 py-3.5 transition-colors hover:bg-muted/60">
+      <span className="text-xs font-semibold text-foreground">
+        {item.featured?.label}
+      </span>
+      {item.featured && (
+        <a
+          href={item.featured.href}
+          className="group/feat inline-flex items-center gap-1.5 text-xs font-semibold text-primary transition-colors hover:text-primary/80"
+        >
+          <span>{item.featured.description}</span>
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-150 group-hover/feat:translate-x-0.5"
+          >
+            →
+          </span>
+        </a>
+      )}
+    </div>
+  </div>
+)}
 
         {item.id === "solutions" && (
-          <div className="grid grid-cols-2">
-            {item.groups.map((g) => (
-              <div key={g.title} className={`p-6 ${g.title === "By Business" ? "border-r border-border/70" : "bg-brand-50/40"}`}>
-                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-600">
-                  <span aria-hidden="true" className="h-px w-4 bg-brand-500" />
-                  {g.title}
-                </p>
-                <ul className="mt-3 space-y-0.5">
-                  {g.links.map((l) => (
-                    <li key={l.href}>
-                      <a
-                        href={l.href}
-                        className="block rounded-lg px-2.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-white hover:text-foreground hover:shadow-xs"
-                      >
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
+  <div className="grid grid-cols-2 divide-x divide-border/60 bg-popover">
+    {item.groups.map((g, idx) => (
+      <div
+        key={g.title}
+        className={`p-5 ${idx % 2 !== 0 ? "bg-muted/30" : ""}`}
+      >
+        {/* Category Header */}
+        <div className="px-2 pb-1.5">
+          <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-primary">
+            <span aria-hidden="true" className="h-px w-3.5 bg-primary/70" />
+            {g.title}
+          </p>
+        </div>
+
+        {/* Links List - Aligned with Header Text */}
+        <ul className="mt-1 space-y-0.5">
+          {g.links.map((l) => (
+            <li key={l.href}>
+              <a
+                href={l.href}
+                className="group/link -mx-2 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-muted-foreground transition-all duration-150 hover:bg-background hover:text-foreground hover:shadow-xs"
+              >
+                <span
+                  aria-hidden="true"
+                  className="size-1.5 shrink-0 rounded-full bg-primary opacity-0 scale-0 transition-all duration-150 group-hover/link:scale-100 group-hover/link:opacity-100"
+                />
+                <span className="truncate">{l.label}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </div>
+)}
 
         {item.id === "resources" && (
           <div className="p-4">

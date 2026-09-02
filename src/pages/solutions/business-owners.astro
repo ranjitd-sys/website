@@ -1,0 +1,86 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Business Owners — Understand your ecommerce business | DeepEcom"
+  description="DeepEcom helps business owners see actual profitability, marketplace performance and money received vs expected, reducing dependence on finance teams."
+>
+  <PageHero
+    eyebrow="SOLUTIONS · BY ROLE"
+    title="Know what your ecommerce business is really making."
+    lead="Marketplace numbers rarely tell you your true profit. DeepEcom shows actual profitability, what you get paid versus what you expect, and how each product and channel performs."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="BUSINESS OWNERS"
+    title="Run your business on what actually happened."
+    lead="Instead of waiting on reports you can't verify, get the answers you need directly — from data that is reconciled and accounted."
+    columns={3}
+    center
+    features={[
+      {
+        title: "Actual profitability",
+        description: "See real profit after marketplace fees, deductions and returns.",
+        icon: "trend",
+      },
+      {
+        title: "Marketplace performance",
+        description: "Understand how each marketplace performs and contributes to the business.",
+        icon: "chart",
+      },
+      {
+        title: "Money received vs expected",
+        description: "Confirm what you should have been paid against what you actually received.",
+        icon: "wallet",
+      },
+      {
+        title: "Product & channel performance",
+        description: "See which products and channels actually drive profit.",
+        icon: "package",
+      },
+      {
+        title: "Business visibility",
+        description: "A clear, current picture of the whole business, without digging through data.",
+        icon: "gauge",
+      },
+      {
+        title: "Less finance dependency",
+        description: "Get the numbers you need directly, instead of waiting on finance.",
+        icon: "zap",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="THE OWNER OUTCOME"
+        title="Run the business, not the spreadsheets."
+        lead="DeepEcom turns marketplace data into the answers you need — profitability, payments and performance — so you can act on what is true."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="See your business the way it actually is."
+    lead="Real profitability, reconciled payments and clear performance — on your own."
+  />
+</PageLayout>

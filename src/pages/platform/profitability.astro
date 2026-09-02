@@ -1,0 +1,84 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const title = "Know what your ecommerce business actually earns."
+const features = [
+  {
+    title: "Channel Profitability",
+    description: "See profitability per marketplace so you know where you genuinely make money.",
+    icon: "trend",
+  },
+  {
+    title: "SKU-Level Profitability",
+    description: "Break profitability down to the SKU to identify your strongest and weakest products.",
+    icon: "package",
+  },
+  {
+    title: "Margin & Cost Breakdown",
+    description: "Understand the cost of every order — marketplace fees, shipping and ads included.",
+    icon: "calculator",
+  },
+  {
+    title: "Net Margin Clarity",
+    description: "See revenue after deductions so gross numbers never hide the true picture.",
+    icon: "scale",
+  },
+  {
+    title: "P&L View",
+    description: "A structured profit-and-loss view built from real ecommerce transactions.",
+    icon: "receipt",
+  },
+  {
+    title: "Cost Allocation",
+    description: "Attribute fees and charges to the right orders, SKUs and channels.",
+    icon: "tag",
+  },
+]
+---
+
+<PageLayout title={`Profitability — ${title}`} description="DeepEcom Platform profitability analysis shows SKU and channel-level margins, the cost of every order, and a clear P&L built from real marketplace transactions.">
+  <PageHero
+    eyebrow="PLATFORM · PROFITABILITY"
+    title={title}
+    lead="Revenue figures only tell part of the story. Understand margins at the SKU and channel level and see exactly what drives — or erodes — your profit."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="PROFITABILITY"
+    title="Profitability that reflects the real cost of ecommerce."
+    lead="Marketplace fees, shipping and ads quietly eat into margins. DeepEcom attributes every cost to the right order, SKU and channel so your profitability is accurate."
+    features={features}
+    columns={3}
+    center
+  />
+
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <SectionHeading
+      eyebrow="BEYOND REVENUE"
+      title="Gross revenue hides more than it reveals."
+      lead="Ecommerce revenue rarely equals what you keep. Deductions, fees and returns all shape the real picture — DeepEcom surfaces profitability after those costs, not before them."
+      center
+    />
+  </section>
+
+  <CtaBand
+    title="Bring your ecommerce business and accounting together."
+    lead="See accurate profitability across your SKUs and channels."
+  />
+</PageLayout>

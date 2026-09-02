@@ -1,0 +1,143 @@
+---
+import SectionHeading from "../section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const flow = [
+  "Order", "Sale", "GST", "Marketplace Charges", "TCS/TDS", "Receivable",
+  "Payment", "Return", "Inventory", "Stock Transfer", "ERP",
+]
+---
+
+<style is:global>
+  .erp-section {
+    padding: clamp(4.5rem, 10vh, 7.5rem) 0;
+    background: var(--ink-950);
+    color: var(--ink-100);
+    overflow: hidden;
+  }
+  .erp-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .erp-section .eyebrow { color: var(--brand-400); }
+  .erp-section .h2 { color: #fff; }
+  .erp-section .lead { color: var(--ink-300); }
+
+  .erp-flow {
+    margin-top: clamp(2.5rem, 6vh, 3.5rem);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem 0.25rem;
+  }
+  .erp-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--ink-700);
+    border-radius: var(--radius-full);
+    background: var(--ink-900);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-200);
+    white-space: nowrap;
+  }
+  .erp-step.is-final {
+    background: var(--brand-500);
+    border-color: var(--brand-500);
+    color: #fff;
+    font-weight: 700;
+  }
+  .erp-arrow {
+    color: var(--ink-500);
+    display: grid;
+    place-items: center;
+  }
+  .erp-arrow svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .erp-note {
+    margin-top: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+  }
+  .erp-note .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--ink-700);
+    background: var(--ink-900);
+    font-size: 0.8125rem;
+    color: var(--ink-300);
+  }
+  .erp-note .chip svg {
+    width: 0.9rem;
+    height: 0.9rem;
+    color: var(--brand-400);
+  }
+
+  .erp-cta {
+    margin-top: 2.75rem;
+    text-align: center;
+  }
+</style>
+
+<section class="erp-section" id="erp-connector">
+  <div class="erp-inner">
+    <SectionHeading
+      eyebrow="ERP Connector"
+      title="Make your ERP ecommerce-ready."
+      lead="DeepEcom converts complex ecommerce transactions into detailed accounting inside your ERP — order by order, GST by GST, warehouse by warehouse."
+      center
+    />
+
+    <div class="erp-flow reveal" role="img" aria-label="The detailed accounting flow from order to ERP: order, sale, GST, marketplace charges, TCS TDS, receivable, payment, return, inventory, stock transfer, ERP">
+      {
+        flow.map((step, i) => (
+          <>
+            <span class:list={["erp-step", i === flow.length - 1 && "is-final"]}>{step}</span>
+            {i < flow.length - 1 && (
+              <span class="erp-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </span>
+            )}
+          </>
+        ))
+      }
+    </div>
+
+    <div class="erp-note reveal">
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        Order-wise entries
+      </span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        GST-wise entries
+      </span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        Warehouse-wise entries
+      </span>
+      <span class="chip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+        Tally · SAP · Zoho
+      </span>
+    </div>
+
+    <div class="erp-cta reveal">
+      <a href="/erp-connector" class={buttonVariants({ variant: "white", size: "lg" })}>
+        Explore ERP Connector
+      </a>
+    </div>
+  </div>
+</section>

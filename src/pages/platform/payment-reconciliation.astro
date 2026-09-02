@@ -1,0 +1,84 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const title = "Reconcile every settlement to the rupee."
+const features = [
+  {
+    title: "Expected vs Actual",
+    description: "Compare the payments you expect against the payments you actually receive.",
+    icon: "wallet",
+  },
+  {
+    title: "Settlement Matching",
+    description: "Match marketplace settlements to orders and payments automatically.",
+    icon: "refresh",
+  },
+  {
+    title: "Discrepancy Flags",
+    description: "Surface every difference so nothing slips through unreconciled.",
+    icon: "shield",
+  },
+  {
+    title: "Net Settlement Visibility",
+    description: "See the impact of fees, returns and adjustments on each settlement.",
+    icon: "scale",
+  },
+  {
+    title: "Settlement Register",
+    description: "A structured record of settlements across every marketplace and period.",
+    icon: "table",
+  },
+  {
+    title: "Payment Reconciliation",
+    description: "Confirm money received matches money expected across your channels.",
+    icon: "bank",
+  },
+]
+---
+
+<PageLayout title={`Payment Reconciliation — ${title}`} description="DeepEcom Platform payment reconciliation matches expected settlements to actual payments and flags every discrepancy so your cash position is clear.">
+  <PageHero
+    eyebrow="PLATFORM · PAYMENT RECONCILIATION"
+    title={title}
+    lead="What you get paid rarely matches what you expect. Understand expected versus actual payments, identify discrepancies and keep your cash position clear."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="PAYMENT RECONCILIATION"
+    title="Know exactly what you should have been paid."
+    lead="Settlements from marketplaces rarely match expectations after fees, returns and adjustments. DeepEcom reconciles every settlement and flags what does not add up."
+    features={features}
+    columns={3}
+    center
+  />
+
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <SectionHeading
+      eyebrow="NO DISCREPANCY LEFT BEHIND"
+      title="Reconciliation is the difference between hoping and knowing."
+      lead="Every settlement that does not match expectations is surfaced, so you understand your true cash position and the reasons behind every difference."
+      center
+    />
+  </section>
+
+  <CtaBand
+    title="Bring your ecommerce business and accounting together."
+    lead="See expected versus actual payments reconciled across your marketplaces."
+  />
+</PageLayout>

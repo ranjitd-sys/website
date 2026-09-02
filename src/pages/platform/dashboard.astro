@@ -1,0 +1,84 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const title = "Your ecommerce business at a glance."
+const features = [
+  {
+    title: "Business Dashboards",
+    description: "A single view of your ecommerce business, built from real marketplace data.",
+    icon: "chart",
+  },
+  {
+    title: "KPIs That Matter",
+    description: "Orders, revenue, profitability and reconciliation status in one place.",
+    icon: "gauge",
+  },
+  {
+    title: "Marketplace Comparison",
+    description: "Compare performance across Amazon, Flipkart, Shopify and other channels.",
+    icon: "grid",
+  },
+  {
+    title: "Performance Trends",
+    description: "See how your business is moving over time, not just at a point in time.",
+    icon: "trend",
+  },
+  {
+    title: "Across All Channels",
+    description: "One dashboard for every marketplace you sell on — no more tab-hopping.",
+    icon: "globe",
+  },
+  {
+    title: "Track What Matters",
+    description: "Keep the metrics that drive decisions visible and easy to monitor.",
+    icon: "target",
+  },
+]
+---
+
+<PageLayout title={`Dashboard — ${title}`} description="DeepEcom Platform business dashboards bring orders, revenue, profitability and reconciliation status across your marketplaces into one connected view.">
+  <PageHero
+    eyebrow="PLATFORM · DASHBOARD"
+    title={title}
+    lead="Stop stitching together reports from each marketplace. See orders, revenue, profitability and reconciliation across your entire ecommerce business in one place."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="DASHBOARD"
+    title="Clarity without the manual work."
+    lead="Real marketplace data becomes a dashboard you can actually rely on — performance, profitability and reconciliation in one connected view."
+    features={features}
+    columns={3}
+    center
+  />
+
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <SectionHeading
+      eyebrow="ONE VIEW"
+      title="Your whole ecommerce business, on one screen."
+      lead="Dashboards pull every channel together so you spend less time gathering numbers and more time acting on them."
+      center
+    />
+  </section>
+
+  <CtaBand
+    title="Bring your ecommerce business and accounting together."
+    lead="See your entire ecommerce business in one connected dashboard."
+  />
+</PageLayout>

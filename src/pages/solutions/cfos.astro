@@ -1,0 +1,91 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="CFOs — Financial visibility and ERP integrity | DeepEcom"
+  description="DeepEcom gives CFOs clear profitability, cash realization, reconciliation and ERP integrity across their ecommerce business."
+>
+  <PageHero
+    eyebrow="SOLUTIONS · BY ROLE"
+    title="A clear financial picture of your ecommerce business."
+    lead="Ecommerce spreads money and data across many systems. DeepEcom gives you the visibility, reconciliation and control you need to report with confidence."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="CFOs"
+    title="Financial leadership built on real data."
+    lead="The questions finance leaders ask need answers that come from reconciled, accounted and controlled data."
+    columns={3}
+    center
+    features={[
+      {
+        title: "Profitability",
+        description: "See true profitability across your business, after fees, deductions and returns.",
+        icon: "trend",
+      },
+      {
+        title: "Cash realization",
+        description: "Understand what you should be paid and confirm what you actually receive.",
+        icon: "bank",
+      },
+      {
+        title: "Financial visibility",
+        description: "One reliable view of revenue, receivables and accounting across channels.",
+        icon: "gauge",
+      },
+      {
+        title: "Reconciliation",
+        description: "Reconcile expected versus actual payments and surface every discrepancy.",
+        icon: "refresh",
+      },
+      {
+        title: "Controls",
+        description: "Structured, audit-ready records that support your control environment.",
+        icon: "shield",
+      },
+      {
+        title: "Reporting",
+        description: "Reports and exports that support management and financial reporting.",
+        icon: "file",
+      },
+      {
+        title: "ERP integrity",
+        description: "Keep your ERP accurate with detailed, posted accounting you can trust.",
+        icon: "check",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="THE CFO OUTCOME"
+        title="Confidence in the numbers you report."
+        lead="DeepEcom ties marketplace data to reconciled cash and your ERP, so the picture you present is the one that is actually true."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Report on a business you actually understand."
+    lead="Clear profitability, reconciled payments and an ERP that reflects reality."
+  />
+</PageLayout>

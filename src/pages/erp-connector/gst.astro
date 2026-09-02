@@ -1,0 +1,86 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="GST — GST-wise Ecommerce Accounting for ERP | DeepEcom"
+  description="GST-wise accounting and GST-ready exports for returns in the DeepEcom ERP Connector, so tax ledgers stay accurate inside your ERP."
+>
+  <PageHero
+    eyebrow="ERP CONNECTOR · GST"
+    title="GST-wise accounting, ready for your ERP."
+    lead="Separate GST by head and account it correctly across orders and returns — with exports prepared for filing."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore ERP Connector
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="GST"
+    title="Tax accounting that stays accurate."
+    lead="GST handled at the level of detail your returns require."
+    columns={3}
+    center
+    features={[
+      {
+        title: "GST-wise accounting",
+        description: "GST is isolated and accounted by head, so tax ledgers stay clean and accurate.",
+        icon: "scale",
+      },
+      {
+        title: "GST-ready exports",
+        description: "Data is prepared for GST returns, structured for filing.",
+        icon: "file",
+      },
+      {
+        title: "Returns and refunds",
+        description: "GST on returns and refunds is adjusted accurately within the accounting.",
+        icon: "refresh",
+      },
+      {
+        title: "Marketplace charges",
+        description: "Tax treatment of marketplace charges is accounted distinctly.",
+        icon: "wallet",
+      },
+      {
+        title: "Detailed accounting entries",
+        description: "Each GST head lands in the right place in your ledgers.",
+        icon: "table",
+      },
+      {
+        title: "ERP posting",
+        description: "GST-wise entries post into your ERP alongside the transactions they belong to.",
+        icon: "bank",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="COMPLIANCE"
+        title="Tax detail that belongs in your books."
+        lead="GST-wise accounting keeps your ecommerce tax position clear and your ERP ready for returns."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Make your ERP ecommerce-ready."
+    lead="Account GST by head and prepare exports for returns inside your ERP."
+  />
+</PageLayout>

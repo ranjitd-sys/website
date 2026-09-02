@@ -1,0 +1,86 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Amazon Sellers — Profitability, reconciliation and accounting | DeepEcom"
+  description="DeepEcom helps Amazon sellers understand profitability, reconcile settlements and account every transaction with detailed GST and warehouse accounting."
+>
+  <PageHero
+    eyebrow="SOLUTIONS · BY BUSINESS"
+    title="Run your Amazon business on real numbers."
+    lead="Amazon profitability is rarely what it looks like on the surface. DeepEcom turns your marketplace data into clear profitability, reconciled settlements and detailed accounting."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/integrations/amazon" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Amazon Integration
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="AMAZON SELLERS"
+    title="Understand profitability the way Amazon actually works."
+    lead="Amazon deductions, fees and settlements make your real profit hard to see. DeepEcom shows it clearly and keeps your books accurate."
+    columns={3}
+    center
+    features={[
+      {
+        title: "Amazon profitability",
+        description: "See your actual profitability after marketplace fees, deductions and adjustments.",
+        icon: "trend",
+      },
+      {
+        title: "Settlement reconciliation",
+        description: "Reconcile Amazon settlements against expected payments and flag every difference.",
+        icon: "refresh",
+      },
+      {
+        title: "Detailed accounting",
+        description: "Every Amazon transaction becomes structured, order-level accounting entries.",
+        icon: "receipt",
+      },
+      {
+        title: "GST handling",
+        description: "GST-wise accounting that keeps your tax reporting accurate across the marketplace.",
+        icon: "scale",
+      },
+      {
+        title: "Marketplace deductions",
+        description: "Commissions, referral fees and deductions captured as distinct accounting entries.",
+        icon: "wallet",
+      },
+      {
+        title: "Warehouse accounting",
+        description: "Inventory and stock movement accounted at the warehouse level.",
+        icon: "boxes",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="THE AMAZON OUTCOME"
+        title="From marketplace data to a clear financial picture."
+        lead="DeepEcom connects Amazon to business intelligence, payment reconciliation and detailed ERP accounting — so your profit is real and your books are ready."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="See your Amazon business on real numbers."
+    lead="Understand profitability, reconcile settlements and account every transaction."
+  />
+</PageLayout>

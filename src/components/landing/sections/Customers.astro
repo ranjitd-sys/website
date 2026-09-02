@@ -1,0 +1,126 @@
+---
+import SectionHeading from "../section-heading.astro"
+
+const studies = [
+  {
+    label: "A multi-marketplace seller",
+    problem: "Settlements from three channels never matched the bank.",
+    process: "Monthly reconciliation in spreadsheets, days of manual matching.",
+    outcome: "Every settlement reconciled to its orders, automatically.",
+  },
+  {
+    label: "A D2C brand",
+    problem: "Website and marketplace sales lived in separate systems.",
+    process: "Profitability was guessed, not measured, across channels.",
+    outcome: "One consolidated view of profit across every channel.",
+  },
+  {
+    label: "A finance team",
+    problem: "Ecommerce entries had to be re-keyed into the ERP by hand.",
+    process: "GST and marketplace charges were mapped manually each close.",
+    outcome: "Detailed accounting posts straight into the ERP.",
+  },
+]
+---
+
+<style is:global>
+  .customers-section {
+    padding: clamp(4.5rem, 10vh, 7.5rem) 0;
+    background: linear-gradient(180deg, var(--background) 0%, var(--ink-50) 100%);
+  }
+  .customers-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .case-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .case-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .case-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+  }
+  .case-card .case-tag {
+    align-self: flex-start;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+  }
+  .case-step strong {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .case-step p {
+    margin-top: 0.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ink-600);
+  }
+  .case-step.is-outcome p {
+    color: var(--ink-900);
+    font-weight: 500;
+  }
+  .customers-note {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="customers-section" id="customers">
+  <div class="customers-inner">
+    <SectionHeading
+      eyebrow="Customers"
+      title="How teams bring ecommerce and accounting together."
+      lead="Every business is different — but the pattern is the same: fragmented data in, one connected layer out."
+      center
+    />
+
+    <div class="case-grid reveal">
+      {
+        studies.map((s) => (
+          <article class="case-card">
+            <span class="case-tag">{s.label}</span>
+            <div class="case-step">
+              <strong>Problem</strong>
+              <p>{s.problem}</p>
+            </div>
+            <div class="case-step">
+              <strong>Existing process</strong>
+              <p>{s.process}</p>
+            </div>
+            <div class="case-step is-outcome">
+              <strong>DeepEcom</strong>
+              <p>{s.outcome}</p>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="customers-note reveal">
+      Case studies use illustrative scenarios — specific customer names and metrics are added as they are verified.
+    </p>
+  </div>
+</section>

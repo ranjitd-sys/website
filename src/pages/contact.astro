@@ -1,0 +1,54 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import ContactForm from "@/components/landing/contact-form"
+
+const expectations = [
+  {
+    title: "Response within one business day",
+    description: "Real humans, no ticket black holes.",
+  },
+  {
+    title: "Free guided demo",
+    description: "See reconciliation running on sample settlements.",
+  },
+  {
+    title: "Migration assistance included",
+    description: "We help import backdated settlements and map SKUs.",
+  },
+]
+---
+
+<PageLayout
+  title="Book a Demo — Talk to DeepEcom"
+  description="Book a free guided demo of DeepEcom. Tell us about your store and we'll show you exactly how DeepEcom fits your workflow."
+>
+  <PageHero
+    eyebrow="BOOK A DEMO"
+    title="Let's talk about your ecommerce business."
+    lead="Tell us about your store and we'll show you exactly how DeepEcom fits your workflow."
+  />
+
+  <section class="mx-auto max-w-2xl px-6 pb-20">
+    <ContactForm client:load />
+  </section>
+
+  <section class="mx-auto max-w-2xl px-6 pb-24">
+    <div class="rounded-2xl border border-border bg-white p-7 shadow-card">
+      <h2 class="text-lg font-bold text-ink-900">What to expect</h2>
+      <ul class="mt-5 flex flex-col gap-4">
+        {
+          expectations.map((e) => (
+            <li class="flex items-start gap-3">
+              <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500" />
+              <div>
+                <strong class="block text-sm font-semibold text-ink-900">{e.title}</strong>
+                <span class="text-sm text-muted-foreground">{e.description}</span>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</PageLayout>

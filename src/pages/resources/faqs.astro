@@ -1,0 +1,26 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import FaqAccordion from "@/components/landing/faq-accordion"
+---
+
+<PageLayout
+  title="FAQs — Frequently asked questions | DeepEcom"
+  description="Frequently asked questions about DeepEcom — marketplace integrations, GST numbers, historical data, SKU mapping, pricing and multi-warehouse accounting."
+>
+  <PageHero
+    eyebrow="FAQS"
+    title="Frequently asked questions."
+    lead="Straight answers on integrations, GST, reconciliation, historical data, SKU mapping and how pricing works."
+  />
+
+  <section class="mx-auto max-w-3xl px-6 pb-20">
+    <FaqAccordion client:visible />
+  </section>
+
+  <CtaBand
+    title="Question not answered here?"
+    lead="Talk to a real person — we respond within one business day."
+  />
+</PageLayout>

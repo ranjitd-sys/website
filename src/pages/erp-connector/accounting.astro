@@ -1,0 +1,86 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+---
+
+<PageLayout
+  title="Accounting — Detailed Ecommerce Accounting for ERP | DeepEcom"
+  description="Order-wise, GST-wise and warehouse-wise accounting with detailed accounting entries, TCS/TDS and ERP posting inside the DeepEcom ERP Connector."
+>
+  <PageHero
+    eyebrow="ERP CONNECTOR · ACCOUNTING"
+    title="Detailed ecommerce accounting inside your ERP."
+    lead="Account every order, GST head and warehouse precisely. DeepEcom turns complex ecommerce transactions into detailed, ERP-ready accounting entries."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore ERP Connector
+      </a>
+    </div>
+  </PageHero>
+
+  <FeatureGrid
+    eyebrow="ACCOUNTING"
+    title="Account with precision, at every level."
+    lead="Detailed accounting that reflects how your ecommerce business actually runs."
+    columns={3}
+    center
+    features={[
+      {
+        title: "Order-wise accounting",
+        description: "Revenue, charges and fees are accounted at the level of each individual order.",
+        icon: "receipt",
+      },
+      {
+        title: "GST-wise accounting",
+        description: "GST is separated and accounted by head, so your tax ledgers stay accurate.",
+        icon: "scale",
+      },
+      {
+        title: "Warehouse-wise accounting",
+        description: "Accounting is kept distinct across warehouses, matching your operations.",
+        icon: "boxes",
+      },
+      {
+        title: "Detailed accounting entries",
+        description: "Complete, audit-ready entries replace thin summary postings.",
+        icon: "table",
+      },
+      {
+        title: "TCS / TDS accounting",
+        description: "TCS and TDS-related accounting is captured within the entries it applies to.",
+        icon: "file",
+      },
+      {
+        title: "ERP posting",
+        description: "Prepared entries post directly into your ERP, ready for your finance team.",
+        icon: "bank",
+      },
+    ]}
+  />
+
+  <section class="bg-muted py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <SectionHeading
+        eyebrow="PRECISION"
+        title="Accounting that reflects real ecommerce complexity."
+        lead="Marketplace fees, GST, TCS/TDS, returns and warehouses — accounted in the detail your ERP needs."
+        center
+      />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Make your ERP ecommerce-ready."
+    lead="Bring order-level, GST-wise and warehouse-wise accounting into your ERP."
+  />
+</PageLayout>

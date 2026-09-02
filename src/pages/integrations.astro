@@ -1,0 +1,124 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const features = [
+  {
+    title: "Marketplace Data Aggregation",
+    description: "Connect Amazon, Flipkart, Shopify and other channels into a single layer.",
+    icon: "layers",
+  },
+  {
+    title: "Payment Reconciliation",
+    description: "Match expected settlements to actual payments and flag discrepancies.",
+    icon: "wallet",
+  },
+  {
+    title: "GST-Ready Accounting",
+    description: "Detailed, order-level accounting entries that map to your ERP.",
+    icon: "calculator",
+  },
+  {
+    title: "ERP Posting",
+    description: "Post complete accounting entries directly into Tally, SAP or Zoho.",
+    icon: "building",
+  },
+  {
+    title: "Warehouse & Stock Transfers",
+    description: "Track inventory movement and stock transfers between warehouses.",
+    icon: "boxes",
+  },
+  {
+    title: "TCS & TDS Handling",
+    description: "Ecommerce tax deductions captured and accounted correctly.",
+    icon: "shield",
+  },
+]
+
+const marketplaces = ["Amazon", "Flipkart", "Shopify", "Other Channels"]
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<PageLayout
+  title="Integrations — Your stack, connected."
+  description="DeepEcom connects ecommerce marketplaces to your ERP. Amazon, Flipkart, Shopify and other channels in, detailed accounting out to Tally, SAP and Zoho."
+>
+  <PageHero
+    eyebrow="INTEGRATIONS"
+    title="Your stack, connected."
+    lead="DeepEcom sits between your ecommerce marketplaces and your ERP. Marketplace data flows in, and detailed accounting flows out to the systems your finance team already runs on."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Explore Platform
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-6xl px-6 py-20">
+    <SectionHeading
+      eyebrow="ONE LAYER"
+      title="Your marketplaces in, your ERP accounting out."
+      lead="DeepEcom is the layer between ecommerce channels and the ERP. It brings marketplace data together, makes it understandable, and posts detailed accounting into the systems you already use."
+      center
+    />
+
+    <div class="mt-14 grid gap-8 lg:grid-cols-3">
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap gap-3">
+          {marketplaces.map((name) => (
+            <div class="flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-600">
+                {name[0]}
+              </span>
+              <span class="text-sm font-medium text-ink-900">{name}</span>
+            </div>
+          ))}
+        </div>
+        <p class="text-sm text-muted-foreground">Ecommerce channels &amp; marketplaces</p>
+      </div>
+
+      <div class="flex flex-col items-center justify-center gap-3">
+        <span class="text-2xl font-bold tracking-tight text-brand-600">DeepEcom</span>
+        <span class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Intelligence · Reconciliation · Accounting</span>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        <div class="flex flex-wrap gap-3">
+          {erps.map((name) => (
+            <div class="flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-600">
+                {name[0]}
+              </span>
+              <span class="text-sm font-medium text-ink-900">{name}</span>
+            </div>
+          ))}
+        </div>
+        <p class="text-sm text-muted-foreground">ERP systems</p>
+      </div>
+    </div>
+  </section>
+
+  <FeatureGrid
+    eyebrow="CAPABILITIES"
+    title="Everything connects, nothing is rebuilt."
+    lead="DeepEcom handles the heavy lifting of ecommerce data and accounting so your marketplaces and ERP work together without custom glue."
+    features={features}
+    columns={3}
+    center
+  />
+
+  <CtaBand
+    title="Connect your marketplaces to your books."
+    lead="See how DeepEcom brings your channels and ERP together."
+  />
+</PageLayout>

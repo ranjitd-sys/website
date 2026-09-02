@@ -1,0 +1,126 @@
+---
+import SectionHeading from "../section-heading.astro"
+
+const business = [
+  { label: "Amazon Sellers", desc: "Profitability, settlements and GST for the Amazon seller.", href: "/solutions/amazon-sellers" },
+  { label: "D2C Brands", desc: "One clear view across your store and marketplaces.", href: "/solutions/d2c-brands" },
+  { label: "Enterprise", desc: "Multi-entity, multi-warehouse accounting at scale.", href: "/solutions/enterprise" },
+]
+const roles = [
+  { label: "CFOs", desc: "Profitability, cash realization and financial visibility.", href: "/solutions/cfos" },
+  { label: "Accountants", desc: "Order-level, GST-wise accounting that ERP-ready.", href: "/solutions/accountants" },
+  { label: "Business Owners", desc: "What you actually earned, without the spreadsheets.", href: "/solutions/business-owners" },
+]
+---
+
+<style is:global>
+  .solutions-section {
+    padding: clamp(4.5rem, 10vh, 7.5rem) 0;
+  }
+  .solutions-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .sol-group {
+    margin-top: 2.75rem;
+  }
+  .sol-group-label {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .sol-group-label::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: var(--ink-200);
+  }
+  .sol-list {
+    margin-top: 1.1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 48rem) {
+    .sol-list { grid-template-columns: repeat(3, 1fr); }
+  }
+  .sol-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    text-decoration: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .sol-card:hover {
+    border-color: var(--brand-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .sol-card strong {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ink-900);
+    letter-spacing: -0.01em;
+  }
+  .sol-card span {
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--ink-500);
+  }
+  .sol-card .go {
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--brand-600);
+  }
+</style>
+
+<section class="solutions-section" id="solutions">
+  <div class="solutions-inner">
+    <SectionHeading
+      eyebrow="Solutions"
+      title="Outcomes for how you sell — and who you are."
+      lead="DeepEcom is built around the specific problems of ecommerce sellers and the finance teams behind them."
+    />
+
+    <div class="sol-group reveal">
+      <span class="sol-group-label">By business</span>
+      <div class="sol-list">
+        {
+          business.map((s) => (
+            <a href={s.href} class="sol-card">
+              <strong>{s.label}</strong>
+              <span>{s.desc}</span>
+              <span class="go">Learn more →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="sol-group reveal">
+      <span class="sol-group-label">By role</span>
+      <div class="sol-list">
+        {
+          roles.map((s) => (
+            <a href={s.href} class="sol-card">
+              <strong>{s.label}</strong>
+              <span>{s.desc}</span>
+              <span class="go">Learn more →</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

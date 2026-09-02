@@ -1,45 +1,26 @@
 ---
-import CallToActionArea from "@/components/landing/sections/Contact.astro"
-import Clarity from "@/components/landing/sections/Clarity.astro"
-import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
-import FAQ from "@/components/landing/sections/FAQ.astro"
-import FeaturesBento from "@/components/landing/sections/FeaturesBento.astro"
-import FinalCta from "@/components/landing/sections/FinalCta.astro"
-import FlowDiagram from "@/components/landing/sections/FlowDiagram.astro"
 import Hero from "@/components/landing/sections/Hero.astro"
+import Problem from "@/components/landing/sections/Problem.astro"
+import DeepEcomLayer from "@/components/landing/sections/DeepEcomLayer.astro"
+import Platform from "@/components/landing/sections/Platform.astro"
+import ErpConnector from "@/components/landing/sections/ErpConnector.astro"
+import Solutions from "@/components/landing/sections/Solutions.astro"
 import Integrations from "@/components/landing/sections/Integrations.astro"
-import MetricsBand from "@/components/landing/sections/MetricsBand.astro"
-import Pricing from "@/components/landing/sections/Pricing.astro"
-import Settlements from "@/components/landing/sections/Settlements.astro"
-import Testimonials from "@/components/landing/sections/Testimonials.astro"
-import WhyDeepEcom from "@/components/landing/sections/WhyDeepEcom.astro"
+import Customers from "@/components/landing/sections/Customers.astro"
+import FinalCta from "@/components/landing/sections/FinalCta.astro"
 import SectionDivider from "@/components/layout/SectionDivider.astro"
 import LandingLayout from "@/layouts/LandingLayout.astro"
 ---
 
 <LandingLayout>
   <Hero />
-  <DashboardPreview />
-  <MetricsBand />
   <SectionDivider />
-  <FlowDiagram />
-  <SectionDivider />
-  <Clarity />
-  <SectionDivider />
-  <FeaturesBento />
-  <SectionDivider />
-  <Settlements />
-  <SectionDivider />
+  <Problem />
+  <DeepEcomLayer />
+  <Platform />
+  <ErpConnector />
+  <Solutions />
   <Integrations />
-  <SectionDivider />
-  <WhyDeepEcom />
-  <SectionDivider />
-  <Testimonials />
-  <SectionDivider />
-  <Pricing />
-  <SectionDivider />
-  <FAQ />
-  <SectionDivider />
+  <Customers />
   <FinalCta />
-  <CallToActionArea />
 </LandingLayout>
