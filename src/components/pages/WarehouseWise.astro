@@ -1,0 +1,121 @@
+---
+const warehouses = [
+  { code: "DEL-01", name: "Delhi", orders: "1,248", revenue: "₹18.4L" },
+  { code: "MUM-02", name: "Mumbai", orders: "986", revenue: "₹14.2L" },
+  { code: "BLR-03", name: "Bangalore", orders: "742", revenue: "₹10.8L" },
+]
+---
+
+<style is:global>
+  .ww {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .ww-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .ww-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .ww-card {
+    padding: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .ww-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .ww-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .ww-card-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .ww-card-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .ww-card-code {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .ww-card-name {
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+  .ww-card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+  .ww-stat {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: var(--ink-50);
+  }
+  .ww-stat-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .ww-stat-value {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<section class="ww">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="ww-grid reveal">
+      {warehouses.map((w) => (
+        <div class="ww-card">
+          <div class="ww-card-head">
+            <span class="ww-card-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7 12 2l9 5-9 5-9-5zM3 7v10l9 5 9-5V7M12 12v10" />
+              </svg>
+            </span>
+            <div>
+              <div class="ww-card-code">{w.code}</div>
+              <div class="ww-card-name">{w.name}</div>
+            </div>
+          </div>
+          <div class="ww-card-stats">
+            <div class="ww-stat">
+              <div class="ww-stat-label">Orders</div>
+              <div class="ww-stat-value">{w.orders}</div>
+            </div>
+            <div class="ww-stat">
+              <div class="ww-stat-label">Revenue</div>
+              <div class="ww-stat-value">{w.revenue}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

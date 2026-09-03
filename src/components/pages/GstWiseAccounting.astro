@@ -1,0 +1,109 @@
+---
+const rows = [
+  { order: "ORD-104928", invoice: "INV-104928", hsn: "6911", taxable: "₹2,117.80", cgst: "₹190.60", sgst: "₹190.60", igst: "" },
+  { order: "ORD-104929", invoice: "INV-104929", hsn: "6911", taxable: "₹1,499.00", cgst: "", sgst: "", igst: "₹269.82" },
+  { order: "ORD-104930", invoice: "INV-104930", hsn: "6110", taxable: "₹3,200.00", cgst: "₹288.00", sgst: "₹288.00", igst: "" },
+  { order: "ORD-104931", invoice: "INV-104931", hsn: "6110", taxable: "₹899.00", cgst: "", sgst: "", igst: "₹161.82" },
+  { order: "ORD-104932", invoice: "INV-104932", hsn: "9503", taxable: "₹1,750.00", cgst: "₹157.50", sgst: "₹157.50", igst: "" },
+]
+---
+
+<style is:global>
+  .gst-section {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .gst-table-wrap {
+    margin-top: 2rem;
+    overflow-x: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .gst-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    min-width: 40rem;
+  }
+  .gst-table thead {
+    background: var(--ink-50);
+  }
+  .gst-table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+    white-space: nowrap;
+  }
+  .gst-table th.right {
+    text-align: right;
+  }
+  .gst-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-700);
+    white-space: nowrap;
+  }
+  .gst-table td.right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .gst-table td.strong {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .gst-table td.muted {
+    color: var(--ink-300);
+  }
+  .gst-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .gst-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+  .gst-note {
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="gst-section">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="gst-table-wrap reveal">
+      <table class="gst-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Invoice</th>
+            <th>HSN</th>
+            <th class="right">Taxable Value</th>
+            <th class="right">CGST</th>
+            <th class="right">SGST</th>
+            <th class="right">IGST</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <td class="strong">{r.order}</td>
+              <td>{r.invoice}</td>
+              <td>{r.hsn}</td>
+              <td class="right strong">{r.taxable}</td>
+              <td class:list={["right", !r.cgst && "muted"]}>{r.cgst || "—"}</td>
+              <td class:list={["right", !r.sgst && "muted"]}>{r.sgst || "—"}</td>
+              <td class:list={["right", !r.igst && "muted"]}>{r.igst || "—"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="gst-note">GST is separated by head — CGST, SGST and IGST — for every order, so your tax ledgers stay accurate.</p>
+  </div>
+</section>

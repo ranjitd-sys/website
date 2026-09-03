@@ -1,0 +1,73 @@
+---
+const dimensions = [
+  { label: "Order", desc: "Every order tracked individually" },
+  { label: "SKU", desc: "Product-level accounting" },
+  { label: "Marketplace", desc: "Amazon, Flipkart, Shopify, Meesho" },
+  { label: "GST", desc: "CGST, SGST, IGST by head" },
+  { label: "Warehouse", desc: "DEL-01, MUM-02, BLR-03" },
+  { label: "Settlement", desc: "Net amount after deductions" },
+  { label: "Payment", desc: "Actual payout received" },
+  { label: "Return", desc: "Reversal entries" },
+  { label: "Inventory", desc: "Stock movement tracked" },
+  { label: "Stock Transfer", desc: "Warehouse-to-warehouse" },
+]
+---
+
+<style is:global>
+  .md {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .md-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+  }
+  @media (max-width: 64rem) {
+    .md-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 40rem) {
+    .md-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .md-cell {
+    padding: 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
+    text-align: center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .md-cell:hover {
+    border-color: var(--brand-300);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  .md-cell-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .md-cell-desc {
+    margin-top: 0.35rem;
+    font-size: 0.6875rem;
+    color: var(--ink-400);
+    line-height: 1.4;
+  }
+</style>
+
+<section class="md">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="md-grid reveal">
+      {dimensions.map((d) => (
+        <div class="md-cell">
+          <div class="md-cell-label">{d.label}</div>
+          <div class="md-cell-desc">{d.desc}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

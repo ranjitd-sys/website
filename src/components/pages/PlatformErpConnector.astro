@@ -1,0 +1,129 @@
+---
+const platformItems = ["Profitability", "Payment Reconciliation", "Reports"]
+const erpItems = ["Detailed Accounting", "Order-wise", "GST-wise", "Warehouse-wise"]
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<style is:global>
+  .pec {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .pec-visual {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    .pec-visual {
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+    }
+  }
+  .pec-block {
+    padding: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .pec-block-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.75rem;
+  }
+  .pec-block-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+    margin-bottom: 0.75rem;
+  }
+  .pec-block-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .pec-block-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--ink-600);
+  }
+  .pec-block-item::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--brand-500);
+    flex: none;
+  }
+  .pec-center {
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    text-align: center;
+  }
+  .pec-center-name {
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .pec-center-sub {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+  .pec-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-300);
+  }
+  @media (max-width: 47.99rem) {
+    .pec-arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>
+
+<section class="pec">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="pec-visual reveal">
+      <div class="pec-block">
+        <div class="pec-block-label">Layer 1</div>
+        <div class="pec-block-name">DeepEcom Platform</div>
+        <div class="pec-block-items">
+          {platformItems.map((i) => <span class="pec-block-item">{i}</span>)}
+        </div>
+      </div>
+
+      <div class="pec-arrow" aria-hidden="true">
+        <svg width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h28M22 6l6 6-6 6" />
+        </svg>
+      </div>
+
+      <div class="pec-center">
+        <div class="pec-center-name">ERP Connector</div>
+        <div class="pec-center-sub">Detailed Accounting</div>
+      </div>
+
+      <div class="pec-arrow" aria-hidden="true">
+        <svg width="32" height="24" viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h28M22 6l6 6-6 6" />
+        </svg>
+      </div>
+
+      <div class="pec-block">
+        <div class="pec-block-label">Layer 2</div>
+        <div class="pec-block-name">Your ERP</div>
+        <div class="pec-block-items">
+          {erps.map((e) => <span class="pec-block-item">{e}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

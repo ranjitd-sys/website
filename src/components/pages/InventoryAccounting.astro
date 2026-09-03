@@ -1,0 +1,101 @@
+---
+const rows = [
+  { event: "Sale", sku: "DCM-HOME-MUG-SET-480", warehouse: "DEL-01", qty: "-2", value: "-₹498.00" },
+  { event: "Return", sku: "DCM-HOME-MUG-SET-480", warehouse: "DEL-01", qty: "+1", value: "+₹249.00" },
+  { event: "Stock Transfer Out", sku: "DCM-HOME-MUG-SET-480", warehouse: "DEL-01 → MUM-02", qty: "-50", value: "-₹12,450.00" },
+  { event: "Stock Transfer In", sku: "DCM-HOME-MUG-SET-480", warehouse: "MUM-02", qty: "+50", value: "+₹12,450.00" },
+  { event: "Closing Balance", sku: "DCM-HOME-MUG-SET-480", warehouse: "DEL-01", qty: "1,199", value: "₹2,98,751.00" },
+]
+---
+
+<style is:global>
+  .inv {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .inv-table-wrap {
+    margin-top: 2rem;
+    overflow-x: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .inv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    min-width: 36rem;
+  }
+  .inv-table thead {
+    background: var(--ink-50);
+  }
+  .inv-table th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+    white-space: nowrap;
+  }
+  .inv-table th.right {
+    text-align: right;
+  }
+  .inv-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-700);
+    white-space: nowrap;
+  }
+  .inv-table td.right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-table td.strong {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .inv-table td.pos {
+    color: var(--success-600);
+  }
+  .inv-table td.neg {
+    color: var(--danger-600);
+  }
+  .inv-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .inv-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+</style>
+
+<section class="inv">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="inv-table-wrap reveal">
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>SKU</th>
+            <th>Warehouse</th>
+            <th class="right">Qty</th>
+            <th class="right">Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <td class="strong">{r.event}</td>
+              <td>{r.sku}</td>
+              <td>{r.warehouse}</td>
+              <td class:list={["right", r.qty.startsWith("+") ? "pos" : r.qty.startsWith("-") ? "neg" : ""]}>{r.qty}</td>
+              <td class:list={["right", r.value.startsWith("+") ? "pos" : r.value.startsWith("-") ? "neg" : ""]}>{r.value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

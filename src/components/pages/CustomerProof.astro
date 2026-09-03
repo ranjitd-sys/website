@@ -1,0 +1,73 @@
+---
+import SectionHeading from "@/components/landing/section-heading.astro"
+---
+
+<style is:global>
+  .cp {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .cp-card {
+    margin-top: 2rem;
+    padding: 2.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+  .cp-logo {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.25rem;
+    border-radius: 1rem;
+    background: var(--ink-50);
+    color: var(--ink-400);
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+  .cp-quote {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--ink-700);
+    font-style: italic;
+  }
+  .cp-author {
+    margin-top: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .cp-role {
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+  }
+  .cp-placeholder {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: var(--ink-50);
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="cp">
+  <div class="mx-auto max-w-6xl px-6">
+    <SectionHeading
+      eyebrow="CUSTOMER PROOF"
+      title="Trusted by ecommerce businesses."
+      center
+    />
+    <div class="cp-card reveal">
+      <div class="cp-logo">DC</div>
+      <p class="cp-quote">"DeepEcom has transformed how we handle ecommerce accounting. The detail and accuracy is exactly what our finance team needed."</p>
+      <div class="cp-author">Rajesh Kumar</div>
+      <div class="cp-role">CFO, Example Company</div>
+      <div class="cp-placeholder">Placeholder — replace with actual customer testimonial when available.</div>
+    </div>
+  </div>
+</section>

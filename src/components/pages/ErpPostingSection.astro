@@ -1,0 +1,138 @@
+---
+interface Erp {
+  name: string
+  tag: string
+  points: string[]
+  voucher: string
+}
+
+const erps: Erp[] = [
+  {
+    name: "Tally",
+    tag: "Small & mid-market ERP",
+    points: ["Sales & GST vouchers", "Output CGST / SGST / IGST ledgers", "TCS ledger (271H)", "Receivable & charge ledgers"],
+    voucher: "Voucher #JRNL-45892",
+  },
+  {
+    name: "SAP",
+    tag: "Enterprise ERP",
+    points: ["FI postings with GL mapping", "Tax codes mapped per rate", "Profit-center & cost-center detail", "Document number on posting"],
+    voucher: "Doc #1900048217",
+  },
+  {
+    name: "Zoho Books",
+    tag: "Cloud accounting",
+    points: ["Gateway-charge mapping", "GST tax profile per line", "Bank & receivable reconciliation", "Posting with source reference"],
+    voucher: "Entry #AI-33178",
+  },
+]
+---
+
+<style is:global>
+  .erp-post {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .erp-post-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 2rem;
+  }
+  @media (min-width: 48rem) {
+    .erp-post-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .erp-post-card {
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-xl);
+    background: #fff;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .erp-post-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .erp-post-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .erp-post-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-900);
+  }
+  .erp-post-tag {
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+    white-space: nowrap;
+  }
+  .erp-post-list {
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .erp-post-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--ink-600);
+  }
+  .erp-post-list li::before {
+    content: "";
+    flex: none;
+    width: 5px;
+    height: 5px;
+    margin-top: 0.5em;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .erp-post-voucher {
+    margin-top: 1.25rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--ink-200);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+  .erp-post-voucher b {
+    color: var(--ink-800);
+  }
+</style>
+
+<section class="erp-post">
+  <div class="erp-post-grid" aria-label="ERP posting detail">
+    {
+      erps.map((e) => (
+        <div class="erp-post-card reveal">
+          <div class="erp-post-top">
+            <span class="erp-post-name">{e.name}</span>
+            <span class="erp-post-tag">{e.tag}</span>
+          </div>
+          <ul class="erp-post-list">
+            {e.points.map((p) => <li>{p}</li>)}
+          </ul>
+          <div class="erp-post-voucher">
+            {e.voucher.split(" #")[0]} <b>#{e.voucher.split(" #")[1]}</b>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</section>

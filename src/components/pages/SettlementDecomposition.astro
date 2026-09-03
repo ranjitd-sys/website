@@ -1,0 +1,137 @@
+---
+const deductions = [
+  { label: "Marketplace Commission", value: "₹225.00" },
+  { label: "Shipping / Logistics", value: "₹65.00" },
+  { label: "Collection Fee", value: "₹15.00" },
+  { label: "Other Charges", value: "₹10.00" },
+]
+const gross = "₹2,499.00"
+const totalDeductions = "₹315.00"
+const net = "₹2,184.00"
+---
+
+<style is:global>
+  .sd {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .sd-card {
+    margin-top: 2rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+  .sd-head {
+    padding: 1.25rem 1.5rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .sd-head .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .sd-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.5rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.875rem;
+  }
+  .sd-row:last-child {
+    border-bottom: 0;
+  }
+  .sd-row .label {
+    color: var(--ink-600);
+  }
+  .sd-row .value {
+    font-weight: 600;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .sd-row.deduct .label {
+    color: var(--ink-500);
+  }
+  .sd-row.deduct .value {
+    color: var(--danger-600);
+  }
+  .sd-row.deduct .value::before {
+    content: "− ";
+  }
+  .sd-divider {
+    height: 1px;
+    background: var(--ink-200);
+    margin: 0 1.5rem;
+  }
+  .sd-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--ink-50);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .sd-total .value {
+    font-variant-numeric: tabular-nums;
+  }
+  .sd-net {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .sd-net .value {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<section class="sd">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="sd-card reveal">
+      <div class="sd-head">
+        <span class="dot" />
+        Settlement Decomposition
+      </div>
+      <div class="sd-row">
+        <span class="label">Gross Sale</span>
+        <span class="value">{gross}</span>
+      </div>
+      <div class="sd-divider" />
+      {deductions.map((d) => (
+        <div class="sd-row deduct">
+          <span class="label">{d.label}</span>
+          <span class="value">{d.value}</span>
+        </div>
+      ))}
+      <div class="sd-divider" />
+      <div class="sd-total">
+        <span>Total Deductions</span>
+        <span class="value">{totalDeductions}</span>
+      </div>
+      <div class="sd-net">
+        <span>Net Settlement</span>
+        <span class="value">{net}</span>
+      </div>
+    </div>
+  </div>
+</section>

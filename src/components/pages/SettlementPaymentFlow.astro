@@ -1,0 +1,88 @@
+---
+const steps = [
+  { label: "Order", value: "₹2,499" },
+  { label: "Marketplace Settlement", value: "₹2,184" },
+  { label: "Deductions", value: "₹315" },
+  { label: "Receivable", value: "₹2,159" },
+  { label: "Payment", value: "₹2,159" },
+]
+---
+
+<style is:global>
+  .spf {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .spf-flow {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  @media (min-width: 48rem) {
+    .spf-flow {
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .spf-step {
+    flex: 1;
+    padding: 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    text-align: center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .spf-step:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-sm);
+  }
+  .spf-step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .spf-step-value {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .spf-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-300);
+  }
+  @media (max-width: 47.99rem) {
+    .spf-arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>
+
+<section class="spf">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="spf-flow reveal">
+      {steps.map((s, i) => (
+        <>
+          <div class="spf-step">
+            <div class="spf-step-label">{s.label}</div>
+            <div class="spf-step-value">{s.value}</div>
+          </div>
+          {i < steps.length - 1 && (
+            <div class="spf-arrow" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M0 12h20M16 6l6 6-6 6" />
+              </svg>
+            </div>
+          )}
+        </>
+      ))}
+    </div>
+  </div>
+</section>

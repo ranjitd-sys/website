@@ -1,0 +1,119 @@
+---
+const transfer = {
+  sku: "DCM-HOME-MUG-SET-480",
+  qty: 50,
+  value: "₹12,450.00",
+  from: { code: "DEL-01", name: "Delhi" },
+  to: { code: "MUM-02", name: "Mumbai" },
+}
+---
+
+<style is:global>
+  .st {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .st-visual {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 48rem) {
+    .st-visual {
+      grid-template-columns: 1fr auto 1fr;
+    }
+  }
+  .st-warehouse {
+    padding: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+  }
+  .st-warehouse-code {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .st-warehouse-name {
+    margin-top: 0.25rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .st-warehouse-detail {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--ink-200);
+    font-size: 0.8125rem;
+    color: var(--ink-500);
+  }
+  .st-warehouse-detail .label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.25rem;
+  }
+  .st-warehouse-detail .value {
+    font-weight: 600;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .st-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-400);
+  }
+  @media (max-width: 47.99rem) {
+    .st-arrow {
+      transform: rotate(90deg);
+    }
+  }
+  .st-arrow-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+</style>
+
+<section class="st">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="st-visual reveal">
+      <div class="st-warehouse">
+        <div class="st-warehouse-code">{transfer.from.code}</div>
+        <div class="st-warehouse-name">{transfer.from.name}</div>
+        <div class="st-warehouse-detail">
+          <span class="label">Stock Out</span>
+          <span class="value">{transfer.qty} units · {transfer.value}</span>
+        </div>
+      </div>
+
+      <div class="st-arrow">
+        <svg width="48" height="24" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h44M38 6l6 6-6 6" />
+        </svg>
+        <span class="st-arrow-label">Stock Transfer</span>
+      </div>
+
+      <div class="st-warehouse">
+        <div class="st-warehouse-code">{transfer.to.code}</div>
+        <div class="st-warehouse-name">{transfer.to.name}</div>
+        <div class="st-warehouse-detail">
+          <span class="label">Stock In</span>
+          <span class="value">{transfer.qty} units · {transfer.value}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

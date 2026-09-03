@@ -10,27 +10,29 @@ import Solutions from "@/components/landing/sections/Solutions.astro"
 import Integrations from "@/components/landing/sections/Integrations.astro"
 import Customers from "@/components/landing/sections/Customers.astro"
 import FinalCta from "@/components/landing/sections/FinalCta.astro"
+import SectionDivider from "@/components/layout/SectionDivider.astro"
 import LandingLayout from "@/layouts/LandingLayout.astro"
 ---
 
 <LandingLayout>
   <Hero />
   <TrustBar />
-
+  <SectionDivider />
   <Problem />
-
+  <SectionDivider />
   <DeepEcomLayer />
-
-  <!-- Product showcases — alternating full-width editorial rows -->
+  <SectionDivider />
+  
+ 
   <Platform />
   <ErpConnector />
 
   <CapabilityStrip />
-
+  <SectionDivider />
   <Solutions />
-
+  <SectionDivider />
   <Integrations />
-
+  <SectionDivider />
   <Customers />
   <FinalCta />
 </LandingLayout>

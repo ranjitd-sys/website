@@ -1,0 +1,204 @@
+---
+interface EntryRow {
+  date?: string
+  txn: string
+  ledger: string
+  debit?: string
+  credit?: string
+  /** status: "posted" | "pending" | "partial" | undefined */
+  status?: "posted" | "pending" | "partial"
+  /** true when this row is a subtotal/total row */
+  total?: boolean
+}
+
+interface Props {
+  title: string
+  entries: EntryRow[]
+  footer?: string
+  cols?: string[]
+}
+
+const { title, entries, footer, cols = ["Date", "Transaction", "Ledger", "Debit", "Credit"] } = Astro.props
+const STATUS: Record<string, { label: string; cls: string }> = {
+  posted: { label: "Posted", cls: "s-posted" },
+  pending: { label: "Pending", cls: "s-pending" },
+  partial: { label: "Partial", cls: "s-partial" },
+}
+---
+
+<style is:global>
+  .jt {
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--ink-200);
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .jt-head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .jt-head .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+    flex: none;
+  }
+  .jt-head .sub {
+    margin-left: auto;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .jt-grid {
+    display: grid;
+    gap: 0;
+  }
+  .jt-row,
+  .jt-thead {
+    display: grid;
+    grid-template-columns: 1.5fr 1.6fr 1.5fr 1fr 1fr;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.7rem 1.1rem;
+  }
+  .jt-thead {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--ink-200);
+    background: #fff;
+    font-size: 0.6875rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .jt-row {
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+    color: var(--ink-600);
+  }
+  .jt-row:last-child {
+    border-bottom: 0;
+  }
+  .jt-row.total {
+    background: var(--ink-50);
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .jt-cell {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .jt-cell.strong {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .jt-cell.num {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-700);
+    text-align: right;
+  }
+  .jt-cell.debit {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--danger-600);
+  }
+  .jt-cell.credit {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--success-600);
+  }
+  .jt-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .jt-status::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .jt-status.s-posted {
+    color: var(--success-600);
+  }
+  .jt-status.s-posted::before {
+    background: var(--success-500);
+  }
+  .jt-status.s-pending {
+    color: var(--ink-500);
+  }
+  .jt-status.s-pending::before {
+    background: var(--ink-400);
+  }
+  .jt-status.s-partial {
+    color: var(--brand-600);
+  }
+  .jt-status.s-partial::before {
+    background: var(--brand-500);
+  }
+  .jt-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.1rem;
+    background: #fbfcfe;
+    border-top: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .jt-foot svg {
+    color: var(--success-500);
+    flex: none;
+  }
+  @media (max-width: 40rem) {
+    .jt-row,
+    .jt-thead {
+      grid-template-columns: 1fr 1.4fr 1fr .9fr .9fr;
+      gap: 0.5rem;
+      padding-inline: 0.85rem;
+    }
+    .jt-thead {
+      font-size: 0.625rem;
+    }
+  }
+</style>
+
+<div class="jt" role="region" aria-label={title}>
+  <div class="jt-head">
+    <span class="dot" aria-hidden="true"></span>
+    {title}
+    {footer && <span class="sub">{footer}</span>}
+  </div>
+  <div class="jt-grid">
+    <div class="jt-thead" aria-hidden="true">
+      {cols.map((c) => <span>{c}</span>)}
+    </div>
+    {
+      entries.map((e) => (
+        <div class:list={["jt-row", e.total && "total"]}>
+          {e.date ? <span class="jt-cell">{e.date}</span> : <span class="jt-cell" />}
+          <span class:list={["jt-cell", "strong"]}>{e.txn}</span>
+          <span class="jt-cell">{e.ledger}</span>
+          <span class="jt-cell debit">{e.debit ?? ""}</span>
+          <span class="jt-cell credit">{e.credit ?? ""}</span>
+        </div>
+      ))
+    }
+  </div>
+</div>

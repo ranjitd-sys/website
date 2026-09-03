@@ -1,0 +1,171 @@
+---
+const orderInfo = [
+  { label: "Order ID", value: "ORD-104928" },
+  { label: "Marketplace", value: "Amazon" },
+  { label: "Invoice", value: "INV-2023-06-104928" },
+  { label: "SKU", value: "DCM-HOME-MUG-SET-480" },
+  { label: "Quantity", value: "2" },
+  { label: "Customer", value: "Rajesh Kumar" },
+  { label: "Warehouse", value: "DEL-01" },
+  { label: "Taxable Value", value: "₹2,117.80" },
+  { label: "GST", value: "CGST 9% + SGST 9%" },
+]
+
+const entries = [
+  { account: "Customer Receivable — Amazon", debit: "₹2,499.00", credit: "" },
+  { account: "Sales — Amazon", debit: "", credit: "₹2,117.80" },
+  { account: "Output CGST", debit: "", credit: "₹190.60" },
+  { account: "Output SGST", debit: "", credit: "₹190.60" },
+  { account: "Amazon Charges A/c", debit: "₹315.00", credit: "" },
+  { account: "TCS Recoverable", debit: "₹29.20", credit: "" },
+  { account: "Receivable — Amazon (net)", debit: "", credit: "₹2,154.80", total: true },
+]
+---
+
+<style is:global>
+  .owa {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .owa-card {
+    margin-top: 2rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .owa-head {
+    padding: 1.25rem 1.5rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .owa-head .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .owa-body {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 56rem) {
+    .owa-body {
+      grid-template-columns: 1fr 1.4fr;
+    }
+  }
+  .owa-info {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  @media (min-width: 56rem) {
+    .owa-info {
+      border-bottom: 0;
+      border-right: 1px solid var(--ink-200);
+    }
+  }
+  .owa-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .owa-info-row:last-child {
+    border-bottom: 0;
+  }
+  .owa-info-row .k {
+    color: var(--ink-400);
+  }
+  .owa-info-row .v {
+    font-weight: 600;
+    color: var(--ink-800);
+    text-align: right;
+  }
+  .owa-entries {
+    padding: 1.5rem;
+  }
+  .owa-entries-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.75rem;
+  }
+  .owa-entry {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+    align-items: center;
+  }
+  .owa-entry:last-child {
+    border-bottom: 0;
+  }
+  .owa-entry.total {
+    background: var(--ink-50);
+    font-weight: 700;
+    color: var(--ink-900);
+    margin: 0.5rem -0.5rem 0;
+    padding: 0.6rem 0.5rem;
+    border-radius: 0.5rem;
+  }
+  .owa-entry-account {
+    color: var(--ink-700);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .owa-entry-debit {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--danger-600);
+  }
+  .owa-entry-credit {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--success-600);
+  }
+</style>
+
+<section class="owa">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="owa-card reveal">
+      <div class="owa-head">
+        <span class="dot" />
+        Order-wise Accounting · ORD-104928
+      </div>
+      <div class="owa-body">
+        <div class="owa-info">
+          {orderInfo.map((r) => (
+            <div class="owa-info-row">
+              <span class="k">{r.label}</span>
+              <span class="v">{r.value}</span>
+            </div>
+          ))}
+        </div>
+        <div class="owa-entries">
+          <div class="owa-entries-title">Accounting Entries</div>
+          {entries.map((e) => (
+            <div class:list={["owa-entry", e.total && "total"]}>
+              <span class="owa-entry-account">{e.account}</span>
+              <span class="owa-entry-debit">{e.debit}</span>
+              <span class="owa-entry-credit">{e.credit}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

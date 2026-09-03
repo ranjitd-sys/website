@@ -1,0 +1,93 @@
+---
+const steps = [
+  { label: "Original Order", sub: "Sale entry created" },
+  { label: "Return", sub: "Customer initiates return" },
+  { label: "Reversal", sub: "Sale entry reversed" },
+  { label: "GST Adjustment", sub: "Output tax reversed" },
+  { label: "Inventory Adjustment", sub: "Stock restored" },
+  { label: "Settlement Adjustment", sub: "Refund processed" },
+]
+---
+
+<style is:global>
+  .rr {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .rr-timeline {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 48rem) {
+    .rr-timeline {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+    }
+  }
+  .rr-step {
+    position: relative;
+    padding: 1.25rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  @media (min-width: 48rem) {
+    .rr-step {
+      margin-bottom: 0;
+      border-radius: 0;
+      border-right-width: 0;
+    }
+    .rr-step:first-child {
+      border-radius: 0.75rem 0 0 0.75rem;
+    }
+    .rr-step:last-child {
+      border-radius: 0 0.75rem 0.75rem 0;
+      border-right-width: 1px;
+    }
+  }
+  .rr-step:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-sm);
+    z-index: 1;
+  }
+  .rr-step-num {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0 auto 0.5rem;
+    border-radius: 50%;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+  .rr-step-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .rr-step-sub {
+    margin-top: 0.25rem;
+    font-size: 0.6875rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="rr">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="rr-timeline reveal">
+      {steps.map((s, i) => (
+        <div class="rr-step">
+          <div class="rr-step-num">{i + 1}</div>
+          <div class="rr-step-label">{s.label}</div>
+          <div class="rr-step-sub">{s.sub}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

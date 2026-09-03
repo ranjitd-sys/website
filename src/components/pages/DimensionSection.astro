@@ -1,0 +1,92 @@
+---
+import JournalTable from "./JournalTable.astro"
+
+interface Props {
+  eyebrow: string
+  title: string
+  desc: string
+  flip?: boolean
+  table: {
+    title: string
+    footer?: string
+    entries: {
+      date?: string
+      txn: string
+      ledger: string
+      debit?: string
+      credit?: string
+      status?: "posted" | "pending" | "partial"
+      total?: boolean
+    }[]
+  }
+}
+
+const { eyebrow, title, desc, flip = false, table } = Astro.props
+---
+
+<style is:global>
+  .dim {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .dim-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .dim-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    }
+    .dim-row.flip .dim-copy {
+      order: 2;
+    }
+    .dim-row.flip .dim-visual {
+      order: 1;
+    }
+  }
+  .dim-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .dim-title {
+    margin-top: 0.85rem;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .dim-desc {
+    margin-top: 0.9rem;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+    max-width: 34rem;
+  }
+  .dim-visual {
+    display: flex;
+    flex-direction: column;
+  }
+  .dim-arrow {
+    align-self: flex-end;
+    margin-top: 0.6rem;
+    color: var(--ink-300);
+  }
+</style>
+
+<section class="dim">
+  <div class:list={["dim-row", flip && "flip"]}>
+    <div class="dim-copy">
+      <span class="dim-eyebrow">{eyebrow}</span>
+      <h3 class="dim-title">{title}</h3>
+      <p class="dim-desc">{desc}</p>
+    </div>
+    <div class="dim-visual reveal">
+      <JournalTable title={table.title} footer={table.footer} entries={table.entries} />
+    </div>
+  </div>
+</section>

@@ -1,0 +1,253 @@
+---
+const voucherMeta = [
+  { label: "Voucher No.", value: "JRNL-45892" },
+  { label: "Date", value: "14 Jun 2023" },
+  { label: "Marketplace", value: "Amazon" },
+  { label: "Order", value: "ORD-104928" },
+  { label: "Warehouse", value: "DEL-01" },
+]
+
+const salesEntries = [
+  { account: "Customer Receivable — Amazon", debit: "₹2,499.00", credit: "" },
+  { account: "Sales — Amazon", debit: "", credit: "₹2,117.80" },
+  { account: "Output CGST", debit: "", credit: "₹190.60" },
+  { account: "Output SGST", debit: "", credit: "₹190.60" },
+]
+
+const settlementEntries = [
+  { account: "Amazon Payable", debit: "", credit: "₹2,184.00" },
+  { account: "Customer Receivable — Amazon", debit: "₹2,499.00", credit: "" },
+  { account: "Marketplace Commission", debit: "₹225.00", credit: "" },
+  { account: "Shipping / Logistics", debit: "₹65.00", credit: "" },
+  { account: "Collection Fee", debit: "₹15.00", credit: "" },
+  { account: "Other Charges", debit: "₹10.00", credit: "" },
+]
+
+const returnEntries = [
+  { account: "Sales Return A/c", debit: "₹830.00", credit: "" },
+  { account: "Output CGST A/c", debit: "₹74.70", credit: "" },
+  { account: "Output SGST A/c", debit: "₹74.70", credit: "" },
+  { account: "Customer Receivable — Amazon", debit: "", credit: "₹979.40" },
+]
+
+const stockEntries = [
+  { account: "Stock — MUM-02", debit: "₹12,450.00", credit: "" },
+  { account: "Stock — DEL-01", debit: "", credit: "₹12,450.00" },
+]
+
+const tabs = [
+  { id: "sales", label: "Sales Entry", entries: salesEntries },
+  { id: "settlement", label: "Settlement Entry", entries: settlementEntries },
+  { id: "return", label: "Return Entry", entries: returnEntries },
+  { id: "stock", label: "Stock Transfer", entries: stockEntries },
+]
+---
+
+<style is:global>
+  .eov {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .eov-card {
+    margin-top: 2rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .eov-head {
+    padding: 1.25rem 1.5rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .eov-head .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .eov-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  @media (min-width: 40rem) {
+    .eov-meta {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .eov-meta-item .k {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .eov-meta-item .v {
+    margin-top: 0.15rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .eov-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--ink-200);
+    overflow-x: auto;
+  }
+  .eov-tab {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-400);
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+    background: none;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+  .eov-tab:hover {
+    color: var(--ink-600);
+  }
+  .eov-tab.active {
+    color: var(--brand-600);
+    border-bottom-color: var(--brand-500);
+  }
+  .eov-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .eov-table thead {
+    background: var(--ink-50);
+  }
+  .eov-table th {
+    padding: 0.75rem 1.5rem;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .eov-table th.right {
+    text-align: right;
+  }
+  .eov-table td {
+    padding: 0.7rem 1.5rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-700);
+  }
+  .eov-table td.right {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .eov-table td.debit {
+    color: var(--danger-600);
+  }
+  .eov-table td.credit {
+    color: var(--success-600);
+  }
+  .eov-table tbody tr:last-child td {
+    border-bottom: 0;
+  }
+  .eov-panel {
+    display: none;
+  }
+  .eov-panel.active {
+    display: block;
+  }
+  .eov-note {
+    padding: 0.85rem 1.5rem;
+    background: var(--ink-50);
+    border-top: 1px solid var(--ink-100);
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="eov">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="eov-card reveal">
+      <div class="eov-head">
+        <span class="dot" />
+        Accounting Entry
+      </div>
+      <div class="eov-meta">
+        {voucherMeta.map((m) => (
+          <div class="eov-meta-item">
+            <div class="k">{m.label}</div>
+            <div class="v">{m.value}</div>
+          </div>
+        ))}
+      </div>
+      <div class="eov-tabs" role="tablist">
+        {tabs.map((t, i) => (
+          <button
+            class:list={["eov-tab", i === 0 && "active"]}
+            role="tab"
+            aria-selected={i === 0}
+            data-tab={t.id}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+      {tabs.map((t, i) => (
+        <div class:list={["eov-panel", i === 0 && "active"]} data-panel={t.id}>
+          <table class="eov-table">
+            <thead>
+              <tr>
+                <th>Account</th>
+                <th class="right">Debit</th>
+                <th class="right">Credit</th>
+              </tr>
+            </thead>
+            <tbody>
+              {t.entries.map((e) => (
+                <tr>
+                  <td>{e.account}</td>
+                  <td class="right debit">{e.debit}</td>
+                  <td class="right credit">{e.credit}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ))}
+      <div class="eov-note">Illustrative example — actual entries depend on your marketplace and ERP configuration.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".eov-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const card = tab.closest(".eov-card")
+      if (!card) return
+      card.querySelectorAll(".eov-tab").forEach((t) => {
+        t.classList.remove("active")
+        t.setAttribute("aria-selected", "false")
+      })
+      tab.classList.add("active")
+      tab.setAttribute("aria-selected", "true")
+      const target = tab.getAttribute("data-tab")
+      card.querySelectorAll(".eov-panel").forEach((p) => {
+        p.classList.toggle("active", p.getAttribute("data-panel") === target)
+      })
+    })
+  })
+</script>

@@ -1,0 +1,110 @@
+---
+const steps = [
+  { label: "Transaction", sub: "Sale of ₹2,499", icon: "receipt" },
+  { label: "Tax Deduction", sub: "TCS 1% = ₹25", icon: "scale" },
+  { label: "Receivable", sub: "₹2,474 after TCS", icon: "bank" },
+  { label: "Settlement", sub: "₹2,159 after fees", icon: "check" },
+]
+
+const ICONS: Record<string, string> = {
+  receipt: '<path d="M6 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM9 8h6M9 12h6"/>',
+  scale: '<path d="M12 3v18M8 21h8M4 6h16M6 6 3 11a3 3 0 0 0 6 0L6 6zM18 6l-3 5a3 3 0 0 0 6 0l-3-5z"/>',
+  bank: '<path d="M3 10h18M5 10l1 9h12l1-9M2 6l10-3 10 3H2zM12 14h.01"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+}
+---
+
+<style is:global>
+  .tcs {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .tcs-flow {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+  }
+  @media (max-width: 48rem) {
+    .tcs-flow {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 30rem) {
+    .tcs-flow {
+      grid-template-columns: 1fr;
+    }
+  }
+  .tcs-step {
+    position: relative;
+    padding: 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    text-align: center;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .tcs-step:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-sm);
+  }
+  .tcs-step-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin: 0 auto 0.75rem;
+    border-radius: 0.75rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .tcs-step-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .tcs-step-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .tcs-step-sub {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+  .tcs-arrow {
+    position: absolute;
+    top: 50%;
+    right: -0.75rem;
+    transform: translateY(-50%);
+    color: var(--ink-300);
+    z-index: 1;
+  }
+  @media (max-width: 48rem) {
+    .tcs-arrow {
+      display: none;
+    }
+  }
+</style>
+
+<section class="tcs">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="tcs-flow reveal">
+      {steps.map((s, i) => (
+        <div class="tcs-step">
+          <div class="tcs-step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={ICONS[s.icon]} />
+            </svg>
+          </div>
+          <div class="tcs-step-label">{s.label}</div>
+          <div class="tcs-step-sub">{s.sub}</div>
+          {i < steps.length - 1 && (
+            <svg class="tcs-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M0 8h12M9 4l4 4-4 4" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,174 @@
+---
+import JournalTable from "./JournalTable.astro"
+
+const orderFacts = [
+  { key: "Source", value: "Amazon" },
+  { key: "Order", value: "202-8493017-4492216" },
+  { key: "SKU", value: "DCM-HOME-MUG-SET-480" },
+  { key: "Warehouse", value: "DEL-01" },
+  { key: "State", value: "Intra-state" },
+  { key: "GST", value: "CGST 9% + SGST 9% (18%)" },
+]
+
+const journal = [
+  { date: "14 Jun 2023", txn: "Net receivable", ledger: "Receivable — Amazon", debit: "₹2,154.80" },
+  { date: "14 Jun 2023", txn: "Amazon fee", ledger: "Amazon Charges A/c", debit: "₹315.00" },
+  { date: "14 Jun 2023", txn: "TCS (271H)", ledger: "TCS Recoverable", debit: "₹29.20" },
+  { date: "14 Jun 2023", txn: "Net sale", ledger: "Sales — Amazon", credit: "₹2,117.80" },
+  { date: "14 Jun 2023", txn: "Output CGST 9%", ledger: "Output CGST A/c", credit: "₹190.60" },
+  { date: "14 Jun 2023", txn: "Output SGST 9%", ledger: "Output SGST A/c", credit: "₹190.60" },
+  { date: "", txn: "Total", ledger: "Debit = Credit", debit: "₹2,499.00", credit: "₹2,499.00", total: true },
+]
+---
+
+<style is:global>
+  .we {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 56rem) {
+    .we {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+  }
+  .we-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .we-col-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .we-col-label .n {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--brand-500);
+    color: #fff;
+    font-size: 0.75rem;
+  }
+  .we-card {
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-xl);
+    background: #fff;
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow-card);
+  }
+  .we-fact {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.42rem 0;
+    border-bottom: 1px dashed var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .we-fact:last-child {
+    border-bottom: 0;
+  }
+  .we-fact .k {
+    color: var(--ink-400);
+    white-space: nowrap;
+  }
+  .we-fact .v {
+    font-weight: 600;
+    color: var(--ink-800);
+    text-align: right;
+  }
+  .we .jt {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+</style>
+
+<div class="we" role="img" aria-label="From one order to a complete set of journal entries, posted to your ERP">
+  <div class="we-col">
+    <span class="we-col-label"><span class="n" aria-hidden="true">1</span>One order</span>
+    <div class="we-card">
+      {
+        orderFacts.map((f) => (
+          <div class="we-fact">
+            <span class="k">{f.key}</span>
+            <span class="v">{f.value}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="we-col">
+    <span class="we-col-label"><span class="n" aria-hidden="true">2</span>Complete journal entries</span>
+    <div class="we-card">
+      <JournalTable
+        title="Journal entries · ₹2,499.00 sale"
+        footer="Balanced · GST-ready"
+        entries={journal}
+      />
+    </div>
+  </div>
+
+  <div class="we-col">
+    <span class="we-col-label"><span class="n" aria-hidden="true">3</span>Posted to your ERP</span>
+    <div class="we-card">
+      <div class="we-post">
+        <p class="we-post-title">Audit-ready voucher</p>
+        <ul class="we-post-list">
+          <li><span>Voucher No.</span><b>JRNL-45892</b></li>
+          <li><span>System</span><b>TallyPrime</b></li>
+          <li><span>GST ledgers</span><b>CGST · SGST</b></li>
+          <li><span>Bridge</span><b>Receivable — Amazon</b></li>
+          <li><span>Status</span><b class="ok">Posted ✓</b></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .we-post-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .we-post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+  .we-post-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px dashed var(--ink-100);
+    font-size: 0.8125rem;
+    color: var(--ink-500);
+  }
+  .we-post-list li:last-child {
+    border-bottom: 0;
+  }
+  .we-post-list li b {
+    font-weight: 600;
+    color: var(--ink-800);
+    text-align: right;
+  }
+  .we-post-list li b.ok {
+    color: var(--success-600);
+  }
+</style>
