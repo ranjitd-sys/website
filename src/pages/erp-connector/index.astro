@@ -47,8 +47,8 @@ const faqs = [
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="max-w-3xl">
         <span class="eyebrow">WHAT IT DOES</span>
-        <h2 class="h2 mt-2">Every ecommerce transaction, accounted for — at a glance.</h2>
-        <p class="lead mt-4">Orders, GST, charges, settlements, returns, inventory, warehouses and stock transfers all become structured accounting in your ERP.</p>
+        <h2 class="h2-md mt-4">Every ecommerce transaction, accounted for — at a glance.</h2>
+        <p class="lead mt-5">Orders, GST, charges, settlements, returns, inventory, warehouses and stock transfers all become structured accounting in your ERP.</p>
       </div>
       <ErpAtAGlance />
     </div>
@@ -60,8 +60,8 @@ const faqs = [
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div>
           <span class="eyebrow">FROM ORDER TO ERP</span>
-          <h2 class="h2 mt-2">One order. Balanced entries. Posted.</h2>
-          <p class="lead mt-4">
+          <h2 class="h2-md mt-4">One order. Balanced entries. Posted.</h2>
+          <p class="lead mt-5">
             A single order becomes a complete journal — sales and GST on one side, charges and receivable on the other — ready to post into your ERP.
           </p>
           <ul class="mt-6 flex flex-col gap-3">
@@ -87,13 +87,13 @@ const faqs = [
   </section>
 
   <!-- 04 — ERP INTEGRATIONS -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="flex items-end justify-between gap-6">
         <div class="max-w-2xl">
           <span class="eyebrow">ERP CONNECTIVITY</span>
-          <h2 class="h2 mt-2">Works with the ERP you already use.</h2>
-          <p class="lead mt-4">Post detailed ecommerce accounting into the systems your finance team already runs on.</p>
+          <h2 class="h2-md mt-4">Works with the ERP you already use.</h2>
+          <p class="lead mt-5">Post detailed ecommerce accounting into the systems your finance team already runs on.</p>
         </div>
       </div>
       <ErpPostingSection />
@@ -105,8 +105,8 @@ const faqs = [
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="max-w-3xl">
         <span class="eyebrow">HOW IT WORKS</span>
-        <h2 class="h2 mt-2">Connect once. Account continuously.</h2>
-        <p class="lead mt-4">Five steps from marketplace to ERP.</p>
+        <h2 class="h2-md mt-4">Connect once. Account continuously.</h2>
+        <p class="lead mt-5">Five steps from marketplace to ERP.</p>
       </div>
       <HowItWorksSteps
         steps={[
@@ -121,12 +121,12 @@ const faqs = [
   </section>
 
   <!-- 06 — WHO IT'S FOR -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="flex items-end justify-between gap-6">
         <div class="max-w-2xl">
           <span class="eyebrow">WHO IT'S FOR</span>
-          <h2 class="h2 mt-2">Built for the teams behind the numbers.</h2>
+          <h2 class="h2-md mt-4">Built for the teams behind the numbers.</h2>
         </div>
       </div>
       <div class="mt-8 grid gap-6 md:grid-cols-3">
@@ -149,7 +149,7 @@ const faqs = [
   <section>
     <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
       <span class="eyebrow">FAQ</span>
-      <h2 class="h2 mt-2">Quick answers.</h2>
+      <h2 class="h2-md mt-4">Quick answers.</h2>
       <div class="mt-8 flex flex-col gap-3">
         {faqs.map((f, i) => (
           <details class="faq-item" open={i === 0}>

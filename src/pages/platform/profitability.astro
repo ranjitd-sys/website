@@ -68,7 +68,7 @@ const faqs = [
   <ProfitHero />
 
   <!-- 02 — REVENUE IS NOT PROFIT -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
         <div class="max-w-lg">
@@ -105,7 +105,7 @@ const faqs = [
   </section>
 
   <!-- 04 — COST & DEDUCTION BREAKDOWN -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
         <div class="max-w-lg">
@@ -151,7 +151,7 @@ const faqs = [
   </section>
 
   <!-- 06 — RETURNS & REALIZATION -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
         <div class="max-w-lg">
@@ -230,11 +230,11 @@ const faqs = [
   </section>
 
   <!-- 08 — PLATFORM + RECONCILIATION + ERP -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="max-w-3xl">
         <span class="eyebrow">ONE LAYER</span>
-        <h2 class="h2 mt-4">Profitability, reconciliation and accounting — one connected system.</h2>
+        <h2 class="h2-md mt-4">Profitability, reconciliation and accounting — one connected system.</h2>
         <p class="lead mt-5">
           The Platform helps you understand profitability and reconcile payments. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
         </p>
@@ -269,7 +269,7 @@ const faqs = [
   </section>
 
   <!-- 10 — CUSTOMER PROOF -->
-  <section class="bg-muted">
+  <section class="section-band">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <CustomerProof />
     </div>
@@ -316,14 +316,6 @@ const faqs = [
 <style is:global>
   html {
     scroll-behavior: smooth;
-  }
-  .h2-md {
-    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    font-weight: 700;
-    color: var(--ink-950);
-    text-wrap: balance;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

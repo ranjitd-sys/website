@@ -1,84 +1,395 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
+import ReportsHero from "@/components/pages/ReportsHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
+import ReportFragmentation from "@/components/pages/ReportFragmentation.astro"
+import ReportsPanel from "@/components/pages/ReportsPanel.astro"
+import ProfitabilityPanel from "@/components/pages/ProfitabilityPanel.astro"
+import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
+import MarketplaceCompare from "@/components/pages/MarketplaceCompare.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const title = "Reports your finance team can actually use."
-const features = [
+const reportFilters = [
+  { label: "Date", value: "Last 30 days" },
+  { label: "Marketplace", value: "Amazon" },
+  { label: "Warehouse", value: "Delhi" },
+]
+
+const detailRows = [
+  { id: "ORD-104928", marketplace: "Amazon", date: "03 Sep 2026", revenue: "₹2,499", payment: "₹2,349", status: "Mismatch", cls: "warn" },
+  { id: "ORD-104929", marketplace: "Amazon", date: "03 Sep 2026", revenue: "₹1,499", payment: "₹1,499", status: "Matched", cls: "ok" },
+  { id: "ORD-104930", marketplace: "Flipkart", date: "02 Sep 2026", revenue: "₹3,200", payment: "₹3,200", status: "Matched", cls: "ok" },
+]
+
+const personaData = [
   {
-    title: "Structured Reports",
-    description: "Clean, structured reports on orders, settlements, profitability and reconciliation.",
-    icon: "file",
+    title: "Business Owners",
+    desc: "Get the reports needed to understand sales and business performance.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
   },
   {
-    title: "GST-Ready Data",
-    description: "Exports structured for GST reporting so finance can move faster.",
-    icon: "grid",
+    title: "CFOs",
+    desc: "Access structured financial information for analysis and review.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
-    title: "Ledger-Ready Exports",
-    description: "Transaction-level exports your accounting workflow can consume.",
-    icon: "receipt",
+    title: "Accountants",
+    desc: "Get detailed transaction and reconciliation data for finance workflows.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
   },
-  {
-    title: "Customizable Views",
-    description: "Reports tailored to the channels, periods and metrics you care about.",
-    icon: "book",
-  },
-  {
-    title: "Consistent Format",
-    description: "A consistent structure across every marketplace you sell on.",
-    icon: "table",
-  },
-  {
-    title: "Fresh Data",
-    description: "Exports and reports built from current, aggregated marketplace data.",
-    icon: "refresh2",
-  },
+]
+
+const faqs = [
+  { q: "What reports are available in DeepEcom?", a: "Reports cover the Platform's supported areas — sales, orders, profitability, payment reconciliation and marketplace performance." },
+  { q: "Can I download reports?", a: "Yes. Reports are available for download and export." },
+  { q: "Which marketplaces are supported?", a: "The Platform supports supported ecommerce channels such as Amazon, Flipkart, Shopify and Meesho." },
+  { q: "Can reports be filtered by date?", a: "Yes. Reports support date-range filters so you can pull exactly the period you need." },
+  { q: "Can reports be filtered by marketplace?", a: "Yes. Reports can be filtered by marketplace and other supported dimensions." },
+  { q: "Can reports contain order-level details?", a: "Yes. Reports can include structured, transaction-level detail." },
+  { q: "Can I access profitability reports?", a: "Yes. Profitability reports are available, showing revenue, costs, deductions and profit." },
+  { q: "Can I access reconciliation reports?", a: "Yes. Reconciliation reports show expected, received and difference for settlements." },
+  { q: "Can I compare marketplaces?", a: "Yes. Marketplace-level performance can be compared within reports." },
+  { q: "Can I export transaction data?", a: "Yes. Transaction-level data can be exported for analysis and workflows." },
+  { q: "Can I use reports for accounting workflows?", a: "Yes. Structured transaction data can support finance and accounting workflows." },
+  { q: "How does DeepEcom Reports differ from the Dashboard?", a: "The Dashboard helps you understand the business at a glance. Reports give you the detailed, structured data behind the numbers." },
 ]
 ---
 
-<PageLayout title={`Reports — ${title}`} description="DeepEcom Platform reports and exports turn marketplace data into structured, GST-ready reports your finance team can use.">
-  <PageHero
-    eyebrow="PLATFORM · REPORTS"
-    title={title}
-    lead="Download clean, structured reports and GST-ready exports built from your marketplace data — no more re-keying numbers out of raw marketplace files."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
+<PageLayout
+  title="Reports — Get the Data Behind the Numbers | DeepEcom"
+  description="Access detailed ecommerce reports across sales, profitability, payments and marketplace activity — filtered, structured and ready to use."
+>
+  <!-- 01 — HERO -->
+  <ReportsHero />
+
+  <!-- 02 — WHY REPORTING GETS MESSY -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2-md mt-4">Your numbers shouldn't live in a dozen spreadsheets.</h2>
+          <p class="lead mt-5">
+            Every marketplace sends its own exports. Settlements, sales, payments and profitability arrive in different formats — and someone has to stitch them together by hand.
+          </p>
+        </div>
+        <div class="reveal">
+          <ReportFragmentation />
+        </div>
+      </div>
     </div>
-  </PageHero>
-
-  <FeatureGrid
-    eyebrow="REPORTS & EXPORTS"
-    title="Move from raw files to usable reports."
-    lead="Raw marketplace files are hard to use. DeepEcom turns them into structured reports and exports your finance team can work with directly."
-    features={features}
-    columns={3}
-    center
-  />
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="READY TO USE"
-      title="Export data once, in a format that works."
-      lead="Whether it is GST-ready data or transaction-level exports for your books, reports come out structured and consistent across every marketplace."
-      center
-    />
   </section>
 
-  <CtaBand
-    title="Bring your ecommerce business and accounting together."
-    lead="Get structured, GST-ready reports from your marketplace data."
-  />
+  <!-- 03 — REPORT LIBRARY -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">THE LIBRARY</span>
+          <h2 class="h2-md mt-4">Start with the report you need.</h2>
+          <p class="lead mt-5">
+            Sales, orders, profitability, reconciliation and marketplace performance — each with its filters and export ready to go.
+          </p>
+        </div>
+        <div class="reveal">
+          <ReportsPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — FILTERS & DIMENSIONS -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">FILTERS &amp; DIMENSIONS</span>
+          <h2 class="h2-md mt-4">Filter the data the way your business works.</h2>
+          <p class="lead mt-5">
+            Date, marketplace, warehouse and more — apply the dimensions you care about and pull the exact slice of data you need.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-ink-200 bg-white p-6 shadow-card">
+          <div class="flex flex-col gap-3">
+            {reportFilters.map((f) => (
+              <div class="flex items-center justify-between border-b border-dashed border-ink-100 pb-3">
+                <span class="text-sm font-semibold text-ink-800">{f.label}</span>
+                <span class="text-sm font-bold tabular-nums text-ink-900">{f.value}</span>
+              </div>
+            ))}
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-sm font-semibold text-ink-500">Result</span>
+              <span class="text-sm font-bold text-brand-700">248 orders · ₹4.2L revenue</span>
+            </div>
+          </div>
+          <p class="mt-5 border-t border-dashed border-ink-200 pt-3 text-xs text-ink-400">Illustrative example — filters depend on supported dimensions.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — TRANSACTION-LEVEL DATA -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">TRANSACTION-LEVEL</span>
+          <h2 class="h2-md mt-4">Go from a summary to the transaction behind it.</h2>
+          <p class="lead mt-5">
+            Reports carry the detail behind every number — order, date, marketplace, revenue, payment and status.
+          </p>
+        </div>
+        <div class="reveal overflow-x-auto rounded-2xl border border-ink-200 bg-white shadow-card">
+          <table class="w-full min-w-[32rem] border-collapse text-[0.8125rem]">
+            <thead>
+              <tr class="bg-ink-50">
+                {["Order", "Marketplace", "Date", "Revenue", "Payment", "Status"].map((h) => (
+                  <th class="px-4 py-3 text-left text-[0.64rem] font-bold uppercase tracking-wider text-ink-400">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {detailRows.map((r) => (
+                <tr class="border-t border-ink-100">
+                  <td class="px-4 py-3 font-bold text-ink-900">{r.id}</td>
+                  <td class="px-4 py-3 text-ink-600">{r.marketplace}</td>
+                  <td class="px-4 py-3 text-ink-600">{r.date}</td>
+                  <td class="px-4 py-3 tabular-nums text-ink-800">{r.revenue}</td>
+                  <td class="px-4 py-3 tabular-nums text-ink-800">{r.payment}</td>
+                  <td class="px-4 py-3">
+                    <span class:list={["inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-bold", r.cls === "ok" ? "bg-success-50 text-success-700" : "bg-danger-50 text-danger-600"]}>{r.status}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — PROFITABILITY REPORTS -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">PROFITABILITY</span>
+          <h2 class="h2-md mt-4">Turn report data into business insight.</h2>
+          <p class="lead mt-5">
+            Revenue, costs, deductions and profit — reported with the detail behind every figure.
+          </p>
+          <div class="mt-6">
+            <a href="/platform/profitability" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
+              Explore Profitability →
+            </a>
+          </div>
+        </div>
+        <div class="reveal">
+          <ProfitabilityPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — RECONCILIATION REPORTS -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">RECONCILIATION</span>
+          <h2 class="h2-md mt-4">See what was expected, received and different.</h2>
+          <p class="lead mt-5">
+            Reconciliation reports carry the expected, received and difference for every settlement.
+          </p>
+          <div class="mt-6">
+            <a href="/platform/payment-reconciliation" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
+              Explore Payment Reconciliation →
+            </a>
+          </div>
+        </div>
+        <div class="reveal">
+          <ReconciliationPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — MARKETPLACE REPORTS -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">MARKETPLACE</span>
+          <h2 class="h2-md mt-4">Bring every marketplace into one reporting view.</h2>
+          <p class="lead mt-5">
+            Sales, orders, profit and payment — compared across every channel you sell on.
+          </p>
+        </div>
+        <div class="reveal">
+          <MarketplaceCompare />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — HOW REPORTS WORK -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">From marketplace data to a report you can use.</h2>
+        <p class="lead mt-5">Five stages turn fragmented channel data into a structured report.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your supported marketplaces." },
+          { num: "02", label: "Collect", desc: "Bring transaction data into DeepEcom." },
+          { num: "03", label: "Structure", desc: "Organize the information." },
+          { num: "04", label: "Filter", desc: "Select the business dimensions you need." },
+          { num: "05", label: "Export", desc: "View or download the report." },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 10 — PLATFORM + ERP -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">ONE PLATFORM</span>
+        <h2 class="h2-md mt-4">Understand the business. Account for it.</h2>
+        <p class="lead mt-5">
+          Reports provide business visibility — sales, profitability, payments and transactions — while the ERP Connector handles detailed accounting.
+        </p>
+      </div>
+      <div class="mt-12 reveal">
+        <PlatformErpConnector />
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — WHO IT'S FOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for every team that needs the numbers.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personaData.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — CUSTOMER PROOF -->
+  <section class="section-band">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 13 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Reports, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Get the numbers you need, without rebuilding them yourself.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Bring ecommerce data together and turn it into structured, usable reports.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

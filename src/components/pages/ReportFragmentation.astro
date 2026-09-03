@@ -1,0 +1,127 @@
+---
+const sources = [
+  { label: "Marketplace reports", sub: "different formats per channel" },
+  { label: "Settlement reports", sub: "what each channel paid" },
+  { label: "Sales reports", sub: "scattered exports" },
+  { label: "Payment reports", sub: "what reached the bank" },
+  { label: "Profitability sheets", sub: "manual calculations" },
+  { label: "Accounting data", sub: "in your own systems" },
+]
+---
+
+<style is:global>
+  .rfg {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .rfg-wrap {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .rfg-wrap {
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.25rem;
+    }
+  }
+  .rfg-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .rfg-source {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  .rfg-source .name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .rfg-source .sub {
+    font-size: 0.68rem;
+    color: var(--ink-400);
+  }
+  .rfg-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-300);
+  }
+  @media (max-width: 55.99rem) {
+    .rfg-arrow {
+      transform: rotate(90deg);
+    }
+  }
+  .rfg-dest {
+    border: 1px solid var(--brand-200);
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--brand-50), #fff);
+    padding: 1.25rem 1.5rem;
+  }
+  .rfg-dest-name {
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: var(--brand-700);
+  }
+  .rfg-dest-sub {
+    margin-top: 0.3rem;
+    font-size: 0.8125rem;
+    color: var(--ink-500);
+  }
+  .rfg-dest-tags {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .rfg-tag {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--brand-100);
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--brand-700);
+  }
+</style>
+
+<section class="rfg">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="rfg-wrap reveal">
+      <div class="rfg-col">
+        {sources.map((s) => (
+          <div class="rfg-source">
+            <span class="name">{s.label}</span>
+            <span class="sub">{s.sub}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="rfg-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h24M18 6l6 6-6 6" />
+        </svg>
+      </div>
+
+      <div class="rfg-dest">
+        <div class="rfg-dest-name">DeepEcom Reports</div>
+        <div class="rfg-dest-sub">One reporting layer</div>
+        <div class="rfg-dest-tags">
+          <span class="rfg-tag">Sales</span>
+          <span class="rfg-tag">Profitability</span>
+          <span class="rfg-tag">Payments</span>
+          <span class="rfg-tag">Reconciliation</span>
+          <span class="rfg-tag">Transactions</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

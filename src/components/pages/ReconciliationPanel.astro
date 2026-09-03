@@ -11,6 +11,7 @@ const rows = [
   { order: "ORD-104931", expected: "₹899", received: "—", diff: "₹899", status: "Pending", cls: "muted" },
   { order: "ORD-104932", expected: "₹1,750", received: "₹1,736", diff: "₹14", status: "Difference", cls: "warn" },
 ]
+const totals = { expected: "₹9,847", received: "₹8,820", diff: "₹1,027" }
 ---
 
 <style is:global>
@@ -166,6 +167,15 @@ const rows = [
   .rp-table tr:last-child td {
     border-bottom: 0;
   }
+  .rp-table tfoot td {
+    font-weight: 700;
+    color: var(--ink-900);
+    background: var(--ink-50);
+    border-top: 1px solid var(--ink-200);
+  }
+  .rp-table tfoot td.diff-amt.warn {
+    color: var(--danger-600);
+  }
   .rp-table tbody tr:hover {
     background: var(--ink-50);
   }
@@ -253,6 +263,15 @@ const rows = [
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td class="right">{totals.expected}</td>
+              <td class="right">{totals.received}</td>
+              <td class="right diff-amt warn">{totals.diff}</td>
+              <td></td>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
