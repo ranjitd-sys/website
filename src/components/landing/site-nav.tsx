@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { ChevronDown, Menu, X } from "lucide-react"
-import { Button } from "@/components/landing/ui/button"
+
 import { LogoMark } from "./icons"
 import { BOOK_DEMO_URL, LOGIN_URL, NAV_ITEMS, type NavItem } from "@/data/navigation"
+import { Button } from "./ui/button"
 
 const OPEN_DELAY = 90
 const CLOSE_DELAY = 140
@@ -441,7 +442,7 @@ export default function Navbar() {
           <a href={LOGIN_URL} onFocus={() => closeNow()} className="hidden rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:block">
             Login
           </a>
-          <Button render={<a href={BOOK_DEMO_URL} />} size="sm" className="hidden sm:inline-flex">
+          <Button variant={'primary'}  render={<a href={BOOK_DEMO_URL} />} size="sm"  >
             Book a Demo
           </Button>
 
@@ -478,11 +479,11 @@ export default function Navbar() {
             <a
               href={LOGIN_URL}
               onClick={() => setMobileOpen(false)}
-              className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-brand-50"
+              className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-50"
             >
               Login
             </a>
-            <Button render={<a href={BOOK_DEMO_URL} />} onClick={() => setMobileOpen(false)} className="w-full">
+            <Button variant={"outline"} render={<a href={BOOK_DEMO_URL} />} onClick={() => setMobileOpen(false)} className="w-full">
               Book a Demo
             </Button>
           </div>

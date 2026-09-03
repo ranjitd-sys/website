@@ -8,7 +8,8 @@ export const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-brand-500 text-white hover:bg-brand-600",
+        
+        primary: "bg-brand-500 !text-white hover:bg-brand-600",
         outline: "border border-ink-200 bg-white text-ink-900 hover:border-ink-300 hover:bg-ink-50",
         secondary: "bg-ink-100 text-ink-900 hover:bg-ink-200",
         ghost: "text-ink-900 hover:bg-ink-100",
@@ -34,9 +35,18 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & VariantProps<typeof
 
 export function Button({ className, variant, size, render, type = "button", children, ...props }: ButtonProps) {
   const cls = twMerge(clsx(buttonVariants({ variant, size }), className))
-  if (isValidElement(render)) {
-    return cloneElement(render as never, { className: cls, ...props } as never, children)
-  }
+  // Inside your Button function:
+if (isValidElement(render)) {
+  return cloneElement(
+    render as any, 
+    { 
+      ...props,
+      // This ensures classes on the <a/> tag are merged with the Button classes
+      className: twMerge(cls) 
+    } as any, 
+    children
+  )
+}
   return (
     <button type={type} className={cls} {...props}>
       {children}
