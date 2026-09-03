@@ -1,0 +1,202 @@
+---
+const channels = [
+  { name: "Amazon", init: "Am", sales: "₹2,10,000", orders: "1,248", profit: "₹1,56,000", share: 48, color: "var(--brand-500)" },
+  { name: "Flipkart", init: "Fk", sales: "₹1,38,000", orders: "986", profit: "₹96,000", share: 32, color: "var(--brand-400)" },
+  { name: "Shopify", init: "Sy", sales: "₹73,740", orders: "742", profit: "₹57,240", share: 20, color: "var(--brand-300)" },
+]
+---
+
+<style is:global>
+  .mc {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .mc-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .mc-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .mc-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .mc-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .mc-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .mc-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .mc-bar .dots i:nth-child(3) { background: #86efac; }
+  .mc-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .mc-bar .seg {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+  .mc-bar .seg i {
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--brand-500);
+  }
+  .mc-body {
+    padding: 0.5rem 1rem 1rem;
+  }
+  .mc-legend {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.75rem 0 0.25rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-400);
+  }
+  .mc-track {
+    display: flex;
+    gap: 2px;
+    height: 6px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--ink-100);
+  }
+  .mc-track span {
+    height: 100%;
+  }
+  .mc-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .mc-table th {
+    padding: 0.65rem 0;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .mc-table th.right {
+    text-align: right;
+  }
+  .mc-table td {
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .mc-table td.right {
+    text-align: right;
+  }
+  .mc-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .mc-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+  .mc-name {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .mc-init {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+  .mc-name span:last-child {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .mc-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .mc-share i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .mc-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="mc">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="mc-app reveal">
+      <div class="mc-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Marketplace Performance</span>
+        <span class="seg"><i></i>Aug 2026</span>
+      </div>
+      <div class="mc-body">
+        <div class="mc-legend">Revenue share by channel</div>
+        <div class="mc-track">
+          {channels.map((c) => <span style={`width:${c.share}%;background:${c.color}`}></span>)}
+        </div>
+        <table class="mc-table">
+          <thead>
+            <tr>
+              <th>Marketplace</th>
+              <th class="right">Sales</th>
+              <th class="right">Orders</th>
+              <th class="right">Profitability</th>
+              <th class="right">Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            {channels.map((c) => (
+              <tr>
+                <td>
+                  <span class="mc-name">
+                    <span class="mc-init">{c.init}</span>
+                    <span>{c.name}</span>
+                  </span>
+                </td>
+                <td class="right">{c.sales}</td>
+                <td class="right">{c.orders}</td>
+                <td class="right">{c.profit}</td>
+                <td class="right"><span class="mc-share"><i style={`background:${c.color}`}></i>{c.share}%</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="mc-note">One business. Multiple channels. One consolidated view.</p>
+  </div>
+</section>

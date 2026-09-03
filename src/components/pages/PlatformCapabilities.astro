@@ -1,0 +1,110 @@
+---
+const capabilities = [
+  {
+    title: "Dashboard",
+    question: "What is happening across my business right now?",
+    desc: "Sales, orders, profitability and payment status in one connected view.",
+    icon: '<path d="M3 3v16a2 2 0 0 0 2 2h16M7 13l4-4 4 3 5-6"/>',
+  },
+  {
+    title: "Profitability",
+    question: "What do I actually make after fees and costs?",
+    desc: "Revenue, deductions and profit — per marketplace and per product.",
+    icon: '<path d="M12 2 2 7l10 5 10-5-10-5zM2 12l10 5 10-5M2 17l10 5 10-5"/>',
+  },
+  {
+    title: "Payment Reconciliation",
+    question: "Did I receive what I was supposed to receive?",
+    desc: "Expected vs received settlements, with every difference flagged.",
+    icon: '<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18M16 14h.01"/>',
+  },
+  {
+    title: "Reports",
+    question: "How do I turn this into something I can use?",
+    desc: "Structured reports on sales, orders, payments, profitability and reconciliation.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/>',
+  },
+]
+---
+
+<style is:global>
+  .pcap {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .pcap-grid {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 56rem) {
+    .pcap-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .pcap-card {
+    padding: 1.4rem 1.4rem 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .pcap-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .pcap-icon {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .pcap-icon svg {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .pcap-title {
+    margin-top: 1rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-900);
+  }
+  .pcap-question {
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--brand-600);
+    line-height: 1.5;
+  }
+  .pcap-desc {
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="pcap">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="pcap-grid reveal">
+      {capabilities.map((c) => (
+        <div class="pcap-card">
+          <span class="pcap-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={c.icon} />
+            </svg>
+          </span>
+          <div class="pcap-title">{c.title}</div>
+          <div class="pcap-question">{c.question}</div>
+          <div class="pcap-desc">{c.desc}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

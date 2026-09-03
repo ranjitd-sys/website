@@ -1,0 +1,190 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
+---
+
+<style is:global>
+  .ph {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 9vh, 7rem) 0 clamp(2.5rem, 5vh, 4rem);
+    background:
+      radial-gradient(46rem 24rem at 76% -10%, rgba(44, 62, 233, 0.12), transparent 60%),
+      radial-gradient(34rem 18rem at 8% -6%, rgba(127, 125, 252, 0.09), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .ph-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .ph-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .ph-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+
+  /* ---------- Left ---------- */
+  .ph-copy {
+    max-width: 34rem;
+  }
+  .ph-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .ph-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .ph-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.35rem, 4.2vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .ph-title .accent {
+    color: var(--brand-500);
+  }
+  .ph-lead {
+    margin-top: 1rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .ph-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .ph-strip {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .ph-strip .arr {
+    color: var(--brand-500);
+  }
+  .ph-strip b {
+    color: var(--ink-900);
+  }
+
+  /* ---------- Right: dashboard ---------- */
+  .ph-visual {
+    width: 100%;
+  }
+  .ph-visual .dash-stage {
+    background: transparent;
+    border: none;
+  }
+  .ph-visual .dash-stage aside {
+    display: none !important;
+  }
+  .ph-visual .dash-stage [class*="grid-cols-[1fr_340px]"] {
+    grid-template-columns: 1fr;
+  }
+  .ph-cap {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .ph-cap-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .ph-cap-chip .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+
+  @media (max-width: 47.99rem) {
+    .ph {
+      padding-top: 3.75rem;
+    }
+    .ph-title {
+      font-size: clamp(2rem, 8.5vw, 2.5rem);
+    }
+  }
+</style>
+
+<section class="ph" data-hero>
+  <div class="ph-inner">
+    <div class="ph-grid">
+      <!-- Left: copy -->
+      <div class="ph-copy reveal">
+        <span class="ph-eyebrow"><span class="dot" aria-hidden="true"></span>DeepEcom Platform</span>
+        <h1 class="ph-title">
+          Understand your <span class="accent">ecommerce business.</span>
+        </h1>
+        <p class="ph-lead">
+          Connect your marketplaces and get one clear view of sales, profitability, payments and performance — across every channel you sell on.
+        </p>
+        <div class="ph-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="/platform/dashboard" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            Explore the Platform →
+          </a>
+        </div>
+        <div class="ph-strip">
+          <span>Fragmented marketplace data <span class="arr">→</span> <b>One clear business view</b></span>
+        </div>
+      </div>
+
+      <!-- Right: dashboard composition -->
+      <div class="ph-visual reveal" data-delay="120">
+        <DashboardPreview compact />
+        <div class="ph-cap" aria-hidden="true">
+          <span class="ph-cap-chip"><span class="dot"></span>Dashboard</span>
+          <span class="ph-cap-chip"><span class="dot"></span>Profitability</span>
+          <span class="ph-cap-chip"><span class="dot"></span>Payment Reconciliation</span>
+          <span class="ph-cap-chip"><span class="dot"></span>Reports</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

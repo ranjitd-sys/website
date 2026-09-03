@@ -27,7 +27,7 @@ export const NAV_ITEMS: NavItem[] = [
     type: "menu",
     groups: [
       {
-        title: "Platform",
+        title: "DeepEcom Platform",
         description: "Understand your ecommerce business",
         links: [
           { label: "Overview", href: "/platform" },

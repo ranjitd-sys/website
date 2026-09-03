@@ -1,88 +1,404 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
+import PlatformHero from "@/components/pages/PlatformHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
+import PlatformCapabilities from "@/components/pages/PlatformCapabilities.astro"
+import FragmentationVisual from "@/components/pages/FragmentationVisual.astro"
+import ProfitabilityPanel from "@/components/pages/ProfitabilityPanel.astro"
+import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
+import MarketplaceCompare from "@/components/pages/MarketplaceCompare.astro"
+import ReportsPanel from "@/components/pages/ReportsPanel.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const title = "Understand your ecommerce business."
-const features = [
+const personas = [
   {
-    title: "Business Dashboards",
-    description: "See your ecommerce business across marketplaces in one connected view.",
-    icon: "chart",
-    href: "/platform/dashboard",
+    title: "Business Owners",
+    desc: "See what you sold, what you earned and how every channel is performing.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
   },
   {
-    title: "Profitability Analysis",
-    description: "Understand margins at the SKU and channel level and what drives your profit.",
-    icon: "trend",
-    href: "/platform/profitability",
+    title: "CFOs",
+    desc: "Understand profitability, payments and business performance across channels.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
-    title: "Payment Reconciliation",
-    description: "Match expected settlements to actual payments and flag discrepancies.",
-    icon: "wallet",
-    href: "/platform/payment-reconciliation",
+    title: "Finance & Accounting Teams",
+    desc: "Get a structured view of marketplace data and reconciliation.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
   },
-  {
-    title: "Marketplace Data Aggregation",
-    description: "Amazon, Flipkart, Shopify and other channels consolidated into one layer.",
-    icon: "layers",
-  },
-  {
-    title: "Marketplace Performance",
-    description: "Compare orders, revenue and profitability across every channel you sell on.",
-    icon: "grid",
-  },
-  {
-    title: "Reports & Exports",
-    description: "Pull clean, structured reports and GST-ready data for your finance team.",
-    icon: "file",
-    href: "/platform/reports",
-  },
+]
+
+const faqs = [
+  { q: "What is the DeepEcom Platform?", a: "DeepEcom Platform connects your marketplaces and turns fragmented marketplace data into a clear view of sales, profitability, payments and business performance." },
+  { q: "Which marketplaces can connect to the Platform?", a: "The Platform supports supported ecommerce channels such as Amazon, Flipkart, Shopify and Meesho." },
+  { q: "What does the Platform dashboard show?", a: "The dashboard brings together sales, orders, profitability, payment status and marketplace performance in one connected view." },
+  { q: "How does DeepEcom calculate profitability?", a: "Profitability is shown as revenue after the supported deductions your marketplace data carries — so you see profit rather than just gross sales." },
+  { q: "How does payment reconciliation work?", a: "The Platform compares the settlements you expect with what you actually received, and surfaces every difference." },
+  { q: "Can I compare different marketplaces?", a: "Yes. Marketplace performance — sales, orders and profitability — can be compared across every channel you sell on." },
+  { q: "Can I download reports?", a: "Yes. Structured reports on sales, orders, payments, profitability and reconciliation are available for export." },
+  { q: "What kind of reports are available?", a: "Reports cover the Platform's supported areas — sales, orders, payments, profitability and reconciliation." },
+  { q: "Can I see profitability across marketplaces?", a: "Yes. Profitability is visible per marketplace and consolidated across your channels." },
+  { q: "Can I use the Platform without the ERP Connector?", a: "Yes. The Platform is a standalone product for understanding your business. The ERP Connector is a separate layer for accounting." },
+  { q: "What is the difference between the Platform and ERP Connector?", a: "The Platform helps you understand what is happening in your ecommerce business. The ERP Connector turns the transaction layer into detailed accounting inside your ERP." },
+  { q: "How does the Platform work with Tally, SAP and Zoho?", a: "Through the ERP Connector, which posts detailed ecommerce accounting into Tally, SAP or Zoho. The Platform itself focuses on business intelligence." },
 ]
 ---
 
-<PageLayout title={`Platform — ${title}`} description="DeepEcom Platform connects your ecommerce marketplaces and turns marketplace data into usable business intelligence, reconciliation and reporting.">
-  <PageHero
-    eyebrow="PLATFORM"
-    title={title}
-    lead="Connect your marketplaces, turn marketplace data into usable business information, reconcile your payments and understand your profitability — all in one layer."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform/dashboard" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        See the Dashboard
-      </a>
+<PageLayout
+  title="Platform — Understand Your Ecommerce Business | DeepEcom"
+  description="DeepEcom Platform connects your marketplaces and turns fragmented ecommerce data into one clear view of sales, profitability, payments and performance."
+>
+  <!-- 01 — HERO -->
+  <PlatformHero />
+
+  <!-- 02 — WHAT THE PLATFORM GIVES YOU -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">WHAT IT GIVES YOU</span>
+        <h2 class="h2 mt-3">Four answers, one connected view.</h2>
+        <p class="lead mt-4">The Platform exists to answer the questions that matter when you sell across multiple marketplaces.</p>
+      </div>
+      <PlatformCapabilities />
     </div>
-  </PageHero>
-
-  <FeatureGrid
-    eyebrow="THE PLATFORM"
-    title="Everything your ecommerce business needs, understood."
-    lead="DeepEcom Platform aggregates marketplace data and turns it into intelligence you can act on — dashboards, profitability, reconciliation and reports."
-    features={features}
-    columns={3}
-    center
-  />
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="ONE LAYER"
-      title="From fragmented marketplace data to usable business information."
-      lead="Orders, payments, returns, GST and fees arrive separately from each marketplace. DeepEcom brings them into one connected view so you can see what is actually happening across your ecommerce business."
-      center
-    />
   </section>
 
-  <CtaBand
-    title="Bring your ecommerce business and accounting together."
-    lead="See the Platform in action on your own marketplace data."
-  />
+  <!-- 03 — THE ECOMMERCE DATA PROBLEM -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2-md mt-3">Your ecommerce numbers live in too many places.</h2>
+          <p class="lead mt-4">
+            Every marketplace sends its own reports, its own settlement data and its own numbers. Sales, orders, returns, payments, fees and profitability arrive fragmented — and that fragmentation hides what your business is really doing.
+          </p>
+        </div>
+        <div class="reveal">
+          <FragmentationVisual />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — MARKETPLACE DATA → DEEPECOM -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">DATA FLOW</span>
+        <h2 class="h2 mt-3">Bring your marketplace data into one view.</h2>
+        <p class="lead mt-4">Marketplace data in. A clear business view out.</p>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          [
+            { label: "Sales", sub: "Revenue across channels" },
+            { label: "Orders", sub: "Volume and order context" },
+            { label: "Payments", sub: "Settlements and payouts" },
+            { label: "Returns", sub: "Returned orders and value" },
+            { label: "Fees", sub: "What marketplaces keep" },
+            { label: "Performance", sub: "Channel-level trends" },
+          ].map((d) => (
+            <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
+              <div class="text-sm font-semibold text-ink-800">{d.label}</div>
+              <div class="mt-1 text-xs text-ink-400">{d.sub}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — PROFITABILITY -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">PROFITABILITY</span>
+          <h2 class="h2-md !mt-3">Know what you actually make.</h2>
+          <p class="lead !mt-4 !mb-6">
+            Sales isn't profit. The Platform shows revenue after the deductions your marketplace data carries — so you see what you genuinely earn, per marketplace and across your business.
+          </p>
+          <ul class="flex flex-col gap-3.5">
+            {
+              [
+                { t: "Profit after deductions", s: "Revenue minus fees and supported costs" },
+                { t: "Per marketplace and product", s: "Know where you genuinely make money" },
+                { t: "Gross never hides the picture", s: "The real margin is always in view" },
+              ].map((x) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed">
+                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                    <span class="text-ink-500">{x.s}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
+            <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 12v4"/></svg>
+            <p class="text-sm leading-relaxed text-ink-600">
+              Marketplace fees and deductions are the difference between looking profitable and being profitable — the Platform keeps both in view.
+            </p>
+          </div>
+        </div>
+        <div class="reveal">
+          <ProfitabilityPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — PAYMENT RECONCILIATION -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">PAYMENT RECONCILIATION</span>
+          <h2 class="h2-md !mt-3">Reconcile every rupee you're owed.</h2>
+          <p class="lead !mt-4">
+            The Platform compares the settlements you expect with what you actually receive, and flags every difference — so nothing slips through.
+          </p>
+          <ul class="!mt-6 flex flex-col gap-3.5">
+            {
+              [
+                { t: "Expected vs received", s: "Every settlement compared side by side" },
+                { t: "Differences flagged", s: "Nothing unreconciled slips through" },
+                { t: "Status at a glance", s: "Matched, difference and pending, clearly marked" },
+              ].map((x) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed">
+                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                    <span class="text-ink-500">{x.s}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="mt-6 flex items-start gap-2.5 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
+            <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 12v4"/></svg>
+            <p class="text-sm leading-relaxed text-ink-600">
+              A single mismatched settlement can hide fees, returns or withholding — the Platform surfaces it before it reaches your books.
+            </p>
+          </div>
+        </div>
+        <div class="reveal">
+          <ReconciliationPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — MARKETPLACE PERFORMANCE -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">MARKETPLACE PERFORMANCE</span>
+          <h2 class="h2-md mt-3">See how every channel is performing.</h2>
+          <p class="lead mt-4">
+            One business, multiple channels, one consolidated view — compare sales, orders and profitability across every marketplace you sell on.
+          </p>
+        </div>
+        <div class="reveal">
+          <MarketplaceCompare />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — REPORTS -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">REPORTS</span>
+          <h2 class="h2-md mt-3">Turn your ecommerce data into the reports your business needs.</h2>
+          <p class="lead mt-4">
+            Structured, downloadable reports on sales, orders, payments, profitability and reconciliation — ready for your finance team.
+          </p>
+        </div>
+        <div class="reveal">
+          <ReportsPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — HOW THE PLATFORM WORKS -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2-md mt-3">From marketplace data to business clarity.</h2>
+        <p class="lead mt-4">Five stages turn fragmented channel data into a view you can act on.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your supported marketplaces." },
+          { num: "02", label: "Collect", desc: "Bring marketplace data into DeepEcom." },
+          { num: "03", label: "Structure", desc: "Organize the data into a consistent business view." },
+          { num: "04", label: "Understand", desc: "Analyze profitability, payments and performance." },
+          { num: "05", label: "Report", desc: "Download and use the resulting reports." },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 10 — PLATFORM + ERP CONNECTOR -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">ONE SYSTEM</span>
+          <h2 class="h2-md mt-3">Understand the business. Then account for it.</h2>
+          <p class="lead mt-4">
+            The Platform helps you understand what is happening across your ecommerce business. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
+          </p>
+        </div>
+        <div class="reveal">
+          <PlatformErpConnector />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — WHO IT'S FOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2 mt-3">Built for the people who need clarity on ecommerce numbers.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personas.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — CUSTOMER PROOF -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 13 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2 mt-3">The Platform, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Know what's happening in your ecommerce business.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect your marketplaces and turn fragmented data into a clear view of profitability, payments and performance.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform/dashboard" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore the Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  .h2-md {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

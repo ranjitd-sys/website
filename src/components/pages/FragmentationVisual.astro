@@ -1,0 +1,121 @@
+---
+const sources = [
+  { name: "Amazon", type: "Reports · settlements · fees" },
+  { name: "Flipkart", type: "Reports · settlements · fees" },
+  { name: "Shopify", type: "Orders · payouts · returns" },
+  { name: "Other channels", type: "Different numbers everywhere" },
+]
+---
+
+<style is:global>
+  .fv {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .fv-wrap {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .fv-wrap {
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 1.25rem;
+    }
+  }
+  .fv-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .fv-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  .fv-chip .name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .fv-chip .type {
+    font-size: 0.7rem;
+    color: var(--ink-400);
+  }
+  .fv-center {
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    text-align: center;
+  }
+  .fv-center-name {
+    font-size: 1rem;
+    font-weight: 800;
+  }
+  .fv-center-sub {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    opacity: 0.85;
+  }
+  .fv-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--ink-300);
+  }
+  @media (max-width: 55.99rem) {
+    .fv-arrow {
+      transform: rotate(90deg);
+    }
+  }
+</style>
+
+<section class="fv">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="fv-wrap reveal">
+      <div class="fv-col">
+        {sources.map((s) => (
+          <div class="fv-chip">
+            <span class="name">{s.name}</span>
+            <span class="type">{s.type}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="fv-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h24M18 6l6 6-6 6" />
+        </svg>
+      </div>
+
+      <div class="fv-center">
+        <div class="fv-center-name">DeepEcom Platform</div>
+        <div class="fv-center-sub">One connected business view</div>
+      </div>
+
+      <div class="fv-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M0 12h24M18 6l6 6-6 6" />
+        </svg>
+      </div>
+
+      <div class="fv-col">
+        <div class="fv-chip" style="border-color:var(--brand-200);background:var(--brand-50)">
+          <span class="name" style="color:var(--brand-700)">Profitability</span>
+        </div>
+        <div class="fv-chip" style="border-color:var(--brand-200);background:var(--brand-50)">
+          <span class="name" style="color:var(--brand-700)">Reconciliation</span>
+        </div>
+        <div class="fv-chip" style="border-color:var(--brand-200);background:var(--brand-50)">
+          <span class="name" style="color:var(--brand-700)">Reports</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

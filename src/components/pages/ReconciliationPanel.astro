@@ -1,0 +1,261 @@
+---
+const kpis = [
+  { label: "Expected", value: "₹10,000", sub: "8 settlements", tone: "neutral" },
+  { label: "Received", value: "₹9,820", sub: "7 settlements", tone: "neutral" },
+  { label: "Difference", value: "₹180", sub: "2 flagged", tone: "danger" },
+]
+const rows = [
+  { order: "ORD-104928", expected: "₹2,499", received: "₹2,499", diff: "₹0", status: "Matched", cls: "ok" },
+  { order: "ORD-104929", expected: "₹1,499", received: "₹1,385", diff: "₹114", status: "Difference", cls: "warn" },
+  { order: "ORD-104930", expected: "₹3,200", received: "₹3,200", diff: "₹0", status: "Matched", cls: "ok" },
+  { order: "ORD-104931", expected: "₹899", received: "—", diff: "₹899", status: "Pending", cls: "muted" },
+  { order: "ORD-104932", expected: "₹1,750", received: "₹1,736", diff: "₹14", status: "Difference", cls: "warn" },
+]
+---
+
+<style is:global>
+  .rp {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .rp-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  /* window chrome */
+  .rp-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rp-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .rp-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .rp-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .rp-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .rp-bar .dots i:nth-child(3) { background: #86efac; }
+  .rp-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .rp-bar .live {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    color: var(--success-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .rp-bar .live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success-500);
+  }
+  /* KPI cards */
+  .rp-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  @media (max-width: 32rem) {
+    .rp-kpis {
+      grid-template-columns: 1fr;
+    }
+  }
+  .rp-kpi {
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .rp-kpi .k {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .rp-kpi .v {
+    margin-top: 0.3rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .rp-kpi .sub {
+    margin-top: 0.15rem;
+    font-size: 0.7rem;
+    color: var(--ink-400);
+  }
+  .rp-kpi.danger .v {
+    color: var(--danger-600);
+  }
+  .rp-kpi.danger {
+    border-color: var(--danger-200);
+    background: linear-gradient(180deg, #fff, var(--danger-50));
+  }
+  /* table */
+  .rp-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--ink-100);
+  }
+  .rp-table {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .rp-table th {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rp-table th.right {
+    text-align: right;
+  }
+  .rp-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .rp-table td.right {
+    text-align: right;
+  }
+  .rp-table td.order {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .rp-table td.diff-amt {
+    font-weight: 700;
+  }
+  .rp-table td.diff-amt.warn {
+    color: var(--danger-600);
+  }
+  .rp-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .rp-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+  /* status pill */
+  .rp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .rp-pill::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .rp-pill.ok {
+    background: var(--success-50);
+    color: var(--success-700);
+  }
+  .rp-pill.ok::before {
+    background: var(--success-500);
+  }
+  .rp-pill.warn {
+    background: var(--danger-50);
+    color: var(--danger-600);
+  }
+  .rp-pill.warn::before {
+    background: var(--danger-500);
+  }
+  .rp-pill.muted {
+    background: var(--ink-100);
+    color: var(--ink-500);
+  }
+  .rp-pill.muted::before {
+    background: var(--ink-400);
+  }
+  .rp-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="rp">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="rp-app reveal">
+      <div class="rp-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Payment Reconciliation</span>
+        <span class="live">Live</span>
+      </div>
+      <div class="rp-kpis">
+        {kpis.map((k) => (
+          <div class:list={["rp-kpi", k.tone === "danger" && "danger"]}>
+            <div class="k">{k.label}</div>
+            <div class="v">{k.value}</div>
+            <div class="sub">{k.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div class="rp-table-wrap">
+        <table class="rp-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th class="right">Expected</th>
+              <th class="right">Received</th>
+              <th class="right">Difference</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <td class="order">{r.order}</td>
+                <td class="right">{r.expected}</td>
+                <td class="right">{r.received}</td>
+                <td class:list={["right", "diff-amt", r.cls === "warn" && "warn"]}>{r.diff}</td>
+                <td><span class:list={["rp-pill", r.cls]}>{r.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <p class="rp-note">Illustrative example — reconciliation results depend on your marketplaces and settlements.</p>
+  </div>
+</section>

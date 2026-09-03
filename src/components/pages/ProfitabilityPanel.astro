@@ -1,0 +1,240 @@
+---
+const stack = [
+  { label: "Revenue", value: "₹4,21,740", cls: "rev", pct: 100 },
+  { label: "Marketplace fees", value: "− ₹64,200", cls: "sub", pct: 15 },
+  { label: "Logistics & other costs", value: "− ₹48,300", cls: "sub", pct: 11 },
+  { label: "Profit", value: "₹3,09,240", cls: "profit", pct: 74 },
+]
+const channels = [
+  { name: "Amazon", revenue: "₹2,10,000", profit: "₹1,56,000", margin: 74, init: "Am" },
+  { name: "Flipkart", revenue: "₹1,38,000", profit: "₹96,000", margin: 70, init: "Fk" },
+  { name: "Shopify", revenue: "₹73,740", profit: "₹57,240", margin: 78, init: "Sy" },
+]
+---
+
+<style is:global>
+  .pp {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .pp-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .pp-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .pp-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .pp-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .pp-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .pp-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .pp-bar .dots i:nth-child(3) { background: #86efac; }
+  .pp-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .pp-bar .period {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .pp-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .pp-body {
+      grid-template-columns: 1fr 1.15fr;
+    }
+  }
+  /* waterfall card */
+  .pp-waterfall {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .pp-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .pp-row:last-child {
+    border-bottom: 0;
+  }
+  .pp-row .k {
+    color: var(--ink-500);
+    font-weight: 500;
+  }
+  .pp-row .v {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .pp-row.rev .v {
+    color: var(--ink-900);
+  }
+  .pp-row.sub .v {
+    color: var(--danger-600);
+  }
+  .pp-row.profit {
+    background: linear-gradient(180deg, var(--brand-50), var(--brand-50));
+  }
+  .pp-row.profit .k {
+    color: var(--brand-700);
+    font-weight: 700;
+  }
+  .pp-row.profit .v {
+    color: var(--brand-700);
+    font-size: 1rem;
+  }
+  /* channel table */
+  .pp-channels {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .pp-channel {
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .pp-channel:last-child {
+    border-bottom: 0;
+  }
+  .pp-channel-top {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .pp-init {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+  .pp-channel-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .pp-channel-margin {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    color: var(--success-700);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .pp-channel-bottom {
+    margin-top: 0.55rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .pp-bar-track {
+    flex: 1;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--ink-100);
+    overflow: hidden;
+  }
+  .pp-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+  }
+  .pp-bar-txt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-400);
+    font-variant-numeric: tabular-nums;
+  }
+  .pp-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="pp">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="pp-app reveal">
+      <div class="pp-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Profitability</span>
+        <span class="period">Aug 2026</span>
+      </div>
+      <div class="pp-body">
+        <div class="pp-waterfall">
+          {stack.map((s) => (
+            <div class:list={["pp-row", s.cls]}>
+              <span class="k">{s.label}</span>
+              <span class="v">{s.value}</span>
+            </div>
+          ))}
+        </div>
+        <div class="pp-channels">
+          {channels.map((c) => (
+            <div class="pp-channel">
+              <div class="pp-channel-top">
+                <span class="pp-init">{c.init}</span>
+                <span class="pp-channel-name">{c.name}</span>
+                <span class="pp-channel-margin">{c.margin}% margin</span>
+              </div>
+              <div class="pp-channel-bottom">
+                <div class="pp-bar-track">
+                  <div class="pp-bar-fill" style={`width:${c.margin}%`}></div>
+                </div>
+                <span class="pp-bar-txt">Profit {c.profit}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <p class="pp-note">Illustrative example — actual profitability depends on your channels and cost structure.</p>
+  </div>
+</section>
