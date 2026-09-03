@@ -119,8 +119,8 @@ const faqs = [
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div class="max-w-lg">
           <span class="eyebrow">PROFITABILITY</span>
-          <h2 class="h2-md !mt-3">Know what you actually make.</h2>
-          <p class="lead !mt-4 !mb-6">
+          <h2 class="h2-md mt-3">Know what you actually make.</h2>
+          <p class="lead mt-4 mb-6">
             Sales isn't profit. The Platform shows revenue after the deductions your marketplace data carries — so you see what you genuinely earn, per marketplace and across your business.
           </p>
           <ul class="flex flex-col gap-3.5">
@@ -162,11 +162,11 @@ const faqs = [
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div class="max-w-lg">
           <span class="eyebrow">PAYMENT RECONCILIATION</span>
-          <h2 class="h2-md !mt-3">Reconcile every rupee you're owed.</h2>
-          <p class="lead !mt-4">
+          <h2 class="h2-md mt-3">Reconcile every rupee you're owed.</h2>
+          <p class="lead mt-4">
             The Platform compares the settlements you expect with what you actually receive, and flags every difference — so nothing slips through.
           </p>
-          <ul class="!mt-6 flex flex-col gap-3.5">
+          <ul class="mt-6 flex flex-col gap-3.5">
             {
               [
                 { t: "Expected vs received", s: "Every settlement compared side by side" },
@@ -258,17 +258,15 @@ const faqs = [
   <!-- 10 — PLATFORM + ERP CONNECTOR -->
   <section class="bg-muted">
     <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
-        <div class="max-w-lg">
-          <span class="eyebrow">ONE SYSTEM</span>
-          <h2 class="h2-md mt-3">Understand the business. Then account for it.</h2>
-          <p class="lead mt-4">
-            The Platform helps you understand what is happening across your ecommerce business. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
-          </p>
-        </div>
-        <div class="reveal">
-          <PlatformErpConnector />
-        </div>
+      <div class="max-w-3xl">
+        <span class="eyebrow">ONE SYSTEM</span>
+        <h2 class="h2-md mt-3">Understand the business. Then account for it.</h2>
+        <p class="lead mt-4">
+          The Platform helps you understand what is happening across your ecommerce business. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
+        </p>
+      </div>
+      <div class="mt-12 reveal">
+        <PlatformErpConnector />
       </div>
     </div>
   </section>

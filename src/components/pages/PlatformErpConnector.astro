@@ -1,194 +1,448 @@
 ---
-const platformItems = ["Profitability", "Payment Reconciliation", "Reports"];
-const erps = ["Tally", "SAP", "Zoho"];
+const marketplaces = [
+  { name: "Amazon", tag: "FBA & MFN Sync", bg: "#fef3c7", dot: "#d97706" },
+  { name: "Shopify", tag: "REST & Webhooks", bg: "#dcfce7", dot: "#16a34a" },
+  { name: "Flipkart", tag: "Seller API Engine", bg: "#e0f2fe", dot: "#0284c7" },
+  { name: "WooCommerce", tag: "Custom Webhooks", bg: "#fae8ff", dot: "#c026d3" },
+  { name: "Walmart", tag: "Marketplace V3", bg: "#fef2f2", dot: "#dc2626" },
+];
+
+const engineStages = [
+  { step: "01", name: "Multi-Channel Ingestion", desc: "Aggregates raw orders, returns & fees" },
+  { step: "02", name: "Reconciliation & Tax", desc: "Automates GST, TCS & payment matching" },
+  { step: "03", name: "Ledger Transformation", desc: "Generates double-entry ERP journal payloads" },
+];
+
+// Expanded card widths and exact connection math
+const platformNodes = [
+  { label: "Overview", desc: "Central Performance Hub", tag: "Hub", icon: "grid" },
+  { label: "Profitability", desc: "Margin & SKU Analytics", tag: "Analytics", icon: "chart" },
+  { label: "Payment Reconciliation", desc: "Automated Ledger Match", tag: "2-Way", icon: "check" },
+  { label: "Dashboard", desc: "Live Operational Data", tag: "Live", icon: "monitor" },
+  { label: "Reports", desc: "Custom Export & Audit Suite", tag: "Exports", icon: "file" },
+];
+
+const erpNodes = [
+  { name: "Tally Prime", tag: "XML Sync Engine", bg: "#e0f2fe", dot: "#0284c7" },
+  { name: "SAP S/4HANA", tag: "Enterprise API", bg: "#fae8ff", dot: "#c026d3" },
+  { name: "Zoho Books", tag: "OAuth 2.0 Direct", bg: "#dcfce7", dot: "#16a34a" },
+];
 ---
 
-<style is:global>
-  .pec {
-    padding-block: clamp(3rem, 6vh, 4.5rem);
-  }
+<section class="pec-section">
+  <div class="pec-container">
+    <svg
+      viewBox="0 0 1280 680"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="pec-diagram-svg"
+      aria-label="Node graph mapping Marketplaces through DeepEcom Engine into DeepEcom Platform and ERP Systems"
+    >
+      <defs>
+        <!-- Soft Modern Elevation Shadow -->
+        <filter id="saasShadow" x="-10%" y="-10%" width="125%" height="125%" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.04" />
+          <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.02" />
+        </filter>
 
-  .pec-visual {
-    margin-top: 1.5rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    align-items: center;
-  }
+        <!-- Hub Engine Ambient Glow -->
+        <filter id="engineGlow" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+          <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#4f46e5" flood-opacity="0.18" />
+        </filter>
 
-  @media (min-width: 48rem) {
-    .pec-visual {
-      /* Equal width for outer cards with explicit auto-width for arrows and connector */
-      grid-template-columns: 1fr auto minmax(200px, auto) auto 1fr;
-      gap: 1.25rem;
-    }
-  }
+        <!-- Engine Gradient -->
+        <linearGradient id="engineBg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#0f172a" />
+          <stop offset="60%" stop-color="#1e1b4b" />
+          <stop offset="100%" stop-color="#020617" />
+        </linearGradient>
 
-  /* Side Cards */
-  .pec-block {
+        <linearGradient id="borderGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#818cf8" stop-opacity="0.6" />
+          <stop offset="50%" stop-color="#4f46e5" stop-opacity="0.1" />
+          <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.5" />
+        </linearGradient>
+
+        <!-- Dynamic Icon Gradient for Platform Cards -->
+        <linearGradient id="iconBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#f0f9ff" />
+          <stop offset="100%" stop-color="#e0f2fe" />
+        </linearGradient>
+
+        <!-- Flow Wires -->
+        <linearGradient id="wireIn" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3" />
+          <stop offset="50%" stop-color="#818cf8" stroke-opacity="0.9" />
+          <stop offset="100%" stop-color="#6366f1" stop-opacity="0.3" />
+        </linearGradient>
+
+        <linearGradient id="wireOutPlat" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3" />
+          <stop offset="50%" stop-color="#38bdf8" stroke-opacity="0.9" />
+          <stop offset="100%" stop-color="#0284c7" stop-opacity="0.3" />
+        </linearGradient>
+
+        <linearGradient id="wireOutErp" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3" />
+          <stop offset="50%" stop-color="#34d399" stroke-opacity="0.9" />
+          <stop offset="100%" stop-color="#10b981" stop-opacity="0.3" />
+        </linearGradient>
+      </defs>
+
+      <!-- Dot Grid Canvas -->
+      <pattern id="dotGrid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1" fill="#cbd5e1" opacity="0.4" />
+      </pattern>
+      <rect width="1280" height="680" fill="url(#dotGrid)" />
+
+
+      <!-- ================= INBOUND WIRES (Marketplaces -> Engine) ================= -->
+      <!-- Marketplaces Out (X: 320, Y: 115, 195, 275, 355, 435) -> Engine In (X: 440, Y: 160, 205, 275, 345, 390) -->
+      <path d="M 320 115 C 380 115, 380 160, 440 160" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 320 115 C 380 115, 380 160, 440 160" stroke="url(#wireIn)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 320 195 C 380 195, 380 205, 440 205" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 320 195 C 380 195, 380 205, 440 205" stroke="url(#wireIn)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 320 275 L 440 275" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 320 275 L 440 275" stroke="url(#wireIn)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 320 355 C 380 355, 380 345, 440 345" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 320 355 C 380 355, 380 345, 440 345" stroke="url(#wireIn)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 320 435 C 380 435, 380 390, 440 390" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 320 435 C 380 435, 380 390, 440 390" stroke="url(#wireIn)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+
+      <!-- ================= OUTBOUND WIRES (Engine -> Platform) ================= -->
+      <!-- Engine Out (X: 760, Y: 160, 190, 220, 250, 280) -> Platform In (X: 880, Y: 116, 172, 228, 284, 340) -->
+      <path d="M 760 160 C 820 160, 820 116, 880 116" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 160 C 820 160, 820 116, 880 116" stroke="url(#wireOutPlat)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 190 C 820 190, 820 172, 880 172" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 190 C 820 190, 820 172, 880 172" stroke="url(#wireOutPlat)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 220 C 820 220, 820 228, 880 228" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 220 C 820 220, 820 228, 880 228" stroke="url(#wireOutPlat)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 250 C 820 250, 820 284, 880 284" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 250 C 820 250, 820 284, 880 284" stroke="url(#wireOutPlat)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 280 C 820 280, 820 340, 880 340" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 280 C 820 280, 820 340, 880 340" stroke="url(#wireOutPlat)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+
+      <!-- ================= OUTBOUND WIRES (Engine -> ERP Systems) ================= -->
+      <!-- Engine Out (X: 760, Y: 330, 360, 390) -> ERP In (X: 880, Y: 472, 537, 602) -->
+      <path d="M 760 330 C 820 330, 820 472, 880 472" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 330 C 820 330, 820 472, 880 472" stroke="url(#wireOutErp)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 360 C 820 360, 820 537, 880 537" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 360 C 820 360, 820 537, 880 537" stroke="url(#wireOutErp)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+      <path d="M 760 390 C 820 390, 820 602, 880 602" stroke="#e2e8f0" stroke-width="2" fill="none" />
+      <path d="M 760 390 C 820 390, 820 602, 880 602" stroke="url(#wireOutErp)" stroke-width="2.5" class="flowing-wire" fill="none" />
+
+
+      <!-- ================= COLUMN 1: MARKETPLACES ================= -->
+      <g transform="translate(50, 32)">
+        <rect x="0" y="0" width="160" height="24" rx="12" fill="#fffbebe6" stroke="#fef3c7" stroke-width="1" />
+        <circle cx="12" cy="12" r="3" fill="#d97706" />
+        <text x="22" y="16" class="pec-col-header amber">MARKETPLACES</text>
+      </g>
+
+      {marketplaces.map((mkt, index) => {
+        const yPos = 88 + index * 80;
+        return (
+          <g class="node-group" transform={`translate(50, ${yPos})`}>
+            <rect width="270" height="54" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#saasShadow)" />
+            <circle cx="28" cy="27" r="13" fill={mkt.bg} />
+            <circle cx="28" cy="27" r="4.5" fill={mkt.dot} />
+
+            <text x="52" y="26" class="node-title">{mkt.name}</text>
+            <text x="52" y="40" class="node-desc">{mkt.tag}</text>
+
+            <rect x="195" y="17" width="62" height="20" rx="10" fill="#f8fafc" stroke="#f1f5f9" />
+            <circle cx="205" cy="27" r="2.5" fill="#10b981" />
+            <text x="213" y="30" class="status-badge">Stream</text>
+
+            <circle cx="270" cy="27" r="4.5" fill="#ffffff" stroke="#f59e0b" stroke-width="2" />
+            <circle cx="270" cy="27" r="1.5" fill="#f59e0b" />
+          </g>
+        );
+      })}
+
+
+      <!-- ================= COLUMN 2: DEEPECOM ENGINE ================= -->
+      <g transform="translate(440, 70)">
+        <rect width="320" height="470" rx="18" fill="url(#engineBg)" filter="url(#engineGlow)" />
+        <rect width="320" height="470" rx="18" fill="none" stroke="url(#borderGlow)" stroke-width="1.5" />
+
+        <g transform="translate(16, 16)">
+          <circle cx="8" cy="8" r="4" fill="#ef4444" opacity="0.8" />
+          <circle cx="22" cy="8" r="4" fill="#f59e0b" opacity="0.8" />
+          <circle cx="36" cy="8" r="4" fill="#10b981" opacity="0.8" />
+          <rect x="180" y="-1" width="108" height="18" rx="9" fill="rgba(255, 255, 255, 0.06)" stroke="rgba(255, 255, 255, 0.1)" />
+          <text x="234" y="11" text-anchor="middle" class="engine-pill-text">CORE ENGINE v3.0</text>
+        </g>
+
+        <text x="20" y="68" class="engine-title">DeepEcom Engine</text>
+        <text x="20" y="86" class="engine-sub">Central Data Sync, Reconciliation & ERP Dispatch</text>
+
+        {engineStages.map((stage, index) => {
+          const yPos = 108 + index * 92;
+          return (
+            <g transform={`translate(16, ${yPos})`}>
+              <rect width="288" height="76" rx="10" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" />
+              <rect x="12" y="20" width="36" height="36" rx="8" fill="rgba(99, 102, 241, 0.15)" stroke="rgba(129, 140, 248, 0.2)" />
+              <text x="30" y="42" text-anchor="middle" class="stage-num">{stage.step}</text>
+
+              <text x="58" y="35" class="stage-title">{stage.name}</text>
+              <text x="58" y="51" class="stage-sub">{stage.desc}</text>
+            </g>
+          );
+        })}
+
+        <line x1="20" y1="400" x2="300" y2="400" stroke="rgba(255,255,255,0.08)" stroke-dasharray="2 4" />
+        <g transform="translate(20, 418)">
+          <text x="0" y="14" class="metric-val">Real-Time</text>
+          <text x="0" y="28" class="metric-label">Ingestion</text>
+
+          <text x="100" y="14" class="metric-val">Automated</text>
+          <text x="100" y="28" class="metric-label">Reconciliation</text>
+
+          <text x="200" y="14" class="metric-val">Dual-Route</text>
+          <text x="200" y="28" class="metric-label">Sync Split</text>
+        </g>
+
+        <!-- Ports (Left) -->
+        <circle cx="0" cy="90" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+        <circle cx="0" cy="135" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+        <circle cx="0" cy="205" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+        <circle cx="0" cy="275" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+        <circle cx="0" cy="320" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+
+        <!-- Ports (Right) -->
+        <circle cx="320" cy="90" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+        <circle cx="320" cy="120" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+        <circle cx="320" cy="150" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+        <circle cx="320" cy="180" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+        <circle cx="320" cy="210" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
+
+        <circle cx="320" cy="260" r="4" fill="#0f172a" stroke="#34d399" stroke-width="2" />
+        <circle cx="320" cy="290" r="4" fill="#0f172a" stroke="#34d399" stroke-width="2" />
+        <circle cx="320" cy="320" r="4" fill="#0f172a" stroke="#34d399" stroke-width="2" />
+      </g>
+
+
+      <!-- ================= COLUMN 3 (TOP): DEEPECOM PLATFORM ================= -->
+      <g transform="translate(880, 32)">
+        <rect x="0" y="0" width="160" height="24" rx="12" fill="#eff6ff" stroke="#dbeafe" stroke-width="1" />
+        <circle cx="12" cy="12" r="3" fill="#3b82f6" />
+        <text x="22" y="16" class="pec-col-header">DEEPECOM PLATFORM</text>
+      </g>
+
+      {platformNodes.map((node, index) => {
+        const yPos = 90 + index * 56; // Cards at Y: 90, 146, 202, 258, 314. Height 52 -> Centers at Y: 116, 172, 228, 284, 340
+        return (
+          <g class="node-group" transform={`translate(880, ${yPos})`}>
+            <!-- Connection Handle Perfectly Center-Aligned at Y=26 relative to group -->
+            <circle cx="0" cy="26" r="4.5" fill="#ffffff" stroke="#0284c7" stroke-width="2" />
+            <circle cx="0" cy="26" r="1.5" fill="#0284c7" />
+
+            <!-- Platform Card -->
+            <rect width="320" height="52" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#saasShadow)" />
+            
+            <!-- Left Accent Indicator Pillar -->
+            <rect x="0" y="10" width="3.5" height="32" rx="1.75" fill="#0284c7" />
+
+            <!-- Dynamic Styled Icon Capsule -->
+            <rect x="14" y="10" width="32" height="32" rx="8" fill="url(#iconBgGrad)" stroke="#bae6fd" stroke-width="1" />
+            
+            {node.icon === "grid" && (
+              <path d="M25 21H28M25 26H28M30 21H33M30 26H33" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+            )}
+            {node.icon === "chart" && (
+              <path d="M22 30V24M26 30V20M30 30V26" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+            )}
+            {node.icon === "check" && (
+              <path d="M22 26L25 29M25 29L32 20" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            )}
+            {node.icon === "monitor" && (
+              <path d="M21 21H33V28H21V21ZM24 31H30" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+            )}
+            {node.icon === "file" && (
+              <rect x="23" y="19" width="10" height="13" rx="1.5" stroke="#0284c7" stroke-width="2" fill="none" />
+            )}
+
+            <!-- Clean Typography Alignment -->
+            <text x="56" y="24" class="node-title">{node.label}</text>
+            <text x="56" y="38" class="node-desc">{node.desc}</text>
+
+            <!-- Tag Badge -->
+            <g transform="translate(236, 16)">
+              <rect width="70" height="20" rx="10" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="0.8" />
+              <text x="35" y="13" text-anchor="middle" class="node-badge">{node.tag}</text>
+            </g>
+          </g>
+        );
+      })}
+
+
+      <!-- ================= COLUMN 3 (BOTTOM): ERP SYSTEMS ================= -->
+      <g transform="translate(880, 405)">
+        <rect x="0" y="0" width="130" height="24" rx="12" fill="#f0fdf4" stroke="#dcfce7" stroke-width="1" />
+        <circle cx="12" cy="12" r="3" fill="#16a34a" />
+        <text x="22" y="16" class="pec-col-header dest">ERP SYSTEMS</text>
+      </g>
+
+      {erpNodes.map((node, index) => {
+        const yPos = 445 + index * 65; // Cards at Y: 445, 510, 575. Height 54 -> Centers at Y: 472, 537, 602
+        return (
+          <g class="node-group" transform={`translate(880, ${yPos})`}>
+            <!-- Connection Handle Perfectly Center-Aligned at Y=27 relative to group -->
+            <circle cx="0" cy="27" r="4.5" fill="#ffffff" stroke="#34d399" stroke-width="2" />
+            <circle cx="0" cy="27" r="1.5" fill="#34d399" />
+
+            <rect width="320" height="54" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1" filter="url(#saasShadow)" />
+            <circle cx="28" cy="27" r="12" fill={node.bg} />
+            <circle cx="28" cy="27" r="4" fill={node.dot} />
+
+            <text x="50" y="25" class="node-title">{node.name}</text>
+            <text x="50" y="38" class="node-desc">{node.tag}</text>
+
+            <g transform="translate(242, 17)">
+              <rect width="64" height="20" rx="10" fill="#f8fafc" stroke="#f1f5f9" />
+              <circle cx="10" cy="10" r="2.5" fill="#16a34a" />
+              <text x="18" y="13" class="status-badge">Active</text>
+            </g>
+          </g>
+        );
+      })}
+    </svg>
+  </div>
+</section>
+
+<style>
+  .pec-section {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 1.75rem;
-    height: 100%;
-    box-sizing: border-box;
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 1.25rem;
-    background: #ffffff;
-    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    justify-content: center;
+    padding: 12px 0;
   }
 
-  .pec-block:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08);
+  .pec-container {
+    width: 100%;
+    max-width: 1280px;
   }
 
-  .pec-block-label {
-    font-size: 0.6875rem;
+  .pec-diagram-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  .pec-col-header {
+    font-size: 10px;
     font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--brand-600, #4f46e5);
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.8px;
+    fill: #2563eb;
+  }
+  .pec-col-header.amber {
+    fill: #d97706;
+  }
+  .pec-col-header.dest {
+    fill: #16a34a;
   }
 
-  .pec-block-name {
-    font-size: 1.25rem;
+  .node-title {
+    font-size: 12.5px;
     font-weight: 700;
-    color: var(--ink-900, #0f172a);
-    margin-bottom: 1.25rem;
-    letter-spacing: -0.01em;
+    fill: #0f172a;
   }
-
-  .pec-block-items {
-    display: flex;
-    flex-direction: column;
-    gap: 0.625rem;
-  }
-
-  .pec-block-item {
-    display: flex;
-    align-items: center;
-    gap: 0.625rem;
-    font-size: 0.84rem;
+  .node-desc {
+    font-size: 10px;
     font-weight: 500;
-    color: var(--ink-700, #334155);
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.625rem;
-    background: var(--ink-50, #f8fafc);
+    fill: #64748b;
   }
-
-  .pec-block-item::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--brand-500, #6366f1);
-    flex: none;
-    box-shadow: 0 0 8px var(--brand-500, #6366f1);
-  }
-
-  /* Center Card */
-  .pec-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1.5rem;
-    border-radius: 1.25rem;
-    background: linear-gradient(135deg, var(--brand-600, #2563eb), var(--brand-800, #1e3a8a));
-    color: #ffffff;
-    text-align: center;
-    box-shadow: 0 12px 25px -5px rgba(37, 99, 235, 0.3);
-  }
-
-  .pec-center-name {
-    font-size: 1.125rem;
+  .node-badge {
+    font-size: 9.5px;
     font-weight: 700;
-    white-space: nowrap;
+    fill: #475569;
+  }
+  .status-badge {
+    font-size: 9px;
+    font-weight: 700;
+    fill: #334155;
+  }
+
+  .engine-pill-text {
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    fill: #a5b4fc;
+  }
+  .engine-title {
+    font-size: 18px;
+    font-weight: 800;
+    fill: #ffffff;
     letter-spacing: -0.01em;
   }
+  .engine-sub {
+    font-size: 11px;
+    font-weight: 500;
+    fill: #94a3b8;
+  }
 
-  .pec-center-badge {
-    display: inline-block;
-    margin-top: 0.75rem;
-    padding: 0.35rem 0.85rem;
-    font-size: 0.75rem;
+  .stage-num {
+    font-size: 11px;
+    font-weight: 800;
+    fill: #a5b4fc;
+  }
+  .stage-title {
+    font-size: 12px;
+    font-weight: 700;
+    fill: #f8fafc;
+  }
+  .stage-sub {
+    font-size: 10px;
+    font-weight: 500;
+    fill: #94a3b8;
+  }
+
+  .metric-val {
+    font-size: 11px;
+    font-weight: 800;
+    fill: #38bdf8;
+  }
+  .metric-label {
+    font-size: 9px;
     font-weight: 600;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(6px);
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    white-space: nowrap;
+    fill: #64748b;
   }
 
-  /* SVG Arrows */
-  .pec-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--brand-500, #3b82f6);
-    flex-shrink: 0;
+  .node-group {
+    transition: transform 0.15s ease;
+    cursor: pointer;
+  }
+  .node-group:hover rect {
+    stroke: #38bdf8;
   }
 
-  .pec-arrow svg {
-    width: 2rem;
-    height: 1.5rem;
+  .flowing-wire {
+    stroke-dasharray: 6 12;
+    animation: wireFlow 1.4s linear infinite;
   }
 
-  @media (max-width: 47.99rem) {
-    .pec-arrow svg {
-      transform: rotate(90deg);
+  @keyframes wireFlow {
+    from { stroke-dashoffset: 18; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flowing-wire {
+      animation: none;
     }
   }
 </style>
-
-<section class="pec">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="pec-visual">
-      <!-- Layer 1 Card -->
-      <div class="pec-block">
-        <div>
-          <div class="pec-block-label">Layer 1</div>
-          <div class="pec-block-name">DeepEcom Platform</div>
-        </div>
-        <div class="pec-block-items">
-          {platformItems.map((i) => <span class="pec-block-item">{i}</span>)}
-        </div>
-      </div>
-
-      <!-- Arrow 1 -->
-      <div class="pec-arrow" aria-hidden="true">
-        <svg viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 12h26M22 6l6 6-6 6" />
-        </svg>
-      </div>
-
-      <!-- Center Connector Card -->
-      <div class="pec-center">
-        <div class="pec-center-name">ERP Connector</div>
-        <div class="pec-center-badge">Detailed Accounting</div>
-      </div>
-
-      <!-- Arrow 2 -->
-      <div class="pec-arrow" aria-hidden="true">
-        <svg viewBox="0 0 32 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M2 12h26M22 6l6 6-6 6" />
-        </svg>
-      </div>
-
-      <!-- Layer 2 Card -->
-      <div class="pec-block">
-        <div>
-          <div class="pec-block-label">Layer 2</div>
-          <div class="pec-block-name">Your ERP</div>
-        </div>
-        <div class="pec-block-items">
-          {erps.map((e) => <span class="pec-block-item">{e}</span>)}
-        </div>
-      </div>
-    </div>
-  </div>
-</section>

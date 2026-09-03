@@ -1,0 +1,437 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const kpis = [
+  { label: "Expected", value: "₹12,48,500", tone: "neutral" },
+  { label: "Received", value: "₹12,31,200", tone: "neutral" },
+  { label: "Difference", value: "₹17,300", tone: "danger" },
+  { label: "Reconciled", value: "98.6%", tone: "accent" },
+]
+const rows = [
+  { id: "STL-2041", expected: "₹2,10,000", received: "₹2,10,000", diff: "₹0", status: "Matched", cls: "ok" },
+  { id: "STL-2042", expected: "₹1,38,000", received: "₹1,36,900", diff: "₹1,100", status: "Mismatch", cls: "warn" },
+  { id: "STL-2043", expected: "₹73,740", received: "₹73,740", diff: "₹0", status: "Matched", cls: "ok" },
+  { id: "STL-2044", expected: "₹1,12,400", received: "₹1,08,300", diff: "₹4,100", status: "Mismatch", cls: "warn" },
+]
+---
+
+<style is:global>
+  .rec-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 9vh, 7rem) 0 clamp(3rem, 6vh, 4.5rem);
+    background:
+      radial-gradient(46rem 24rem at 78% -12%, rgba(44, 62, 233, 0.12), transparent 60%),
+      radial-gradient(36rem 18rem at 8% -8%, rgba(167, 139, 250, 0.1), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .rec-hero-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .rec-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .rec-hero-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+
+  /* ---------- Left ---------- */
+  .rec-copy {
+    max-width: 34rem;
+  }
+  .rec-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .rec-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .rec-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .rec-title .accent {
+    color: var(--brand-500);
+  }
+  .rec-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .rec-actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .rec-note {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .rec-note svg {
+    color: var(--brand-500);
+    flex: none;
+  }
+  .rec-note b {
+    color: var(--ink-700);
+  }
+
+  /* ---------- Right: reconciliation window ---------- */
+  .rec-app {
+    background: #ffffff;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    max-width: 34rem;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .rec-app-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rec-app-head .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .rec-app-head .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .rec-app-head .dots i:nth-child(1) { background: #fca5a5; }
+  .rec-app-head .dots i:nth-child(2) { background: #fcd34d; }
+  .rec-app-head .dots i:nth-child(3) { background: #86efac; }
+  .rec-app-head .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .rec-app-head .live {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    color: var(--success-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .rec-app-head .live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success-500);
+  }
+  .rec-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+    padding: 1rem;
+  }
+  @media (max-width: 34rem) {
+    .rec-kpis {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  .rec-kpi {
+    padding: 0.7rem 0.75rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.7rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .rec-kpi .k {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .rec-kpi .v {
+    margin-top: 0.25rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .rec-kpi.danger .v {
+    color: var(--danger-600);
+  }
+  .rec-kpi.danger {
+    border-color: var(--danger-200);
+    background: linear-gradient(180deg, #fff, var(--danger-50));
+  }
+  .rec-kpi.accent .v {
+    color: var(--brand-600);
+  }
+  /* expected vs actual bar */
+  .rec-bar {
+    padding: 0 1rem 0.9rem;
+  }
+  .rec-bar-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.5rem;
+  }
+  .rec-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+  }
+  .rec-bar-row .lb {
+    width: 3.8rem;
+    flex: none;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-500);
+    text-align: right;
+  }
+  .rec-bar-row .track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--ink-100);
+    overflow: hidden;
+  }
+  .rec-bar-row .fill {
+    height: 100%;
+    border-radius: 999px;
+  }
+  .rec-bar-row .vl {
+    width: 3.2rem;
+    flex: none;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  /* table */
+  .rec-table-wrap {
+    overflow-x: auto;
+    border-top: 1px solid var(--ink-100);
+  }
+  .rec-table {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .rec-table th {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rec-table th.right {
+    text-align: right;
+  }
+  .rec-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .rec-table td.right {
+    text-align: right;
+  }
+  .rec-table td.id {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .rec-table td.diff-amt.warn {
+    color: var(--danger-600);
+    font-weight: 700;
+  }
+  .rec-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .rec-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .rec-pill::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .rec-pill.ok {
+    background: var(--success-50);
+    color: var(--success-700);
+  }
+  .rec-pill.ok::before {
+    background: var(--success-500);
+  }
+  .rec-pill.warn {
+    background: var(--danger-50);
+    color: var(--danger-600);
+  }
+  .rec-pill.warn::before {
+    background: var(--danger-500);
+  }
+  .rec-app-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-200);
+    background: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .rec-app-foot .ok {
+    margin-left: auto;
+    color: var(--success-600);
+    font-weight: 700;
+  }
+  @media (max-width: 47.99rem) {
+    .rec-hero {
+      padding-top: 4rem;
+    }
+    .rec-title {
+      font-size: clamp(2rem, 8.5vw, 2.6rem);
+    }
+  }
+</style>
+
+<section class="rec-hero" data-hero>
+  <div class="rec-hero-inner">
+    <div class="rec-hero-grid">
+      <!-- Left -->
+      <div class="rec-copy reveal">
+        <span class="rec-eyebrow"><span class="dot" aria-hidden="true"></span>Payment Reconciliation</span>
+        <h1 class="rec-title">
+          Know what you <span class="accent">should have received.</span>
+        </h1>
+        <p class="rec-lead">
+          Match ecommerce orders and expected settlements with actual marketplace payouts, identify discrepancies and see exactly where the difference came from.
+        </p>
+        <div class="rec-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="#how-it-works" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            See How It Works →
+          </a>
+        </div>
+        <p class="rec-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>What the marketplace says you earned <b>isn't always what reaches your bank.</b></span>
+        </p>
+      </div>
+
+      <!-- Right: reconciliation window -->
+      <div class="rec-app reveal" data-delay="120" aria-label="Illustrative payment reconciliation preview showing expected vs received amounts and matched settlements">
+        <div class="rec-app-head">
+          <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="title">Payment Reconciliation</span>
+          <span class="live">Live</span>
+        </div>
+        <div class="rec-kpis">
+          {kpis.map((k) => (
+            <div class:list={["rec-kpi", k.tone]}>
+              <div class="k">{k.label}</div>
+              <div class="v">{k.value}</div>
+            </div>
+          ))}
+        </div>
+        <div class="rec-bar">
+          <div class="rec-bar-label">Expected → received</div>
+          <div class="rec-bar-row"><span class="lb">Expected</span><span class="track"><span class="fill" style="width:100%;background:var(--brand-500)"></span></span><span class="vl">₹12.48L</span></div>
+          <div class="rec-bar-row"><span class="lb">Received</span><span class="track"><span class="fill" style="width:98.6%;background:var(--success-500)"></span></span><span class="vl">₹12.31L</span></div>
+        </div>
+        <div class="rec-table-wrap">
+          <table class="rec-table">
+            <thead>
+              <tr>
+                <th>Settlement</th>
+                <th class="right">Expected</th>
+                <th class="right">Received</th>
+                <th class="right">Diff</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr>
+                  <td class="id">{r.id}</td>
+                  <td class="right">{r.expected}</td>
+                  <td class="right">{r.received}</td>
+                  <td class:list={["right", "diff-amt", r.cls === "warn" && "warn"]}>{r.diff}</td>
+                  <td><span class:list={["rec-pill", r.cls]}>{r.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div class="rec-app-foot">
+          Settlements reconciled across your marketplaces
+          <span class="ok">✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

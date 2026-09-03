@@ -1,0 +1,78 @@
+---
+const steps = [
+  { label: "Gross sales", value: "₹2,499", tone: "base" },
+  { label: "Marketplace charges", value: "− ₹250", tone: "down" },
+  { label: "Returns & adjustments", value: "− ₹180", tone: "down" },
+  { label: "Other supported deductions", value: "− ₹95", tone: "down" },
+  { label: "Realized value", value: "₹1,974", tone: "mid" },
+  { label: "Profit", value: "₹340", tone: "profit" },
+]
+---
+
+<style is:global>
+  .pw {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .pw-stack {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .pw-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .pw-row:last-child {
+    border-bottom: 0;
+  }
+  .pw-row .k {
+    color: var(--ink-500);
+    font-weight: 500;
+  }
+  .pw-row .v {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .pw-row.down .v {
+    color: var(--danger-600);
+  }
+  .pw-row.mid .v {
+    color: var(--ink-900);
+  }
+  .pw-row.profit {
+    background: linear-gradient(180deg, var(--success-50), var(--success-50));
+  }
+  .pw-row.profit .k {
+    color: var(--success-700);
+    font-weight: 700;
+  }
+  .pw-row.profit .v {
+    color: var(--success-700);
+    font-size: 1rem;
+  }
+  .pw-divider {
+    height: 1px;
+    background: var(--ink-200);
+    margin: 0 1rem;
+  }
+</style>
+
+<section class="pw">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="pw-stack reveal">
+      {steps.map((s) => (
+        <div class:list={["pw-row", s.tone]}>
+          <span class="k">{s.label}</span>
+          <span class="v">{s.value}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

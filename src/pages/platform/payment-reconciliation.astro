@@ -1,84 +1,348 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
+import ReconciliationHero from "@/components/pages/ReconciliationHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
+import SettlementFlow from "@/components/pages/SettlementFlow.astro"
+import MatchStates from "@/components/pages/MatchStates.astro"
+import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const title = "Reconcile every settlement to the rupee."
-const features = [
+const whatsCompared = [
+  { label: "Orders", sub: "What you sold" },
+  { label: "Invoices", sub: "The invoice value" },
+  { label: "Settlement data", sub: "What the marketplace reports" },
+  { label: "Payments", sub: "What actually reached you" },
+  { label: "Returns & refunds", sub: "Value reversed" },
+  { label: "Marketplace charges", sub: "Fees and deductions" },
+]
+
+const personaData = [
   {
-    title: "Expected vs Actual",
-    description: "Compare the payments you expect against the payments you actually receive.",
-    icon: "wallet",
+    title: "Business Owners",
+    desc: "Know what the marketplace says you earned and what you actually received.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
   },
   {
-    title: "Settlement Matching",
-    description: "Match marketplace settlements to orders and payments automatically.",
-    icon: "refresh",
+    title: "CFOs",
+    desc: "Get visibility into payment realization and financial discrepancies.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
-    title: "Discrepancy Flags",
-    description: "Surface every difference so nothing slips through unreconciled.",
-    icon: "shield",
+    title: "Accountants",
+    desc: "Investigate settlement differences and maintain clean financial records.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
   },
-  {
-    title: "Net Settlement Visibility",
-    description: "See the impact of fees, returns and adjustments on each settlement.",
-    icon: "scale",
-  },
-  {
-    title: "Settlement Register",
-    description: "A structured record of settlements across every marketplace and period.",
-    icon: "table",
-  },
-  {
-    title: "Payment Reconciliation",
-    description: "Confirm money received matches money expected across your channels.",
-    icon: "bank",
-  },
+]
+
+const faqs = [
+  { q: "What is ecommerce payment reconciliation?", a: "It is the process of comparing what you expected to be paid — from marketplace orders and settlements — against what you actually received, and identifying every difference." },
+  { q: "Why do marketplace settlements differ from order values?", a: "Orders pass through marketplace charges, taxes, returns, refunds and adjustments before a settlement is made, so the amount that reaches you rarely equals the order value." },
+  { q: "What does DeepEcom compare during reconciliation?", a: "DeepEcom compares expected payment amounts from orders and settlements against the actual payments received, and surfaces the difference for each one." },
+  { q: "Can I reconcile settlements order-wise?", a: "Yes. Reconciliation can be looked at at the settlement level and drilled into the orders included in each settlement." },
+  { q: "Can I identify mismatches?", a: "Yes. Every settlement or order where expected and received do not line up is surfaced with its difference and status." },
+  { q: "Can I see expected vs received amounts?", a: "Yes. Expected and received amounts are shown side by side for every settlement and order." },
+  { q: "How are marketplace deductions represented?", a: "Deductions such as marketplace charges, returns and adjustments are represented in the settlement breakdown so differences are explainable." },
+  { q: "How do returns affect reconciliation?", a: "Returns change the amount the marketplace settles, and that change is reflected in the expected vs received picture." },
+  { q: "How do refunds affect reconciliation?", a: "Refunds adjust the settlement and are accounted for when comparing expected and actual payments." },
+  { q: "Can I reconcile multiple marketplaces?", a: "Yes. Reconciliation covers the marketplaces connected to your Platform." },
+  { q: "Can I export reconciliation reports?", a: "Yes. Reconciliation and settlement data are available for export and reporting." },
+  { q: "How does reconciliation relate to profitability?", a: "Reconciliation establishes what you actually received, which underpins the realized value used in profitability." },
+  { q: "Does DeepEcom automatically recover missing payments?", a: "No. DeepEcom surfaces differences and mismatches so you can act on them. It does not file disputes or recover payments." },
+  { q: "Can reconciliation information flow into the ERP?", a: "Through the ERP Connector, the same transaction layer can be carried into detailed accounting inside your ERP." },
 ]
 ---
 
-<PageLayout title={`Payment Reconciliation — ${title}`} description="DeepEcom Platform payment reconciliation matches expected settlements to actual payments and flags every discrepancy so your cash position is clear.">
-  <PageHero
-    eyebrow="PLATFORM · PAYMENT RECONCILIATION"
-    title={title}
-    lead="What you get paid rarely matches what you expect. Understand expected versus actual payments, identify discrepancies and keep your cash position clear."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
+<PageLayout
+  title="Payment Reconciliation — Know What You Should Have Received | DeepEcom"
+  description="Match marketplace orders and expected settlements against actual payouts, identify discrepancies and see exactly where every payment difference came from."
+>
+  <!-- 01 — HERO -->
+  <ReconciliationHero />
+
+  <!-- 02 — WHY PAYMENTS DON'T MATCH -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2-md mt-4">What you sold is not always what you received.</h2>
+          <p class="lead mt-5">
+            Order value and actual settlement are different numbers. Marketplace charges, taxes, returns and adjustments sit between what you expect and what reaches your bank — which is exactly why reconciliation is necessary.
+          </p>
+        </div>
+        <div class="reveal">
+          <SettlementFlow />
+        </div>
+      </div>
     </div>
-  </PageHero>
-
-  <FeatureGrid
-    eyebrow="PAYMENT RECONCILIATION"
-    title="Know exactly what you should have been paid."
-    lead="Settlements from marketplaces rarely match expectations after fees, returns and adjustments. DeepEcom reconciles every settlement and flags what does not add up."
-    features={features}
-    columns={3}
-    center
-  />
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="NO DISCREPANCY LEFT BEHIND"
-      title="Reconciliation is the difference between hoping and knowing."
-      lead="Every settlement that does not match expectations is surfaced, so you understand your true cash position and the reasons behind every difference."
-      center
-    />
   </section>
 
-  <CtaBand
-    title="Bring your ecommerce business and accounting together."
-    lead="See expected versus actual payments reconciled across your marketplaces."
-  />
+  <!-- 03 — WHAT DEEPECOM RECONCILES -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">WHAT IT COMPARES</span>
+        <h2 class="h2-md mt-4">Reconcile the transaction, not just the total.</h2>
+        <p class="lead mt-5">Orders, invoices, settlement data, payments, returns and charges are brought together so expected and received amounts line up at the right level.</p>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {whatsCompared.map((d) => (
+          <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="text-sm font-semibold text-ink-800">{d.label}</div>
+            <div class="mt-1 text-xs text-ink-400">{d.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — MATCH / MISMATCH STATES -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">THE STATES</span>
+        <h2 class="h2-md mt-4">Find payments that don't line up.</h2>
+        <p class="lead mt-5">Every settlement falls into a clear state — matched, partial or unmatched — so exceptions are easy to spot.</p>
+      </div>
+      <MatchStates />
+    </div>
+  </section>
+
+  <!-- 05 — EXPECTED VS ACTUAL TABLE -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">IN THE PRODUCT</span>
+          <h2 class="h2-md mt-4">Know exactly what matched — and what didn't.</h2>
+          <p class="lead mt-5">
+            Expected, received and difference sit side by side for every settlement, with a clear status on each row.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3.5">
+            {
+              [
+                { t: "Expected vs received", s: "Every settlement compared side by side" },
+                { t: "Differences flagged", s: "Nothing unreconciled slips through" },
+                { t: "Status at a glance", s: "Matched, difference and pending, clearly marked" },
+              ].map((x) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed">
+                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                    <span class="text-ink-500">{x.s}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal">
+          <ReconciliationPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — RETURNS & FEES IMPACT -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
+        <div class="reveal order-2 lg:order-1 rounded-2xl border border-ink-200 bg-white p-6 shadow-card">
+          <div class="flex flex-col gap-3">
+            {[
+              { label: "Gross order value", value: "₹2,499" },
+              { label: "Marketplace charges", value: "− ₹250" },
+              { label: "Returns & adjustments", value: "− ₹65" },
+              { label: "Expected / net settlement", value: "₹2,184", strong: true },
+              { label: "Actual received", value: "₹2,184" },
+            ].map((r, i) => (
+              <div class:list={["flex items-center justify-between", i < 3 && "border-b border-dashed border-ink-100 pb-3"]}>
+                <span class:list={["text-sm", r.strong ? "font-bold text-ink-900" : "font-semibold text-ink-800", r.label.startsWith("−") && "text-ink-500"]}>{r.label}</span>
+                <span class:list={["text-sm font-bold tabular-nums", r.strong ? "text-brand-700" : "text-ink-900", r.label.startsWith("−") && "text-danger-600"]}>{r.value}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-5 border-t border-dashed border-ink-200 pt-3 text-xs text-ink-400">Illustrative example — deduction mix depends on your marketplaces.</p>
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="eyebrow">RETURNS &amp; FEES</span>
+          <h2 class="h2-md mt-4">Know what's reducing the amount you receive.</h2>
+          <p class="lead mt-5">
+            Returns change the payment story, and marketplace charges reduce the settlement. When numbers don't match, DeepEcom shows the breakdown behind the difference — so it's explainable, not a mystery.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">Reconcile in five steps.</h2>
+        <p class="lead mt-5">From connecting your marketplaces to reviewing the results.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your supported marketplace data." },
+          { num: "02", label: "Collect", desc: "Bring order and settlement information into DeepEcom." },
+          { num: "03", label: "Match", desc: "Compare expected and actual payment information." },
+          { num: "04", label: "Identify", desc: "Surface differences and exceptions." },
+          { num: "05", label: "Report", desc: "Review and export reconciliation results." },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 08 — PROFITABILITY + ERP -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">ONE LAYER</span>
+        <h2 class="h2-md mt-4">Reconcile what you received. Understand what you made. Account with confidence.</h2>
+        <p class="lead mt-5">
+          Reconciliation establishes realized value, profitability builds on it, and the ERP Connector carries the same transaction layer into detailed accounting inside your ERP.
+        </p>
+      </div>
+      <div class="mt-12 reveal">
+        <PlatformErpConnector />
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — WHO IT'S FOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for the people who need the numbers to match.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personaData.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — CUSTOMER PROOF -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 11 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Payment reconciliation, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Stop chasing marketplace settlements.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Bring orders, settlements and payments into one reconciliation view.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  .h2-md {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

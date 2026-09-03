@@ -1,84 +1,376 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
+import ProfitHero from "@/components/pages/ProfitHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
+import ProfitWaterfall from "@/components/pages/ProfitWaterfall.astro"
+import ProfitTables from "@/components/pages/ProfitTables.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
-const title = "Know what your ecommerce business actually earns."
-const features = [
+const inputs = [
+  { label: "Sales", sub: "Gross marketplace revenue" },
+  { label: "Orders", sub: "Every order accounted" },
+  { label: "Marketplace charges", sub: "Fees and deductions" },
+  { label: "Returns", sub: "Returned value and impact" },
+  { label: "Payments", sub: "Settlements and payouts" },
+  { label: "Supported costs", sub: "Cost data the product carries" },
+]
+
+const costs = [
+  { label: "Marketplace charges", pct: 62, cls: "primary" },
+  { label: "Returns & adjustments", pct: 30, cls: "mid" },
+  { label: "Other supported deductions", pct: 18, cls: "muted" },
+]
+
+const personas = [
   {
-    title: "Channel Profitability",
-    description: "See profitability per marketplace so you know where you genuinely make money.",
-    icon: "trend",
+    title: "Business Owner",
+    desc: "Know which products and marketplaces actually make money.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
   },
   {
-    title: "SKU-Level Profitability",
-    description: "Break profitability down to the SKU to identify your strongest and weakest products.",
-    icon: "package",
+    title: "CFO",
+    desc: "Understand profitability, realization and financial performance.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
-    title: "Margin & Cost Breakdown",
-    description: "Understand the cost of every order — marketplace fees, shipping and ads included.",
-    icon: "calculator",
+    title: "Accountant",
+    desc: "Provide reliable profitability reporting backed by underlying transaction data.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
   },
-  {
-    title: "Net Margin Clarity",
-    description: "See revenue after deductions so gross numbers never hide the true picture.",
-    icon: "scale",
-  },
-  {
-    title: "P&L View",
-    description: "A structured profit-and-loss view built from real ecommerce transactions.",
-    icon: "receipt",
-  },
-  {
-    title: "Cost Allocation",
-    description: "Attribute fees and charges to the right orders, SKUs and channels.",
-    icon: "tag",
-  },
+]
+
+const faqs = [
+  { q: "How does DeepEcom calculate profitability?", a: "Profitability is shown as revenue after the deductions and supported costs your marketplace data carries — so you see profit rather than just gross sales." },
+  { q: "What is the difference between revenue and profit?", a: "Revenue is what you sold. Profit is what remains after marketplace charges, returns and other supported deductions are removed." },
+  { q: "Can I see profitability by marketplace?", a: "Yes. Profitability is visible per marketplace so you can see where you genuinely make money." },
+  { q: "Can I see profitability by product or SKU?", a: "Yes. Profitability can be viewed at the product or SKU level to identify your strongest and weakest products." },
+  { q: "Can I see profitability order-wise?", a: "Yes. Individual orders carry their revenue, costs, deductions and profit in the profitability view." },
+  { q: "How are marketplace charges reflected?", a: "Marketplace charges are captured from the transaction data and reflected as deductions against revenue." },
+  { q: "How do returns affect profitability?", a: "Returns reduce realized value and are reflected in the profitability picture, so returned sales don't inflate profit." },
+  { q: "Can I compare profitability across marketplaces?", a: "Yes. Marketplace-level profitability can be compared side by side." },
+  { q: "Can I view profitability over time?", a: "Yes. Revenue, profit and margin can be viewed over time to see how profitability is changing." },
+  { q: "Can I export profitability reports?", a: "Yes. Profitability reports and exports are available with date-range and marketplace filters." },
+  { q: "How does payment reconciliation relate to profitability?", a: "Reconciliation connects what you were supposed to receive with what you actually received, which underpins realized value and profitability." },
+  { q: "Can profitability data be connected to ERP accounting?", a: "Through the ERP Connector, the same transaction layer can be carried into detailed accounting inside your ERP." },
+  { q: "Which marketplaces are supported?", a: "The Platform supports supported ecommerce channels such as Amazon, Flipkart, Shopify and Meesho." },
 ]
 ---
 
-<PageLayout title={`Profitability — ${title}`} description="DeepEcom Platform profitability analysis shows SKU and channel-level margins, the cost of every order, and a clear P&L built from real marketplace transactions.">
-  <PageHero
-    eyebrow="PLATFORM · PROFITABILITY"
-    title={title}
-    lead="Revenue figures only tell part of the story. Understand margins at the SKU and channel level and see exactly what drives — or erodes — your profit."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
+<PageLayout
+  title="Profitability — Know What You Actually Make | DeepEcom"
+  description="Go beyond marketplace sales. DeepEcom turns transaction data into a clear view of revenue, costs, deductions and profitability across products, marketplaces and orders."
+>
+  <!-- 01 — HERO -->
+  <ProfitHero />
+
+  <!-- 02 — REVENUE IS NOT PROFIT -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">THE TRUTH</span>
+          <h2 class="h2-md mt-4">The number on the marketplace isn't the number you keep.</h2>
+          <p class="lead mt-5">
+            Every sale passes through marketplace charges, returns and other supported deductions before it becomes value you can keep. DeepEcom shows that path — from gross sales to profit.
+          </p>
+        </div>
+        <div class="reveal">
+          <ProfitWaterfall />
+        </div>
+      </div>
     </div>
-  </PageHero>
-
-  <FeatureGrid
-    eyebrow="PROFITABILITY"
-    title="Profitability that reflects the real cost of ecommerce."
-    lead="Marketplace fees, shipping and ads quietly eat into margins. DeepEcom attributes every cost to the right order, SKU and channel so your profitability is accurate."
-    features={features}
-    columns={3}
-    center
-  />
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="BEYOND REVENUE"
-      title="Gross revenue hides more than it reveals."
-      lead="Ecommerce revenue rarely equals what you keep. Deductions, fees and returns all shape the real picture — DeepEcom surfaces profitability after those costs, not before them."
-      center
-    />
   </section>
 
-  <CtaBand
-    title="Bring your ecommerce business and accounting together."
-    lead="See accurate profitability across your SKUs and channels."
-  />
+  <!-- 03 — WHAT GOES INTO PROFITABILITY -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">THE INPUTS</span>
+        <h2 class="h2-md mt-4">Profitability starts with the full transaction picture.</h2>
+        <p class="lead mt-5">Sales, orders, charges, returns and payments are brought together so profitability reflects what actually happened.</p>
+      </div>
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {inputs.map((d) => (
+          <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="text-sm font-semibold text-ink-800">{d.label}</div>
+            <div class="mt-1 text-xs text-ink-400">{d.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — COST & DEDUCTION BREAKDOWN -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">WHAT EATS THE MARGIN</span>
+          <h2 class="h2-md mt-4">See exactly what is eating into your margin.</h2>
+          <p class="lead mt-5">
+            Marketplace charges and returns are the biggest silent costs in ecommerce. DeepEcom surfaces them so you can see what's really driving — or eroding — profit.
+          </p>
+        </div>
+        <div class="reveal rounded-2xl border border-ink-200 bg-white p-6 shadow-card">
+          <div class="flex flex-col gap-4">
+            {costs.map((c) => (
+              <div>
+                <div class="flex items-center justify-between text-sm">
+                  <span class="font-semibold text-ink-800">{c.label}</span>
+                  <span class="font-bold tabular-nums text-ink-900">{c.pct}%</span>
+                </div>
+                <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-ink-100">
+                  <div
+                    class="h-full rounded-full"
+                    style={`width:${c.pct}%;background:${c.cls === "primary" ? "var(--brand-500)" : c.cls === "mid" ? "var(--ink-400)" : "var(--ink-200)"}`}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-5 border-t border-dashed border-ink-200 pt-3 text-xs text-ink-400">Illustrative example — deduction mix depends on your marketplaces.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — BY ORDER / PRODUCT / MARKETPLACE -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">GRANULAR PROFITABILITY</span>
+        <h2 class="h2-md mt-4">Know which orders, products and marketplaces actually make money.</h2>
+        <p class="lead mt-5">Revenue, costs, deductions and profit — compared by order, by product and by marketplace.</p>
+      </div>
+      <ProfitTables />
+    </div>
+  </section>
+
+  <!-- 06 — RETURNS & REALIZATION -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">REALIZATION</span>
+          <h2 class="h2-md mt-4">What you sold. What you realized. What you made.</h2>
+          <p class="lead mt-5">
+            Sales value, realized value and profit are different numbers. Returns change the economics of a sale, and the Platform reflects that in your profitability.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3.5">
+            {
+              [
+                { t: "Returns change the economics", s: "Returned sales don't inflate profit" },
+                { t: "Realization vs revenue", s: "What you received, not just what you sold" },
+                { t: "Connected to reconciliation", s: "Expected vs received underpins realized value" },
+              ].map((x) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed">
+                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                    <span class="text-ink-500">{x.s}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal" aria-hidden="true">
+          <div class="flex flex-col gap-0">
+            {[
+              { label: "Sales", value: "₹2,499" },
+              { label: "Realized / received", value: "₹1,974" },
+              { label: "Profit", value: "₹340" },
+            ].map((r, i) => (
+              <>
+                <div class:list={["rounded-xl border p-4", i === 2 ? "border-brand-200 bg-brand-50" : "border-ink-200 bg-white"]}>
+                  <div class="flex items-center justify-between">
+                    <span class:list={["text-sm font-semibold", i === 2 ? "text-brand-700" : "text-ink-800"]}>{r.label}</span>
+                    <span class:list={["text-sm font-bold tabular-nums", i === 2 ? "text-brand-700" : "text-ink-900"]}>{r.value}</span>
+                  </div>
+                </div>
+                {i < 2 && (
+                  <div class="flex flex-col items-center gap-1 py-1.5">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--brand-400)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 4v16M6 14l6 6 6-6" />
+                    </svg>
+                  </div>
+                )}
+              </>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">From marketplace data to profitability.</h2>
+        <p class="lead mt-5">Five stages turn channel data into a clear view of what you actually make.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your supported marketplaces." },
+          { num: "02", label: "Collect", desc: "Bring transaction data into DeepEcom." },
+          { num: "03", label: "Structure", desc: "Organize the data into a unified view." },
+          { num: "04", label: "Analyze", desc: "Understand revenue, costs, deductions and profitability." },
+          { num: "05", label: "Act", desc: "Use the insights and reports to make better decisions." },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 08 — PLATFORM + RECONCILIATION + ERP -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">ONE LAYER</span>
+        <h2 class="h2 mt-4">Profitability, reconciliation and accounting — one connected system.</h2>
+        <p class="lead mt-5">
+          The Platform helps you understand profitability and reconcile payments. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
+        </p>
+      </div>
+      <div class="mt-12 reveal">
+        <PlatformErpConnector />
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — WHO IT'S FOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for the people who need to know the real numbers.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personas.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — CUSTOMER PROOF -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 11 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Profitability, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Know what you're really making.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Bring marketplace sales, transaction data and profitability into one clear view.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  .h2-md {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

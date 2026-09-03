@@ -1,0 +1,113 @@
+---
+const stages = [
+  { label: "Order", value: "₹2,499", icon: "receipt" },
+  { label: "Marketplace deductions", value: "− ₹250", icon: "wallet" },
+  { label: "Expected settlement", value: "₹2,249", icon: "scale" },
+  { label: "Actual received", value: "₹2,184", icon: "bank" },
+]
+
+const ICONS: Record<string, string> = {
+  receipt: '<path d="M6 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM9 8h6M9 12h6"/>',
+  wallet: '<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18M16 14h.01"/>',
+  scale: '<path d="M12 3v18M8 21h8M4 6h16M6 6 3 11a3 3 0 0 0 6 0L6 6zM18 6l-3 5a3 3 0 0 0 6 0l-3-5z"/>',
+  bank: '<path d="M3 10h18M5 10l1 9h12l1-9M2 6l10-3 10 3H2zM12 14h.01"/>',
+}
+---
+
+<style is:global>
+  .sf {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .sf-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 56rem) {
+    .sf-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .sf-stage {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.1rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    position: relative;
+  }
+  .sf-stage:nth-child(3) {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+  .sf-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.65rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .sf-icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .sf-stage .k {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+  .sf-stage .v {
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .sf-stage:nth-child(3) .k {
+    color: var(--brand-700);
+  }
+  .sf-stage:nth-child(3) .v {
+    color: var(--brand-700);
+  }
+  .sf-arrow {
+    display: none;
+  }
+  @media (min-width: 56rem) {
+    .sf-arrow {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      right: -0.85rem;
+      transform: translateY(-50%);
+      color: var(--ink-300);
+      z-index: 1;
+    }
+  }
+</style>
+
+<section class="sf">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="sf-grid reveal">
+      {stages.map((s, i) => (
+        <div class="sf-stage">
+          <span class="sf-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <Fragment set:html={ICONS[s.icon]} />
+            </svg>
+          </span>
+          <div class="k">{s.label}</div>
+          <div class="v">{s.value}</div>
+          {i < stages.length - 1 && (
+            <svg class="sf-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M0 8h12M9 4l4 4-4 4" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

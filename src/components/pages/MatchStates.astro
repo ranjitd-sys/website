@@ -1,0 +1,145 @@
+---
+const states = [
+  {
+    label: "Matched",
+    expected: "₹2,499",
+    received: "₹2,499",
+    note: "Expected = received",
+    cls: "ok",
+  },
+  {
+    label: "Partial",
+    expected: "₹3,200",
+    received: "₹3,050",
+    note: "Expected > received",
+    cls: "warn",
+  },
+  {
+    label: "Unmatched",
+    expected: "₹1,899",
+    received: "—",
+    note: "Expected, no corresponding receipt",
+    cls: "muted",
+  },
+]
+---
+
+<style is:global>
+  .ms {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .ms-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 48rem) {
+    .ms-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .ms-card {
+    padding: 1.2rem 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .ms-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .ms-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .ms-label {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .ms-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .ms-badge::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+  }
+  .ms-badge.ok {
+    background: var(--success-50);
+    color: var(--success-700);
+  }
+  .ms-badge.ok::before {
+    background: var(--success-500);
+  }
+  .ms-badge.warn {
+    background: var(--danger-50);
+    color: var(--danger-600);
+  }
+  .ms-badge.warn::before {
+    background: var(--danger-500);
+  }
+  .ms-badge.muted {
+    background: var(--ink-100);
+    color: var(--ink-500);
+  }
+  .ms-badge.muted::before {
+    background: var(--ink-400);
+  }
+  .ms-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0.9rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--ink-100);
+    font-size: 0.78rem;
+  }
+  .ms-row:last-of-type {
+    border-bottom: 0;
+  }
+  .ms-row .k {
+    color: var(--ink-500);
+  }
+  .ms-row .v {
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .ms-note {
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="ms">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="ms-grid reveal">
+      {states.map((s) => (
+        <div class="ms-card">
+          <div class="ms-top">
+            <span class="ms-label">{s.label}</span>
+            <span class:list={["ms-badge", s.cls]}>{s.label}</span>
+          </div>
+          <div class="ms-row"><span class="k">Expected</span><span class="v">{s.expected}</span></div>
+          <div class="ms-row"><span class="k">Received</span><span class="v">{s.received}</span></div>
+          <div class="ms-note">{s.note}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,199 @@
+---
+const orders = [
+  { id: "ORD-104928", mp: "Amazon", revenue: "₹2,499", costs: "₹1,850", deductions: "₹249", profit: "₹400", margin: "16%" },
+  { id: "ORD-104929", mp: "Amazon", revenue: "₹1,499", costs: "₹1,100", deductions: "₹150", profit: "₹249", margin: "16.6%" },
+  { id: "ORD-104930", mp: "Flipkart", revenue: "₹3,200", costs: "₹2,600", deductions: "₹290", profit: "₹310", margin: "9.7%" },
+  { id: "ORD-104931", mp: "Shopify", revenue: "₹899", costs: "₹520", deductions: "₹40", profit: "₹339", margin: "37.7%" },
+  { id: "ORD-104932", mp: "Flipkart", revenue: "₹1,750", costs: "₹1,380", deductions: "₹170", profit: "₹200", margin: "11.4%" },
+]
+const products = [
+  { sku: "SKU-2048", product: "Ceramic Mug Set", orders: "1,240", revenue: "₹12.4L", profit: "₹4.1L", margin: "33%" },
+  { sku: "SKU-3011", product: "Cotton T-Shirt", orders: "3,860", revenue: "₹18.9L", profit: "₹4.9L", margin: "26%" },
+  { sku: "SKU-0577", product: "Leather Wallet", orders: "640", revenue: "₹8.2L", profit: "₹3.6L", margin: "44%" },
+  { sku: "SKU-8810", product: "Desk Lamp", orders: "1,980", revenue: "₹11.7L", profit: "₹2.4L", margin: "20.5%" },
+  { sku: "SKU-4492", product: "Water Bottle", orders: "4,120", revenue: "₹9.1L", profit: "₹1.3L", margin: "14%" },
+]
+const channels = [
+  { name: "Amazon", sales: "₹2,10,000", costs: "₹1,52,000", profit: "₹58,000", margin: "27.6%" },
+  { name: "Flipkart", sales: "₹1,38,000", costs: "₹1,06,000", profit: "₹32,000", margin: "23.2%" },
+  { name: "Shopify", sales: "₹73,740", costs: "₹50,400", profit: "₹23,340", margin: "31.7%" },
+]
+const tabs = [
+  { id: "orders", label: "By Order", head: ["Order", "Marketplace", "Revenue", "Costs", "Deductions", "Profit", "Margin"], rows: orders.map((r) => [r.id, r.mp, r.revenue, r.costs, r.deductions, r.profit, r.margin]) },
+  { id: "products", label: "By Product", head: ["SKU", "Product", "Orders", "Revenue", "Profit", "Margin"], rows: products.map((r) => [r.sku, r.product, r.orders, r.revenue, r.profit, r.margin]) },
+  { id: "channels", label: "By Marketplace", head: ["Marketplace", "Sales", "Costs", "Profit", "Margin"], rows: channels.map((r) => [r.name, r.sales, r.costs, r.profit, r.margin]) },
+]
+---
+
+<style is:global>
+  .pt {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .pt-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .pt-tabs {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.6rem 0.75rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+    overflow-x: auto;
+  }
+  .pt-tab {
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-500);
+    cursor: pointer;
+    white-space: nowrap;
+    background: none;
+    border: 1px solid transparent;
+    transition: all var(--transition-fast);
+  }
+  .pt-tab:hover {
+    color: var(--ink-800);
+    background: #fff;
+  }
+  .pt-tab.active {
+    color: var(--brand-700);
+    background: #fff;
+    border-color: var(--ink-200);
+    box-shadow: var(--shadow-sm);
+  }
+  .pt-panel {
+    display: none;
+  }
+  .pt-panel.active {
+    display: block;
+  }
+  .pt-wrap {
+    overflow-x: auto;
+  }
+  .pt-table {
+    width: 100%;
+    min-width: 38rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .pt-table th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .pt-table th.right {
+    text-align: right;
+  }
+  .pt-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .pt-table td.right {
+    text-align: right;
+  }
+  .pt-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .pt-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+  .pt-strong {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .pt-profit {
+    font-weight: 700;
+    color: var(--success-700);
+  }
+  .pt-margin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    color: var(--success-700);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .pt-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="pt">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="pt-app reveal">
+      <div class="pt-tabs" role="tablist">
+        {tabs.map((t, i) => (
+          <button class:list={["pt-tab", i === 0 && "active"]} role="tab" aria-selected={i === 0} data-tab={t.id}>{t.label}</button>
+        ))}
+      </div>
+      {tabs.map((t, i) => (
+        <div class:list={["pt-panel", i === 0 && "active"]} data-panel={t.id}>
+          <div class="pt-wrap">
+            <table class="pt-table">
+              <thead>
+                <tr>
+                  {t.head.map((h, j) => <th class:list={[j > 1 && "right"]}>{h}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {t.rows.map((r) => (
+                  <tr>
+                    {r.map((cell, j) => {
+                      const last = j === r.length - 1
+                      const first = j === 0
+                      return (
+                        <td class:list={[j > 1 && "right", first && "pt-strong", last && "pt-margin-cell"]}>
+                          {last ? <span class="pt-margin">{cell}</span> : cell}
+                        </td>
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
+    </div>
+    <p class="pt-note">Illustrative example — profitability depends on your channels, orders and cost structure.</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll(".pt-tab").forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const app = tab.closest(".pt-app")
+      if (!app) return
+      app.querySelectorAll(".pt-tab").forEach((t) => {
+        t.classList.remove("active")
+        t.setAttribute("aria-selected", "false")
+      })
+      tab.classList.add("active")
+      tab.setAttribute("aria-selected", "true")
+      const target = tab.getAttribute("data-tab")
+      app.querySelectorAll(".pt-panel").forEach((p) => {
+        p.classList.toggle("active", p.getAttribute("data-panel") === target)
+      })
+    })
+  })
+</script>

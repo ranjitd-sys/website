@@ -1,0 +1,191 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
+---
+
+<style is:global>
+  .dh {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5rem, 9vh, 7rem) 0 clamp(2.5rem, 5vh, 4rem);
+    background:
+      radial-gradient(46rem 24rem at 76% -12%, rgba(44, 62, 233, 0.12), transparent 60%),
+      radial-gradient(36rem 18rem at 8% -8%, rgba(167, 139, 250, 0.1), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .dh-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .dh-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .dh-grid {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+
+  /* ---------- Left ---------- */
+  .dh-copy {
+    max-width: 34rem;
+  }
+  .dh-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .dh-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .dh-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .dh-title .accent {
+    color: var(--brand-500);
+  }
+  .dh-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .dh-actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .dh-note {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .dh-note svg {
+    color: var(--brand-500);
+    flex: none;
+  }
+  .dh-note b {
+    color: var(--ink-700);
+  }
+
+  /* ---------- Right: dashboard ---------- */
+  .dh-visual {
+    width: 100%;
+  }
+  .dh-visual .dash-stage {
+    background: transparent;
+    border: none;
+  }
+  .dh-visual .dash-stage aside {
+    display: none !important;
+  }
+  .dh-visual .dash-stage [class*="grid-cols-[1fr_340px]"] {
+    grid-template-columns: 1fr;
+  }
+  .dh-cap {
+    margin-top: 0.75rem;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .dh-cap-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .dh-cap-chip .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+
+  @media (max-width: 47.99rem) {
+    .dh {
+      padding-top: 4rem;
+    }
+    .dh-title {
+      font-size: clamp(2rem, 8.5vw, 2.6rem);
+    }
+  }
+</style>
+
+<section class="dh" data-hero>
+  <div class="dh-inner">
+    <div class="dh-grid">
+      <!-- Left -->
+      <div class="dh-copy reveal">
+        <span class="dh-eyebrow"><span class="dot" aria-hidden="true"></span>Ecommerce Dashboard</span>
+        <h1 class="dh-title">
+          See your entire ecommerce business <span class="accent">in one view.</span>
+        </h1>
+        <p class="dh-lead">
+          Bring marketplace data together and get a clear view of sales, profitability, payments and performance — all from one dashboard.
+        </p>
+        <div class="dh-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            Explore Platform →
+          </a>
+        </div>
+        <p class="dh-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>Stop stitching reports together. <b>Your whole business on one screen.</b></span>
+        </p>
+      </div>
+
+      <!-- Right: dashboard -->
+      <div class="dh-visual reveal" data-delay="120">
+        <DashboardPreview compact />
+        <div class="dh-cap" aria-hidden="true">
+          <span class="dh-cap-chip"><span class="dot"></span>Sales</span>
+          <span class="dh-cap-chip"><span class="dot"></span>Profitability</span>
+          <span class="dh-cap-chip"><span class="dot"></span>Payments</span>
+          <span class="dh-cap-chip"><span class="dot"></span>Marketplace performance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
