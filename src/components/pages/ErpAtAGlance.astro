@@ -1,0 +1,108 @@
+---
+const rows = [
+  { type: "Orders", what: "Order-wise entries with revenue, charges and receivable", lands: "Ledgers" },
+  { type: "GST", what: "CGST, SGST and IGST separated by head", lands: "GST ledgers" },
+  { type: "Marketplace charges", what: "Commissions, logistics and collection kept distinct", lands: "Charge ledgers" },
+  { type: "TCS / TDS", what: "Withholdings captured within the entries they apply to", lands: "Tax ledgers" },
+  { type: "Settlements", what: "Gross sale and net settlement as separate events", lands: "Receivable · Bank" },
+  { type: "Returns & refunds", what: "Sales, GST and fees reversed correctly", lands: "Ledger adjustments" },
+  { type: "Inventory", what: "Movement accounted per SKU", lands: "Stock ledgers" },
+  { type: "Warehouses", what: "Accounting kept distinct per warehouse", lands: "Warehouse dimension" },
+  { type: "Stock transfers", what: "Both source and destination posted", lands: "Inventory ledgers" },
+]
+---
+
+<style is:global>
+  .g2 {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .g2-table {
+    margin-top: 1.75rem;
+    overflow-x: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .g2-table table {
+    width: 100%;
+    min-width: 40rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .g2-table thead {
+    background: var(--ink-50);
+  }
+  .g2-table th {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .g2-table th:first-child {
+    width: 26%;
+  }
+  .g2-table th:nth-child(2) {
+    width: 52%;
+  }
+  .g2-table td {
+    padding: 0.72rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    vertical-align: top;
+  }
+  .g2-table tr:last-child td {
+    border-bottom: 0;
+  }
+  .g2-table tbody tr:hover {
+    background: var(--ink-50);
+  }
+  .g2-type {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .g2-lands {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--brand-700);
+  }
+  .g2-lands::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+</style>
+
+<section class="g2">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="g2-table reveal">
+      <table>
+        <thead>
+          <tr>
+            <th>Transaction</th>
+            <th>What DeepEcom does</th>
+            <th>Where it lands</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <td class="g2-type">{r.type}</td>
+              <td>{r.what}</td>
+              <td><span class="g2-lands">{r.lands}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

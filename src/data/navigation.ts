@@ -44,7 +44,7 @@ export const NAV_ITEMS: NavItem[] = [
           { label: "Overview", href: "/erp-connector" },
           { label: "Accounting", href: "/erp-connector/accounting" },
           { label: "GST", href: "/erp-connector/gst" },
-          { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory-stock-transfers" },
+          { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory" },
         ],
       },
     ],

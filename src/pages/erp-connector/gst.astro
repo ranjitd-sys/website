@@ -1,86 +1,346 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
+import GstHero from "@/components/pages/GstHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
+import GstWiseAccounting from "@/components/pages/GstWiseAccounting.astro"
+import GstDimensions from "@/components/pages/GstDimensions.astro"
+import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
+import ErpPostingSection from "@/components/pages/ErpPostingSection.astro"
+import ReturnsReversal from "@/components/pages/ReturnsReversal.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+
+const taxFlow = [
+  { label: "Gross Sale", value: "₹2,499.00" },
+  { label: "Taxable Value", value: "₹2,117.80" },
+  { label: "CGST 9%", value: "₹190.60" },
+  { label: "SGST 9%", value: "₹190.60" },
+  { label: "Marketplace Charges", value: "₹315.00" },
+  { label: "Receivable — Amazon", value: "₹2,154.80" },
+]
+
+const personas = [
+  {
+    title: "Accountants",
+    desc: "Keep GST-related transaction information connected to accounting and ERP entries.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+  {
+    title: "CFOs",
+    desc: "Get greater visibility into ecommerce financial and tax data.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  },
+  {
+    title: "Business Owners",
+    desc: "Know that ecommerce sales and tax information are properly represented in the books.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
+  },
+]
+
+const faqs = [
+  { q: "How does DeepEcom handle GST for ecommerce orders?", a: "DeepEcom carries the GST-relevant details of each marketplace order — taxable value and tax component — into structured accounting entries inside your ERP." },
+  { q: "Does DeepEcom maintain GST at order level?", a: "Yes. GST context stays attached to each individual order, so every entry can be traced back to the transaction that created it." },
+  { q: "How are CGST, SGST and IGST represented?", a: "Where the transaction carries CGST, SGST or IGST, the tax component is represented distinctly in the accounting so the relevant ledgers stay accurate." },
+  { q: "Can GST be viewed by marketplace?", a: "Because marketplace context is preserved per order, GST can be looked at across channels in the accounting and reporting view." },
+  { q: "Can GST be viewed by warehouse?", a: "Yes. Warehouse context is part of the transaction, so GST can be viewed warehouse-wise where that accounting dimension is used." },
+  { q: "How does GST flow into Tally, SAP or Zoho?", a: "GST-wise entries are prepared and posted into your ERP with the vouchers and ledgers your finance team expects." },
+  { q: "How are GST-related values affected by returns?", a: "When a sale is reversed, the associated GST is adjusted through the accounting so revenue and tax ledgers stay balanced." },
+  { q: "Does DeepEcom calculate GST or only account for GST information?", a: "DeepEcom accounts for the GST information that exists in your marketplace transactions. It does not act as a tax calculation or filing system." },
+  { q: "Can GST information be traced back to the order?", a: "Yes. Each posting carries the source order, invoice, marketplace and warehouse reference." },
+  { q: "Does DeepEcom support GST reports?", a: "GST-relevant transaction and accounting views are available within the product. DeepEcom is not a GST filing platform." },
+]
 ---
 
 <PageLayout
-  title="GST — GST-wise Ecommerce Accounting for ERP | DeepEcom"
-  description="GST-wise accounting and GST-ready exports for returns in the DeepEcom ERP Connector, so tax ledgers stay accurate inside your ERP."
+  title="GST Accounting for Ecommerce — GST-wise ERP Accounting | DeepEcom"
+  description="Keep GST connected to every ecommerce transaction. DeepEcom carries GST details from marketplaces into structured accounting — order-wise, tax-wise and warehouse-wise — inside your ERP."
 >
-  <PageHero
-    eyebrow="ERP CONNECTOR · GST"
-    title="GST-wise accounting, ready for your ERP."
-    lead="Separate GST by head and account it correctly across orders and returns — with exports prepared for filing."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore ERP Connector
-      </a>
+  <!-- 01 — HERO -->
+  <GstHero />
+
+  <!-- 02 — WHY GST GETS COMPLICATED -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div>
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2 mt-2">An ecommerce sale carries more tax context than the selling price.</h2>
+          <p class="lead mt-4">
+            A single order carries an invoice, taxable value, tax component, marketplace, customer location, warehouse, returns and settlement. GST isn't a separate number — it's part of a larger transaction structure that must stay intact into the books.
+          </p>
+        </div>
+        <div class="reveal flex flex-col gap-2">
+          {taxFlow.map((t, i) => (
+            <>
+              <div class:list={["rounded-xl border p-4", i === 1 ? "border-brand-200 bg-brand-50" : i === 2 || i === 3 ? "border-ink-200 bg-white" : "border-ink-200 bg-white"]}>
+                <div class="flex items-center justify-between">
+                  <span class:list={["text-sm font-semibold", i === 1 ? "text-brand-700" : i === 2 || i === 3 ? "text-ink-800" : "text-ink-800"]}>{t.label}</span>
+                  <span class:list={["text-sm font-bold tabular-nums", i === 1 ? "text-brand-700" : i === 2 || i === 3 ? "text-brand-700" : "text-ink-900"]}>{t.value}</span>
+                </div>
+              </div>
+              {i < taxFlow.length - 1 && (
+                <div class="flex justify-center text-ink-300" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M6 17l6 6 6-6"/></svg>
+                </div>
+              )}
+            </>
+          ))}
+        </div>
+      </div>
     </div>
-  </PageHero>
+  </section>
 
-  <FeatureGrid
-    eyebrow="GST"
-    title="Tax accounting that stays accurate."
-    lead="GST handled at the level of detail your returns require."
-    columns={3}
-    center
-    features={[
-      {
-        title: "GST-wise accounting",
-        description: "GST is isolated and accounted by head, so tax ledgers stay clean and accurate.",
-        icon: "scale",
-      },
-      {
-        title: "GST-ready exports",
-        description: "Data is prepared for GST returns, structured for filing.",
-        icon: "file",
-      },
-      {
-        title: "Returns and refunds",
-        description: "GST on returns and refunds is adjusted accurately within the accounting.",
-        icon: "refresh",
-      },
-      {
-        title: "Marketplace charges",
-        description: "Tax treatment of marketplace charges is accounted distinctly.",
-        icon: "wallet",
-      },
-      {
-        title: "Detailed accounting entries",
-        description: "Each GST head lands in the right place in your ledgers.",
-        icon: "table",
-      },
-      {
-        title: "ERP posting",
-        description: "GST-wise entries post into your ERP alongside the transactions they belong to.",
-        icon: "bank",
-      },
-    ]}
-  />
+  <!-- 03 — GST BY ORDER + DIMENSIONS -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">GST BY ORDER</span>
+        <h2 class="h2 mt-2">Track GST at the order level.</h2>
+        <p class="lead mt-4">GST context stays attached to the individual transaction — order, invoice, HSN, taxable value and tax component.</p>
+      </div>
+      <GstWiseAccounting />
+    </div>
+  </section>
 
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="COMPLIANCE"
-        title="Tax detail that belongs in your books."
-        lead="GST-wise accounting keeps your ecommerce tax position clear and your ERP ready for returns."
-        center
+  <!-- 04 — GST DIMENSIONS -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">GST DIMENSIONS</span>
+        <h2 class="h2 mt-2">Look at GST from the dimensions your business needs.</h2>
+        <p class="lead mt-4">Order, SKU/HSN, marketplace, warehouse and tax component — the same GST information, structured every way you work.</p>
+      </div>
+      <GstDimensions />
+    </div>
+  </section>
+
+  <!-- 05 — RETURNS & GST ADJUSTMENTS -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.2fr_1fr]">
+        <div class="reveal order-2 lg:order-1">
+          <ReturnsReversal />
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="eyebrow">RETURNS &amp; GST</span>
+          <h2 class="h2 mt-2">When the sale changes, the tax context changes too.</h2>
+          <p class="lead mt-4">
+            A return reverses the original sale — and the GST attached to it — through accounting adjustments, so revenue and tax ledgers stay balanced.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Original sale and its GST reversed",
+                "Output tax adjusted in the ledgers",
+                "Inventory and settlement adjusted together",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — ACTUAL ERP ACCOUNTING OUTPUT -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div>
+          <span class="eyebrow">IN THE ERP</span>
+          <h2 class="h2 mt-2">See what GST looks like inside the accounting entry.</h2>
+          <p class="lead mt-4">
+            Sales, output GST, receivable and marketplace charges all land in the same balanced entry — posted into your ERP with the source order attached.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Output GST separated in the ledgers",
+                "Sales entry, settlement, return and stock views",
+                "Each entry traceable to its order",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal">
+          <ErpOutputVoucher />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — HOW DEEPECOM HANDLES GST -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2 mt-2">From transaction data to structured accounting.</h2>
+        <p class="lead mt-4">Five stages carry GST context from the marketplace into your ERP.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect supported ecommerce channels." },
+          { num: "02", label: "Fetch", desc: "Bring relevant transaction information into DeepEcom." },
+          { num: "03", label: "Understand", desc: "Identify and structure the transaction and GST context." },
+          { num: "04", label: "Account", desc: "Generate the detailed accounting representation." },
+          { num: "05", label: "Post", desc: "Push the accounting into the ERP." },
+        ]}
       />
     </div>
   </section>
 
-  <CtaBand
-    title="Make your ERP ecommerce-ready."
-    lead="Account GST by head and prepare exports for returns inside your ERP."
-  />
+  <!-- 08 — ERP CONNECTIVITY + PLATFORM RELATIONSHIP -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">ERP CONNECTIVITY</span>
+        <h2 class="h2 mt-2">GST-ready accounting in the ERP you already use.</h2>
+        <p class="lead mt-4">Prepared, GST-wise entries post into the systems your finance team runs on.</p>
+      </div>
+      <ErpPostingSection />
+    </div>
+  </section>
+
+  <!-- 09 — PLATFORM + ERP CONNECTOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div>
+          <span class="eyebrow">ONE SYSTEM</span>
+          <h2 class="h2 mt-2">Understand the numbers. Then account for them.</h2>
+          <p class="lead mt-4">
+            GST is part of the broader ecommerce accounting layer. The Platform helps you understand the business; the ERP Connector turns it into detailed accounting in your ERP.
+          </p>
+        </div>
+        <div class="reveal">
+          <PlatformErpConnector />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — WHO IT'S FOR -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2 mt-2">Built for the people responsible for GST and the books.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personas.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2 mt-2">GST and ecommerce accounting, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Bring ecommerce transactions and GST into one accounting layer.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect marketplace transactions to structured ecommerce accounting in your ERP.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Talk to an Expert
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

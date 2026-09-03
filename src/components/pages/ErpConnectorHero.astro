@@ -1,0 +1,580 @@
+---
+// EchSection.astro
+import { ArrowRight, CheckCircle2, RefreshCw, Zap, ShieldCheck } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const marketplaces = [
+  { name: "Amazon", tag: "Orders · GST · Fees" },
+  { name: "Flipkart", tag: "Settlements · TCS" },
+  { name: "Shopify", tag: "Orders · Inventory" },
+  { name: "Meesho", tag: "Payments · Returns" },
+]
+
+const erps = [
+  { name: "Tally Prime", status: "Auto-synced" },
+  { name: "SAP S/4HANA", status: "Connected" },
+  { name: "Zoho Books", status: "Connected" },
+]
+
+const engineRules = [
+  "Order & Tax Breakdown",
+  "Fee & Charge Allocation",
+  "TCS / TDS Withholding",
+  "COGS & Stock Movements",
+]
+
+// Minimalist Scaled Coordinates (ViewBox 0 0 100 100)
+// Left side anchors aligned precisely to 4 marketplace card center points
+const leftY = [17.5, 39, 61, 82.5];
+
+// Right side anchors aligned precisely to 3 ERP card center points
+const rightY = [25.5, 50, 74.5];
+
+const centerY = 50;
+---
+
+<style is:global>
+  .ech {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(10rem, 10vh, 8rem) 0 clamp(2.5rem, 5vh, 4rem);
+    background:
+      radial-gradient(50rem 25rem at 80% -10%, rgba(79, 70, 229, 0.08), transparent 60%),
+      radial-gradient(35rem 18rem at 10% 0%, rgba(99, 102, 241, 0.05), transparent 55%),
+      linear-gradient(180deg, var(--ink-50, #f8fafc) 0%, #ffffff 100%);
+  }
+  
+  .ech-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter, 1.5rem);
+  }
+
+  .ech-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+
+  @media (min-width: 72rem) {
+    .ech-grid {
+      grid-template-columns: 0.85fr 1.15fr;
+    }
+  }
+
+  .ech-copy {
+    max-width: 34rem;
+  }
+
+  .ech-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    background: rgba(79, 70, 229, 0.06);
+    border: 1px solid rgba(79, 70, 229, 0.15);
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-600, #4f46e5);
+  }
+
+  .ech-eyebrow .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-500, #6366f1);
+    box-shadow: 0 0 8px var(--brand-500, #6366f1);
+  }
+
+  .ech-title {
+    margin-top: 1rem;
+    font-size: clamp(2.25rem, 4.2vw, 3.35rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950, #09090b);
+    text-wrap: balance;
+  }
+
+  .ech-title .accent {
+    background: linear-gradient(135deg, var(--brand-600, #4f46e5) 0%, #2563eb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .ech-lead {
+    margin-top: 1rem;
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.6;
+    color: var(--ink-500, #64748b);
+  }
+
+  .ech-actions {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .ech-strip {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ech-strip-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 9999px;
+    background: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-700, #334155);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  }
+
+  .ech-strip-chip .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-500, #6366f1);
+  }
+
+  /* Right Panel */
+  .ech-panel {
+    position: relative;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 1.25rem;
+    background: #ffffff;
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.07), 0 0 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+  }
+
+  .ech-panel-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    background: var(--ink-50, #f8fafc);
+    border-bottom: 1px solid var(--ink-200, #e2e8f0);
+  }
+
+  .ech-panel-dots {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .ech-panel-dots span {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ink-200, #cbd5e1);
+  }
+
+  .ech-panel-dots span:nth-child(1) { background: #ef4444; }
+  .ech-panel-dots span:nth-child(2) { background: #f59e0b; }
+  .ech-panel-dots span:nth-child(3) { background: #10b981; }
+
+  .ech-panel-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--ink-700, #334155);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .ech-panel-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.375rem;
+    background: #dcfce7;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #15803d;
+  }
+
+  .ech-panel-status .pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #16a34a;
+    animation: ech-pulse 2s infinite;
+  }
+
+  @keyframes ech-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  /* Pipeline Flex Structure */
+  .ech-pipeline {
+    position: relative;
+    padding: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 42rem) {
+    .ech-pipeline {
+      grid-template-columns: 1fr 1.25fr 1fr;
+      column-gap: 3rem;
+      align-items: stretch;
+    }
+  }
+
+  /* Minimalist SVG Connector Overlay */
+  .ech-svg-connectors {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    display: none;
+  }
+
+  @media (min-width: 42rem) {
+    .ech-svg-connectors {
+      display: block;
+    }
+  }
+
+  /* Minimalist Dash Motion */
+  .pulse-stream {
+    stroke: #6366f1;
+    stroke-width: 0.4;
+    stroke-dasharray: 2 6;
+    animation: pulseMove 1.8s linear infinite;
+  }
+
+  @keyframes pulseMove {
+    from { stroke-dashoffset: 16; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Pipeline Columns */
+  .ech-pipe-col {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .ech-col-header {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-400, #94a3b8);
+    margin-bottom: 0.25rem;
+  }
+
+  /* Nodes */
+  .ech-node-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 0.625rem;
+    background: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .ech-node-card:hover {
+    border-color: var(--brand-500, #6366f1);
+    transform: translateY(-1px);
+  }
+
+  .ech-node-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ech-node-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-800, #1e293b);
+  }
+
+  .ech-node-tag {
+    font-size: 0.68rem;
+    color: var(--ink-400, #94a3b8);
+  }
+
+  /* Engine Core Card */
+  .ech-engine-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(238, 242, 255, 0.85) 0%, #ffffff 100%);
+    border: 1.5px solid var(--brand-200, #c7d2fe);
+    border-radius: 0.875rem;
+    padding: 1rem;
+    box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08);
+    text-align: center;
+  }
+
+  .ech-engine-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: var(--brand-600, #4f46e5);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .ech-engine-rules {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .ech-rule-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.6rem;
+    background: #ffffff;
+    border: 1px solid rgba(199, 210, 254, 0.6);
+    border-radius: 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-700, #334155);
+  }
+
+  /* ERP Cards */
+  .ech-erp-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 0.625rem;
+    background: #ffffff;
+    transition: all 0.2s ease;
+  }
+
+  .ech-erp-card.active-target {
+    border-color: var(--brand-500, #6366f1);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.12);
+  }
+
+  .ech-erp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #16a34a;
+    background: #f0fdf4;
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+  }
+
+  .ech-erp-badge.connected {
+    color: var(--ink-500, #64748b);
+    background: var(--ink-100, #f1f5f9);
+  }
+
+  /* Ticker Footer */
+  .ech-panel-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.25rem;
+    border-top: 1px solid var(--ink-200, #e2e8f0);
+    background: var(--ink-50, #f8fafc);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-600, #475569);
+  }
+
+  .ech-foot-tx {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ech-foot-journal {
+    color: var(--brand-600, #4f46e5);
+    font-weight: 700;
+    background: rgba(79, 70, 229, 0.08);
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.375rem;
+  }
+</style>
+
+<section class="ech" data-hero>
+  <div class="ech-inner">
+    <div class="ech-grid">
+      <!-- Left Column Copy -->
+      <div class="ech-copy">
+        <span class="ech-eyebrow">
+          <span class="dot" aria-hidden="true"></span>
+          ERP Connector
+        </span>
+
+        <h1 class="ech-title">
+          Make your ERP <span class="accent">ecommerce-ready.</span>
+        </h1>
+
+        <p class="ech-lead">
+          The ERP Connector turns raw marketplace sales and fees into structured accounting—order-wise, GST-wise, and warehouse-wise—and posts directly to your ledger.
+        </p>
+
+        <div class="ech-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="#how-it-works" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            See How It Works →
+          </a>
+        </div>
+
+        <div class="ech-strip">
+          <span class="ech-strip-chip"><span class="dot"></span>Order-level ledger</span>
+          <span class="ech-strip-chip"><span class="dot"></span>Multi-state GST</span>
+          <span class="ech-strip-chip"><span class="dot"></span>Warehouse stock</span>
+          <span class="ech-strip-chip"><span class="dot"></span>TCS / TDS deduction</span>
+          <span class="ech-strip-chip"><span class="dot"></span>Stock transfers</span>
+        </div>
+      </div>
+
+      <!-- Right Column Flow Preview -->
+      <div class="ech-panel">
+        <div class="ech-panel-bar">
+          <div class="ech-panel-dots" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="ech-panel-title">
+            <Zap size={13} className="text-indigo-600" />
+            DeepEcom Sync Pipeline
+          </span>
+          <span class="ech-panel-status">
+            <span class="pulse"></span>
+            Real-time Engine
+          </span>
+        </div>
+
+        <div class="ech-pipeline">
+          <!-- Minimalist Ultra-Clean SVG Connectors -->
+          <svg class="ech-svg-connectors" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <!-- Subtle Base Guide Lines -->
+            <!-- Left Side: Channel Cards -> Center Entry -->
+            {leftY.map((y) => (
+              <path d={`M 28 ${y} L 31 ${y} L 33 ${centerY} L 35 ${centerY}`} stroke="#e2e8f0" stroke-width="0.3" fill="none" />
+            ))}
+
+            <!-- Right Side: Center Exit -> All 3 ERP Cards -->
+            {rightY.map((y) => (
+              <path d={`M 65 ${centerY} L 67 ${centerY} L 69 ${y} L 72 ${y}`} stroke="#e2e8f0" stroke-width="0.3" fill="none" />
+            ))}
+
+            <!-- Glowing Flow Pulses -->
+            {leftY.map((y) => (
+              <path d={`M 28 ${y} L 31 ${y} L 33 ${centerY} L 35 ${centerY}`} class="pulse-stream" fill="none" />
+            ))}
+            {rightY.map((y) => (
+              <path d={`M 65 ${centerY} L 67 ${centerY} L 69 ${y} L 72 ${y}`} class="pulse-stream" fill="none" />
+            ))}
+
+            <!-- Minimalist Connection Nodes -->
+            {leftY.map((y) => (
+              <circle cx="28" cy={y} r="0.6" fill="#6366f1" />
+            ))}
+            <circle cx="35" cy={centerY} r="0.8" fill="#4f46e5" />
+            
+            <circle cx="65" cy={centerY} r="0.8" fill="#4f46e5" />
+            {rightY.map((y) => (
+              <circle cx="72" cy={y} r="0.6" fill="#6366f1" />
+            ))}
+          </svg>
+
+          <!-- Column 1: Marketplaces -->
+          <div class="ech-pipe-col">
+            <div class="ech-col-header">01. Channels</div>
+            {marketplaces.map((m) => (
+              <div class="ech-node-card">
+                <div class="ech-node-info">
+                  <span class="ech-node-name">{m.name}</span>
+                  <span class="ech-node-tag">{m.tag}</span>
+                </div>
+                <CheckCircle2 size={13} className="text-emerald-500 shrink-0" />
+              </div>
+            ))}
+          </div>
+
+          <!-- Column 2: Engine -->
+          <div class="ech-pipe-col">
+            <div class="ech-col-header text-center">02. Accounting Engine</div>
+            <div class="ech-engine-card">
+              <div class="ech-engine-badge">
+                <RefreshCw size={13} className="animate-spin text-indigo-600" />
+                Ledger Rules
+              </div>
+              <div class="ech-engine-rules">
+                {engineRules.map((rule) => (
+                  <div class="ech-rule-item">
+                    <ShieldCheck size={13} className="text-indigo-500 shrink-0" />
+                    <span>{rule}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 3: ERP Destinations -->
+          <div class="ech-pipe-col">
+            <div class="ech-col-header">03. Automated Posting</div>
+            {erps.map((erp) => (
+              <div class={`ech-erp-card ${erp.name === "Tally Prime" ? "active-target" : ""}`}>
+                <span class="ech-node-name">{erp.name}</span>
+                <span class={`ech-erp-badge ${erp.name !== "Tally Prime" ? "connected" : ""}`}>
+                  <CheckCircle2 size={11} />
+                  {erp.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="ech-panel-foot">
+          <div class="ech-foot-tx">
+            <span>Order <strong>#ORD-104928</strong></span>
+            <span class="text-slate-300">·</span>
+            <span>₹2,499.00</span>
+          </div>
+          <div class="ech-foot-journal">
+            Posted → JRNL-45892 ✓
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

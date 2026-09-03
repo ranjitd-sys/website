@@ -1,0 +1,116 @@
+---
+const stages = [
+  { num: "01", label: "Marketplace Order", desc: "A sale happens on Amazon, Flipkart, Shopify or another channel." },
+  { num: "02", label: "Transaction Data", desc: "Order, payment, GST, fee and settlement details arrive in DeepEcom." },
+  { num: "03", label: "DeepEcom Processing", desc: "The connector structures the transaction into accounting-ready components." },
+  { num: "04", label: "Accounting Structure", desc: "Sales, GST, charges, receivable and payment are mapped to ledger accounts." },
+  { num: "05", label: "ERP Entry", desc: "A detailed, balanced entry is posted into your ERP." },
+]
+---
+
+<style is:global>
+  .ol {
+    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  .ol-flow {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 56rem) {
+    .ol-flow {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .ol-stage {
+    position: relative;
+    padding: 1.4rem 1.15rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .ol-stage:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-sm);
+  }
+  .ol-stage-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--brand-600);
+  }
+  .ol-stage-label {
+    margin-top: 0.6rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-900);
+  }
+  .ol-stage-desc {
+    margin-top: 0.4rem;
+    font-size: 0.75rem;
+    line-height: 1.55;
+    color: var(--ink-500);
+  }
+  .ol-arrow {
+    display: none;
+  }
+  @media (min-width: 56rem) {
+    .ol-arrow {
+      display: flex;
+      position: absolute;
+      top: 50%;
+      right: -0.8rem;
+      transform: translateY(-50%);
+      color: var(--ink-300);
+      z-index: 1;
+    }
+  }
+  .ol-out {
+    margin-top: 1.25rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.8125rem;
+    color: var(--ink-600);
+  }
+  .ol-out b {
+    color: var(--ink-900);
+  }
+  .ol-out .ok {
+    margin-left: auto;
+    color: var(--success-600);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<section class="ol">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="ol-flow reveal">
+      {stages.map((s, i) => (
+        <div class="ol-stage">
+          <div class="ol-stage-num">{s.num}</div>
+          <div class="ol-stage-label">{s.label}</div>
+          <div class="ol-stage-desc">{s.desc}</div>
+          {i < stages.length - 1 && (
+            <svg class="ol-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M0 8h12M9 4l4 4-4 4" />
+            </svg>
+          )}
+        </div>
+      ))}
+    </div>
+    <div class="ol-out reveal">
+      <span>Final output: <b>Voucher JRNL-45892</b> — balanced debits and credits posted to your ERP.</span>
+      <span class="ok">Posted ✓</span>
+    </div>
+  </div>
+</section>

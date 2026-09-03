@@ -1,0 +1,379 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import InventoryHero from "@/components/pages/InventoryHero.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import InventoryAtAGlance from "@/components/pages/InventoryAtAGlance.astro"
+import InventoryAccounting from "@/components/pages/InventoryAccounting.astro"
+import StockTransferVisual from "@/components/pages/StockTransferVisual.astro"
+import WarehouseWise from "@/components/pages/WarehouseWise.astro"
+import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
+import ErpPostingSection from "@/components/pages/ErpPostingSection.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const orderImpact = [
+  { label: "Order", value: "#104928 · 2 units" },
+  { label: "SKU", value: "SKU-2048" },
+  { label: "Warehouse", value: "Delhi · DEL-01" },
+  { label: "Available Stock", value: "−2 units" },
+  { label: "Accounting", value: "Sale · Inventory · Receivable" },
+]
+
+const personas = [
+  {
+    title: "Business Owners",
+    desc: "Know where inventory is moving and how those movements affect the business.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
+  },
+  {
+    title: "CFOs",
+    desc: "Maintain visibility across locations and financial records.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  },
+  {
+    title: "Accountants",
+    desc: "Keep inventory and stock-transfer context connected to accounting and ERP.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+]
+
+const faqs = [
+  { q: "How does DeepEcom handle ecommerce inventory?", a: "DeepEcom accounts for inventory movement created by ecommerce orders, returns and stock transfers, carrying warehouse and SKU context into ERP accounting." },
+  { q: "Can inventory be tracked warehouse-wise?", a: "Yes. Inventory and stock are accounted distinctly per warehouse, matching how your operations actually run." },
+  { q: "How are stock transfers handled?", a: "Transfers between warehouses are captured with the source, destination, SKU, quantity and value — and accounted on both sides." },
+  { q: "Can stock transfers be accounted for?", a: "Yes. A transfer posts the movement out of the source warehouse and into the destination warehouse in your accounting." },
+  { q: "How are returns connected to inventory?", a: "When an order is returned, the inventory movement is reversed through accounting so stock and ledgers stay aligned." },
+  { q: "How does warehouse information reach the ERP?", a: "Warehouse context is carried as part of each accounting entry, so the ERP sees which warehouse a transaction belongs to." },
+  { q: "Can inventory movements be associated with ecommerce orders?", a: "Yes. Each movement is traceable to the order, return or transfer that created it." },
+  { q: "Does DeepEcom support multiple warehouses?", a: "Yes. Inventory accounting and stock positions are maintained warehouse-wise across your locations." },
+  { q: "How does stock movement affect accounting?", a: "Sales, returns and transfers all create inventory-related accounting so your stock ledgers and financial records stay in balance." },
+  { q: "Can inventory accounting be posted to Tally, SAP or Zoho?", a: "Yes. Prepared inventory and stock-transfer entries post into Tally, SAP or Zoho with the vouchers and ledgers your finance team expects." },
+  { q: "What is the difference between inventory accounting and inventory management?", a: "DeepEcom provides inventory-related accounting and stock-transfer capabilities as part of the ERP Connector — it is not a standalone inventory-management or warehouse-management system." },
+]
+---
+
+<PageLayout
+  title="Inventory & Stock Transfers — Warehouse Accounting for ERP | DeepEcom"
+  description="Account for ecommerce inventory movement across warehouses. DeepEcom connects orders, returns and stock transfers to warehouse-wise inventory and detailed ERP accounting."
+>
+  <!-- 01 — HERO -->
+  <InventoryHero />
+
+  <!-- 02 — WHY ECOMMERCE INVENTORY IS DIFFERENT -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
+        <div>
+          <span class="eyebrow">WHY IT MATTERS</span>
+          <h2 class="h2 mt-2">An ecommerce sale changes more than your revenue.</h2>
+          <p class="lead mt-4">
+            Every order touches inventory, a warehouse, returns, stock availability and accounting. If the movement isn't captured, your books drift from your actual stock.
+          </p>
+        </div>
+        <div class="reveal flex flex-col gap-2">
+          {orderImpact.map((o, i) => (
+            <>
+              <div class:list={["rounded-xl border p-4", i === 3 ? "border-brand-200 bg-brand-50" : "border-ink-200 bg-white"]}>
+                <div class="flex items-center justify-between">
+                  <span class:list={["text-sm font-semibold", i === 3 ? "text-brand-700" : "text-ink-800"]}>{o.label}</span>
+                  <span class:list={["text-sm font-bold tabular-nums", i === 3 ? "text-brand-700" : "text-ink-900"]}>{o.value}</span>
+                </div>
+              </div>
+              {i < orderImpact.length - 1 && (
+                <div class="flex justify-center text-ink-300" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M6 17l6 6 6-6"/></svg>
+                </div>
+              )}
+            </>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — AT A GLANCE: THREE MOTIFS -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">WHAT IT DOES</span>
+        <h2 class="h2 mt-2">Order → inventory → warehouse → accounting → ERP.</h2>
+        <p class="lead mt-4">Three movements, one accounting thread — everything connected in the books.</p>
+      </div>
+      <InventoryAtAGlance />
+    </div>
+  </section>
+
+  <!-- 04 — INVENTORY ACROSS WAREHOUSES -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div>
+          <span class="eyebrow">MULTI-WAREHOUSE</span>
+          <h2 class="h2 mt-2">See inventory in the context of where it lives.</h2>
+          <p class="lead mt-4">
+            Every order, return and transfer carries its warehouse context — so inventory and accounting stay aligned location by location.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Warehouse-wise stock and accounting",
+                "Orders mapped to the fulfilling warehouse",
+                "One view across every location",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal">
+          <WarehouseWise />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — STOCK TRANSFERS -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
+        <div class="reveal order-2 lg:order-1">
+          <StockTransferVisual />
+        </div>
+        <div class="order-1 lg:order-2">
+          <span class="eyebrow">STOCK TRANSFERS</span>
+          <h2 class="h2 mt-2">Move stock between warehouses. Keep the books aligned.</h2>
+          <p class="lead mt-4">
+            A transfer is captured as physical movement and as an accounting event — posted out of the source warehouse and into the destination.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Source and destination both posted",
+                "SKU, quantity and value together",
+                "Inventory and stock ledgers stay balanced",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — DETAILED STOCK MOVEMENT -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">STOCK MOVEMENT</span>
+        <h2 class="h2 mt-2">See every stock movement in context.</h2>
+        <p class="lead mt-4">Sales, returns and stock transfers — each with SKU, warehouse, quantity and value.</p>
+      </div>
+      <InventoryAccounting />
+    </div>
+  </section>
+
+  <!-- 07 — INVENTORY → ACCOUNTING → ERP -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div>
+          <span class="eyebrow">IN THE ERP</span>
+          <h2 class="h2 mt-2">From stock movement to ERP-ready accounting.</h2>
+          <p class="lead mt-4">
+            Each movement becomes a balanced entry — posted into your ERP with the stock, warehouse and source order attached.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Balanced inventory entries",
+                "Warehouse context in every posting",
+                "Sales, settlement, return and stock views",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal">
+          <ErpOutputVoucher />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — HOW IT WORKS -->
+  <section id="how-it-works" class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2 mt-2">Connect inventory movement to your accounting flow.</h2>
+        <p class="lead mt-4">Five stages carry stock movement from the marketplace into your ERP.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your ecommerce channels." },
+          { num: "02", label: "Capture", desc: "Bring order, return and stock-related transaction information into DeepEcom." },
+          { num: "03", label: "Structure", desc: "Associate transactions with the relevant SKU and warehouse context." },
+          { num: "04", label: "Account", desc: "Generate the supported inventory accounting representation." },
+          { num: "05", label: "Post", desc: "Send the accounting information into your ERP." },
+        ]}
+      />
+    </div>
+  </section>
+
+  <!-- 09 — ERP CONNECTIVITY -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">ERP CONNECTIVITY</span>
+        <h2 class="h2 mt-2">Inventory-ready accounting in the ERP you already use.</h2>
+        <p class="lead mt-4">Prepared inventory and stock-transfer entries post into the systems your finance team runs on.</p>
+      </div>
+      <ErpPostingSection />
+    </div>
+  </section>
+
+  <!-- 10 — PLATFORM + ERP CONNECTOR -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div>
+          <span class="eyebrow">ONE SYSTEM</span>
+          <h2 class="h2 mt-2">Understand the transaction. Track the movement. Keep the books aligned.</h2>
+          <p class="lead mt-4">
+            Inventory and stock movements sit within the broader ecommerce accounting workflow — the Platform helps you understand the business, the ERP Connector accounts for it.
+          </p>
+        </div>
+        <div class="reveal">
+          <PlatformErpConnector />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — WHO IT'S FOR -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2 mt-2">Built for teams managing ecommerce across warehouses.</h2>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personas.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FAQ -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2 mt-2">Inventory and ecommerce accounting, explained.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Keep every ecommerce movement connected to your books.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect orders, returns, warehouses and stock transfers with detailed ecommerce accounting in your ERP.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Talk to an Expert
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+const rows = [
+  { dim: "By Order", detail: "Taxable value, CGST, SGST or IGST attached to each order", sample: "ORD-104928 · ₹381.20" },
+  { dim: "By SKU / HSN", detail: "Product-level tax context preserved in the accounting", sample: "HSN 6911 · 18%" },
+  { dim: "By Marketplace", detail: "GST viewable across every connected channel", sample: "Amazon · Flipkart · Shopify" },
+  { dim: "By Warehouse", detail: "GST aligned with the warehouse that fulfilled the order", sample: "DEL-01 · MUM-02" },
+  { dim: "By Tax Component", detail: "CGST, SGST and IGST separated in the ledgers", sample: "CGST + SGST · IGST" },
+]
+---
+
+<style is:global>
+  .gdm {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .gdm-list {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .gdm-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.9rem 1.1rem;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .gdm-row:last-child {
+    border-bottom: 0;
+  }
+  @media (min-width: 48rem) {
+    .gdm-row {
+      grid-template-columns: 1fr 2fr 1.2fr;
+      align-items: center;
+      gap: 1rem;
+    }
+  }
+  .gdm-row:hover {
+    background: var(--ink-50);
+  }
+  .gdm-dim {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .gdm-detail {
+    font-size: 0.8125rem;
+    color: var(--ink-500);
+  }
+  .gdm-sample {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--brand-700);
+    font-variant-numeric: tabular-nums;
+  }
+  .gdm-sample::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  @media (min-width: 48rem) {
+    .gdm-sample {
+      justify-self: end;
+    }
+  }
+</style>
+
+<section class="gdm">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="gdm-list reveal">
+      {rows.map((r) => (
+        <div class="gdm-row">
+          <div class="gdm-dim">{r.dim}</div>
+          <div class="gdm-detail">{r.detail}</div>
+          <span class="gdm-sample">{r.sample}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

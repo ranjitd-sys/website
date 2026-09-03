@@ -1,165 +1,270 @@
 ---
 const events = [
-  { label: "Sale", sub: "Taxable value", icon: "receipt", color: "var(--brand-500)" },
-  { label: "GST", sub: "CGST / SGST / IGST", icon: "scale", color: "var(--brand-600)" },
-  { label: "Marketplace Charges", sub: "Commission · Fees", icon: "wallet", color: "var(--ink-700)" },
-  { label: "TCS / TDS", sub: "Tax deductions", icon: "file", color: "var(--ink-700)" },
-  { label: "Receivable", sub: "Amount due", icon: "bank", color: "var(--brand-500)" },
-  { label: "Payment", sub: "Settlement received", icon: "check", color: "var(--success-600)" },
-  { label: "Return / Refund", sub: "Reversal entries", icon: "refresh", color: "var(--danger-600)" },
-  { label: "Inventory", sub: "Stock movement", icon: "package", color: "var(--ink-700)" },
-  { label: "Stock Transfer", sub: "Warehouse movement", icon: "truck", color: "var(--ink-700)" },
-]
+  { label: "Sale", sub: "Taxable value", icon: "receipt", color: "#6366f1", badge: "+ Credit", type: "credit", amount: "₹2,499.00" },
+  { label: "GST", sub: "CGST / SGST / IGST", icon: "scale", color: "#8b5cf6", badge: "Tax", type: "tax", amount: "-₹381.20" },
+  { label: "Marketplace Fee", sub: "Commission & charges", icon: "wallet", color: "#f59e0b", badge: "Fee", type: "debit", amount: "-₹180.00" },
+  { label: "TCS / TDS", sub: "Sec 194O / Sec 52", icon: "file", color: "#06b6d4", badge: "Withheld", type: "tax", amount: "-₹24.99" },
+  { label: "Receivable", sub: "Net amount due", icon: "bank", color: "#3b82f6", badge: "Pending", type: "neutral", amount: "₹1,912.81" },
+  { label: "Payment", sub: "Payout received", icon: "check", color: "#10b981", badge: "Settled", type: "credit", amount: "Cleared" },
+  { label: "Return / Refund", sub: "Reversals", icon: "refresh", color: "#ef4444", badge: "Idle", type: "neutral", amount: "₹0.00" },
+  { label: "Inventory", sub: "Stock deduction", icon: "package", color: "#64748b", badge: "Synced", type: "neutral", amount: "-1 Unit" },
+  { label: "Stock Transfer", sub: "Logistics shift", icon: "truck", color: "#64748b", badge: "Transit", type: "neutral", amount: "In Transit" },
+];
 
 const ICONS: Record<string, string> = {
-  receipt: '<path d="M6 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM9 8h6M9 12h6"/>',
-  scale: '<path d="M12 3v18M8 21h8M4 6h16M6 6 3 11a3 3 0 0 0 6 0L6 6zM18 6l-3 5a3 3 0 0 0 6 0l-3-5z"/>',
-  wallet: '<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18M16 14h.01"/>',
-  file: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/>',
-  bank: '<path d="M3 10h18M5 10l1 9h12l1-9M2 6l10-3 10 3H2zM12 14h.01"/>',
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  refresh: '<path d="M21 12a9 9 0 1 1-2.6-6.3M21 3v6h-6"/>',
-  package: '<path d="M21 8 12 3 3 8v8l9 5 9-5V8zM3 8l9 5 9-5M12 13v8"/>',
-  truck: '<path d="M1 3h15v13H1zM16 8h4l3 3v5h-7zM5.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM17.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>',
-}
+  receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1zm4 6h8m-8 4h8m-8 4h5"/>',
+  scale: '<path d="m16 16 3-8 3 8c-.87.37-1.88.37-2.75 0l-.25-.11-.25.11c-.87.37-1.88.37-2.75 0zM2 16l3-8 3 8c-.87.37-1.88.37-2.75 0L5 15.89l-.25.11c-.87.37-1.88.37-2.75 0zM12 3v18M7 21h10"/>',
+  wallet: '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4M3 7v12a2 2 0 0 0 2 2h16v-5M18 12a2 2 0 0 0 0 4h3v-4h-3z"/>',
+  file: '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2zM14 2v6h6M8 13h8M8 17h6"/>',
+  bank: '<path d="m2 9 20-5-10-3L2 9zm1 3v8a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-8M6 12v5M10 12v5M14 12v5M18 12v5"/>',
+  check: '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4 12 14.01l-3-3"/>',
+  refresh: '<path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/>',
+  package: '<path d="M16.5 9.4 7.55 4.24M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16zM3.27 6.96 12 12.01l8.73-5.05M12 22.08V12"/>',
+  truck: '<path d="M10 17h4M2 17h2m16 0h2M15 4H2v13h13V4zm0 5h5l3 3v5h-8V9zM5.5 19.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm11 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>',
+};
 ---
 
 <style is:global>
-  .td-section {
-    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  :root {
+    --saas-card-bg: #ffffff;
+    --saas-border: #e2e8f0;
+    --saas-border-hover: #cbd5e1;
+    --saas-text-main: #0f172a;
+    --saas-text-muted: #64748b;
+    --saas-line-color: #cbd5e1;
+    --saas-primary: #6366f1;
   }
-  .td-order {
+
+  /* Transparent container - adapts to any background */
+  .saas-flow-wrapper {
+    padding-block: 2rem;
+    background: transparent;
+    width: 100%;
+  }
+
+  /* Root Hub Node */
+  .saas-root-card {
     position: relative;
-    margin: 2rem auto 0;
-    max-width: 28rem;
-    padding: 1.75rem 2rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 1.25rem;
-    background: #fff;
-    box-shadow: var(--shadow-card);
-    text-align: center;
-  }
-  .td-order-label {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--brand-600);
-  }
-  .td-order-id {
-    margin-top: 0.5rem;
-    font-size: 1.25rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--ink-900);
-  }
-  .td-order-amount {
-    margin-top: 0.25rem;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: var(--ink-950);
-    font-variant-numeric: tabular-nums;
-  }
-  .td-arrow {
+    max-width: 26rem;
+    margin: 0 auto;
+    padding: 1rem 1.25rem;
+    background: var(--saas-card-bg);
+    border: 1px solid var(--saas-border);
+    border-radius: 9999px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     display: flex;
-    justify-content: center;
-    margin: 1.5rem 0;
-    color: var(--ink-300);
+    align-items: center;
+    justify-content: space-between;
+    z-index: 2;
   }
-  .td-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-  }
-  @media (max-width: 48rem) {
-    .td-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-  @media (max-width: 30rem) {
-    .td-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  .td-event {
+
+  .saas-root-left {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.85rem 1rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 0.75rem;
-    background: #fff;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   }
-  .td-event:hover {
-    border-color: var(--ink-300);
-    box-shadow: var(--shadow-sm);
-    transform: translateY(-1px);
+
+  .saas-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
   }
-  .td-event-icon {
+
+  .saas-root-id {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--saas-text-main);
+  }
+
+  .saas-root-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--saas-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .saas-root-val {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--saas-primary);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* SVG Flow Pipeline */
+  .saas-tree-svg {
+    width: 100%;
+    max-width: 56rem;
+    height: 44px;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Event Nodes Grid */
+  .saas-grid {
     display: grid;
-    place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 0.625rem;
-    flex: none;
-    background: var(--ink-50);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.875rem;
+    max-width: 56rem;
+    margin: 0 auto;
   }
-  .td-event-icon svg {
-    width: 1.125rem;
-    height: 1.125rem;
+
+  @media (max-width: 52rem) {
+    .saas-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .saas-tree-svg {
+      display: none;
+    }
   }
-  .td-event-text {
+
+  @media (max-width: 32rem) {
+    .saas-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .saas-node-card {
+    background: var(--saas-card-bg);
+    border: 1px solid var(--saas-border);
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease;
+  }
+
+  .saas-node-card:hover {
+    border-color: var(--saas-border-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .saas-node-left {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
     min-width: 0;
   }
-  .td-event-label {
+
+  .saas-icon-box {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+
+  .saas-icon-box svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .saas-node-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .saas-node-label {
     font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--saas-text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .saas-node-sub {
+    font-size: 0.7rem;
+    color: var(--saas-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .saas-node-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .saas-node-amount {
+    font-size: 0.75rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--saas-text-main);
+  }
+
+  .saas-node-badge {
+    font-size: 0.625rem;
     font-weight: 600;
-    color: var(--ink-800);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 0.08rem 0.35rem;
+    border-radius: 0.25rem;
+    margin-top: 0.15rem;
   }
-  .td-event-sub {
-    font-size: 0.72rem;
-    color: var(--ink-400);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+
+  .type-credit { background: #ecfdf5; color: #047857; }
+  .type-debit { background: #fef2f2; color: #b91c1c; }
+  .type-tax { background: #f5f3ff; color: #6d28d9; }
+  .type-neutral { background: #f1f5f9; color: #475569; }
 </style>
 
-<section class="td-section">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="td-order reveal">
-      <span class="td-order-label">Order</span>
-      <p class="td-order-id">#104928</p>
-      <p class="td-order-amount">₹2,499</p>
+<div class="saas-flow-wrapper">
+  <div class="mx-auto max-w-5xl px-4">
+    <!-- Main Node Hub -->
+    <div class="saas-root-card">
+      <div class="saas-root-left">
+        <span class="saas-status-dot"></span>
+        <span class="saas-root-id">Order #104928</span>
+        <span class="saas-root-tag">· Amazon Merchant</span>
+      </div>
+      <span class="saas-root-val">₹2,499.00</span>
     </div>
 
-    <div class="td-arrow" aria-hidden="true">
-      <svg width="24" height="40" viewBox="0 0 24 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-        <path d="M12 0v36M6 30l6 6 6-6" />
-      </svg>
-    </div>
+    <!-- Minimal Connection Graph -->
+    <svg class="saas-tree-svg" viewBox="0 0 900 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 450 0 V 18" stroke="var(--saas-line-color)" stroke-width="1.5" />
+      <path d="M 150 18 H 750" stroke="var(--saas-line-color)" stroke-width="1.5" />
+      <path d="M 150 18 V 44" stroke="var(--saas-line-color)" stroke-width="1.5" />
+      <path d="M 450 18 V 44" stroke="var(--saas-line-color)" stroke-width="1.5" />
+      <path d="M 750 18 V 44" stroke="var(--saas-line-color)" stroke-width="1.5" />
+      
+      <circle cx="450" cy="18" r="3" fill="var(--saas-primary)" />
+      <circle cx="150" cy="44" r="2.5" fill="var(--saas-line-color)" />
+      <circle cx="450" cy="44" r="2.5" fill="var(--saas-line-color)" />
+      <circle cx="750" cy="44" r="2.5" fill="var(--saas-line-color)" />
+    </svg>
 
-    <div class="td-grid reveal">
+    <!-- Distributed Event Nodes Grid -->
+    <div class="saas-grid">
       {
         events.map((e) => (
-          <div class="td-event">
-            <span class="td-event-icon" style={`color:${e.color}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <Fragment set:html={ICONS[e.icon]} />
-              </svg>
-            </span>
-            <span class="td-event-text">
-              <span class="td-event-label">{e.label}</span>
-              <span class="td-event-sub">{e.sub}</span>
-            </span>
+          <div class="saas-node-card">
+            <div class="saas-node-left">
+              <div class="saas-icon-box" style={`color: ${e.color}; background-color: ${e.color}15`}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <Fragment set:html={ICONS[e.icon]} />
+                </svg>
+              </div>
+              <div class="saas-node-info">
+                <span class="saas-node-label">{e.label}</span>
+                <span class="saas-node-sub">{e.sub}</span>
+              </div>
+            </div>
+            <div class="saas-node-right">
+              <span class="saas-node-amount">{e.amount}</span>
+              <span class={`saas-node-badge type-${e.type}`}>{e.badge}</span>
+            </div>
           </div>
         ))
       }
     </div>
   </div>
-</section>
+</div>

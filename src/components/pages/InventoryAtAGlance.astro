@@ -1,0 +1,106 @@
+---
+const motifs = [
+  {
+    num: "01",
+    title: "Order → Inventory",
+    desc: "An ecommerce order reduces stock at the warehouse that fulfilled it.",
+    sample: "Order #104928 · -2 units",
+  },
+  {
+    num: "02",
+    title: "Warehouse → Stock Transfer",
+    desc: "Inventory moves between warehouses, posted on both sides.",
+    sample: "DEL-01 → MUM-02 · 100 units",
+  },
+  {
+    num: "03",
+    title: "Inventory → Accounting → ERP",
+    desc: "Every movement becomes an accounting entry in your ERP.",
+    sample: "Stock ledgers · Tally / SAP / Zoho",
+  },
+]
+---
+
+<style is:global>
+  .iga {
+    padding-block: clamp(2rem, 4vh, 2.75rem);
+  }
+  .iga-grid {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 56rem) {
+    .iga-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  .iga-card {
+    position: relative;
+    padding: 1.4rem 1.4rem 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .iga-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .iga-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--brand-600);
+  }
+  .iga-title {
+    margin-top: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink-900);
+  }
+  .iga-desc {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+  .iga-sample {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--ink-200);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brand-700);
+    font-variant-numeric: tabular-nums;
+  }
+  .iga-sample::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+</style>
+
+<section class="iga">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="iga-grid reveal">
+      {motifs.map((m) => (
+        <div class="iga-card">
+          <div class="iga-num">{m.num}</div>
+          <div class="iga-title">{m.title}</div>
+          <div class="iga-desc">{m.desc}</div>
+          <div class="iga-sample">{m.sample}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,86 +1,238 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import ErpConnectorHero from "@/components/pages/ErpConnectorHero.astro"
+import ErpAtAGlance from "@/components/pages/ErpAtAGlance.astro"
+import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
+import ErpPostingSection from "@/components/pages/ErpPostingSection.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+
+const personas = [
+  {
+    title: "Business Owners",
+    desc: "Know what you sold, what you received and what reached the books.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
+  },
+  {
+    title: "CFOs",
+    desc: "Visibility, control and confidence in ecommerce accounting.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  },
+  {
+    title: "Accountants",
+    desc: "Reduce repetitive ecommerce accounting and ERP posting.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+]
+
+const faqs = [
+  { q: "What does the DeepEcom ERP Connector do?", a: "It connects ecommerce marketplaces to your ERP and turns marketplace transactions into detailed, structured accounting entries — order-wise, GST-wise, warehouse-wise and more." },
+  { q: "How does GST information flow into the ERP?", a: "GST is separated by head — CGST, SGST and IGST — for each order, so the right tax information lands in the correct ledgers inside your ERP." },
+  { q: "How are marketplace charges and TCS/TDS handled?", a: "Commissions, logistics, collection and other supported charges are captured as distinct entries. TCS and TDS are recorded within the transactions they apply to." },
+  { q: "How are returns, inventory and stock transfers accounted for?", a: "Returns reverse the original sale and its GST. Inventory is tracked per SKU and warehouse, and stock transfers post to both source and destination warehouses." },
+  { q: "Does DeepEcom connect to Tally, SAP and Zoho?", a: "Yes. Prepared entries post into Tally, SAP or Zoho with the vouchers, ledgers and source references your finance team expects." },
+]
 ---
 
 <PageLayout
   title="ERP Connector — Make your ERP ecommerce-ready | DeepEcom"
-  description="DeepEcom ERP Connector converts complex ecommerce transactions into detailed accounting inside your ERP, with Tally, SAP and Zoho connectivity."
+  description="DeepEcom ERP Connector turns marketplace orders, GST, charges, returns, inventory and stock transfers into detailed accounting entries posted into Tally, SAP or Zoho."
 >
-  <PageHero
-    eyebrow="ERP CONNECTOR"
-    title="Make your ERP ecommerce-ready."
-    lead="Convert complex ecommerce transactions into detailed accounting inside your ERP. Order-wise entries, marketplace charges, returns and refunds — posted into Tally, SAP or Zoho."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore ERP Connector
-      </a>
+  <!-- 01 — HERO -->
+  <ErpConnectorHero />
+
+  <!-- 02 — AT A GLANCE -->
+  <section class="bg-muted ">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">WHAT IT DOES</span>
+        <h2 class="h2 mt-2">Every ecommerce transaction, accounted for — at a glance.</h2>
+        <p class="lead mt-4">Orders, GST, charges, settlements, returns, inventory, warehouses and stock transfers all become structured accounting in your ERP.</p>
+      </div>
+      <ErpAtAGlance />
     </div>
-  </PageHero>
+  </section>
 
-  <FeatureGrid
-    eyebrow="DETAILED ACCOUNTING"
-    title="More than an integration. A complete accounting layer."
-    lead="Every ecommerce transaction becomes structured accounting entries inside your ERP — not a generic data sync."
-    columns={3}
-    center
-    features={[
-      {
-        title: "Order-wise accounting",
-        description: "Each order is accounted individually, with the revenue, charges and fees that belong to it.",
-        icon: "receipt",
-      },
-      {
-        title: "Marketplace charges",
-        description: "Marketplace fees, commissions and deductions are captured as distinct accounting entries.",
-        icon: "wallet",
-      },
-      {
-        title: "Returns and refunds",
-        description: "Returns and refunds are accounted accurately, keeping receivables and ledgers aligned.",
-        icon: "refresh",
-      },
-      {
-        title: "Detailed accounting entries",
-        description: "Transactions become complete, audit-ready entries rather than summary postings.",
-        icon: "table",
-      },
-      {
-        title: "ERP posting",
-        description: "Prepared entries are posted directly into your ERP, ready for your finance team.",
-        icon: "bank",
-      },
-      {
-        title: "Tally, SAP & Zoho connectivity",
-        description: "Connect the connector to the ERP you run on — Tally, SAP or Zoho.",
-        icon: "building",
-      },
-    ]}
-  />
+  <!-- 03 — ONE ORDER → POSTED -->
+  <section>
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div>
+          <span class="eyebrow">FROM ORDER TO ERP</span>
+          <h2 class="h2 mt-2">One order. Balanced entries. Posted.</h2>
+          <p class="lead mt-4">
+            A single order becomes a complete journal — sales and GST on one side, charges and receivable on the other — ready to post into your ERP.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3">
+            {
+              [
+                "Balanced debits and credits per order",
+                "Switch between sales, settlement, return and stock views",
+                "Each entry traceable to its source order",
+              ].map((t) => (
+                <li class="flex items-start gap-3 text-sm text-ink-600">
+                  <svg class="mt-0.5 flex-none text-brand-500" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {t}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal">
+          <ErpOutputVoucher />
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="FROM ORDER TO LEDGER"
-        title="The full transaction lifecycle, accounted."
-        lead="The ERP Connector carries each transaction through sale, GST, charges, receivable, payment, return and inventory — into your ERP."
-        center
+  <!-- 04 — ERP INTEGRATIONS -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <span class="eyebrow">ERP CONNECTIVITY</span>
+          <h2 class="h2 mt-2">Works with the ERP you already use.</h2>
+          <p class="lead mt-4">Post detailed ecommerce accounting into the systems your finance team already runs on.</p>
+        </div>
+      </div>
+      <ErpPostingSection />
+    </div>
+  </section>
+
+  <!-- 05 — HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2 mt-2">Connect once. Account continuously.</h2>
+        <p class="lead mt-4">Five steps from marketplace to ERP.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect your supported marketplace accounts." },
+          { num: "02", label: "Fetch", desc: "Bring relevant ecommerce transactions into DeepEcom." },
+          { num: "03", label: "Process", desc: "Structure the transaction data." },
+          { num: "04", label: "Account", desc: "Generate detailed accounting entries." },
+          { num: "05", label: "Post", desc: "Push the entries into your ERP." },
+        ]}
       />
     </div>
   </section>
 
-  <CtaBand
-    title="Make your ERP ecommerce-ready."
-    lead="Bring the full detail of your ecommerce transactions into your accounting system."
-  />
+  <!-- 06 — WHO IT'S FOR -->
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div class="max-w-2xl">
+          <span class="eyebrow">WHO IT'S FOR</span>
+          <h2 class="h2 mt-2">Built for the teams behind the numbers.</h2>
+        </div>
+      </div>
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
+        {personas.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <h3 class="text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — FAQ -->
+  <section>
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2 mt-2">Quick answers.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Make your ERP ready for ecommerce.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect your marketplaces to detailed, structured ecommerce accounting.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Talk to an Expert
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

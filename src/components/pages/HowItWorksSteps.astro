@@ -1,96 +1,112 @@
----
-const steps = [
-  { num: "01", label: "Connect", desc: "Connect marketplace accounts." },
-  { num: "02", label: "Fetch", desc: "Bring relevant transaction data into DeepEcom." },
-  { num: "03", label: "Map", desc: "Map transactions to accounting structures." },
-  { num: "04", label: "Generate", desc: "Create detailed accounting entries." },
-  { num: "05", label: "Post", desc: "Push accounting into the ERP." },
-]
----
+  ---
+import { ArrowDown, ArrowRight } from 'lucide-react'
 
-<style is:global>
-  .hiw {
-    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
+  interface Step {
+    num: string
+    label: string
+    desc: string
   }
-  .hiw-steps {
-    margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  interface Props {
+    steps?: Step[]
   }
-  @media (min-width: 48rem) {
-    .hiw-steps {
-      grid-template-columns: repeat(5, 1fr);
+  const defaultSteps: Step[] = [
+    { num: "01", label: "Connect", desc: "Connect marketplace accounts." },
+    { num: "02", label: "Fetch", desc: "Bring relevant transaction data into DeepEcom." },
+    { num: "03", label: "Map", desc: "Map transactions to accounting structures." },
+    { num: "04", label: "Generate", desc: "Create detailed accounting entries." },
+    { num: "05", label: "Post", desc: "Push accounting into the ERP." },
+  ]
+  const { steps = defaultSteps } = Astro.props
+  ---
+
+  <style is:global>
+    .hiw {
+      padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
     }
-  }
-  .hiw-step {
-    position: relative;
-    padding: 1.5rem 1.25rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 1rem;
-    background: #fff;
-    text-align: center;
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .hiw-step:hover {
-    border-color: var(--ink-300);
-    box-shadow: var(--shadow-sm);
-  }
-  .hiw-step-num {
-    display: grid;
-    place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin: 0 auto 0.75rem;
-    border-radius: 50%;
-    background: var(--brand-500);
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 700;
-  }
-  .hiw-step-label {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--ink-900);
-    letter-spacing: -0.01em;
-  }
-  .hiw-step-desc {
-    margin-top: 0.5rem;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--ink-500);
-  }
-  .hiw-arrow {
+    .hiw-steps {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 48rem) {
+      .hiw-steps {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+    .hiw-step {
+      position: relative;
+      padding: 1.5rem 1.25rem;
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      background: #fff;
+      text-align: center;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .hiw-step:hover {
+      border-color: var(--ink-300);
+      box-shadow: var(--shadow-sm);
+    }
+    .hiw-step-num {
+      display: grid;
+      place-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      margin: 0 auto 0.75rem;
+      border-radius: 50%;
+      background: var(--brand-500);
+      color: #fff;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+    .hiw-step-label {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--ink-900);
+      letter-spacing: -0.01em;
+    }
+    .hiw-step-desc {
+      margin-top: 0.5rem;
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      color: var(--ink-500);
+    }
+    .hiw-arrow {
+      display: none;
+    }
+    .hiw-arrow {
     display: none;
   }
   @media (min-width: 48rem) {
     .hiw-arrow {
       display: flex;
       position: absolute;
-      top: 50%;
-      right: -0.75rem;
-      transform: translateY(-50%);
+      
+      /* 1. Vertically align to the center of the step number circle */
+      /* Card top padding (1.5rem) + Half of circle height (1.25rem) = 2.75rem */
+      top: 2.75rem;
+      
+      /* 2. Horizontally center within the 1rem grid gap */
+      right: -0.5rem;
+      transform: translate(50%, -50%);
+      
       color: var(--ink-300);
       z-index: 1;
     }
   }
-</style>
+  </style>
 
-<section class="hiw">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="hiw-steps reveal">
-      {steps.map((s, i) => (
-        <div class="hiw-step">
-          <div class="hiw-step-num">{s.num}</div>
-          <div class="hiw-step-label">{s.label}</div>
-          <div class="hiw-step-desc">{s.desc}</div>
-          {i < steps.length - 1 && (
-            <svg class="hiw-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-              <path d="M0 8h12M9 4l4 4-4 4" />
-            </svg>
-          )}
-        </div>
-      ))}
+  <section class="hiw ">
+    <div class="mx-auto max-w-6xl px-6 ">
+      <div class="hiw-steps reveal">
+        {steps.map((s, i) => (
+          <div class="hiw-step ">
+            <div class="hiw-step-num">{s.num}</div>
+            <div class="hiw-step-label">{s.label}</div>
+            <div class="hiw-step-desc">{s.desc}</div>
+           
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-</section>
+  </section>

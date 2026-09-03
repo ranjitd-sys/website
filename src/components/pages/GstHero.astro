@@ -1,0 +1,296 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const breakdown = [
+  { label: "Order Value", value: "₹2,499.00", cls: "" },
+  { label: "Taxable Value", value: "₹2,118.64", cls: "strong" },
+  { label: "CGST 9%", value: "₹190.68", cls: "tax" },
+  { label: "SGST 9%", value: "₹190.68", cls: "tax" },
+  { label: "Invoice Total", value: "₹2,499.00", cls: "total" },
+]
+const contextChips = ["CGST", "SGST", "IGST", "HSN", "Warehouse", "Marketplace", "Returns", "Settlement"]
+---
+
+<style is:global>
+  .gst-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(6rem, 10vh, 8rem) 0 clamp(2.5rem, 5vh, 4rem);
+    background:
+      radial-gradient(44rem 22rem at 78% -12%, rgba(44, 62, 233, 0.12), transparent 60%),
+      radial-gradient(32rem 16rem at 6% -8%, rgba(127, 125, 252, 0.09), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .gst-hero-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .gst-hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .gst-hero-grid {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+  }
+
+  /* ---------- Left ---------- */
+  .gst-copy {
+    max-width: 35rem;
+  }
+  .gst-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .gst-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .gst-title {
+    margin-top: 1.05rem;
+    font-size: clamp(2.35rem, 4.2vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .gst-title .accent {
+    color: var(--brand-500);
+  }
+  .gst-lead {
+    margin-top: 1rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .gst-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .gst-importance {
+    margin-top: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--brand-100);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--brand-50));
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: var(--ink-600);
+  }
+  .gst-importance svg {
+    flex: none;
+    color: var(--brand-600);
+  }
+  .gst-importance b {
+    color: var(--ink-900);
+    font-weight: 700;
+  }
+
+  /* ---------- Right: GST transaction card ---------- */
+  .gst-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    max-width: 30rem;
+    margin-inline: auto;
+    width: 100%;
+  }
+  .gst-card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.1rem;
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .gst-card-head .ord {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .gst-card-head .id {
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-400);
+  }
+  .gst-card-head .gst-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+  .gst-card-body {
+    padding: 1rem 1.1rem 0.4rem;
+  }
+  .gst-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.9rem;
+  }
+  .gst-meta-chip {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: var(--ink-50);
+    border: 1px solid var(--ink-100);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+  .gst-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed var(--ink-100);
+    font-size: 0.82rem;
+  }
+  .gst-line:last-child {
+    border-bottom: 0;
+  }
+  .gst-line .k {
+    color: var(--ink-500);
+  }
+  .gst-line .v {
+    font-weight: 600;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .gst-line.strong .k,
+  .gst-line.strong .v {
+    color: var(--ink-900);
+    font-weight: 700;
+  }
+  .gst-line.tax .v {
+    color: var(--brand-700);
+    font-weight: 700;
+  }
+  .gst-line.total {
+    margin-top: 0.25rem;
+    padding: 0.6rem 0;
+    border-bottom: 0;
+    border-top: 2px solid var(--ink-200);
+  }
+  .gst-line.total .k,
+  .gst-line.total .v {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ink-950);
+  }
+  .gst-card-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.1rem;
+    border-top: 1px solid var(--ink-200);
+    background: var(--ink-50);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .gst-card-foot .ok {
+    margin-left: auto;
+    color: var(--success-600);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 47.99rem) {
+    .gst-hero {
+      padding-top: 4.5rem;
+    }
+    .gst-title {
+      font-size: clamp(2rem, 8.5vw, 2.5rem);
+    }
+  }
+</style>
+
+<section class="gst-hero" data-hero>
+  <div class="gst-hero-inner">
+    <div class="gst-hero-grid">
+      <!-- Left -->
+      <div class="gst-copy reveal">
+        <span class="gst-eyebrow"><span class="dot" aria-hidden="true"></span>GST Accounting</span>
+        <h1 class="gst-title">
+          Keep GST connected to every <span class="accent">ecommerce transaction.</span>
+        </h1>
+        <p class="gst-lead">
+          Carry GST details from marketplace transactions into structured accounting — order-wise, tax-wise and warehouse-wise — inside your ERP.
+        </p>
+        <div class="gst-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="#how-it-works" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            See How It Works →
+          </a>
+        </div>
+        <div class="gst-importance">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 12v4"/></svg>
+          <span>GST touches <b>every order, return and settlement</b> in your business. If the tax context is lost, your books and your returns drift apart.</span>
+        </div>
+      </div>
+
+      <!-- Right: GST transaction breakdown card -->
+      <div class="gst-card reveal" data-delay="120" aria-label="Example: a single marketplace order broken into taxable value, CGST, SGST and invoice total">
+        <div class="gst-card-head">
+          <span class="ord">Marketplace Order</span>
+          <span class="gst-badge">GST</span>
+          <span class="id">ORD-104928</span>
+        </div>
+        <div class="gst-card-body">
+          <div class="gst-meta">
+            {contextChips.map((c) => <span class="gst-meta-chip">{c}</span>)}
+          </div>
+          {breakdown.map((b) => (
+            <div class:list={["gst-line", b.cls]}>
+              <span class="k">{b.label}</span>
+              <span class="v">{b.value}</span>
+            </div>
+          ))}
+        </div>
+        <div class="gst-card-foot">
+          Accounting entry prepared
+          <span class="ok">JRNL-45892 ✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
