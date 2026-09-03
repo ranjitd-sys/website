@@ -87,7 +87,7 @@ const jsonLd = [
   <body class="min-h-screen overflow-x-hidden bg-background text-foreground antialiased">
     <SiteNav client:load />
 
-    <main class="relative">
+    <main class="relative landing-canvas">
       <slot />
     </main>
 
@@ -124,7 +124,7 @@ const jsonLd = [
             io.unobserve(el)
           }
         },
-        { threshold: 0.12, rootMargin: "0px -32px 0px 0px" },
+        { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
       )
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el))
 

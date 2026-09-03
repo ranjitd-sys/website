@@ -92,18 +92,20 @@ const events = [
     width: 100%;
     max-width: var(--container-wide);
     margin-inline: auto;
-    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+    padding: clamp(1rem, 2vw, 1.5rem) var(--space-gutter);
     background: transparent;
   }
 
   /* Single unified container matching image */
   .problem-card {
     width: 100%;
-    background: #f6f7fd;
-    border: 1px solid #eaeeed;
+    background:
+      radial-gradient(40rem 18rem at 100% -20%, rgba(44, 62, 233, 0.06), transparent 62%),
+      #f8f9fd;
+    border: 1px solid #e6e8f1;
     border-radius: 20px;
     padding: 3rem 3.5rem 2.25rem;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 24px -4px rgba(9, 17, 32, 0.06);
   }
 
   /* Top Section Grid */
@@ -126,7 +128,7 @@ const events = [
     font-weight: 800;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #4f46e5;
+    color: #2c3ee9;
     margin-bottom: 0.75rem;
   }
 
@@ -163,7 +165,7 @@ const events = [
   .point-icon {
     width: 2.25rem;
     height: 2.25rem;
-    color: #4f46e5;
+    color: #2c3ee9;
     stroke-width: 1.8;
   }
 
@@ -216,6 +218,6 @@ const events = [
   }
 
   .problem-multiply .highlight {
-    color: #4f46e5;
+    color: #2c3ee9;
   }
 </style>

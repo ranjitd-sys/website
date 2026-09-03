@@ -71,16 +71,15 @@ const capabilities = [
     width: 100%;
     max-width: var(--container-wide);
     margin: 0 auto;
-    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+    padding: clamp(0.75rem, 1.5vw, 1.25rem) var(--space-gutter);
   }
 
-  /* Single Outer White Card Container */
+  /* Open, flowing band — sits directly on the page canvas */
   .capability-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem 0;
   }
 
   /* Blue Header Text */

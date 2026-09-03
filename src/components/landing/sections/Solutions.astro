@@ -104,16 +104,15 @@ const solutions = [
     width: 100%;
     max-width: var(--container-wide);
     margin: 0 auto;
-    padding: clamp(2.5rem, 5vw, 4rem) var(--space-gutter);
+    padding: clamp(0.75rem, 1.5vw, 1.25rem) var(--space-gutter);
   }
 
-  /* Outer White Container Card */
+  /* Open, flowing band — sits directly on the page canvas */
   .solutions-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 1.5rem 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 1.25rem 0;
   }
 
   /* Header Kicker */
@@ -158,18 +157,19 @@ const solutions = [
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #f8fafc;
-    border: 1px solid #f1f5f9;
+    background: #ffffff;
+    border: 1px solid var(--ink-200, #e2e8f0);
     border-radius: 12px;
     padding: 1.25rem 1rem;
     text-decoration: none;
+    box-shadow: 0 1px 2px rgba(9, 17, 32, 0.04), 0 1px 3px rgba(16, 24, 40, 0.02);
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .solution-item-card:hover {
     transform: translateY(-2px);
-    border-color: #cbd5e1;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-color: rgba(44, 62, 233, 0.35);
+    box-shadow: 0 8px 18px rgba(9, 17, 32, 0.07);
   }
 
   /* Top row containing Icon and Title */
