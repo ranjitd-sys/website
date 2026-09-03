@@ -6,6 +6,8 @@ import CtaBand from "@/components/pages/CtaBand.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+import HeroDiagram from "@/components/landing/HeroDiagram.astro"
+import DeepEcomLayer from "@/components/landing/sections/DeepEcomLayer.astro"
 
 const features = [
   {
@@ -65,47 +67,9 @@ const erps = ["Tally", "SAP", "Zoho"]
   </PageHero>
 
   <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="ONE LAYER"
-      title="Your marketplaces in, your ERP accounting out."
-      lead="DeepEcom is the layer between ecommerce channels and the ERP. It brings marketplace data together, makes it understandable, and posts detailed accounting into the systems you already use."
-      center
-    />
+    <DeepEcomLayer/>
 
-    <div class="mt-14 grid gap-8 lg:grid-cols-3">
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-wrap gap-3">
-          {marketplaces.map((name) => (
-            <div class="flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-600">
-                {name[0]}
-              </span>
-              <span class="text-sm font-medium text-ink-900">{name}</span>
-            </div>
-          ))}
-        </div>
-        <p class="text-sm text-muted-foreground">Ecommerce channels &amp; marketplaces</p>
-      </div>
-
-      <div class="flex flex-col items-center justify-center gap-3">
-        <span class="text-2xl font-bold tracking-tight text-brand-600">DeepEcom</span>
-        <span class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Intelligence · Reconciliation · Accounting</span>
-      </div>
-
-      <div class="flex flex-col gap-4">
-        <div class="flex flex-wrap gap-3">
-          {erps.map((name) => (
-            <div class="flex items-center gap-2 rounded-xl border border-ink-200 bg-white px-4 py-3 shadow-sm">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-600">
-                {name[0]}
-              </span>
-              <span class="text-sm font-medium text-ink-900">{name}</span>
-            </div>
-          ))}
-        </div>
-        <p class="text-sm text-muted-foreground">ERP systems</p>
-      </div>
-    </div>
+    
   </section>
 
   <FeatureGrid

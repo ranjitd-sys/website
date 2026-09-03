@@ -60,17 +60,17 @@
    2. Color palette
    ============================================================= */
 :root {
-/* Brand — DeepEcom violet (primary: #533AFD, light: #7F7DFC) */
-  --brand-50: #f1efff;
-  --brand-100: #e0dcff;
-  --brand-200: #c4beff;
-  --brand-300: #a29bff;
-  --brand-400: #7f7dfc;
-  --brand-500: #533afd;
-  --brand-600: #4a2ef0;
-  --brand-700: #3d25c9;
-  --brand-800: #32209f;
-  --brand-900: #241775;
+/* Brand — DeepEcom indigo-blue (primary: #2C3EE9) */
+  --brand-50: #eef0fe;
+  --brand-100: #d8dcfc;
+  --brand-200: #b4bcfa;
+  --brand-300: #8a98f7;
+  --brand-400: #5c6ff2;
+  --brand-500: #2c3ee9;
+  --brand-600: #2735c9;
+  --brand-700: #202da3;
+  --brand-800: #1a247d;
+  --brand-900: #11184e;
 
   /* Neutrals — cool, ink-leaning grays (Stripe-inspired) */
   --ink-50: #f8fafc;
@@ -199,7 +199,7 @@
   --gradient-hero:
     radial-gradient(42rem 20rem at 74% -8%, rgba(99, 102, 241, 0.16), transparent 60%),
     radial-gradient(38rem 18rem at 18% -4%, rgba(129, 140, 248, 0.12), transparent 58%),
-    radial-gradient(80rem 40rem at 50% 130%, rgba(83, 58, 253, 0.08), transparent 60%);
+    radial-gradient(80rem 40rem at 50% 130%, rgba(44, 62, 233, 0.08), transparent 60%);
   --gradient-hero-dark:
     radial-gradient(42rem 20rem at 74% -8%, rgba(129, 140, 248, 0.2), transparent 60%),
     radial-gradient(38rem 18rem at 18% -4%, rgba(99, 102, 241, 0.16), transparent 58%);
