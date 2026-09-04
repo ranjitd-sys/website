@@ -1,15 +1,23 @@
 ---
-import { ArrowRight, Check, ChevronRight } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
 import { buttonVariants } from "@/components/landing/ui/button"
 
 const sources = [
-  { label: "Your Website" },
-  { label: "Marketplaces" },
-  { label: "Payment Gateways" },
-  { label: "Other Channels" },
+  { label: "Your Website", sub: "SELL" },
+  { label: "Marketplaces", sub: "SELL" },
+  { label: "Payment Gateways", sub: "COLLECT" },
+  { label: "Shipping & Logistics", sub: "SHIP" },
+  { label: "Google & Meta Ads", sub: "ACQUIRE" },
+  { label: "Other Channels", sub: "SUPPORTED" },
 ]
 
 const engineFeatures = ["Connect", "Understand", "Reconcile", "Account"]
+
+const outputs = [
+  "Sales & Profitability",
+  "Payment Collections",
+  "Structured Reports",
+]
 
 const erps = ["Tally", "SAP", "Zoho"]
 ---
@@ -24,7 +32,7 @@ const erps = ["Tally", "SAP", "Zoho"]
     background:
       radial-gradient(46rem 24rem at 80% -10%, rgba(83, 58, 253, 0.12), transparent 60%),
       radial-gradient(34rem 18rem at 4% -8%, rgba(167, 139, 250, 0.1), transparent 55%),
-      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+      linear-gradient(180deg, var(--ink-50, #f8fafc) 0%, #ffffff 100%);
   }
   .d2c-h-inner {
     width: 100%;
@@ -108,182 +116,30 @@ const erps = ["Tally", "SAP", "Zoho"]
     color: var(--ink-700, #334155);
   }
 
-  /* HTML/CSS Diagram Box */
+  /* SVG Visual Styles & Flow Animation */
   .d2c-h-visual {
     width: 100%;
   }
-  .d2c-diagram-card {
+  .d2c-svg-diagram {
     width: 100%;
-    border: 1px solid var(--ink-200, #e2e8f0);
-    border-radius: 1.25rem;
-    background:
-      radial-gradient(30rem 22rem at 50% -10%, rgba(83, 58, 253, 0.08), transparent 62%),
-      linear-gradient(180deg, #ffffff 0%, var(--ink-50, #f8fafc) 120%);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
-    padding: 1.5rem;
+    height: auto;
+    display: block;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  .d2c-flow-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-    align-items: center;
-  }
-
-  @media (min-width: 48rem) {
-    .d2c-flow-grid {
-      grid-template-columns: 1fr auto 1.1fr auto 1.1fr;
-      gap: 0.6rem;
+  /* Animated Flow Effect for Connectors */
+  @keyframes d2cFlowAnimation {
+    from {
+      stroke-dashoffset: 24;
+    }
+    to {
+      stroke-dashoffset: 0;
     }
   }
 
-  .d2c-flow-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-  }
-
-  .d2c-col-header {
-    font-size: 0.65rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-400, #94a3b8);
-    margin-bottom: 0.25rem;
-  }
-
-  /* Source Nodes */
-  .d2c-source-node {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem 0.75rem;
-    background: #ffffff;
-    border: 1px solid var(--ink-200, #e2e8f0);
-    border-radius: 0.6rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--ink-900, #0f172a);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-    transition: border-color 0.2s ease, transform 0.2s ease;
-  }
-  .d2c-source-node:hover {
-    border-color: var(--brand-300, #a5b4fc);
-    transform: translateX(2px);
-  }
-  .d2c-source-node .dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--brand-500, #6366f1);
-    flex: none;
-  }
-
-  /* Core Engine Box */
-  .d2c-engine-box {
-    background: linear-gradient(135deg, var(--brand-500, #6366f1), var(--brand-700, #4338ca));
-    border-radius: 0.85rem;
-    padding: 1.1rem 0.9rem;
-    color: #ffffff;
-    box-shadow: 0 12px 24px -6px rgba(83, 58, 253, 0.35);
-  }
-  .d2c-engine-title {
-    font-size: 0.95rem;
-    font-weight: 800;
-    text-align: center;
-  }
-  .d2c-engine-subtitle {
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-align: center;
-    opacity: 0.8;
-    margin-bottom: 0.85rem;
-  }
-  .d2c-engine-pills {
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-  }
-  .d2c-engine-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.65rem;
-    background: rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(4px);
-    border-radius: 9999px;
-    font-size: 0.68rem;
-    font-weight: 600;
-  }
-  .d2c-engine-pill .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #ffffff;
-  }
-
-  /* Connector Arrows */
-  .d2c-flow-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--brand-400, #818cf8);
-    padding: 0.25rem;
-  }
-  @media (max-width: 47.99rem) {
-    .d2c-flow-arrow {
-      transform: rotate(90deg);
-    }
-  }
-
-  /* Output Cards */
-  .d2c-output-box {
-    background: #ffffff;
-    border: 1px solid var(--ink-200, #e2e8f0);
-    border-radius: 0.75rem;
-    padding: 0.75rem 0.85rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
-  }
-  .d2c-output-tag {
-    font-size: 0.6rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--brand-600, #4f46e5);
-    margin-bottom: 0.45rem;
-  }
-  .d2c-output-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--ink-800, #1e293b);
-  }
-
-  .d2c-erp-box {
-    background: var(--ink-50, #f8fafc);
-    border: 1px solid var(--ink-200, #e2e8f0);
-    border-radius: 0.75rem;
-    padding: 0.65rem 0.85rem;
-  }
-  .d2c-erp-tag {
-    font-size: 0.58rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-400, #94a3b8);
-    margin-bottom: 0.25rem;
-  }
-  .d2c-erp-names {
-    font-size: 0.74rem;
-    font-weight: 800;
-    color: var(--ink-700, #334155);
+  .d2c-flow-dash {
+    stroke-dasharray: 6 6;
+    animation: d2cFlowAnimation 1.2s linear infinite;
   }
 
   .d2c-h-note-under {
@@ -304,7 +160,7 @@ const erps = ["Tally", "SAP", "Zoho"]
           All your ecommerce channels. <span class="accent">One platform.</span>
         </h1>
         <p class="d2c-h-lead">
-          Connect the platforms you sell on and the payment systems you use to bring sales, payments, profitability, reconciliation and accounting into one place.
+          Bring your selling channels, payment sources, shipping and logistics partners and ad platforms into one connected view — sales, profitability, reconciliation and accounting in a single place.
         </p>
         <div class="d2c-h-actions">
           <a href="/contact" class={buttonVariants({ size: "default" })}>
@@ -321,68 +177,100 @@ const erps = ["Tally", "SAP", "Zoho"]
         </p>
       </div>
 
-      <!-- Right Visual: Clean HTML/CSS Diagram Box -->
+      <!-- Right Visual: Vector SVG Diagram (Transparent Background + Animated Flow) -->
       <div class="d2c-h-visual reveal" data-delay="120" role="img" aria-label="Diagram showing sources flowing into DeepEcom engine and out to unified reporting and ERPs">
-        <div class="d2c-diagram-card">
-          <div class="d2c-flow-grid">
+        <svg viewBox="0 0 760 450" class="d2c-svg-diagram" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- Core Engine Gradient -->
+            <linearGradient id="d2cEngineGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6366f1" />
+              <stop offset="100%" stop-color="#4338ca" />
+            </linearGradient>
+
+            <!-- Connector Flow Line Gradient -->
+            <linearGradient id="d2cLineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#818cf8" />
+              <stop offset="50%" stop-color="#6366f1" />
+              <stop offset="100%" stop-color="#a5b4fc" />
+            </linearGradient>
+
+            <!-- Soft Drop Shadow for Core Engine -->
+            <filter id="d2cShadow" x="-10%" y="-10%" width="120%" height="130%">
+              <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#533afd" flood-opacity="0.22" />
+            </filter>
+          </defs>
+
+          <!-- Column Headers -->
+          <text x="30" y="24" font-size="10" font-weight="800" fill="#94a3b8" letter-spacing="1.2">SOURCES</text>
+          <text x="530" y="24" font-size="10" font-weight="800" fill="#94a3b8" letter-spacing="1.2">OUTPUT & INTEGRATION</text>
+
+          <!-- Static Base Connector Lines -->
+          <g stroke="#cbd5e1" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round">
+            {sources.map((_, idx) => (
+              <path d={`M 230 ${72 + idx * 58} C 255 ${72 + idx * 58}, 255 220, 280 220`} />
+            ))}
+            <path d="M 480 190 C 505 190, 505 160, 530 160" />
+            <path d="M 480 250 C 505 250, 505 320, 530 320" />
+          </g>
+
+          <!-- Animated Flowing Dash Connector Lines -->
+          <g stroke="url(#d2cLineGrad)" stroke-width="2.5" fill="none" stroke-linecap="round" class="d2c-flow-dash">
+            {sources.map((_, idx) => (
+              <path d={`M 230 ${72 + idx * 58} C 255 ${72 + idx * 58}, 255 220, 280 220`} />
+            ))}
+            <path d="M 480 190 C 505 190, 505 160, 530 160" />
+            <path d="M 480 250 C 505 250, 505 320, 530 320" />
+          </g>
+
+          <!-- LEFT COLUMN: Sources -->
+          {sources.map((item, idx) => (
+            <g transform={`translate(30, ${48 + idx * 58})`}>
+              <rect width="200" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+              <circle cx="18" cy="24" r="3.5" fill="#6366f1" />
+              <text x="32" y="28" font-size="12" font-weight="700" fill="#0f172a">{item.label}</text>
+              <text x="184" y="28" font-size="9" font-weight="800" fill="#6366f1" text-anchor="end" letter-spacing="0.5">{item.sub}</text>
+            </g>
+          ))}
+
+          <!-- CENTER COLUMN: DeepEcom Core Engine -->
+          <g transform="translate(280, 85)" filter="url(#d2cShadow)">
+            <rect width="200" height="270" rx="16" fill="url(#d2cEngineGrad)" />
             
-            <!-- Left Column: Sources -->
-            <div class="d2c-flow-col">
-              <span class="d2c-col-header">Sources</span>
-              {sources.map((item) => (
-                <div class="d2c-source-node">
-                  <span class="dot" aria-hidden="true"></span>
-                  <span>{item.label}</span>
-                </div>
-              ))}
-            </div>
+            <text x="100" y="36" font-size="16" font-weight="800" fill="#ffffff" text-anchor="middle">DeepEcom</text>
+            <text x="100" y="52" font-size="9" font-weight="800" fill="#ffffff" opacity="0.8" text-anchor="middle" letter-spacing="1">CORE PLATFORM</text>
 
-            <!-- Connector 1 -->
-            <div class="d2c-flow-arrow" aria-hidden="true">
-              <ChevronRight size={20} />
-            </div>
+            <!-- Engine Feature Pills -->
+            {engineFeatures.map((feat, idx) => (
+              <g transform={`translate(18, ${70 + idx * 45})`}>
+                <rect width="164" height="34" rx="17" fill="#ffffff" fill-opacity="0.16" />
+                <circle cx="18" cy="17" r="3" fill="#ffffff" />
+                <text x="32" y="21" font-size="11" font-weight="600" fill="#ffffff">{feat}</text>
+              </g>
+            ))}
+          </g>
 
-            <!-- Center Column: DeepEcom Engine -->
-            <div class="d2c-flow-col">
-              <span class="d2c-col-header">&nbsp;</span>
-              <div class="d2c-engine-box">
-                <div class="d2c-engine-title">DeepEcom</div>
-                <div class="d2c-engine-subtitle">Core Platform</div>
-                <div class="d2c-engine-pills">
-                  {engineFeatures.map((feat) => (
-                    <div class="d2c-engine-pill">
-                      <span class="dot" aria-hidden="true"></span>
-                      <span>{feat}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+          <!-- RIGHT COLUMN: Outputs -->
+          <!-- Box 1: Unified View -->
+          <g transform="translate(530, 85)">
+            <rect width="195" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+            <text x="16" y="28" font-size="10" font-weight="800" fill="#4f46e5" letter-spacing="0.8">UNIFIED VIEW</text>
+            
+            {outputs.map((out, idx) => (
+              <g transform={`translate(16, ${54 + idx * 32})`}>
+                <circle cx="4" cy="0" r="3" fill="#6366f1" />
+                <text x="16" y="4" font-size="11" font-weight="700" fill="#1e293b">{out}</text>
+              </g>
+            ))}
+          </g>
 
-            <!-- Connector 2 -->
-            <div class="d2c-flow-arrow" aria-hidden="true">
-              <ChevronRight size={20} />
-            </div>
+          <!-- Box 2: ERP Connectors -->
+          <g transform="translate(530, 260)">
+            <rect width="195" height="95" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
+            <text x="16" y="28" font-size="9" font-weight="800" fill="#94a3b8" letter-spacing="0.8">ERP CONNECTORS</text>
+            <text x="16" y="58" font-size="13" font-weight="800" fill="#334155">{erps.join("   •   ")}</text>
+          </g>
+        </svg>
 
-            <!-- Right Column: Outputs -->
-            <div class="d2c-flow-col">
-              <span class="d2c-col-header">Output & Integration</span>
-              <div class="d2c-output-box">
-                <div class="d2c-output-tag">Unified View</div>
-                <ul class="d2c-output-list">
-                  <li>• Sales & Profitability</li>
-                  <li>• Payment Collections</li>
-                  <li>• Structured Reports</li>
-                </ul>
-              </div>
-              <div class="d2c-erp-box">
-                <div class="d2c-erp-tag">ERP Connectors</div>
-                <div class="d2c-erp-names">{erps.join("  •  ")}</div>
-              </div>
-            </div>
-
-          </div>
-        </div>
         <p class="d2c-h-note-under">Illustrative composition — supported systems depend on your setup.</p>
       </div>
 

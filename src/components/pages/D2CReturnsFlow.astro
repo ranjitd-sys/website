@@ -89,19 +89,17 @@ const steps = [
   <div class="mx-auto max-w-6xl px-6">
     <div class="d2crf-app reveal" role="img" aria-label="Illustration: an order becomes a payment, then a return or refund, then an adjustment, and profitability and accounting stay connected">
       <div class="d2crf-flow">
-        {steps.map((s, i) => (
-          <>
-            <div class:list={["d2crf-step", i === steps.length - 1 && "brand"]}>
-              <div class="l">{s.label}</div>
-              <div class="s">{s.sub}</div>
+        {steps.map((s, i) => [
+          <div class:list={["d2crf-step", i === steps.length - 1 && "brand"]}>
+            <div class="l">{s.label}</div>
+            <div class="s">{s.sub}</div>
+          </div>,
+          i < steps.length - 1 && (
+            <div class="d2crf-arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </div>
-            {i < steps.length - 1 && (
-              <div class="d2crf-arrow" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-              </div>
-            )}
-          </>
-        ))}
+          )
+        ])}
       </div>
       <div class="d2crf-note">
         When a transaction changes — a return, a refund, an adjustment — the financial view stays connected to the original order.

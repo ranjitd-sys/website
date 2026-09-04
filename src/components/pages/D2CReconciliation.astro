@@ -16,13 +16,14 @@ const rows = [
 <style is:global>
   .d2cr {
     padding-block: clamp(1rem, 2vh, 1.5rem);
+    overflow-x: hidden;
   }
   .d2cr-app {
     border: 1px solid var(--ink-200);
     border-radius: 1rem;
     background: #fff;
     box-shadow: var(--shadow-card);
-    overflow: hidden;
+    overflow-x: hidden;
   }
   .d2cr-bar {
     display: flex;
@@ -102,6 +103,15 @@ const rows = [
     background: var(--ink-50);
     border-bottom: 1px solid var(--ink-200);
   }
+  .d2cr-wrap {
+  overflow-x: hidden;
+  border-top: 1px solid var(--ink-100);
+}
+.d2cr-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
   .d2cr-table th.right { text-align: right; }
   .d2cr-table td {
     padding: 0.65rem 1rem;

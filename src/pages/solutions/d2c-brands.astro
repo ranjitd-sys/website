@@ -61,6 +61,8 @@ const faqs = [
   { q: "Can I compare profitability across channels?", a: "Yes. Profitability is shown per channel — revenue after the deductions and supported costs your data carries — so you can see where the business genuinely makes money." },
   { q: "Can I reconcile marketplace payments?", a: "Yes. Expected vs received is compared for connected marketplace settlements, with every difference surfaced." },
   { q: "Can I reconcile payment-gateway transactions?", a: "Yes. Collections from connected payment sources are reconciled — expected vs received — so you don't piece together payment information from multiple systems." },
+  { q: "Can shipping and logistics costs be tracked?", a: "Yes. Costs from shipping and logistics partners like Shiprocket are reflected in profitability and accounting, so fulfilment costs stay connected to the sales they belong to." },
+  { q: "Can ad spend on Google and Meta be accounted for?", a: "Yes. Ad spend on platforms like Google Ads and Meta Ads can be represented as a marketing expense in profitability and accounting — so you see the true cost of acquisition against your sales." },
   { q: "How are returns handled?", a: "Returns reverse the original sale and its tax through accounting, so revenue and tax ledgers stay balanced." },
   { q: "How is GST represented?", a: "The GST context carried by a transaction is kept with the order — taxable value and GST by head — and represented in the accounting." },
   { q: "Can D2C transactions be accounted for order-wise?", a: "Yes. Each order is accounted individually with its revenue, charges, GST and receivable." },
@@ -88,7 +90,7 @@ const faqs = [
           <span class="eyebrow">THE PROBLEM</span>
           <h2 class="h2-md mt-4">Your business is one. Your systems are many.</h2>
           <p class="lead mt-5">
-            As a D2C business grows, every new sales channel and payment system adds another source of data to understand, reconcile and account for.
+            As a D2C business grows, every new sales channel, payment system, shipping partner and ad platform adds another source of data to understand, reconcile and account for.
           </p>
         </div>
         <div class="reveal min-w-0">
@@ -98,7 +100,7 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 03 — MANY PLATFORMS. MANY PAYMENT SYSTEMS. ONE DEEPECOM. -->
+  
 
 
   <!-- 04 — CONNECT YOUR ENTIRE SELLING ECOSYSTEM -->
@@ -109,7 +111,7 @@ const faqs = [
           <span class="eyebrow">CONNECT</span>
           <h2 class="h2-md mt-4">Bring every selling channel into one place.</h2>
           <p class="lead mt-5">
-            Your website, marketplaces and payment sources stay where they are — DeepEcom connects to them and brings the financial data together.
+            Your website, marketplaces, payment sources, shipping and logistics partners and ad platforms stay where they are — DeepEcom connects to them and brings the financial data together.
           </p>
         </div>
         <div class="reveal min-w-0">
@@ -126,7 +128,7 @@ const faqs = [
         <span class="eyebrow eyebrow-center">ONE VIEW</span>
         <h2 class="h2-md mt-4">Stop stitching your business together manually.</h2>
         <p class="lead mt-5">
-          Revenue, orders, payments, profit and margin across every channel and payment source — in one dashboard.
+          Revenue, orders, payments, profit and margin across every channel, payment source, shipping partner and ad platform — in one dashboard.
         </p>
       </div>
       <div class="mt-10">
@@ -179,7 +181,7 @@ const faqs = [
           <span class="eyebrow">UNIFIED PROFITABILITY</span>
           <h2 class="h2-md mt-4">Know what your entire D2C business actually makes.</h2>
           <p class="lead mt-5">
-            Don't just know what sold — know what made money. Revenue, deductions and profit across every channel, in one view.
+            Don't just know what sold — know what made money. Revenue, channel deductions, shipping and logistics costs and ad spend across every channel, in one view.
           </p>
           <div class="mt-6">
             <a href="/platform/profitability" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
@@ -217,8 +219,7 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 10 — RETURNS & REFUNDS -->
-  
+
 
   <!-- 11 — GST & TRANSACTION CONTEXT -->
   <section>
@@ -247,7 +248,7 @@ const faqs = [
           <span class="eyebrow">DETAILED ACCOUNTING</span>
           <h2 class="h2-md mt-4">From every channel to detailed ecommerce accounting.</h2>
           <p class="lead mt-5">
-            Each order becomes a balanced journal — order-wise, GST-wise and warehouse-wise — posted into your ERP.
+            Each order becomes a balanced journal — order-wise, GST-wise and warehouse-wise — posted into your ERP. Shipping, logistics and ad costs are kept as expenses alongside every sale.
           </p>
           <ul class="mt-6 flex flex-col gap-3.5">
             {
@@ -291,7 +292,7 @@ const faqs = [
     </div>
   </section>
 
-  
+
 
   <!-- 15 — HOW IT WORKS -->
   <section id="how-it-works">
@@ -303,7 +304,7 @@ const faqs = [
       </div>
       <HowItWorksSteps
         steps={[
-          { num: "01", label: "Connect", desc: "Connect supported selling platforms and payment sources." },
+          { num: "01", label: "Connect", desc: "Connect supported selling platforms, payment sources, shipping partners and ad platforms." },
           { num: "02", label: "Collect", desc: "Bring transaction information into DeepEcom." },
           { num: "03", label: "Unify", desc: "Bring fragmented channel data into one platform." },
           { num: "04", label: "Understand", desc: "See sales, profitability and payment information." },

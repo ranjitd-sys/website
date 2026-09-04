@@ -11,6 +11,15 @@ const payments = [
   { label: "Settlement source", sub: "payouts" },
   { label: "Other payment sources", sub: "supported" },
 ]
+const ops = [
+  { label: "Shiprocket", sub: "shipping & logistics" },
+  { label: "Other logistics partners", sub: "supported" },
+]
+const ads = [
+  { label: "Google Ads", sub: "ad spend" },
+  { label: "Meta Ads", sub: "ad spend" },
+  { label: "Other ad platforms", sub: "supported" },
+]
 ---
 
 <style is:global>
@@ -123,7 +132,7 @@ const payments = [
 
 <section class="d2ce">
   <div class="mx-auto max-w-6xl px-6">
-    <div class="d2ce-app reveal" role="img" aria-label="Illustration: your website, Amazon, Flipkart, Shopify and other channels plus payment gateways and settlement sources connect into DeepEcom">
+    <div class="d2ce-app reveal" role="img" aria-label="Illustration: your website, Amazon, Flipkart, Shopify and other channels, payment gateways, shipping and logistics partners and ad platforms connect into DeepEcom">
       <div class="d2ce-head">
         <span class="title">Connect your selling ecosystem</span>
         <span class="hint">one layer for all of it</span>
@@ -149,16 +158,36 @@ const payments = [
         ))}
       </div>
 
+      <div class="d2ce-group-label">Shipping &amp; logistics</div>
+      <div class="d2ce-group">
+        {ops.map((c) => (
+          <span class="d2ce-chip">
+            <span class="l">{c.label}</span>
+            <span class="s">{c.sub}</span>
+          </span>
+        ))}
+      </div>
+
+      <div class="d2ce-group-label">Ad platforms</div>
+      <div class="d2ce-group">
+        {ads.map((c) => (
+          <span class="d2ce-chip">
+            <span class="l">{c.label}</span>
+            <span class="s">{c.sub}</span>
+          </span>
+        ))}
+      </div>
+
       <div class="d2ce-divider" aria-hidden="true"></div>
 
       <div class="d2ce-core">
         <div>
           <div class="name">DeepEcom</div>
-          <div class="desc">Connects every channel and payment source into one financial layer</div>
+          <div class="desc">Connects every channel, payment source, shipping partner and ad platform into one financial layer</div>
         </div>
         <span class="tag">Platform + ERP Connector</span>
       </div>
-      <p class="d2ce-note">Supported channels and payment sources depend on your setup.</p>
+      <p class="d2ce-note">Supported channels, payment sources, logistics partners and ad platforms depend on your setup.</p>
     </div>
   </div>
 </section>
