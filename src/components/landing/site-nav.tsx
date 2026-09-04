@@ -101,8 +101,8 @@ function NavTrigger({
   onMouseLeave: () => void
   registerTrigger: (id: string, el: HTMLButtonElement | null) => void
 }) {
-  const cls = `group inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-    open ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
+  const cls = `relative inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
+    open ? "text-foreground" : "text-muted-foreground hover:text-foreground"
   }`
 
   if (item.type === "menu") {
@@ -360,6 +360,7 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [mobileExpanded, setMobileExpanded] = useState<string[]>([])
   const { open, openSoon, closeSoon, keepOpen, openNow, closeNow, triggerRefs, panelRefs } = useHoverNav()
+  const [indicator, setIndicator] = useState<{ x: number; w: number } | null>(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -376,6 +377,19 @@ export default function Navbar() {
       document.body.style.overflow = prev
     }
   }, [mobileOpen])
+
+  // Position the sliding pill behind whichever trigger is hovered/focused/active.
+  // Animate the pill to the next item (CSS transition on left/width) so it
+  // "flows" between nav items instead of popping.
+  const moveIndicator = (id: string) => {
+    const el = triggerRefs.current[id]
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const track = el.parentElement
+    if (!track) return
+    setIndicator({ x: rect.left - track.getBoundingClientRect().left, w: rect.width })
+  }
+  const clearIndicator = () => setIndicator(null)
 
   const toggleMobileAccordion = (id: string) =>
     setMobileExpanded((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
@@ -400,27 +414,44 @@ export default function Navbar() {
   }
 
   return (
-    <header data-nav-root className={`fixed inset-x-0 top-0 z-50 border-b transition-[border-color,box-shadow] duration-200 ${scrolled ? "border-border bg-white/85 shadow-xs backdrop-blur-xl backdrop-saturate-150" : "border-transparent bg-white/0"}`}>
+    <header data-nav-root className={`fixed inset-x-0 top-0 z-50 border-b transition-[border-color,box-shadow] duration-200 ${scrolled || open ? "border-border bg-white/85 shadow-xs backdrop-blur-xl backdrop-saturate-150" : "border-transparent bg-white/0"}`}>
       <nav className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6 lg:h-17" aria-label="Primary">
         <a href="/" onFocus={() => closeNow()} className="inline-flex items-center gap-2.5 text-[17.5px] font-bold tracking-tight text-foreground no-underline">
           <LogoMark />
           DeepEcom
         </a>
 
-        <div className="ml-4 hidden items-center gap-1 lg:flex">
+        <div className="relative ml-4 hidden items-center gap-1 lg:flex">
+          {/* sliding indicator pill */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 z-0 h-9 -translate-y-1/2 rounded-lg bg-brand-50/80 ring-1 ring-brand-100 transition-[left,width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"
+            style={{ left: indicator ? indicator.x : -40, width: indicator ? indicator.w : 0, opacity: indicator ? 1 : 0 }}
+          />
           {NAV_ITEMS.map((item) => (
             <div
               key={item.id}
-              className="relative"
-              onMouseEnter={() => (item.type === "menu" ? openSoon(item.id) : undefined)}
+              className="relative z-10"
+              onMouseEnter={() => {
+                if (item.type === "menu") openSoon(item.id)
+                moveIndicator(item.id)
+              }}
               onMouseLeave={() => (item.type === "menu" ? closeSoon() : undefined)}
+              onFocusCapture={() => moveIndicator(item.id)}
             >
               <NavTrigger
                 item={item}
                 open={open === item.id}
-                onFocus={() => (item.type === "menu" ? openNow(item.id) : closeNow())}
+                onFocus={() => {
+                  if (item.type === "menu") openNow(item.id)
+                  else closeNow()
+                  moveIndicator(item.id)
+                }}
                 onKeyDown={(e) => handleTriggerKeyDown(e, item.id)}
-                onMouseEnter={() => (item.type === "menu" ? openSoon(item.id) : undefined)}
+                onMouseEnter={() => {
+                  if (item.type === "menu") openSoon(item.id)
+                  moveIndicator(item.id)
+                }}
                 onMouseLeave={() => (item.type === "menu" ? closeSoon() : undefined)}
                 registerTrigger={(id, el) => (triggerRefs.current[id] = el)}
               />

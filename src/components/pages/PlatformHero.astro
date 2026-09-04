@@ -1,7 +1,19 @@
 ---
 import { ArrowRight } from "lucide-react"
 import { buttonVariants } from "@/components/landing/ui/button"
-import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
+
+const marketplaces = [
+  { name: "Amazon", init: "Am", tag: "Sales · fees · settlements" },
+  { name: "Flipkart", init: "Fk", tag: "Sales · fees · settlements" },
+  { name: "Shopify", init: "Sy", tag: "Orders · payouts" },
+  { name: "Meesho", init: "Me", tag: "Sales · returns" },
+]
+const capabilities = [
+  { label: "Sales", sub: "Revenue across channels" },
+  { label: "Profitability", sub: "What you actually make" },
+  { label: "Payments", sub: "Expected vs received" },
+  { label: "Performance", sub: "Channel-by-channel" },
+]
 ---
 
 <style is:global>
@@ -9,7 +21,7 @@ import DashboardPreview from "@/components/landing/sections/DashboardPreview.ast
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: clamp(5rem, 9vh, 7rem) 0 clamp(2.5rem, 5vh, 4rem);
+    padding: clamp(7rem, 12vh, 9rem) 0 clamp(2.5rem, 5vh, 4rem);
     background:
       radial-gradient(46rem 24rem at 76% -10%, rgba(44, 62, 233, 0.12), transparent 60%),
       radial-gradient(34rem 18rem at 8% -6%, rgba(127, 125, 252, 0.09), transparent 55%),
@@ -98,53 +110,138 @@ import DashboardPreview from "@/components/landing/sections/DashboardPreview.ast
     color: var(--ink-900);
   }
 
-  /* ---------- Right: dashboard ---------- */
+  /* ---------- Right: many marketplaces → one view ---------- */
   .ph-visual {
     width: 100%;
+    max-width: 32rem;
+    margin-inline: auto;
   }
-  .ph-visual .dash-stage {
-    background: transparent;
-    border: none;
-  }
-  .ph-visual .dash-stage aside {
-    display: none !important;
-  }
-  .ph-visual .dash-stage [class*="grid-cols-[1fr_340px]"] {
-    grid-template-columns: 1fr;
-  }
-  .ph-cap {
-    margin-top: 0.75rem;
+  .ph-unify {
     display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 0.75rem;
   }
-  .ph-cap-chip {
-    display: inline-flex;
+  .ph-sources {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  @media (max-width: 26rem) {
+    .ph-sources {
+      grid-template-columns: 1fr;
+    }
+  }
+  .ph-source {
+    display: flex;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.35rem 0.75rem;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
     border: 1px solid var(--ink-200);
-    border-radius: 999px;
+    border-radius: 0.75rem;
     background: #fff;
     box-shadow: var(--shadow-sm);
-    font-size: 0.75rem;
-    font-weight: 600;
+  }
+  .ph-source-init {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.55rem;
+    background: var(--ink-50);
     color: var(--ink-600);
+    font-size: 0.68rem;
+    font-weight: 800;
+    flex: none;
+  }
+  .ph-source-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .ph-source-tag {
+    font-size: 0.66rem;
+    color: var(--ink-400);
+  }
+  .ph-down {
+    display: flex;
+    justify-content: center;
+    color: var(--brand-400);
+  }
+  .ph-center {
+    border: 1px solid var(--brand-200);
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    padding: 0.9rem 1.1rem;
+    box-shadow: 0 16px 32px -16px rgba(44, 62, 233, 0.4);
+  }
+  .ph-center-top {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ph-center-name {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .ph-center-tag {
+    margin-left: auto;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .ph-center-sub {
+    margin-top: 0.3rem;
+    font-size: 0.78rem;
+    opacity: 0.85;
+  }
+  .ph-cap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .ph-cap-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
   }
   .ph-cap-chip .dot {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--brand-500);
+    flex: none;
+  }
+  .ph-cap-chip .txt {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .ph-cap-chip .sub {
+    font-size: 0.66rem;
+    color: var(--ink-400);
   }
 
   @media (max-width: 47.99rem) {
     .ph {
-      padding-top: 3.75rem;
+      padding-top: 5rem;
     }
     .ph-title {
       font-size: clamp(2rem, 8.5vw, 2.5rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ph-down {
+      animation: none;
     }
   }
 </style>
@@ -175,14 +272,44 @@ import DashboardPreview from "@/components/landing/sections/DashboardPreview.ast
         </div>
       </div>
 
-      <!-- Right: dashboard composition -->
-      <div class="ph-visual reveal" data-delay="120">
-        <DashboardPreview compact />
-        <div class="ph-cap" aria-hidden="true">
-          <span class="ph-cap-chip"><span class="dot"></span>Dashboard</span>
-          <span class="ph-cap-chip"><span class="dot"></span>Profitability</span>
-          <span class="ph-cap-chip"><span class="dot"></span>Payment Reconciliation</span>
-          <span class="ph-cap-chip"><span class="dot"></span>Reports</span>
+      <!-- Right: marketplaces → DeepEcom → one view -->
+      <div class="ph-visual reveal" data-delay="120" aria-label="Illustration: Amazon, Flipkart, Shopify and Meesho flow into the DeepEcom Platform and become one clear business view">
+        <div class="ph-unify">
+          <div class="ph-sources">
+            {marketplaces.map((m) => (
+              <div class="ph-source">
+                <span class="ph-source-init">{m.init}</span>
+                <span>
+                  <span class="ph-source-name">{m.name}</span>
+                  <span class="ph-source-tag">{m.tag}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div class="ph-down" aria-hidden="true">
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 0v12M4 8l6 6 6-6" /></svg>
+          </div>
+
+          <div class="ph-center">
+            <div class="ph-center-top">
+              <span class="ph-center-name">DeepEcom</span>
+              <span class="ph-center-tag">Platform</span>
+            </div>
+            <div class="ph-center-sub">One business view across every channel</div>
+          </div>
+
+          <div class="ph-cap">
+            {capabilities.map((c) => (
+              <div class="ph-cap-chip">
+                <span class="dot" aria-hidden="true"></span>
+                <span>
+                  <span class="txt">{c.label}</span>
+                  <span class="sub"> {c.sub}</span>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

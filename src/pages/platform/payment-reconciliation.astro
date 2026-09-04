@@ -65,9 +65,9 @@ const faqs = [
 
   <!-- 02 — WHY PAYMENTS DON'T MATCH -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
-        <div class="max-w-lg">
+        <div class="max-w-lg reveal">
           <span class="eyebrow">THE PROBLEM</span>
           <h2 class="h2-md mt-4">What you sold is not always what you received.</h2>
           <p class="lead mt-5">
@@ -83,13 +83,13 @@ const faqs = [
 
   <!-- 03 — WHAT DEEPECOM RECONCILES -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">WHAT IT COMPARES</span>
         <h2 class="h2-md mt-4">Reconcile the transaction, not just the total.</h2>
         <p class="lead mt-5">Orders, invoices, settlement data, payments, returns and charges are brought together so expected and received amounts line up at the right level.</p>
       </div>
-      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid reveal gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {whatsCompared.map((d) => (
           <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="text-sm font-semibold text-ink-800">{d.label}</div>
@@ -102,8 +102,8 @@ const faqs = [
 
   <!-- 04 — MATCH / MISMATCH STATES -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">THE STATES</span>
         <h2 class="h2-md mt-4">Find payments that don't line up.</h2>
         <p class="lead mt-5">Every settlement falls into a clear state — matched, partial or unmatched — so exceptions are easy to spot.</p>
@@ -114,9 +114,9 @@ const faqs = [
 
   <!-- 05 — EXPECTED VS ACTUAL TABLE -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
-        <div class="max-w-lg">
+        <div class="max-w-lg reveal">
           <span class="eyebrow">IN THE PRODUCT</span>
           <h2 class="h2-md mt-4">Know exactly what matched — and what didn't.</h2>
           <p class="lead mt-5">
@@ -151,7 +151,7 @@ const faqs = [
 
   <!-- 06 — RETURNS & FEES IMPACT -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1.1fr_1fr]">
         <div class="reveal order-2 lg:order-1 rounded-2xl border border-ink-200 bg-white p-6 shadow-card">
           <div class="flex flex-col gap-3">
@@ -183,8 +183,8 @@ const faqs = [
 
   <!-- 07 — HOW IT WORKS -->
   <section id="how-it-works">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">HOW IT WORKS</span>
         <h2 class="h2-md mt-4">Reconcile in five steps.</h2>
         <p class="lead mt-5">From connecting your marketplaces to reviewing the results.</p>
@@ -203,8 +203,8 @@ const faqs = [
 
   <!-- 08 — PROFITABILITY + ERP -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">ONE LAYER</span>
         <h2 class="h2-md mt-4">Reconcile what you received. Understand what you made. Account with confidence.</h2>
         <p class="lead mt-5">
@@ -219,12 +219,12 @@ const faqs = [
 
   <!-- 09 — WHO IT'S FOR -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-2xl">
+    <div class="sec">
+      <div class="max-w-2xl reveal">
         <span class="eyebrow">WHO IT'S FOR</span>
         <h2 class="h2-md mt-4">Built for the people who need the numbers to match.</h2>
       </div>
-      <div class="mt-8 grid gap-6 md:grid-cols-3">
+      <div class="mt-8 grid reveal gap-6 md:grid-cols-3">
         {personaData.map((p) => (
           <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
@@ -242,17 +242,17 @@ const faqs = [
 
   <!-- 10 — CUSTOMER PROOF -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <CustomerProof />
     </div>
   </section>
 
   <!-- 11 — FAQ -->
   <section>
-    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+    <div class="sec-narrow">
       <span class="eyebrow">FAQ</span>
       <h2 class="h2-md mt-4">Payment reconciliation, explained.</h2>
-      <div class="mt-8 flex flex-col gap-3">
+      <div class="mt-8 flex flex-col gap-3 reveal">
         {faqs.map((f, i) => (
           <details class="faq-item" open={i === 0}>
             <summary class="faq-q">{f.q}</summary>

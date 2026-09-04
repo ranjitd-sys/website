@@ -63,7 +63,7 @@ const faqs = [
 
   <!-- 02 — WHY ECOMMERCE INVENTORY IS DIFFERENT -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
         <div>
           <span class="eyebrow">WHY IT MATTERS</span>
@@ -95,8 +95,8 @@ const faqs = [
 
   <!-- 03 — AT A GLANCE: THREE MOTIFS -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">WHAT IT DOES</span>
         <h2 class="h2-md mt-4">Order → inventory → warehouse → accounting → ERP.</h2>
         <p class="lead mt-5">Three movements, one accounting thread — everything connected in the books.</p>
@@ -107,7 +107,7 @@ const faqs = [
 
   <!-- 04 — INVENTORY ACROSS WAREHOUSES -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div>
           <span class="eyebrow">MULTI-WAREHOUSE</span>
@@ -139,7 +139,7 @@ const faqs = [
 
   <!-- 05 — STOCK TRANSFERS -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
         <div class="reveal order-2 lg:order-1">
           <StockTransferVisual />
@@ -171,8 +171,8 @@ const faqs = [
 
   <!-- 06 — DETAILED STOCK MOVEMENT -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">STOCK MOVEMENT</span>
         <h2 class="h2-md mt-4">See every stock movement in context.</h2>
         <p class="lead mt-5">Sales, returns and stock transfers — each with SKU, warehouse, quantity and value.</p>
@@ -183,7 +183,7 @@ const faqs = [
 
   <!-- 07 — INVENTORY → ACCOUNTING → ERP -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+    <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div>
           <span class="eyebrow">IN THE ERP</span>
@@ -215,8 +215,8 @@ const faqs = [
 
   <!-- 08 — HOW IT WORKS -->
   <section id="how-it-works" class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">HOW IT WORKS</span>
         <h2 class="h2-md mt-4">Connect inventory movement to your accounting flow.</h2>
         <p class="lead mt-5">Five stages carry stock movement from the marketplace into your ERP.</p>
@@ -235,8 +235,8 @@ const faqs = [
 
   <!-- 09 — ERP CONNECTIVITY -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">ERP CONNECTIVITY</span>
         <h2 class="h2-md mt-4">Inventory-ready accounting in the ERP you already use.</h2>
         <p class="lead mt-5">Prepared inventory and stock-transfer entries post into the systems your finance team runs on.</p>
@@ -247,8 +247,8 @@ const faqs = [
 
   <!-- 10 — PLATFORM + ERP CONNECTOR -->
   <section class="section-band">
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-3xl">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
         <span class="eyebrow">ONE SYSTEM</span>
         <h2 class="h2-md mt-4">Understand the transaction. Track the movement. Keep the books aligned.</h2>
         <p class="lead mt-5">
@@ -263,12 +263,12 @@ const faqs = [
 
   <!-- 11 — WHO IT'S FOR -->
   <section>
-    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
-      <div class="max-w-2xl">
+    <div class="sec">
+      <div class="max-w-2xl reveal">
         <span class="eyebrow">WHO IT'S FOR</span>
         <h2 class="h2-md mt-4">Built for teams managing ecommerce across warehouses.</h2>
       </div>
-      <div class="mt-8 grid gap-6 md:grid-cols-3">
+      <div class="mt-8 grid reveal gap-6 md:grid-cols-3">
         {personas.map((p) => (
           <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
@@ -286,10 +286,10 @@ const faqs = [
 
   <!-- 12 — FAQ -->
   <section class="section-band">
-    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
+    <div class="sec-narrow">
       <span class="eyebrow">FAQ</span>
       <h2 class="h2-md mt-4">Inventory and ecommerce accounting, explained.</h2>
-      <div class="mt-8 flex flex-col gap-3">
+      <div class="mt-8 flex flex-col gap-3 reveal">
         {faqs.map((f, i) => (
           <details class="faq-item" open={i === 0}>
             <summary class="faq-q">{f.q}</summary>

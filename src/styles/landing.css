@@ -327,6 +327,27 @@ body {
   padding-inline: var(--space-gutter);
   padding-block: clamp(2.5rem, 5vh, 4rem);
 }
+/* accounting page: band sections whose inner container carries no vertical padding */
+.section-band .band-bleed {
+  max-width: var(--container-wide);
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+  padding-block: clamp(2.5rem, 5vh, 4rem);
+}
+
+/* ---------- standard product section inner container ---------- */
+.sec {
+  max-width: var(--container-content);
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+  padding-block: clamp(2.5rem, 5vh, 4rem);
+}
+.sec-narrow {
+  max-width: 48rem;
+  margin-inline: auto;
+  padding-inline: var(--space-gutter);
+  padding-block: clamp(2.5rem, 5vh, 4rem);
+}
 
 /* ---------- premium product panel chrome ---------- */
 .de-panel {

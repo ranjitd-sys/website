@@ -49,6 +49,9 @@ const isHome = pathname === "/"
       rel="stylesheet"
     />
     <Font cssVariable="--font-inter" preload />
+    <script is:inline>
+      document.documentElement.classList.add("js")
+    </script>
   </head>
   <body class:list={["min-h-screen overflow-x-hidden bg-background text-foreground antialiased", isHome && "home-page"]}>
     <SiteNav client:load />
@@ -56,5 +59,21 @@ const isHome = pathname === "/"
       <slot />
     </main>
     <SiteFooter />
+    <script>
+      // Scroll reveal — fades + slides content in as it enters the viewport
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (!e.isIntersecting) continue
+            const el = e.target as HTMLElement
+            el.style.transitionDelay = `${el.dataset.delay ?? 0}ms`
+            el.classList.add("in")
+            io.unobserve(el)
+          }
+        },
+        { threshold: 0.08, rootMargin: "0px 0px -8% 0px" },
+      )
+      document.querySelectorAll(".reveal").forEach((el) => io.observe(el))
+    </script>
   </body>
 </html>
