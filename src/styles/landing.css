@@ -116,7 +116,7 @@ body {
    sections feel connected while scrolling instead of floating in white space. */
 .landing-canvas {
   background:
-    radial-gradient(50rem 28rem at 50% 4%, rgba(47, 114, 240, 0.045), transparent 62%),
+    radial-gradient(50rem 28rem at 50% 4%, rgba(83, 58, 253, 0.045), transparent 62%),
     linear-gradient(180deg, #ffffff 0%, #f8f9fc 22%, #f8f9fc 78%, #ffffff 100%);
 }
 
@@ -318,7 +318,7 @@ body {
 .section-band {
   border-block: 1px solid var(--ink-100);
   background:
-    radial-gradient(40rem 20rem at 90% 0%, rgba(47, 114, 240, 0.03), transparent 60%),
+    radial-gradient(40rem 20rem at 90% 0%, rgba(83, 58, 253, 0.03), transparent 60%),
     linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
 }
 .section-band .band-inner {

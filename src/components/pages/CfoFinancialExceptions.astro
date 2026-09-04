@@ -1,0 +1,136 @@
+---
+const exceptions = [
+  { id: 1, type: "Payment Mismatch",  source: "Gateway 02 → Bank", expected: "₹13.1L", received: "₹12.6L", difference: "-₹0.5L", severity: "warning", date: "Sep 03" },
+  { id: 2, type: "Settlement Difference", source: "Amazon → Wallet", expected: "₹8.4L", received: "₹8.2L", difference: "-₹0.2L", severity: "warning", date: "Sep 01" },
+  { id: 3, type: "Refund Adjustment", source: "Flipkart → Bank", expected: "₹2.2L", received: "₹2.1L", difference: "-₹10K", severity: "info", date: "Aug 30" },
+  { id: 4, type: "Pending Settlement", source: "Shopify → Bank", expected: "₹5.6L", received: "—", difference: "-₹5.6L", severity: "info", date: "Sep 04" },
+]
+---
+<style is:global>
+  .cfexc {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfexc-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cfexc-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* padding: 0.7rem 1rem; */
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cfexc-bar .dots { display: flex; gap: 0.3rem; }
+  .cfexc-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cfexc-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cfexc-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cfexc-bar .dots i:nth-child(3) { background: #86efac; }
+  .cfexc-bar .name { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfexc-panel { padding: 1rem; }
+  .cfexc-panel-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.8rem; }
+  .cfexc-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .cfexc-table th {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--ink-200);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .cfexc-table td {
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .cfexc-table tr:last-child td { border-bottom: none; }
+  .cfexc-severity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .cfexc-severity.warning { background: var(--warning-50); border: 1px solid var(--warning-200); color: var(--warning-700); }
+  .cfexc-severity.info { background: var(--ink-50); border: 1px solid var(--ink-200); color: var(--ink-600); }
+  .cfexc-diff { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .cfexc-diff.warning { color: var(--warning-600); }
+  .cfexc-diff.info { color: var(--ink-600); }
+  .cfexc-summary {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    padding: 0 1rem 1rem;
+  }
+  .cfexc-summary .stat { text-align: center; }
+  .cfexc-summary .v { font-size: 1.4rem; font-weight: 800; color: var(--warning-600); }
+  .cfexc-summary .lbl { font-size: 0.72rem; font-weight: 700; color: var(--ink-400); text-transform: uppercase; }
+  .cfexc-summary .note { margin-left: auto; font-size: 0.8rem; color: var(--ink-500); }
+</style>
+
+<section class="cfexc">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfexc-app reveal">
+      <div class="cfexc-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="name">Financial Exceptions</span>
+      </div>
+      <div class="cfexc-panel">
+        <div class="cfexc-panel-title">Reconciliation mismatches this week</div>
+        <table class="cfexc-table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Source</th>
+              <th>Expected</th>
+              <th>Received</th>
+              <th>Difference</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {exceptions.map((e) => (
+              <tr>
+                <td>{e.type}</td>
+                <td>{e.source}</td>
+                <td>{e.expected}</td>
+                <td>{e.received}</td>
+                <td class:list={["cfexc-diff", e.severity]}>{e.difference}</td>
+                <td><span class:list={["cfexc-severity", e.severity]}>{e.severity}</span></td>
+                <td>{e.date}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="cfexc-summary">
+        <div class="stat">
+          <div class="v">4</div>
+          <div class="lbl">Exceptions</div>
+        </div>
+        <div class="stat">
+          <div class="v">2</div>
+          <div class="lbl">Require review</div>
+        </div>
+        <div class="stat">
+          <div class="v">2</div>
+          <div class="lbl">Pending</div>
+        </div>
+        <p class="note">Each exception links to the underlying transactions for investigation.</p>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,72 @@
+---
+const reconciliationTypes = [
+  { title: "Settlement reconciliation", desc: "Match expected vs received across every payment source" },
+  { title: "Fee reconciliation", desc: "Surface every marketplace deduction and fee" },
+  { title: "Return reconciliation", desc: "Reverse original sales and tax through accounting" },
+  { title: "GST / TDS reconciliation", desc: "Ensure tax amounts are correct and traceable" },
+  { title: "Channel reconciliation", desc: "Compare marketplace vs payment gateway vs bank settlements" },
+]
+---
+<style is:global>
+  .cfrecon {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfrecon-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cfrecon-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cfrecon-bar .dots { display: flex; gap: 0.3rem; }
+  .cfrecon-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cfrecon-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cfrecon-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cfrecon-bar .dots i:nth-child(3) { background: #86efac; }
+  .cfrecon-title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfrecon-panel { padding: 1rem; }
+  .cfrecon-panel-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.8rem; }
+  .cfrecon-list { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .cfrecon-item {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .cfrecon-item .t { font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfrecon-item .d { font-size: 0.7rem; color: var(--ink-500); margin-top: 0.2rem; }
+  .cfrecon-note { margin-top: 1rem; text-align: center; font-size: 0.7rem; color: var(--ink-400); }
+</style>
+
+<section class="cfrecon">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfrecon-app reveal">
+      <div class="cfrecon-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Payment Reconciliation</span>
+      </div>
+      <div class="cfrecon-panel">
+        <div class="cfrecon-panel-title">Reconciliation types</div>
+        <div class="cfrecon-list">
+          {reconciliationTypes.map((r) => (
+            <div class="cfrecon-item">
+              <div class="t">{r.title}</div>
+              <div class="d">{r.desc}</div>
+            </div>
+          ))}
+        </div>
+        <p class="cfrecon-note">All matched, surfaced and resolved in one view.</p>
+      </div>
+    </div>
+  </div>
+</section>

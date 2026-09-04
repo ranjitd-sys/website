@@ -1,0 +1,86 @@
+---
+const dimensions = [
+  { title: "Marketplace", values: ["Amazon", "Flipkart", "Shopify", "Other"] },
+  { title: "Product Category", values: ["Electronics", "Fashion", "Home", "Beauty"] },
+  { title: "Warehouse", values: ["Bengaluru", "Delhi", "Mumbai", "Hyderabad"] },
+  { title: "Payment Method", values: ["Prepaid", "COD", "Razorpay", "Stripe"] },
+  { title: "Order Status", values: ["Delivered", "Returned", "Cancelled"] },
+  { title: "Time Period", values: ["Daily", "Weekly", "Monthly", "Quarterly"] },
+]
+---
+<style is:global>
+  .cfmv {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfmv-title { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink-950); }
+  .cfmv-lead { margin-top: 0.75rem; font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.6; color: var(--ink-500); }
+  .cfmv-grid {
+      
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  @media (min-width: 60rem) {
+    .cfmv-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .cfmv-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.85rem;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .cfmv-card:hover { box-shadow: var(--shadow-card-hover); }
+  .cfmv-card .dim {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.65rem;
+  }
+  .cfmv-card .val {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--brand-600);
+  }
+  .cfmv-card:hover .val { color: var(--brand-700); }
+  .cfmv-card ul {
+    margin-top: 0.5rem;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .cfmv-card ul li {
+    font-size: 0.72rem;
+    padding: 0.15rem 0.5rem;
+    background: var(--ink-50);
+    border-radius: 999px;
+    color: var(--ink-600);
+  }
+  @media (max-width: 59.99rem) {
+    .cfmv-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<section class="cfmv">
+  <div class="mx-auto max-w-6xl px-6 reveal">
+    <h2 class="cfmv-title">Look at the business from the dimensions that matter.</h2>
+    <p class="cfmv-lead">
+      Slice revenue, profit, and realization across any combination of dimensions. Every view ties back to the underlying ecommerce transactions and accounting entries.
+    </p>
+    <div class="cfmv-grid">
+      {dimensions.map((d) => (
+        <div class="cfmv-card">
+          <div class="dim">{d.title}</div>
+          <div class="val">Configurable</div>
+          <ul>
+            {d.values.map((v) => <li>{v}</li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

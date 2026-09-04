@@ -1,0 +1,71 @@
+---
+const sections = [
+  { title: "Order Accounting",   svg: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 11h8M8 15h.01M12 15h.01M16 15h.01"/>' },
+  { title: "GST Reporting",      svg: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h8M8 15h.01M12 15h.01M16 15h.01"/>' },
+  { title: "Warehouse Stock",    svg: '<path d="M3 21V7l9-4 9 4v14"/><path d="M9 21V11h6v10"/>' },
+  { title: "Settlement Tracking", svg: '<path d="M21 12V7H5a2 2 0 010-4h14v4"/><path d="M3 5v14a2 2 0 002 2h16v-5"/><path d="M18 12a2 2 0 000 4h4v-4h-4z"/>' },
+  { title: "Returns & Refunds",  svg: '<path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 105.64-8.36L3 12"/>' },
+  { title: "Marketplace Charges", svg: '<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>' },
+  { title: "TCS / TDS",          svg: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15h.01M13 15h.01M17 15h.01"/>' },
+]
+const erpSystems = ["Tally", "SAP", "Zoho Books"]
+---
+<style is:global>
+  .cfr {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfr-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (min-width: 56rem) {
+    .cfr-wrap { grid-template-columns: 1.4fr 1fr; }
+  }
+  .cfr-title { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink-950); }
+  .cfr-lead { margin-top: 0.75rem; font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.6; color: var(--ink-500); }
+  .cfr-sections { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.25rem; }
+  .cfr-sec {
+    flex: 1 1 120px;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    text-align: center;
+  }
+  .cfr-sec svg { width: 20px; height: 20px; color: var(--brand-600); margin-bottom: 0.35rem; }
+  .cfr-sec .lbl { font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfr-erp {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    padding-top: 2rem;
+  }
+  .cfr-erp-title { font-size: 0.78rem; font-weight: 700; color: var(--ink-600); text-transform: uppercase; letter-spacing: 0.08em; }
+  .cfr-erp-list { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+  .cfr-erp-badge {
+    padding: 0.45rem 1rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brand-700);
+  }
+  .cfr-highlight {
+    margin-top: 1.25rem;
+    background: linear-gradient(135deg, var(--brand-50), #fff);
+    border: 1px solid var(--brand-100);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+  .cfr-highlight h3 { font-size: 1rem; font-weight: 700; color: var(--ink-800); margin-bottom: 0.35rem; }
+  .cfr-highlight p { font-size: 0.85rem; color: var(--ink-500); line-height: 1.5; }
+  @media (max-width: 55.99rem) {
+    .cfr { padding-block: 0.75rem; }
+  }
+</style>
+

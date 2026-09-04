@@ -1,0 +1,154 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const businessLayer = [
+  { level: "Executive View", metric: "Revenue", value: "₹42.6L", change: "+18% MoM" },
+  { level: "Channel View", metric: "Amazon", value: "₹16.4L", change: "+22% MoM" },
+  { level: "Transaction View", metric: "Order #23456", value: "₹999", change: "From Finance" },
+]
+
+const channelView = [
+  { label: "Sales", value: "₹22.1L" },
+  { label: "Returns", value: "-₹2.1L" },
+  { label: "Marketplace Fees", value: "-₹3.9L" },
+  { label: "Net Revenue", value: "₹16.4L" },
+]
+
+const transactionView = [
+  { label: "Order ID", value: "#A-23456-789" },
+  { label: "Customer", value: "Rohit Sharma" },
+  { label: "Items", value: "5 SKUs" },
+  { label: "Sale Amount", value: "₹999" },
+  { label: "Platform Fee", value: "₹119" },
+  { label: "GST", value: "₹43" },
+  { label: "Net", value: "₹837" },
+  { label: "Payment Status", value: "Settled" },
+  { label: "Accounting Entry", value: "Invoice #INV-45231" },
+]
+---
+<style is:global>
+  .cftt {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cftt-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .cftt-grid { grid-template-columns: repeat(4, 1fr); }
+  }
+  .cftt-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cftt-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    padding: 1rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    box-shadow: var(--shadow-card);
+  }
+  .cftt-card h3 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+    margin-bottom: 0.75rem;
+  }
+  .cftt-line {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0;
+    font-size: 0.78rem;
+  }
+  .cftt-line + .cftt-line { border-top: 1px solid var(--ink-100); }
+  .cftt-line .k { width: 6rem; flex: none; font-weight: 700; color: var(--ink-500); }
+  .cftt-line .v { flex: 1; text-align: right; font-weight: 600; color: var(--ink-800); font-variant-numeric: tabular-nums; }
+  .cftt-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    color: var(--brand-500);
+    font-size: 1.5rem;
+  }
+  @media (max-width: 63.99rem) {
+    .cftt-arrow { padding: 1rem; font-size: 1.25rem; }
+  }
+  .cftt-stacked {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 64rem) {
+    .cftt-stacked { grid-template-columns: 1fr 1fr; }
+  }
+  .cftt-stacked .cftt-card { min-height: 220px; }
+  .cftt-title { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink-950); margin-bottom: 1.25rem; }
+  .cftt-lead { font-size: clamp(1rem, 1.3vw, 1.125rem); line-height: 1.6; color: var(--ink-500); }
+</style>
+
+<section class="cftt">
+  <div class="mx-auto max-w-6xl px-6 reveal">
+    <h2 class="cftt-title">Move from the number to the transaction behind it.</h2>
+    <p class="cftt-lead">
+      Click any metric to see the transactions behind it. The same data layer that feeds accounting entries — from executive to channel to individual order — one source of truth.
+    </p>
+
+    <div class="cftt-grid">
+      <div class="cftt-column">
+        <div class="cftt-card">
+          <h3>Executive View</h3>
+          {businessLayer.map((l) => (
+            <div class="cftt-line">
+              <span class="k">{l.metric}</span>
+              <span class="v">{l.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="cftt-arrow" aria-hidden="true">
+        <ArrowRight size={20} />
+      </div>
+
+      <div class="cftt-column">
+        <div class="cftt-card">
+          <h3>Channel View</h3>
+          {channelView.map((l) => (
+            <div class="cftt-line">
+              <span class="k">{l.label}</span>
+              <span class="v">{l.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="cftt-arrow" aria-hidden="true">
+        <ArrowRight size={20} />
+      </div>
+
+      <div class="cftt-stacked">
+        <div class="cftt-card">
+          <h3>Transaction View</h3>
+          <div class="cftt-line" style="border-bottom: 2px solid var(--ink-200); padding-bottom: 0.75rem; margin-bottom: 0.5rem;">
+            <span class="k">Order ID</span>
+            <span class="v" style="font-weight: 800;">#A-23456-789</span>
+          </div>
+          {transactionView.slice(2).map((l) => (
+            <div class="cftt-line">
+              <span class="k">{l.label}</span>
+              <span class="v">{l.value}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

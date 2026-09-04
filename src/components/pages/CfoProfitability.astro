@@ -1,0 +1,147 @@
+---
+const grossRevenue = 42.6;
+
+const waterfallData = [
+  { label: "Gross Revenue",    value: 42.6,  display: "₹42.6L", type: "start" },
+  { label: "Platform Fees",    value: -6.2,  display: "-₹6.2L", type: "deduction" },
+  { label: "Payment Gateway",  value: -1.8,  display: "-₹1.8L", type: "deduction" },
+  { label: "Returns",          value: -2.1,  display: "-₹2.1L", type: "deduction" },
+  { label: "GST / TCS / TDS",  value: -3.4,  display: "-₹3.4L", type: "deduction" },
+  { label: "COGS",             value: -12.8, display: "-₹12.8L",type: "deduction" },
+  { label: "Shipping / Other", value: -5.5,  display: "-₹5.5L", type: "deduction" },
+  { label: "Net Profit",       value: 10.8,  display: "₹10.8L", type: "end" },
+];
+
+// Compute running totals for authentic waterfall offsets
+let runningTotal = 0;
+const processedWaterfall = waterfallData.map((item) => {
+  let left = 0;
+  let width = (Math.abs(item.value) / grossRevenue) * 100;
+
+  if (item.type === "start") {
+    runningTotal = item.value;
+    left = 0;
+  } else if (item.type === "end") {
+    left = 0;
+  } else {
+    runningTotal += item.value; // item.value is negative
+    left = (runningTotal / grossRevenue) * 100;
+  }
+
+  return { ...item, leftPercent: Math.max(0, left), widthPercent: width };
+});
+
+const channelProfit = [
+  { name: "Amazon",   revenue: "₹16.4L", profit: "₹4.6L", margin: "28%" },
+  { name: "Flipkart", revenue: "₹9.8L",  profit: "₹2.7L", margin: "28%" },
+  { name: "Shopify",  revenue: "₹8.2L",  profit: "₹2.3L", margin: "28%" },
+  { name: "Other",    revenue: "₹8.2L",  profit: "₹1.2L", margin: "15%" },
+];
+---
+
+<style is:global>
+  .cfprof { padding-block: clamp(1rem, 2vh, 1.5rem); }
+  .cfprof-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow-x: hidden;
+  }
+  .cfprof-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cfprof-bar .dots { display: flex; gap: 0.3rem; }
+  .cfprof-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cfprof-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cfprof-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cfprof-bar .dots i:nth-child(3) { background: #86efac; }
+  .cfprof-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfprof-body { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 48rem) { .cfprof-body { grid-template-columns: 1.2fr 0.8fr; } }
+  .cfprof-panel { padding: 1rem; }
+  .cfprof-panel + .cfprof-panel { border-top: 1px solid var(--ink-200); }
+  @media (min-width: 48rem) { .cfprof-panel + .cfprof-panel { border-top: 0; border-left: 1px solid var(--ink-200); } }
+  .cfprof-panel-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.8rem; }
+
+  /* Waterfall chart */
+  .cfprof-waterfall { display: flex; flex-direction: column; gap: 0.5rem; }
+  .cfprof-wf-row { display: flex; align-items: center; gap: 0.75rem; }
+  .cfprof-wf-label { width: 8.5rem; flex: none; font-size: 0.82rem; font-weight: 600; color: var(--ink-800); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cfprof-wf-bar-wrap { flex: 1; display: flex; align-items: center; gap: 0.75rem; min-width: 0; }
+  .cfprof-wf-bar-track { flex: 1; height: 8px; border-radius: 4px; background: var(--ink-100); position: relative; overflow: hidden; }
+  .cfprof-wf-bar-fill { height: 100%; border-radius: 4px; position: absolute; }
+  .cfprof-wf-bar-fill.negative { background: linear-gradient(90deg, var(--danger-500), var(--danger-400)); }
+  .cfprof-wf-bar-fill.start { background: linear-gradient(90deg, var(--brand-500), var(--brand-400)); }
+  .cfprof-wf-bar-fill.end { background: linear-gradient(90deg, var(--ink-800), var(--ink-600)); }
+  .cfprof-wf-value { width: 5.5rem; flex: none; text-align: right; font-size: 0.82rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .cfprof-wf-value.negative { color: var(--danger-600); }
+  .cfprof-wf-value.start { color: var(--brand-600); }
+  .cfprof-wf-value.end { color: var(--ink-900); }
+
+  /* Channel profit table */
+  .cfprof-ch-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.55rem 0; }
+  .cfprof-ch-row + .cfprof-ch-row { border-top: 1px solid var(--ink-100); }
+  .cfprof-ch-row .name { width: 5.5rem; flex: none; font-size: 0.82rem; font-weight: 700; color: var(--ink-900); }
+  .cfprof-ch-row .rev { flex: 1; text-align: right; font-size: 0.82rem; font-weight: 600; color: var(--ink-700); font-variant-numeric: tabular-nums; }
+  .cfprof-ch-row .prof { flex: 1; text-align: right; font-size: 0.82rem; font-weight: 700; color: var(--ink-900); font-variant-numeric: tabular-nums; }
+  .cfprof-ch-row .margin { width: 4rem; flex: none; text-align: right; font-size: 0.75rem; font-weight: 700; color: var(--success-600); }
+  .cfprof-note { padding: 0.7rem 1rem; border-top: 1px solid var(--ink-100); background: var(--ink-50); text-align: center; font-size: 0.72rem; color: var(--ink-400); }
+</style>
+
+<section class="cfprof">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfprof-app reveal">
+      <div class="cfprof-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Profitability Waterfall</span>
+      </div>
+
+      <div class="cfprof-body">
+        <div class="cfprof-panel">
+          <div class="cfprof-panel-title">Revenue → Net Profit</div>
+          <div class="cfprof-waterfall">
+            {processedWaterfall.map((w) => (
+              <div class="cfprof-wf-row">
+                <span class="cfprof-wf-label" title={w.label}>{w.label}</span>
+                <div class="cfprof-wf-bar-wrap">
+                  <div class="cfprof-wf-bar-track" aria-label={`${w.label}: ${w.display}`}>
+                    <div 
+                      class:list={["cfprof-wf-bar-fill", w.type]} 
+                      style={`left: ${w.leftPercent}%; width: ${w.widthPercent}%;`}
+                    ></div>
+                  </div>
+                  <span class:list={["cfprof-wf-value", w.type]}>{w.display}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="cfprof-panel">
+          <div class="cfprof-panel-title">Profitability by channel</div>
+          <div class="cfprof-ch-row" style="font-weight: 700; color: var(--ink-400); font-size: 0.72rem;">
+            <span class="name">Channel</span>
+            <span class="rev">Revenue</span>
+            <span class="prof">Profit</span>
+            <span class="margin">Margin</span>
+          </div>
+          {channelProfit.map((c) => (
+            <div class="cfprof-ch-row">
+              <span class="name">{c.name}</span>
+              <span class="rev">{c.revenue}</span>
+              <span class="prof">{c.profit}</span>
+              <span class="margin">{c.margin}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <p class="cfprof-note">Illustrative profitability waterfall — actual calculations reflect your marketplace fee structures, return rates, and cost configurations.</p>
+  </div>
+</section>

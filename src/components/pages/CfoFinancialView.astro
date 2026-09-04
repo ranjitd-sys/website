@@ -1,0 +1,110 @@
+---
+const inputs = [
+  { label: "Amazon", sub: "Orders, fees, settlements" },
+  { label: "Flipkart", sub: "Orders, fees, settlements" },
+  { label: "Shopify", sub: "Orders, payouts" },
+  { label: "Payments", sub: "Gateway collections" },
+  { label: "Returns", sub: "Reversals, refunds" },
+  { label: "Taxes", sub: "GST, TCS, TDS" },
+]
+
+const core = ["Understand", "Reconcile", "Account"]
+
+const outputs = [
+  { label: "Profitability", sub: "Per channel, per product" },
+  { label: "Reconciliation", sub: "Expected vs received" },
+  { label: "Reports", sub: "Filtered, structured" },
+  { label: "ERP Accounting", sub: "Tally, SAP, Zoho" },
+]
+---
+<style is:global>
+  .cfarch {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfarch-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .cfarch-grid { grid-template-columns: 1fr auto 1fr; gap: 1rem; }
+  }
+  .cfarch-col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .cfarch-item {
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    transition: border-color 0.15s ease;
+  }
+  .cfarch-item:hover { border-color: var(--ink-300); }
+  .cfarch-item .lbl { font-size: 0.82rem; font-weight: 700; color: var(--ink-800); }
+  .cfarch-item .sub { font-size: 0.68rem; color: var(--ink-400); margin-top: 0.1rem; }
+  .cfarch-arrow {
+    display: flex;
+    justify-content: center;
+    color: var(--brand-500);
+  }
+  @media (max-width: 55.99rem) { .cfarch-arrow { transform: rotate(90deg); } }
+  .cfarch-center {
+    border: 2px solid var(--brand-200);
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, var(--brand-50), #fff);
+    padding: 1.5rem 1.5rem;
+    text-align: center;
+  }
+  .cfarch-center .name { font-size: 1.35rem; font-weight: 800; color: var(--brand-700); }
+  .cfarch-center .steps { margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .cfarch-center .step {
+    padding: 0.4rem 0.75rem;
+    background: #fff;
+    border: 1px solid var(--brand-100);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brand-700);
+  }
+  .cfarch-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-400); text-align: center; margin-bottom: 0.5rem; }
+</style>
+
+<section class="cfarch">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfarch-grid reveal">
+      <div class="cfarch-col">
+        <div class="cfarch-label">Input</div>
+        {inputs.map((i) => (
+          <div class="cfarch-item">
+            <div class="lbl">{i.label}</div>
+            <div class="sub">{i.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      <div class="cfarch-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M0 12h24M18 6l6 6-6 6" /></svg>
+      </div>
+
+      <div class="cfarch-center">
+        <div class="name">DeepEcom</div>
+        <div class="steps">
+          {core.map((s) => <span class="step">{s}</span>)}
+        </div>
+      </div>
+
+      <div class="cfarch-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M0 12h24M18 6l6 6-6 6" /></svg>
+      </div>
+
+      <div class="cfarch-col">
+        <div class="cfarch-label">Output</div>
+        {outputs.map((o) => (
+          <div class="cfarch-item">
+            <div class="lbl">{o.label}</div>
+            <div class="sub">{o.sub}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

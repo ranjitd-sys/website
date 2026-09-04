@@ -1,0 +1,364 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const kpis = [
+  { label: "Revenue",       value: "₹42.6L",  delta: "all channels" },
+  { label: "Realized",      value: "₹40.9L",  delta: "96% realization" },
+  { label: "Profit",        value: "₹10.8L",  delta: "25.4% margin" },
+  { label: "Expected / Received", value: "₹40.9L / ₹42.6L", delta: "2 settlements pending" },
+]
+
+const trend = [
+  { m: "Mar", v: 28 },
+  { m: "Apr", v: 31 },
+  { m: "May", v: 34 },
+  { m: "Jun", v: 33 },
+  { m: "Jul", v: 37 },
+  { m: "Aug", v: 41 },
+  { m: "Sep", v: 43 },
+]
+const trendMax = Math.max(...trend.map(t => t.v))
+
+const channelPerf = [
+  { name: "Amazon",    rev: "₹16.4L", share: 38, tone: "brand" },
+  { name: "Flipkart",  rev: "₹9.8L",  share: 23, tone: "neutral" },
+  { name: "Website",   rev: "₹8.2L",  share: 19, tone: "neutral" },
+  { name: "Other",     rev: "₹8.2L",  share: 20, tone: "neutral" },
+]
+---
+
+<style is:global>
+  .cfhero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(7rem, 12vh, 9rem) 0 clamp(3rem, 6vh, 4.5rem);
+    background:
+      radial-gradient(50rem 26rem at 78% -12%, rgba(83, 58, 253, 0.14), transparent 60%),
+      radial-gradient(38rem 20rem at 8% -6%, rgba(160, 140, 255, 0.10), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .cfhero-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .cfhero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .cfhero-grid { grid-template-columns: 0.95fr 1.05fr; }
+  }
+  .cfhero-copy { max-width: 34rem; }
+  .cfhero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-700);
+  }
+  .cfhero-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .cfhero-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .cfhero-title .accent { color: var(--brand-500); }
+  .cfhero-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .cfhero-actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .cfhero-note {
+    margin-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .cfhero-note svg { color: var(--brand-500); flex: none; }
+  .cfhero-note b { color: var(--ink-700); }
+
+  /* ---------- Right: executive dashboard ---------- */
+  .cfhero-board {
+    background: #ffffff;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cfhero-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cfhero-bar .dots { display: flex; gap: 0.3rem; }
+  .cfhero-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cfhero-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cfhero-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cfhero-bar .dots i:nth-child(3) { background: #86efac; }
+  .cfhero-bar .name {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .cfhero-bar .badge {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .cfhero-bar .badge .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--brand-500); }
+
+  .cfhero-kpis {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  @media (min-width: 40rem) { .cfhero-kpis { grid-template-columns: repeat(4, 1fr); } }
+  .cfhero-kpi {
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .cfhero-kpi .k {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .cfhero-kpi .v {
+    margin-top: 0.25rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .cfhero-kpi .d {
+    margin-top: 0.15rem;
+    font-size: 0.66rem;
+    color: var(--ink-500);
+  }
+
+  .cfhero-body {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48rem) {
+    .cfhero-body { grid-template-columns: 1.15fr 0.85fr; }
+  }
+  .cfhero-panel { padding: 1rem; }
+  .cfhero-panel + .cfhero-panel {
+    border-top: 1px solid var(--ink-200);
+  }
+  @media (min-width: 48rem) {
+    .cfhero-panel + .cfhero-panel {
+      border-top: 0;
+      border-left: 1px solid var(--ink-200);
+    }
+  }
+  .cfhero-panel-title {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.7rem;
+  }
+
+  /* Trend chart */
+  .cfhero-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    height: 7.2rem;
+    padding-top: 0.3rem;
+  }
+  .cfhero-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .cfhero-bar-stack {
+    width: 100%;
+    height: 6rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .cfhero-bar-fill {
+    width: 78%;
+    background: linear-gradient(180deg, var(--brand-500), var(--brand-700));
+    border-radius: 6px 6px 0 0;
+    min-height: 0.3rem;
+    transition: height 600ms var(--ease-out);
+  }
+  .cfhero-bar-col .lbl {
+    font-size: 0.62rem;
+    color: var(--ink-400);
+    font-weight: 600;
+  }
+
+  /* Channel rows */
+  .cfhero-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0;
+  }
+  .cfhero-row + .cfhero-row { border-top: 1px solid var(--ink-100); }
+  .cfhero-row .n { width: 5.6rem; flex: none; font-size: 0.78rem; font-weight: 700; color: var(--ink-900); }
+  .cfhero-track { flex: 1; height: 5px; border-radius: 999px; background: var(--ink-100); overflow: hidden; }
+  .cfhero-fill  { height: 100%; border-radius: 999px; }
+  .cfhero-row .v { width: 4.5rem; flex: none; text-align: right; font-size: 0.74rem; font-weight: 700; color: var(--ink-800); font-variant-numeric: tabular-nums; }
+
+  .cfhero-foot {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-200);
+    background: var(--ink-50);
+    font-size: 0.72rem;
+    color: var(--ink-500);
+  }
+  .cfhero-foot .ok { margin-left: auto; color: var(--success-600); font-weight: 700; }
+
+  @media (max-width: 47.99rem) {
+    .cfhero { padding-top: 5rem; }
+    .cfhero-title { font-size: clamp(2rem, 8.5vw, 2.6rem); }
+  }
+</style>
+
+<section class="cfhero" data-hero>
+  <div class="cfhero-inner">
+    <div class="cfhero-grid">
+      <!-- Left -->
+      <div class="cfhero-copy reveal">
+        <span class="cfhero-eyebrow"><span class="dot" aria-hidden="true"></span>For CFOs</span>
+        <h1 class="cfhero-title">
+          Know where your <span class="accent">ecommerce money</span> is going.
+        </h1>
+        <p class="cfhero-lead">
+          Bring sales, payments, profitability, reconciliation and detailed accounting into one connected financial view — built for the way finance teams actually work.
+        </p>
+        <div class="cfhero-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="#how-it-works" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            See How It Works →
+          </a>
+        </div>
+        <p class="cfhero-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span>From sales to settlement to the ledger. <b>One financial picture.</b></span>
+        </p>
+      </div>
+
+      <!-- Right: executive dashboard -->
+      <div class="cfhero-board reveal" data-delay="120" role="img" aria-label="Illustrative executive dashboard showing revenue, realized, profit, expected versus received, revenue trend, and channel performance">
+        <div class="cfhero-bar">
+          <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="name">CFO Dashboard</span>
+          <span class="badge"><span class="dot" aria-hidden="true"></span>All channels</span>
+        </div>
+
+        <div class="cfhero-kpis">
+          {kpis.map((k) => (
+            <div class="cfhero-kpi">
+              <div class="k">{k.label}</div>
+              <div class="v">{k.value}</div>
+              <div class="d">{k.delta}</div>
+            </div>
+          ))}
+        </div>
+
+        <div class="cfhero-body">
+          <div class="cfhero-panel">
+            <div class="cfhero-panel-title">Revenue trend · last 7 months</div>
+            <div class="cfhero-chart" aria-hidden="true">
+              {trend.map((t) => (
+                <div class="cfhero-bar-col">
+                  <div class="cfhero-bar-stack">
+                    <div class="cfhero-bar-fill" style={`height:${(t.v / trendMax) * 100}%`}></div>
+                  </div>
+                  <span class="lbl">{t.m}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="cfhero-panel">
+            <div class="cfhero-panel-title">Channel performance</div>
+            {channelPerf.map((c) => (
+              <div class="cfhero-row">
+                <span class="n">{c.name}</span>
+                <div class="cfhero-track">
+                  <div class="cfhero-fill" style={`width:${c.share}%;background:${c.tone === 'brand' ? 'linear-gradient(90deg,var(--brand-500),var(--brand-400))' : 'var(--ink-300)'}`}></div>
+                </div>
+                <span class="v">{c.rev}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="cfhero-foot">
+          <span>Illustrative figures — actual dashboards reflect your channels and time window.</span>
+          <span class="ok">✓</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

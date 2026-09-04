@@ -1,91 +1,380 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import CfoHero from "@/components/pages/CfoHero.astro"
+import CfoProblem from "@/components/pages/CfoProblem.astro"
+import CfoFinancialView from "@/components/pages/CfoFinancialView.astro"
+import CfoExecutiveDashboard from "@/components/pages/CfoExecutiveDashboard.astro"
+import CfoRealization from "@/components/pages/CfoRealization.astro"
+import CfoProfitability from "@/components/pages/CfoProfitability.astro"
+import CfoReconciliation from "@/components/pages/CfoReconciliation.astro"
+import CfoFinancialExceptions from "@/components/pages/CfoFinancialExceptions.astro"
+import CfoAccountingConfidence from "@/components/pages/CfoAccountingConfidence.astro"
+import CfoMultiDimensional from "@/components/pages/CfoMultiDimensional.astro"
+import CfoReports from "@/components/pages/CfoReports.astro"
+import CfoBusinessToTransaction from "@/components/pages/CfoBusinessToTransaction.astro"
+import CfoPlatformErpConnector from "@/components/pages/CfoPlatformErpConnector.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+import HeroDashboard from "@/components/landing/HeroDashboard.astro"
+import DashboardHero from "@/components/pages/DashboardHero.astro"
+import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
+
+const personaData = [
+  {
+    title: "CFO",
+    role: "Financial control",
+    desc: "Understand consolidated sales, profitability and payment realization.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  },
+  {
+    title: "Finance Team",
+    role: "Less manual work",
+    desc: "Reduce fragmented reporting and reconciliation work.",
+    icon: '<path d="M3 3v18h18M8 17V9M13 17V5M18 17v-5"/>',
+  },
+  {
+    title: "Accountant",
+    role: "ERP accounting",
+    desc: "Bring transaction-level information into detailed ERP accounting.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+  {
+    title: "Business Owner",
+    role: "One view",
+    desc: "See every channel and payment source without piecing reports together.",
+    icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
+  },
+]
+
+const faqs = [
+  { q: "How quickly can we set this up?", a: "Typical setup takes 2 weeks. ERP integration adds another 1-2 weeks depending on your systems." },
+  { q: "Which ERPs do you support?", a: "We integrate with Tally, SAP Business One, and Zoho Books today. Other systems can be added via our API." },
+  { q: "Do you support multi-warehouse accounting?", a: "Yes. Each warehouse can be mapped to its own GL account or branch in your ERP." },
+  { q: "How is reconciliation different from my bank statement?", a: "We reconcile against marketplace settlements, not just bank credits. This catches missing payouts, returns, and fee adjustments." },
+  { q: "Can we keep our existing accounting structure?", a: "Yes. You can map each ecommerce event (orders, returns, fees, taxes) to your existing GL accounts." },
+  { q: "How do you handle multi-currency?", a: "Each transaction is recorded in its native currency. Reports can be consolidated to INR, USD, or any base currency." },
+]
 ---
 
 <PageLayout
-  title="CFOs — Financial visibility and ERP integrity | DeepEcom"
+  title="CFO — Financial visibility and ERP integrity | DeepEcom"
   description="DeepEcom gives CFOs clear profitability, cash realization, reconciliation and ERP integrity across their ecommerce business."
 >
-  <PageHero
-    eyebrow="SOLUTIONS · BY ROLE"
-    title="A clear financial picture of your ecommerce business."
-    lead="Ecommerce spreads money and data across many systems. DeepEcom gives you the visibility, reconciliation and control you need to report with confidence."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
+  <!-- 01 — HERO -->
+  <CfoHero />
+
+  <!-- 02 — CFO PROBLEM -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2-md mt-4">The CFO problem with ecommerce.</h2>
+          <p class="lead mt-5">
+            Ecommerce sales are spread across multiple channels. Payments and settlements come from different sources. Marketplace deductions make revenue difficult to interpret. Profitability is harder to understand than topline sales.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoProblem />
+        </div>
+      </div>
     </div>
-  </PageHero>
+  </section>
 
-  <FeatureGrid
-    eyebrow="CFOs"
-    title="Financial leadership built on real data."
-    lead="The questions finance leaders ask need answers that come from reconciled, accounted and controlled data."
-    columns={3}
-    center
-    features={[
-      {
-        title: "Profitability",
-        description: "See true profitability across your business, after fees, deductions and returns.",
-        icon: "trend",
-      },
-      {
-        title: "Cash realization",
-        description: "Understand what you should be paid and confirm what you actually receive.",
-        icon: "bank",
-      },
-      {
-        title: "Financial visibility",
-        description: "One reliable view of revenue, receivables and accounting across channels.",
-        icon: "gauge",
-      },
-      {
-        title: "Reconciliation",
-        description: "Reconcile expected versus actual payments and surface every discrepancy.",
-        icon: "refresh",
-      },
-      {
-        title: "Controls",
-        description: "Structured, audit-ready records that support your control environment.",
-        icon: "shield",
-      },
-      {
-        title: "Reporting",
-        description: "Reports and exports that support management and financial reporting.",
-        icon: "file",
-      },
-      {
-        title: "ERP integrity",
-        description: "Keep your ERP accurate with detailed, posted accounting you can trust.",
-        icon: "check",
-      },
-    ]}
-  />
 
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="THE CFO OUTCOME"
-        title="Confidence in the numbers you report."
-        lead="DeepEcom ties marketplace data to reconciled cash and your ERP, so the picture you present is the one that is actually true."
-        center
+
+  <!-- 04 — EXECUTIVE DASHBOARD -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">EXECUTIVE DASHBOARD</span>
+        <h2 class="h2-md mt-4">Revenue, realization and margin — in one view.</h2>
+        <p class="lead mt-5">
+          No more stitching together spreadsheets from multiple channels. Revenue, profitability and payment realization across every channel — in one executive dashboard.
+        </p>
+      </div>
+      <div class="mt-10">
+        <DashboardPreview/>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — EXPECTED VS RECEIVED -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">PAYMENT REALIZATION</span>
+        <h2 class="h2-md mt-4">Know what you should have received — and what you actually got.</h2>
+        <p class="lead mt-5">
+          Ecommerce settlements rarely match the expected amount. Fees, returns, and adjustments create a realization gap that CFOs need to understand and track.
+        </p>
+      </div>
+      <div class="mt-10">
+        <CfoRealization />
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — PROFITABILITY -->
+  <section>
+    <div class="sec"> 
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.6fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">PROFITABILITY</span>
+          <h2 class="h2-md mt-4">Revenue minus every cost. Actual margin by channel.</h2>
+          <p class="lead mt-5">
+            Topline sales are easy to see. Actual profitability is harder to calculate. DeepEcom shows revenue, deductions, fees and true margin — per channel and in total.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoProfitability />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — RECONCILIATION -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">RECONCILIATION</span>
+          <h2 class="h2-md mt-4">Every payment matched. Every difference surfaced.</h2>
+          <p class="lead mt-5">
+            Expected vs received across every payment source — marketplace settlements, payment gateways and bank accounts — with every discrepancy tracked and resolved.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoReconciliation />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — EXCEPTIONS -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">EXCEPTIONS</span>
+          <h2 class="h2-md mt-4">Every reconciliation mismatch, in one place.</h2>
+          <p class="lead mt-5">
+            Payment mismatches, missing settlements and refund differences are surfaced automatically — before they become month-end surprises.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoFinancialExceptions />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — ACCOUNTING CONFIDENCE -->
+  <section class="section-band">
+    <div class="sec">
+      <CfoAccountingConfidence />
+    </div>
+  </section>
+
+  <!-- 10 — MULTI-DIMENSIONAL VISIBILITY -->
+  <section>
+    <div class="sec">
+      <CfoMultiDimensional />
+    </div>
+  </section>
+
+  <!-- 11 — REPORTS -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">REPORTS</span>
+          <h2 class="h2-md mt-4">One reporting layer across every channel and ERP.</h2>
+          <p class="lead mt-5">
+            Sales, profitability, reconciliation and transactions — filtered, structured and ready to download or post directly to your ERP.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoReports />
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- 13 — HOW IT WORKS -->
+  <section id="how-it-works">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">Connect once. Get financial control.</h2>
+        <p class="lead mt-5">From every selling platform and payment source to one set of reconciled books.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect supported selling platforms, payment sources, shipping partners and ad platforms." },
+          { num: "02", label: "Collect", desc: "Bring transaction information into DeepEcom." },
+          { num: "03", label: "Reconcile", desc: "Match expected vs received payments across every source." },
+          { num: "04", label: "Understand", desc: "See sales, profitability and payment information." },
+          { num: "05", label: "Account", desc: "Generate detailed accounting for the ERP." },
+        ]}
       />
     </div>
   </section>
 
-  <CtaBand
-    title="Report on a business you actually understand."
-    lead="Clear profitability, reconciled payments and an ERP that reflects reality."
-  />
+  <!-- 14 — PLATFORM + ERP CONNECTOR -->
+  <section class="section-band">
+    <div class="sec">
+      <CfoPlatformErpConnector />
+    </div>
+  </section>
+
+  <!-- 15 — WHO IT'S FOR -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for finance teams that need one view of ecommerce.</h2>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {personaData.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">{p.role}</span>
+            <h3 class="mt-1 text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 — CUSTOMER PROOF -->
+  <section class="section-band">
+    <div class="sec">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 17 — FAQ -->
+  <section>
+    <div class="sec-narrow">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Questions CFOs ask before they start.</h2>
+      <div class="mt-10 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 — FINAL CTA -->
+  <section class="cfo-cta">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Know where your ecommerce money is going.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Bring your selling channels, payments, profitability, reconciliation and accounting into one connected platform.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  .cfo-cta {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background:
+      radial-gradient(40rem 22rem at 78% -20%, rgba(123, 98, 254, 0.32), transparent 60%),
+      radial-gradient(30rem 20rem at 12% 120%, rgba(57, 34, 184, 0.5), transparent 60%),
+      linear-gradient(135deg, #0b1120 0%, #151238 55%, #1e1560 100%);
+  }
+  .cfo-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.35;
+    mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    -webkit-mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    pointer-events: none;
+  }
+  .cfo-cta > div {
+    position: relative;
+    z-index: 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

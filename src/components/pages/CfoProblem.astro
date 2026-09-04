@@ -1,0 +1,101 @@
+---
+const sources = [
+  { label: "Amazon",   sub: "sales · fees · settlements" },
+  { label: "Flipkart", sub: "sales · fees · settlements" },
+  { label: "Shopify",  sub: "orders · payouts" },
+  { label: "Payments", sub: "what reached the bank" },
+  { label: "Returns",  sub: "refunds · adjustments" },
+]
+const tags = ["Sales", "Payments", "Returns", "Fees", "GST", "Inventory", "Accounting"]
+---
+<style is:global>
+  .cfpb {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfpb-flow {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .cfpb-flow { grid-template-columns: 1fr auto 1fr; gap: 1.25rem; }
+  }
+  .cfpb-col { display: flex; flex-direction: column; gap: 0.5rem; }
+  .cfpb-source {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: #fff;
+  }
+  .cfpb-source .name { font-size: 0.85rem; font-weight: 700; color: var(--ink-800); }
+  .cfpb-source .sub { font-size: 0.68rem; color: var(--ink-400); }
+  .cfpb-arrow { display: flex; justify-content: center; color: var(--ink-300); }
+  @media (max-width: 55.99rem) { .cfpb-arrow { transform: rotate(90deg); } }
+  .cfpb-dest {
+    border: 1px solid var(--brand-200);
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--brand-50), #fff);
+    padding: 1.25rem 1.5rem;
+  }
+  .cfpb-dest-name { font-size: 1.125rem; font-weight: 800; color: var(--brand-700); }
+  .cfpb-dest-sub { margin-top: 0.3rem; font-size: 0.8125rem; color: var(--ink-500); }
+  .cfpb-dest-tags { margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .cfpb-tag { padding: 0.22rem 0.55rem; border-radius: 999px; background: #fff; border: 1px solid var(--brand-100); font-size: 0.68rem; font-weight: 600; color: var(--brand-700); }
+  .cfpb-metric {
+    margin-top: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink-950);
+  }
+  .cfpb-metric .warn { color: var(--danger-600); }
+  .cfpb-tagline {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="cfpb">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfpb-flow reveal">
+      <div class="cfpb-col">
+        {sources.map((s) => (
+          <div class="cfpb-source">
+            <span class="name">{s.label}</span>
+            <span class="sub">{s.sub}</span>
+          </div>
+        ))}
+      </div>
+
+      <div class="cfpb-arrow" aria-hidden="true">
+        <svg width="28" height="24" viewBox="0 0 28 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M0 12h24M18 6l6 6-6 6" /></svg>
+      </div>
+
+      <div class="cfpb-dest">
+        <div class="cfpb-dest-name">The CFO problem</div>
+        <div class="cfpb-dest-sub">Numbers arrive scattered across every channel</div>
+        <div class="cfpb-dest-tags">
+          {tags.map((t) => <span class="cfpb-tag">{t}</span>)}
+        </div>
+      </div>
+    </div>
+
+    <div class="cfpb-metric">
+      <span class="warn">Manual reconciliation</span>
+      <span>× 3 weeks / month</span>
+    </div>
+    <p class="cfpb-tagline">
+      Ecommerce sales are spread across multiple channels. Payments and settlements come from different sources. Marketplace deductions make revenue difficult to interpret. Finance teams spend weeks reconciling numbers. Accounting must capture ecommerce details correctly. ERP data becomes difficult to maintain manually.
+    </p>
+  </div>
+</section>

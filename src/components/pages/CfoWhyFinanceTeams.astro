@@ -1,0 +1,45 @@
+---
+const why = [
+  { reason: "Unified visibility", benefit: "See all ecommerce transactions in one place" },
+  { reason: "Automated reconciliation", benefit: "No more manual spreadsheets" },
+  { reason: "Detailed accounting", benefit: "Full ERP integration from day one" },
+  { reason: "Clear insights", benefit: "Make faster, data-driven decisions" },
+  { reason: "Reduced effort", benefit: "Save hours on reporting and reconciliation" },
+]
+---
+<style is:global>
+  .cwt {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cwt-title { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink-950); }
+  .cwt-lead { font-size: clamp(1rem, 1.2vw, 1.125rem); line-height: 1.6; color: var(--ink-500); margin-top: 0.5rem; }
+  .cwt-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 64rem) { .cwt-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cwt-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.85rem;
+    padding: 1.25rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cwt-card:hover { border-color: var(--ink-300); box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .cwt-card .name { font-size: 0.85rem; font-weight: 700; color: var(--ink-800); margin-bottom: 0.3rem; }
+  .cwt-card .desc { font-size: 0.82rem; color: var(--ink-500); line-height: 1.5; }
+</style>
+
+<section class="cwt">
+  <div class="mx-auto max-w-6xl px-6">
+    <h2 class="cwt-title">Why finance teams choose DeepEcom.</h2>
+    <p class="cwt-lead">
+      Traditional ecommerce platforms leave finance teams disconnected from the data they need. DeepEcom bridges the gap between sales, payments, and accounting in a single, auditable system.
+    </p>
+    <div class="cwt-grid reveal">
+      {why.map((w) => (
+        <div class="cwt-card">
+          <div class="name">{w.reason}</div>
+          <div class="desc">{w.benefit}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

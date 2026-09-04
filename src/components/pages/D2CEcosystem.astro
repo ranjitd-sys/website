@@ -5,176 +5,215 @@ const channels = [
   { label: "Flipkart", sub: "marketplace" },
   { label: "Shopify", sub: "storefront" },
   { label: "Other channels", sub: "supported" },
-]
+];
 const payments = [
   { label: "Payment Gateway", sub: "collections" },
   { label: "Settlement source", sub: "payouts" },
   { label: "Other payment sources", sub: "supported" },
-]
+];
 const ops = [
   { label: "Shiprocket", sub: "shipping & logistics" },
   { label: "Other logistics partners", sub: "supported" },
-]
+];
 const ads = [
   { label: "Google Ads", sub: "ad spend" },
   { label: "Meta Ads", sub: "ad spend" },
   { label: "Other ad platforms", sub: "supported" },
-]
+];
+
+const categories = [
+  { title: "Selling channels", data: channels, icon: "store" },
+  { title: "Payment sources", data: payments, icon: "card" },
+  { title: "Logistics", data: ops, icon: "truck" },
+  { title: "Ad platforms", data: ads, icon: "target" },
+];
 ---
 
 <style is:global>
   .d2ce {
-    padding-block: clamp(1rem, 2vh, 1.5rem);
+    padding-block: clamp(1.5rem, 3vh, 2.5rem);
   }
   .d2ce-app {
     position: relative;
-    border: 1px solid var(--ink-200);
+    border: 1px solid var(--ink-200, #e2e8f0);
     border-radius: 1.25rem;
-    background: #fff;
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-    padding: 1.25rem;
+    background: #ffffff;
+    box-shadow: var(--shadow-card, 0 10px 30px -10px rgba(0, 0, 0, 0.05));
+    padding: 1.5rem;
   }
   .d2ce-head {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--ink-100, #f1f5f9);
   }
   .d2ce-head .title {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     font-weight: 700;
-    color: var(--ink-800);
+    color: var(--ink-800, #1e293b);
+    letter-spacing: -0.01em;
   }
   .d2ce-head .hint {
-    margin-left: auto;
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    color: var(--ink-400);
+    color: var(--ink-400, #94a3b8);
+    background: var(--ink-50, #f8fafc);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
   }
-  .d2ce-group {
+
+  /* Horizontal Grid Layout */
+  .d2ce-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 900px) {
+    .d2ce-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 550px) {
+    .d2ce-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .d2ce-col {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    flex-direction: column;
+    gap: 0.6rem;
   }
-  .d2ce-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.6rem 0.85rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 0.7rem;
-    background: linear-gradient(180deg, #fff, var(--ink-50));
-  }
-  .d2ce-chip.brand {
-    border-color: var(--brand-200);
-    background: linear-gradient(180deg, var(--brand-50), #fff);
-  }
-  .d2ce-chip .l {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--ink-900);
-  }
-  .d2ce-chip .s {
-    font-size: 0.64rem;
-    color: var(--ink-400);
-  }
+
   .d2ce-group-label {
-    margin: 1rem 0 0.5rem;
-    font-size: 0.66rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.68rem;
     font-weight: 800;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--ink-400);
+    color: var(--ink-500, #64748b);
+    margin-bottom: 0.25rem;
   }
+
+  .d2ce-chips-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .d2ce-chip {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0.55rem 0.75rem;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 0.6rem;
+    background: #ffffff;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .d2ce-chip:hover {
+    border-color: var(--ink-300, #cbd5e1);
+    transform: translateY(-1px);
+  }
+
+  .d2ce-chip.brand {
+    border-color: var(--brand-300, #a5b4fc);
+    background: linear-gradient(180deg, var(--brand-50, #eef2ff), #ffffff);
+  }
+
+  .d2ce-chip .l {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-900, #0f172a);
+    line-height: 1.2;
+  }
+
+  .d2ce-chip .s {
+    font-size: 0.62rem;
+    color: var(--ink-400, #94a3b8);
+    margin-top: 0.1rem;
+  }
+
   .d2ce-divider {
     height: 1px;
-    margin: 1.1rem 0;
-    background: linear-gradient(90deg, transparent, var(--ink-200), transparent);
+    margin: 1.5rem 0 1.25rem;
+    background: linear-gradient(90deg, transparent, var(--ink-200, #e2e8f0), transparent);
   }
+
   .d2ce-core {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.85rem 1rem;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
     border-radius: 0.85rem;
-    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
-    color: #fff;
-    box-shadow: 0 14px 28px -16px rgba(47, 114, 240, 0.5);
+    background: linear-gradient(135deg, var(--brand-600, #4f46e5), var(--brand-800, #3730a3));
+    color: #ffffff;
+    box-shadow: 0 12px 24px -10px rgba(79, 70, 229, 0.4);
   }
+
   .d2ce-core .name {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.01em;
   }
+
   .d2ce-core .desc {
-    font-size: 0.72rem;
-    opacity: 0.85;
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-top: 0.15rem;
   }
+
   .d2ce-core .tag {
-    margin-left: auto;
-    padding: 0.18rem 0.6rem;
+    padding: 0.25rem 0.7rem;
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.16);
-    font-size: 0.6rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    font-size: 0.62rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     white-space: nowrap;
+    flex-shrink: 0;
   }
+
   .d2ce-note {
     margin-top: 0.85rem;
     text-align: center;
-    font-size: 0.72rem;
-    color: var(--ink-400);
+    font-size: 0.7rem;
+    color: var(--ink-400, #94a3b8);
   }
 </style>
 
 <section class="d2ce">
   <div class="mx-auto max-w-6xl px-6">
-    <div class="d2ce-app reveal" role="img" aria-label="Illustration: your website, Amazon, Flipkart, Shopify and other channels, payment gateways, shipping and logistics partners and ad platforms connect into DeepEcom">
+    <div class="d2ce-app reveal" role="img" aria-label="Ecosystem connections to DeepEcom">
       <div class="d2ce-head">
         <span class="title">Connect your selling ecosystem</span>
         <span class="hint">one layer for all of it</span>
       </div>
 
-      <div class="d2ce-group-label">Selling channels</div>
-      <div class="d2ce-group">
-        {channels.map((c) => (
-          <span class:list={["d2ce-chip", c.tone === "brand" && "brand"]}>
-            <span class="l">{c.label}</span>
-            <span class="s">{c.sub}</span>
-          </span>
-        ))}
-      </div>
-
-      <div class="d2ce-group-label">Payment sources</div>
-      <div class="d2ce-group">
-        {payments.map((c) => (
-          <span class="d2ce-chip">
-            <span class="l">{c.label}</span>
-            <span class="s">{c.sub}</span>
-          </span>
-        ))}
-      </div>
-
-      <div class="d2ce-group-label">Shipping &amp; logistics</div>
-      <div class="d2ce-group">
-        {ops.map((c) => (
-          <span class="d2ce-chip">
-            <span class="l">{c.label}</span>
-            <span class="s">{c.sub}</span>
-          </span>
-        ))}
-      </div>
-
-      <div class="d2ce-group-label">Ad platforms</div>
-      <div class="d2ce-group">
-        {ads.map((c) => (
-          <span class="d2ce-chip">
-            <span class="l">{c.label}</span>
-            <span class="s">{c.sub}</span>
-          </span>
+      <!-- 4-Column Horizontal Layout Grid -->
+      <div class="d2ce-grid">
+        {categories.map((cat) => (
+          <div class="d2ce-col">
+            <div class="d2ce-group-label">{cat.title}</div>
+            <div class="d2ce-chips-stack">
+              {cat.data.map((c) => (
+                <div class:list={["d2ce-chip", c.sub === "brand" && "brand"]}>
+                  <span class="l">{c.label}</span>
+                  <span class="s">{c.sub}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         ))}
       </div>
 
@@ -187,6 +226,7 @@ const ads = [
         </div>
         <span class="tag">Platform + ERP Connector</span>
       </div>
+
       <p class="d2ce-note">Supported channels, payment sources, logistics partners and ad platforms depend on your setup.</p>
     </div>
   </div>

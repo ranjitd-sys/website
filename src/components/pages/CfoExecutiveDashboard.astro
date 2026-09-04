@@ -1,0 +1,209 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const overviewKpis = [
+  { label: "Revenue",       value: "₹42.6L",  sub: "monthly" },
+  { label: "Profit",        value: "₹10.8L",  sub: "25.4% margin" },
+  { label: "Realized",      value: "₹40.9L",  sub: "96% realization" },
+  { label: "Orders",        value: "28,410",  sub: "all channels" },
+]
+const trends = [
+  { m: "Mar", rev: 28, profit: 8.1 },
+  { m: "Apr", rev: 31, profit: 8.5 },
+  { m: "May", rev: 34, profit: 9.2 },
+  { m: "Jun", rev: 33, profit: 8.9 },
+  { m: "Jul", rev: 37, profit: 9.8 },
+  { m: "Aug", rev: 41, profit: 10.2 },
+  { m: "Sep", rev: 43, profit: 10.8 },
+]
+const trendMax = Math.max(...trends.map(t => t.rev))
+const trendProfitMax = Math.max(...trends.map(t => t.profit))
+const channels = [
+  { name: "Amazon",    revenue: "₹16.4L", profit: "₹4.6L", realization: "97%" },
+  { name: "Flipkart",  revenue: "₹9.8L",  profit: "₹2.7L", realization: "94%" },
+  { name: "Shopify",   revenue: "₹8.2L",  profit: "₹2.3L", realization: "98%" },
+  { name: "Other",     revenue: "₹8.2L",  profit: "₹1.2L", realization: "95%" },
+]
+const paymentSummary = [
+  { label: "Expected",  value: "₹42.6L",  status: "ok" },
+  { label: "Received",  value: "₹40.9L",  status: "warn" },
+  { label: "Pending",   value: "₹1.7L",   status: "muted" },
+]
+---
+<style is:global>
+  .cfdash {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfdash-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cfdash-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cfdash-bar .dots { display: flex; gap: 0.3rem; }
+  .cfdash-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cfdash-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cfdash-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cfdash-bar .dots i:nth-child(3) { background: #86efac; }
+  .cfdash-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .cfdash-bar .all { margin-left: auto; display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.18rem 0.55rem; border-radius: 999px; background: var(--brand-50); border: 1px solid var(--brand-100); color: var(--brand-700); font-size: 0.66rem; font-weight: 700; }
+  
+  /* Grid Layout Fixes */
+  .cfdash-body { 
+    display: grid; 
+    grid-template-columns: 1fr;
+    background: var(--ink-200); /* Serves as grid gap border color */
+    gap: 1px;
+  }
+  @media (min-width: 48rem) { 
+    .cfdash-body { 
+      grid-template-columns: 1fr 1fr; 
+    } 
+  }
+
+  .cfdash-panel { 
+    padding: 1.25rem; 
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .cfdash-panel-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.8rem; }
+  
+  /* KPIs */
+  .cfdash-kpis { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+  .cfdash-kpi { padding: 0.8rem 0.9rem; border: 1px solid var(--ink-200); border-radius: 0.75rem; background: linear-gradient(180deg, #fff, var(--ink-50)); }
+  .cfdash-kpi .k { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); }
+  .cfdash-kpi .v { margin-top: 0.28rem; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink-950); font-variant-numeric: tabular-nums; }
+  .cfdash-kpi .sub { margin-top: 0.1rem; font-size: 0.66rem; color: var(--ink-400); }
+  
+  /* Channel Rows */
+  .cfdash-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0; }
+  .cfdash-row + .cfdash-row { border-top: 1px solid var(--ink-100); }
+  .cfdash-row .name { width: 5.5rem; flex: none; font-size: 0.8rem; font-weight: 700; color: var(--ink-900); }
+  .cfdash-track { flex: 1; height: 6px; border-radius: 999px; background: var(--ink-100); overflow: hidden; }
+  .cfdash-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--brand-500), var(--brand-400)); }
+  .cfdash-row .rev { width: 4.5rem; flex: none; text-align: right; font-size: 0.76rem; font-weight: 700; color: var(--ink-800); font-variant-numeric: tabular-nums; }
+  
+  /* Chart */
+  .cfdash-chart { position: relative; height: 160px; width: 100%; }
+  .cfdash-chart-bg { width: 100%; height: 100%; }
+
+  /* Payment Summary */
+  .cfdash-pay { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; }
+  @media (max-width: 30rem) { .cfdash-pay { grid-template-columns: 1fr; } }
+  .cfdash-paycard { padding: 0.8rem 0.9rem; border: 1px solid var(--ink-200); border-radius: 0.75rem; background: linear-gradient(180deg, #fff, var(--ink-50)); }
+  .cfdash-paycard .k { font-size: 0.64rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); }
+  .cfdash-paycard .v { margin-top: 0.28rem; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.02em; color: var(--ink-950); font-variant-numeric: tabular-nums; }
+  .cfdash-paycard.ok .v { color: var(--success-600); }
+  .cfdash-paycard.warn .v { color: var(--danger-600); }
+  
+  .cfdash-pay-note, .cfdash-note { margin-top: 0.7rem; font-size: 0.7rem; color: var(--ink-400); }
+  .cfdash-footer-note { padding: 0.7rem 1rem; border-top: 1px solid var(--ink-200); background: var(--ink-50); text-align: center; font-size: 0.72rem; color: var(--ink-400); }
+</style>
+
+<section class="cfdash">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="cfdash-app reveal">
+      <div class="cfdash-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Executive Dashboard</span>
+        <span class="all">Monthly snapshot</span>
+      </div>
+
+      <div class="cfdash-body">
+        <!-- Grid Quadrant 1: Overview -->
+        <div class="cfdash-panel">
+          <div>
+            <div class="cfdash-panel-title">Financial overview</div>
+            <div class="cfdash-kpis">
+              {overviewKpis.map((k) => (
+                <div class="cfdash-kpi">
+                  <div class="k">{k.label}</div>
+                  <div class="v">{k.value}</div>
+                  <div class="sub">{k.sub}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Quadrant 2: Trends -->
+        <div class="cfdash-panel">
+          <div>
+            <div class="cfdash-panel-title">Trends · last 7 months</div>
+            <div class="cfdash-chart" aria-hidden="true">
+              <svg viewBox="0 0 380 160" preserveAspectRatio="none" class="cfdash-chart-bg">
+                <defs>
+                  <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--brand-500)" />
+                    <stop offset="100%" stop-color="var(--brand-700)" />
+                  </linearGradient>
+                  <linearGradient id="profitGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="var(--success-500)" />
+                    <stop offset="100%" stop-color="var(--success-300)" />
+                  </linearGradient>
+                </defs>
+                <polyline points="20,136 75,108 130,90 185,102 240,72 295,64 350,52" fill="none" stroke="url(#revGrad)" stroke-width="2" />
+                <polyline points="20,136 75,130 130,126 185,122 240,116 295,112 350,106" fill="none" stroke="url(#profitGrad)" stroke-width="2" />
+                {trends.map((t, i) => (
+                  <g>
+                    <circle cx={20 + i * 55} cy={136 - ((t.rev / trendMax) * 110)} r="3.5" fill="var(--brand-500)" />
+                    <circle cx={20 + i * 55} cy={136 - ((t.profit / trendProfitMax) * 110)} r="3.5" fill="var(--success-500)" />
+                    <text x={20 + i * 55} y={152} text-anchor="middle" font-size="9" fill="var(--ink-400)">{t.m}</text>
+                  </g>
+                ))}
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid Quadrant 3: Channels -->
+        <div class="cfdash-panel">
+          <div>
+            <div class="cfdash-panel-title">Channel performance</div>
+            {channels.map((c) => (
+              <div class="cfdash-row">
+                <span class="name">{c.name}</span>
+                <div class="cfdash-track">
+                  <div class="cfdash-fill" style={`width:${parseInt(c.realization)}%;background:${c.name === 'Amazon' ? 'linear-gradient(90deg,var(--brand-500),var(--brand-400))' : 'var(--ink-100)'}`}></div>
+                </div>
+                <span class="rev">{c.revenue}</span>
+              </div>
+            ))}
+          </div>
+          <p class="cfdash-note">Revenue and profit per channel</p>
+        </div>
+
+        <!-- Grid Quadrant 4: Payments -->
+        <div class="cfdash-panel">
+          <div>
+            <div class="cfdash-panel-title">Payment summary</div>
+            <div class="cfdash-pay">
+              {paymentSummary.map((p) => (
+                <div class:list={["cfdash-paycard", p.status]}>
+                  <div class="k">{p.label}</div>
+                  <div class="v">{p.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p class="cfdash-pay-note">Expected vs received across all connected sources</p>
+        </div>
+      </div>
+
+      <div class="cfdash-footer-note">Illustrative example — actual dashboards reflect your configuration and time window.</div>
+    </div>
+  </div>
+</section>

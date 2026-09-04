@@ -1,0 +1,66 @@
+---
+const faqs = [
+  { q: "How quickly can we set this up?", a: "Typical setup takes 2 weeks. ERP integration adds another 1-2 weeks depending on your systems." },
+  { q: "Which ERPs do you support?", a: "We integrate with Tally, SAP Business One, and Zoho Books today. Other systems can be added via our API." },
+  { q: "Do you support multi-warehouse accounting?", a: "Yes. Each warehouse can be mapped to its own GL account or branch in your ERP." },
+  { q: "How is reconciliation different from my bank statement?", a: "We reconcile against marketplace settlements, not just bank credits. This catches missing payouts, returns, and fee adjustments." },
+  { q: "Can we keep our existing accounting structure?", a: "Yes. You can map each ecommerce event (orders, returns, fees, taxes) to your existing GL accounts." },
+  { q: "How do you handle multi-currency?", a: "Each transaction is recorded in its native currency. Reports can be consolidated to INR, USD, or any base currency." },
+]
+---
+<style is:global>
+  .cfaq {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cfaq-title { font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.025em; color: var(--ink-950); margin-bottom: 1.5rem; text-align: center; }
+  .cfaq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .cfaq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.85rem;
+    background: #fff;
+    overflow: hidden;
+  }
+  .cfaq-summary {
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink-800);
+    transition: background 0.15s ease;
+  }
+  .cfaq-summary:hover { background: var(--ink-50); }
+  .cfaq-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--ink-400);
+    flex: none;
+    transition: transform 0.2s ease;
+  }
+  .cfaq-item[open] .cfaq-icon { transform: rotate(180deg); color: var(--brand-600); }
+  .cfaq-answer {
+    padding: 0 1.25rem 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="cfaq">
+  <div class="mx-auto max-w-4xl px-6">
+    <h2 class="cfaq-title">Questions CFOs ask before they start.</h2>
+    <div class="cfaq-list">
+      {faqs.map((f) => (
+        <details class="cfaq-item">
+          <summary class="cfaq-summary">
+            <span>{f.q}</span>
+            <svg class="cfaq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <p class="cfaq-answer">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
