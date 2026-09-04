@@ -1,0 +1,213 @@
+---
+const meta = [
+  { label: "Channel", value: "Website" },
+  { label: "Order", value: "ORD-102831" },
+  { label: "Invoice", value: "INV-2026-0412" },
+  { label: "SKU", value: "DSK-0412" },
+  { label: "GST", value: "CGST ₹90 · SGST ₹90" },
+  { label: "Warehouse", value: "MUM-01" },
+  { label: "Amount", value: "₹1,180" },
+]
+const entries = [
+  { account: "Customer Receivable", debit: "₹1,180.00", credit: "" },
+  { account: "Sales — Website", debit: "", credit: "₹1,000.00" },
+  { account: "Output CGST", debit: "", credit: "₹90.00" },
+  { account: "Output SGST", debit: "", credit: "₹90.00" },
+]
+const lower = [
+  { label: "Sales", sub: "recognized per order" },
+  { label: "GST", sub: "kept by head" },
+  { label: "Receivable", sub: "expected amount" },
+  { label: "Charges", sub: "where applicable" },
+  { label: "Payment", sub: "against receivable" },
+]
+---
+
+<style is:global>
+  .d2ca {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2ca-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2ca-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2ca-bar .dots { display: flex; gap: 0.3rem; }
+  .d2ca-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2ca-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2ca-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2ca-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2ca-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2ca-bar .orderwise {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2ca-meta {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  @media (min-width: 40rem) {
+    .d2ca-meta { grid-template-columns: repeat(4, 1fr); }
+  }
+  .d2ca-meta-item .k {
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2ca-meta-item .v {
+    margin-top: 0.15rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .d2ca-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 48rem) {
+    .d2ca-body { grid-template-columns: 1.1fr 0.9fr; }
+  }
+  .d2ca-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .d2ca-table th {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2ca-table th.right { text-align: right; }
+  .d2ca-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-700);
+  }
+  .d2ca-table td.right { text-align: right; font-variant-numeric: tabular-nums; }
+  .d2ca-table td.debit { color: var(--danger-600); }
+  .d2ca-table td.credit { color: var(--success-600); }
+  .d2ca-lower {
+    padding: 1rem;
+    border-top: 1px solid var(--ink-200);
+  }
+  @media (min-width: 48rem) {
+    .d2ca-lower {
+      border-top: 0;
+      border-left: 1px solid var(--ink-200);
+    }
+  }
+  .d2ca-lower-title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.7rem;
+  }
+  .d2ca-lower-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .d2ca-lower-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.2rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8rem;
+  }
+  .d2ca-lower-item:last-child { border-bottom: 0; }
+  .d2ca-lower-item .l { font-weight: 700; color: var(--ink-900); }
+  .d2ca-lower-item .s { font-size: 0.66rem; color: var(--ink-400); }
+  .d2ca-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2ca">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2ca-app reveal">
+      <div class="d2ca-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Detailed Accounting</span>
+        <span class="orderwise">Order-wise</span>
+      </div>
+      <div class="d2ca-meta">
+        {meta.map((m) => (
+          <div class="d2ca-meta-item">
+            <div class="k">{m.label}</div>
+            <div class="v">{m.value}</div>
+          </div>
+        ))}
+      </div>
+      <div class="d2ca-body">
+        <table class="d2ca-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th class="right">Debit</th>
+              <th class="right">Credit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {entries.map((e) => (
+              <tr>
+                <td>{e.account}</td>
+                <td class="right debit">{e.debit}</td>
+                <td class="right credit">{e.credit}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div class="d2ca-lower">
+          <div class="d2ca-lower-title">Accounting for each order</div>
+          <div class="d2ca-lower-list">
+            {lower.map((x) => (
+              <div class="d2ca-lower-item">
+                <span class="l">{x.label}</span>
+                <span class="s">{x.sub}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="d2ca-note">Illustrative example — actual entries depend on your channel and ERP configuration.</p>
+  </div>
+</section>

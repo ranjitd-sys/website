@@ -1,0 +1,164 @@
+---
+const channels = [
+  { label: "Your Website", sub: "storefront", tone: "brand" },
+  { label: "Amazon", sub: "marketplace" },
+  { label: "Flipkart", sub: "marketplace" },
+  { label: "Shopify", sub: "storefront" },
+  { label: "Other channels", sub: "supported" },
+]
+const payments = [
+  { label: "Payment Gateway", sub: "collections" },
+  { label: "Settlement source", sub: "payouts" },
+  { label: "Other payment sources", sub: "supported" },
+]
+---
+
+<style is:global>
+  .d2ce {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2ce-app {
+    position: relative;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    padding: 1.25rem;
+  }
+  .d2ce-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .d2ce-head .title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .d2ce-head .hint {
+    margin-left: auto;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--ink-400);
+  }
+  .d2ce-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .d2ce-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.7rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2ce-chip.brand {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+  .d2ce-chip .l {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .d2ce-chip .s {
+    font-size: 0.64rem;
+    color: var(--ink-400);
+  }
+  .d2ce-group-label {
+    margin: 1rem 0 0.5rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2ce-divider {
+    height: 1px;
+    margin: 1.1rem 0;
+    background: linear-gradient(90deg, transparent, var(--ink-200), transparent);
+  }
+  .d2ce-core {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.85rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    box-shadow: 0 14px 28px -16px rgba(83, 58, 253, 0.5);
+  }
+  .d2ce-core .name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+  .d2ce-core .desc {
+    font-size: 0.72rem;
+    opacity: 0.85;
+  }
+  .d2ce-core .tag {
+    margin-left: auto;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .d2ce-note {
+    margin-top: 0.85rem;
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2ce">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2ce-app reveal" role="img" aria-label="Illustration: your website, Amazon, Flipkart, Shopify and other channels plus payment gateways and settlement sources connect into DeepEcom">
+      <div class="d2ce-head">
+        <span class="title">Connect your selling ecosystem</span>
+        <span class="hint">one layer for all of it</span>
+      </div>
+
+      <div class="d2ce-group-label">Selling channels</div>
+      <div class="d2ce-group">
+        {channels.map((c) => (
+          <span class:list={["d2ce-chip", c.tone === "brand" && "brand"]}>
+            <span class="l">{c.label}</span>
+            <span class="s">{c.sub}</span>
+          </span>
+        ))}
+      </div>
+
+      <div class="d2ce-group-label">Payment sources</div>
+      <div class="d2ce-group">
+        {payments.map((c) => (
+          <span class="d2ce-chip">
+            <span class="l">{c.label}</span>
+            <span class="s">{c.sub}</span>
+          </span>
+        ))}
+      </div>
+
+      <div class="d2ce-divider" aria-hidden="true"></div>
+
+      <div class="d2ce-core">
+        <div>
+          <div class="name">DeepEcom</div>
+          <div class="desc">Connects every channel and payment source into one financial layer</div>
+        </div>
+        <span class="tag">Platform + ERP Connector</span>
+      </div>
+      <p class="d2ce-note">Supported channels and payment sources depend on your setup.</p>
+    </div>
+  </div>
+</section>

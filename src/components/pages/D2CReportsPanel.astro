@@ -1,0 +1,144 @@
+---
+const reports = [
+  { name: "Sales report", cat: "Sales", source: "All channels", tone: "brand" },
+  { name: "Profitability report", cat: "Profitability", source: "All channels", tone: "brand" },
+  { name: "Payment reconciliation", cat: "Reconciliation", source: "All sources", tone: "success" },
+  { name: "Transactions report", cat: "Transactions", source: "All channels", tone: "brand" },
+  { name: "Channel performance", cat: "Performance", source: "All channels", tone: "brand" },
+]
+---
+
+<style is:global>
+  .d2crp {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2crp-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2crp-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2crp-bar .dots { display: flex; gap: 0.3rem; }
+  .d2crp-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2crp-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2crp-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2crp-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2crp-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2crp-bar .count {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2crp-list { display: flex; flex-direction: column; padding: 0.35rem 0.75rem 0.75rem; }
+  .d2crp-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.5rem;
+    border-radius: 0.65rem;
+  }
+  .d2crp-row + .d2crp-row { border-top: 1px solid var(--ink-100); border-radius: 0; }
+  .d2crp-row:hover { background: var(--ink-50); }
+  .d2crp-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.6rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    flex: none;
+  }
+  .d2crp-icon svg { width: 1.05rem; height: 1.05rem; }
+  .d2crp-info { min-width: 0; flex: 1; }
+  .d2crp-name { font-size: 0.8125rem; font-weight: 700; color: var(--ink-900); }
+  .d2crp-meta { margin-top: 0.1rem; font-size: 0.68rem; color: var(--ink-400); }
+  .d2crp-cat {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--ink-50);
+    border: 1px solid var(--ink-200);
+    color: var(--ink-500);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+  .d2crp-dl {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    color: var(--ink-700);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+  .d2crp-cta {
+    padding: 0.75rem 1rem 0.9rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+  }
+  .d2crp-cta a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--brand-600);
+    text-decoration: none;
+  }
+  .d2crp-cta a:hover { color: var(--brand-700); }
+</style>
+
+<section class="d2crp">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2crp-app reveal">
+      <div class="d2crp-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Reports</span>
+        <span class="count">{reports.length} available</span>
+      </div>
+      <div class="d2crp-list">
+        {reports.map((r) => (
+          <div class="d2crp-row">
+            <span class="d2crp-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6"/></svg>
+            </span>
+            <span class="d2crp-info">
+              <span class="d2crp-name">{r.name}</span>
+              <span class="d2crp-meta">Aug 2026 · {r.source}</span>
+            </span>
+            <span class="d2crp-cat">{r.cat}</span>
+            <span class="d2crp-dl">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+              Export
+            </span>
+          </div>
+        ))}
+      </div>
+      <div class="d2crp-cta">
+        <a href="/platform/reports">Explore Reports →</a>
+      </div>
+    </div>
+  </div>
+</section>

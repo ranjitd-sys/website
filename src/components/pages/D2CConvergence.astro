@@ -1,0 +1,238 @@
+---
+const channels = [
+  { label: "Website", sub: "your store" },
+  { label: "Marketplaces", sub: "supported channels" },
+  { label: "Other channels", sub: "supported sales" },
+]
+const payments = [
+  { label: "Supported gateways", sub: "collections" },
+  { label: "Settlement sources", sub: "payouts" },
+]
+const business = [
+  { label: "Sales", sub: "every channel" },
+  { label: "Payments", sub: "every source" },
+  { label: "Profitability", sub: "what you make" },
+  { label: "Reconciliation", sub: "expected vs received" },
+  { label: "Reports", sub: "structured" },
+  { label: "Accounting", sub: "ERP-ready" },
+]
+---
+
+<style is:global>
+  .d2cv {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cv-app {
+    position: relative;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cv-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .d2cv-svg {
+    display: block;
+    width: 100%;
+    min-width: 42rem;
+    height: auto;
+    font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  @media (min-width: 48rem) {
+    .d2cv-svg {
+      min-width: 0;
+    }
+  }
+  .d2cv-label {
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    fill: var(--ink-400);
+  }
+  .d2cv-node {
+    rx: 10px;
+  }
+  .d2cv-node-title {
+    font-size: 12.5px;
+    font-weight: 700;
+    fill: var(--ink-900);
+  }
+  .d2cv-node-sub {
+    font-size: 9.5px;
+    font-weight: 500;
+    fill: var(--ink-400);
+  }
+  .d2cv-core-name {
+    font-size: 18px;
+    font-weight: 800;
+    fill: #fff;
+    letter-spacing: -0.01em;
+  }
+  .d2cv-core-sub {
+    font-size: 10.5px;
+    font-weight: 500;
+    fill: rgba(255, 255, 255, 0.8);
+  }
+  .d2cv-chip {
+    rx: 999px;
+  }
+  .d2cv-chip-text {
+    font-size: 10px;
+    font-weight: 700;
+    fill: var(--brand-700);
+  }
+  .d2cv-wire {
+    fill: none;
+    stroke: #e4e7ee;
+    stroke-width: 1.4;
+  }
+  .d2cv-wire-flow {
+    fill: none;
+    stroke: var(--brand-500);
+    stroke-opacity: 0.5;
+    stroke-width: 1.4;
+    stroke-dasharray: 5 8;
+    animation: d2cv-dash 1.2s linear infinite;
+  }
+  @keyframes d2cv-dash {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .d2cv-wire-flow {
+      animation: none;
+    }
+  }
+  .d2cv-note {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cv">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cv-app reveal">
+      <div class="d2cv-scroll">
+      <svg viewBox="0 0 1160 480" fill="none" class="d2cv-svg" role="img" aria-label="Diagram: selling channels and payment systems connect into DeepEcom, which produces sales, payments, profitability, reconciliation, reports and accounting">
+        <defs>
+          <linearGradient id="d2cvCore" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#533AFD" />
+            <stop offset="100%" stop-color="#3922B8" />
+          </linearGradient>
+          <linearGradient id="d2cvBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff" />
+            <stop offset="100%" stop-color="#f7f8fc" />
+          </linearGradient>
+        </defs>
+
+        <rect width="1160" height="480" fill="url(#d2cvBg)" />
+
+        <!-- section labels -->
+        <text x="120" y="52" class="d2cv-label">Selling channels</text>
+        <text x="430" y="52" class="d2cv-label">Payments</text>
+        <text x="900" y="52" class="d2cv-label">Business view</text>
+
+        <!-- left: channel nodes -->
+        <g font-family="Inter, sans-serif">
+          <rect x="50" y="80" width="230" height="54" rx="10" fill="#fff" stroke="#e2e5ee" />
+          <circle cx="80" cy="107" r="4" fill="#533AFD" />
+          <text x="94" y="101" class="d2cv-node-title">{channels[0].label}</text>
+          <text x="94" y="116" class="d2cv-node-sub">{channels[0].sub}</text>
+
+          <rect x="50" y="148" width="230" height="54" rx="10" fill="#fff" stroke="#e2e5ee" />
+          <circle cx="80" cy="175" r="4" fill="#533AFD" />
+          <text x="94" y="169" class="d2cv-node-title">{channels[1].label}</text>
+          <text x="94" y="184" class="d2cv-node-sub">{channels[1].sub}</text>
+
+          <rect x="50" y="216" width="230" height="54" rx="10" fill="#fff" stroke="#e2e5ee" />
+          <circle cx="80" cy="243" r="4" fill="#533AFD" />
+          <text x="94" y="237" class="d2cv-node-title">{channels[2].label}</text>
+          <text x="94" y="252" class="d2cv-node-sub">{channels[2].sub}</text>
+        </g>
+
+        <!-- payment nodes -->
+        <g font-family="Inter, sans-serif">
+          <rect x="340" y="110" width="230" height="54" rx="10" fill="#fff" stroke="#e2e5ee" />
+          <circle cx="370" cy="137" r="4" fill="#533AFD" />
+          <text x="384" y="131" class="d2cv-node-title">{payments[0].label}</text>
+          <text x="384" y="146" class="d2cv-node-sub">{payments[0].sub}</text>
+
+          <rect x="340" y="178" width="230" height="54" rx="10" fill="#fff" stroke="#e2e5ee" />
+          <circle cx="370" cy="205" r="4" fill="#533AFD" />
+          <text x="384" y="199" class="d2cv-node-title">{payments[1].label}</text>
+          <text x="384" y="214" class="d2cv-node-sub">{payments[1].sub}</text>
+        </g>
+
+        <!-- connectors from channels + payments to core -->
+        <path d="M 280 107 C 360 107, 400 250, 470 265" class="d2cv-wire" />
+        <path d="M 280 107 C 360 107, 400 250, 470 265" class="d2cv-wire-flow" />
+        <path d="M 280 175 C 360 175, 400 240, 470 250" class="d2cv-wire" />
+        <path d="M 280 175 C 360 175, 400 240, 470 250" class="d2cv-wire-flow" />
+        <path d="M 280 243 C 360 243, 400 235, 470 235" class="d2cv-wire" />
+        <path d="M 280 243 C 360 243, 400 235, 470 235" class="d2cv-wire-flow" />
+        <path d="M 570 137 C 640 137, 620 250, 500 265" class="d2cv-wire" />
+        <path d="M 570 137 C 640 137, 620 250, 500 265" class="d2cv-wire-flow" />
+        <path d="M 570 205 C 640 205, 620 240, 500 250" class="d2cv-wire" />
+        <path d="M 570 205 C 640 205, 620 240, 500 250" class="d2cv-wire-flow" />
+
+        <!-- DeepEcom core -->
+        <rect x="440" y="230" width="280" height="150" rx="18" fill="url(#d2cvCore)" filter="url(#d2cvGlow)" />
+        <text x="468" y="266" class="d2cv-core-name">DeepEcom</text>
+        <text x="468" y="284" class="d2cv-core-sub">One financial layer across every system</text>
+        <g>
+          <rect x="468" y="304" width="112" height="26" rx="999" fill="rgba(255,255,255,0.16)" />
+          <text x="482" y="321" class="d2cv-chip-text" fill="#fff">Understand</text>
+          <rect x="590" y="304" width="112" height="26" rx="999" fill="rgba(255,255,255,0.16)" />
+          <text x="604" y="321" class="d2cv-chip-text" fill="#fff">Reconcile</text>
+          <rect x="468" y="338" width="112" height="26" rx="999" fill="rgba(255,255,255,0.16)" />
+          <text x="482" y="355" class="d2cv-chip-text" fill="#fff">Account</text>
+          <rect x="590" y="338" width="112" height="26" rx="999" fill="rgba(255,255,255,0.16)" />
+          <text x="604" y="355" class="d2cv-chip-text" fill="#fff">Connect</text>
+        </g>
+
+        <!-- business view nodes on right -->
+        <g font-family="Inter, sans-serif">
+          {business.map((b, i) => {
+            const x = 800 + (i % 2) * 170
+            const y = 80 + Math.floor(i / 2) * 74
+            return (
+              <Fragment>
+                <rect x={x} y={y} width="156" height="52" rx="10" fill="#fff" stroke="#e2e5ee" />
+                <circle cx={x + 20} cy={y + 26} r="3.5" fill="#533AFD" />
+                <text x={x + 32} y={y + 22} class="d2cv-node-title">{b.label}</text>
+                <text x={x + 32} y={y + 37} class="d2cv-node-sub">{b.sub}</text>
+              </Fragment>
+            )
+          })}
+        </g>
+
+        <!-- connectors from core to business view -->
+        <path d="M 720 250 C 770 210, 790 130, 800 110" class="d2cv-wire" />
+        <path d="M 720 250 C 770 210, 790 130, 800 110" class="d2cv-wire-flow" />
+        <path d="M 720 280 C 770 280, 800 200, 800 160" class="d2cv-wire" />
+        <path d="M 720 280 C 770 280, 800 200, 800 160" class="d2cv-wire-flow" />
+        <path d="M 720 320 C 770 320, 800 240, 800 200" class="d2cv-wire" />
+        <path d="M 720 320 C 770 320, 800 240, 800 200" class="d2cv-wire-flow" />
+        <path d="M 720 350 C 770 350, 800 290, 800 250" class="d2cv-wire" />
+        <path d="M 720 350 C 770 350, 800 290, 800 250" class="d2cv-wire-flow" />
+
+        <defs>
+          <filter id="d2cvGlow" x="-10%" y="-10%" width="125%" height="125%" filterUnits="userSpaceOnUse">
+            <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#533AFD" flood-opacity="0.28" />
+          </filter>
+        </defs>
+      </svg>
+      </div>
+      <p class="d2cv-note">Illustrative architecture — supported channels and payment sources depend on your setup.</p>
+    </div>
+  </div>
+</section>

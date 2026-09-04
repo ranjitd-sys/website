@@ -1,0 +1,173 @@
+---
+const platform = [
+  { label: "Dashboard", sub: "one view across channels" },
+  { label: "Profitability", sub: "per channel & overall" },
+  { label: "Payment Reconciliation", sub: "expected vs received" },
+  { label: "Reports", sub: "structured exports" },
+]
+const connector = [
+  { label: "Detailed Accounting", sub: "order-wise entries" },
+  { label: "GST", sub: "CGST · SGST · IGST" },
+  { label: "Inventory", sub: "warehouse-wise" },
+  { label: "Stock Transfers", sub: "source & destination" },
+]
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<style is:global>
+  .d2cpc {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cpc-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .d2cpc-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .d2cpc-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cpc-card.dark {
+    border-color: rgba(83, 58, 253, 0.3);
+    background: linear-gradient(180deg, var(--ink-950), #151238);
+    color: #fff;
+  }
+  .d2cpc-head {
+    padding: 1.1rem 1.2rem;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .d2cpc-card.dark .d2cpc-head {
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  .d2cpc-kicker {
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .d2cpc-card.dark .d2cpc-kicker {
+    color: var(--brand-300);
+  }
+  .d2cpc-name {
+    margin-top: 0.3rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--ink-900);
+    letter-spacing: -0.01em;
+  }
+  .d2cpc-card.dark .d2cpc-name { color: #fff; }
+  .d2cpc-desc {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    color: var(--ink-500);
+  }
+  .d2cpc-card.dark .d2cpc-desc { color: rgba(255, 255, 255, 0.7); }
+  .d2cpc-list { padding: 0.8rem 1.2rem 1.1rem; }
+  .d2cpc-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .d2cpc-item:last-child { border-bottom: 0; }
+  .d2cpc-card.dark .d2cpc-item { border-bottom-color: rgba(255, 255, 255, 0.08); }
+  .d2cpc-item .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+    flex: none;
+  }
+  .d2cpc-item .l { font-weight: 700; color: var(--ink-900); }
+  .d2cpc-card.dark .d2cpc-item .l { color: #fff; }
+  .d2cpc-item .s { margin-left: auto; font-size: 0.68rem; color: var(--ink-400); }
+  .d2cpc-card.dark .d2cpc-item .s { color: rgba(255, 255, 255, 0.55); }
+  .d2cpc-erp {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  .d2cpc-erp-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.7rem;
+    background: var(--ink-50);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-700);
+  }
+  .d2cpc-erp-chip svg { color: var(--brand-500); }
+  .d2cpc-note {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cpc">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cpc-grid reveal">
+      <div class="d2cpc-card">
+        <div class="d2cpc-head">
+          <div class="d2cpc-kicker">DeepEcom Platform</div>
+          <div class="d2cpc-name">Understand the D2C business</div>
+          <div class="d2cpc-desc">Sales, payments, profitability and reconciliation across every channel — in one place.</div>
+        </div>
+        <div class="d2cpc-list">
+          {platform.map((x) => (
+            <div class="d2cpc-item">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="l">{x.label}</span>
+              <span class="s">{x.sub}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="d2cpc-card dark">
+        <div class="d2cpc-head">
+          <div class="d2cpc-kicker">ERP Connector</div>
+          <div class="d2cpc-name">Account every transaction</div>
+          <div class="d2cpc-desc">Turns the same transaction layer into detailed accounting that posts into your ERP.</div>
+        </div>
+        <div class="d2cpc-list">
+          {connector.map((x) => (
+            <div class="d2cpc-item">
+              <span class="dot" aria-hidden="true"></span>
+              <span class="l">{x.label}</span>
+              <span class="s">{x.sub}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="d2cpc-erp reveal" data-delay="120" role="img" aria-label="ERP Connector posts accounting into Tally, SAP and Zoho">
+      <span style="font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-400)">Into your ERP</span>
+      {erps.map((e) => (
+        <span class="d2cpc-erp-chip">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-6 9 6-9 6-9-6zM3 9v9l9 6 9-6V9"/></svg>
+          {e}
+        </span>
+      ))}
+    </div>
+    <p class="d2cpc-note">Platform = see the D2C business. ERP Connector = put the transactions into the books.</p>
+  </div>
+</section>

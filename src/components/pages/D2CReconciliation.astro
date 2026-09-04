@@ -1,0 +1,191 @@
+---
+const kpis = [
+  { label: "Expected", value: "₹5,94,000", sub: "across all sources" },
+  { label: "Received", value: "₹5,71,000", sub: "across all sources" },
+  { label: "Difference", value: "₹23,000", sub: "3 flagged", warn: true },
+]
+const rows = [
+  { source: "Payment Gateway 01", settlement: "STL-9921", expected: "₹1,72,000", received: "₹1,72,000", diff: "₹0", status: "Matched", cls: "ok" },
+  { source: "Payment Gateway 02", settlement: "STL-9922", expected: "₹89,000", received: "₹86,400", diff: "₹2,600", status: "Mismatch", cls: "warn" },
+  { source: "Marketplace settlement", settlement: "STL-9923", expected: "₹2,14,000", received: "₹2,14,000", diff: "₹0", status: "Matched", cls: "ok" },
+  { source: "Channel 02 settlement", settlement: "STL-9924", expected: "₹1,38,000", received: "₹1,38,000", diff: "₹0", status: "Matched", cls: "ok" },
+  { source: "Other payment source", settlement: "STL-9925", expected: "₹81,000", received: "—", diff: "₹81,000", status: "Pending", cls: "muted" },
+]
+---
+
+<style is:global>
+  .d2cr {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cr-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cr-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cr-bar .dots { display: flex; gap: 0.3rem; }
+  .d2cr-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2cr-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2cr-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2cr-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2cr-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2cr-bar .all {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cr-kpis {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  @media (max-width: 32rem) {
+    .d2cr-kpis { grid-template-columns: 1fr; }
+  }
+  .d2cr-kpi {
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2cr-kpi .k {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2cr-kpi .v {
+    margin-top: 0.28rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cr-kpi .sub { margin-top: 0.1rem; font-size: 0.68rem; color: var(--ink-400); }
+  .d2cr-kpi.warn { border-color: var(--danger-200); background: linear-gradient(180deg, #fff, var(--danger-50)); }
+  .d2cr-kpi.warn .v { color: var(--danger-600); }
+  .d2cr-wrap { overflow-x: auto; border-top: 1px solid var(--ink-100); }
+  .d2cr-table {
+    width: 100%;
+    min-width: 42rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .d2cr-table th {
+    padding: 0.65rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cr-table th.right { text-align: right; }
+  .d2cr-table td {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cr-table td.right { text-align: right; }
+  .d2cr-table td.source { font-weight: 600; color: var(--ink-900); }
+  .d2cr-table td.settle { color: var(--ink-500); }
+  .d2cr-table td.diff-amt { font-weight: 700; }
+  .d2cr-table td.diff-amt.warn { color: var(--danger-600); }
+  .d2cr-table tbody tr:hover { background: var(--ink-50); }
+  .d2cr-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .d2cr-pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; }
+  .d2cr-pill.ok { background: var(--success-50); color: var(--success-700); }
+  .d2cr-pill.ok::before { background: var(--success-500); }
+  .d2cr-pill.warn { background: var(--danger-50); color: var(--danger-600); }
+  .d2cr-pill.warn::before { background: var(--danger-500); }
+  .d2cr-pill.muted { background: var(--ink-100); color: var(--ink-500); }
+  .d2cr-pill.muted::before { background: var(--ink-400); }
+  .d2cr-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cr">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cr-app reveal">
+      <div class="d2cr-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Payment Reconciliation</span>
+        <span class="all">All sources</span>
+      </div>
+      <div class="d2cr-kpis">
+        {kpis.map((k) => (
+          <div class:list={["d2cr-kpi", k.warn && "warn"]}>
+            <div class="k">{k.label}</div>
+            <div class="v">{k.value}</div>
+            <div class="sub">{k.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div class="d2cr-wrap">
+        <table class="d2cr-table">
+          <thead>
+            <tr>
+              <th>Source</th>
+              <th>Settlement</th>
+              <th class="right">Expected</th>
+              <th class="right">Received</th>
+              <th class="right">Difference</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <td class="source">{r.source}</td>
+                <td class="settle">{r.settlement}</td>
+                <td class="right">{r.expected}</td>
+                <td class="right">{r.received}</td>
+                <td class:list={["right", "diff-amt", r.cls === "warn" && "warn"]}>{r.diff}</td>
+                <td><span class:list={["d2cr-pill", r.cls]}>{r.status}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="d2cr-note">Illustrative example — reconciliation results depend on your channels and settlements.</p>
+    </div>
+  </div>
+</section>

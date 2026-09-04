@@ -1,0 +1,193 @@
+---
+const stack = [
+  { label: "Revenue", value: "₹5,94,000", cls: "rev" },
+  { label: "Channel deductions", value: "− ₹1,16,000", cls: "sub" },
+  { label: "Payment & other costs", value: "− ₹80,000", cls: "sub" },
+  { label: "Profit", value: "₹3,98,000", cls: "profit" },
+]
+const channels = [
+  { name: "Website", revenue: "₹1,72,000", profit: "₹1,21,000", margin: 70 },
+  { name: "Marketplace 01", revenue: "₹2,14,000", profit: "₹1,49,000", margin: 70 },
+  { name: "Channel 02", revenue: "₹1,38,000", profit: "₹94,000", margin: 68 },
+  { name: "Other channels", revenue: "₹70,000", profit: "₹34,000", margin: 49 },
+]
+---
+
+<style is:global>
+  .d2cpr {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cpr-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cpr-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cpr-bar .dots { display: flex; gap: 0.3rem; }
+  .d2cpr-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2cpr-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2cpr-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2cpr-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2cpr-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2cpr-bar .period {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.5rem;
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cpr-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+  @media (min-width: 48rem) {
+    .d2cpr-body { grid-template-columns: 1fr 1.15fr; }
+  }
+  .d2cpr-waterfall {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .d2cpr-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .d2cpr-row:last-child { border-bottom: 0; }
+  .d2cpr-row .k { color: var(--ink-500); font-weight: 500; }
+  .d2cpr-row .v { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .d2cpr-row.rev .v { color: var(--ink-900); }
+  .d2cpr-row.sub .v { color: var(--danger-600); }
+  .d2cpr-row.profit { background: linear-gradient(180deg, var(--brand-50), var(--brand-50)); }
+  .d2cpr-row.profit .k { color: var(--brand-700); font-weight: 700; }
+  .d2cpr-row.profit .v { color: var(--brand-700); font-size: 1rem; }
+  .d2cpr-channels {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .d2cpr-channel {
+    padding: 0.7rem 0.9rem;
+    border-bottom: 1px solid var(--ink-100);
+  }
+  .d2cpr-channel:last-child { border-bottom: 0; }
+  .d2cpr-channel-top { display: flex; align-items: center; gap: 0.6rem; }
+  .d2cpr-init {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+  .d2cpr-name { font-size: 0.8125rem; font-weight: 700; color: var(--ink-900); }
+  .d2cpr-margin {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    color: var(--success-700);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .d2cpr-channel-bottom {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .d2cpr-track {
+    flex: 1;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--ink-100);
+    overflow: hidden;
+  }
+  .d2cpr-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+  }
+  .d2cpr-txt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-400);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cpr-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cpr">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cpr-app reveal">
+      <div class="d2cpr-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Unified Profitability</span>
+        <span class="period">All channels</span>
+      </div>
+      <div class="d2cpr-body">
+        <div class="d2cpr-waterfall">
+          {stack.map((s) => (
+            <div class:list={["d2cpr-row", s.cls]}>
+              <span class="k">{s.label}</span>
+              <span class="v">{s.value}</span>
+            </div>
+          ))}
+        </div>
+        <div class="d2cpr-channels">
+          {channels.map((c) => (
+            <div class="d2cpr-channel">
+              <div class="d2cpr-channel-top">
+                <span class="d2cpr-init">{c.name.slice(0, 2)}</span>
+                <span class="d2cpr-name">{c.name}</span>
+                <span class="d2cpr-margin">{c.margin}% margin</span>
+              </div>
+              <div class="d2cpr-channel-bottom">
+                <div class="d2cpr-track"><div class="d2cpr-fill" style={`width:${c.margin}%`}></div></div>
+                <span class="d2cpr-txt">Profit {c.profit}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <p class="d2cpr-note">Illustrative example — actual profitability depends on your channels and cost structure.</p>
+  </div>
+</section>

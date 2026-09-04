@@ -1,0 +1,111 @@
+---
+const steps = [
+  { label: "Order", sub: "original sale" },
+  { label: "Payment", sub: "collected" },
+  { label: "Return / Refund", sub: "reversal" },
+  { label: "Adjustment", sub: "tax & ledger" },
+  { label: "Profitability / Accounting", sub: "stays connected" },
+]
+---
+
+<style is:global>
+  .d2crf {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2crf-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    padding: 1.25rem;
+  }
+  .d2crf-flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 40rem) {
+    .d2crf-flow {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.6rem;
+      align-items: center;
+    }
+  }
+  .d2crf-step {
+    position: relative;
+    padding: 0.9rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    text-align: left;
+  }
+  .d2crf-step.brand {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+  .d2crf-step .l {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .d2crf-step .s {
+    margin-top: 0.2rem;
+    font-size: 0.66rem;
+    color: var(--ink-400);
+  }
+  .d2crf-arrow {
+    display: none;
+  }
+  @media (min-width: 40rem) {
+    .d2crf-arrow {
+      display: flex;
+      justify-content: center;
+      color: var(--brand-400);
+    }
+  }
+  @media (max-width: 39.99rem) {
+    .d2crf-arrow {
+      display: flex;
+      justify-content: center;
+      color: var(--brand-400);
+      transform: rotate(90deg);
+      padding: 0.1rem 0;
+    }
+  }
+  .d2crf-note {
+    margin-top: 1rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.75rem;
+    background: var(--ink-50);
+    border: 1px dashed var(--ink-200);
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="d2crf">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2crf-app reveal" role="img" aria-label="Illustration: an order becomes a payment, then a return or refund, then an adjustment, and profitability and accounting stay connected">
+      <div class="d2crf-flow">
+        {steps.map((s, i) => (
+          <>
+            <div class:list={["d2crf-step", i === steps.length - 1 && "brand"]}>
+              <div class="l">{s.label}</div>
+              <div class="s">{s.sub}</div>
+            </div>
+            {i < steps.length - 1 && (
+              <div class="d2crf-arrow" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </div>
+            )}
+          </>
+        ))}
+      </div>
+      <div class="d2crf-note">
+        When a transaction changes — a return, a refund, an adjustment — the financial view stays connected to the original order.
+      </div>
+    </div>
+  </div>
+</section>

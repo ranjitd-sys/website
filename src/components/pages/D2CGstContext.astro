@@ -1,0 +1,139 @@
+---
+const fields = [
+  { label: "Channel", sub: "where it sold" },
+  { label: "Order", sub: "identifier" },
+  { label: "Invoice", sub: "document" },
+  { label: "Taxable value", sub: "base" },
+  { label: "GST", sub: "CGST · SGST · IGST" },
+  { label: "Payment", sub: "source" },
+  { label: "Warehouse", sub: "node" },
+]
+---
+
+<style is:global>
+  .d2cg {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cg-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    padding: 1.25rem;
+  }
+  .d2cg-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  .d2cg-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.6rem 0.85rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.7rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2cg-field .l {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .d2cg-field .s {
+    font-size: 0.62rem;
+    color: var(--ink-400);
+  }
+  .d2cg-down {
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem 0 0.65rem;
+    color: var(--brand-400);
+  }
+  .d2cg-lower {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 40rem) {
+    .d2cg-lower {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .d2cg-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.8rem;
+  }
+  .d2cg-box .l {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--ink-900);
+  }
+  .d2cg-box .s {
+    font-size: 0.7rem;
+    color: var(--ink-400);
+  }
+  .d2cg-box.dark {
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    box-shadow: 0 14px 28px -16px rgba(83, 58, 253, 0.5);
+  }
+  .d2cg-box.dark .l { color: #fff; }
+  .d2cg-box.dark .s { color: rgba(255, 255, 255, 0.8); }
+  .d2cg-box.light {
+    border: 1px solid var(--ink-200);
+    background: var(--ink-50);
+  }
+  .d2cg-tax {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.85rem;
+    justify-content: center;
+  }
+  .d2cg-tax span {
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+</style>
+
+<section class="d2cg">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cg-app reveal" role="img" aria-label="Illustration: channel, order, invoice, taxable value, GST, payment and warehouse context stay together through accounting and into the ERP">
+      <div class="d2cg-fields">
+        {fields.map((f) => (
+          <span class="d2cg-field">
+            <span class="l">{f.label}</span>
+            <span class="s">{f.sub}</span>
+          </span>
+        ))}
+      </div>
+      <div class="d2cg-tax">
+        <span>CGST</span>
+        <span>SGST</span>
+        <span>IGST</span>
+      </div>
+      <div class="d2cg-down" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v15M6 12l6 6 6-6"/></svg>
+      </div>
+      <div class="d2cg-lower">
+        <div class="d2cg-box dark">
+          <div><div class="l">Accounting</div><div class="s">The full transaction context is kept with each entry</div></div>
+        </div>
+        <div class="d2cg-box light">
+          <div><div class="l">ERP</div><div class="s">Tally · SAP · Zoho — context preserved into the books</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

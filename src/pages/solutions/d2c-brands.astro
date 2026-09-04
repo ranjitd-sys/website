@@ -2,168 +2,183 @@
 import PageLayout from "@/layouts/PageLayout.astro"
 import D2CBrandsHero from "@/components/pages/D2CBrandsHero.astro"
 import SectionHeading from "@/components/landing/section-heading.astro"
-import TransactionDecomposition from "@/components/pages/TransactionDecomposition.astro"
-import ProfitabilityPanel from "@/components/pages/ProfitabilityPanel.astro"
-import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
-import MarketplaceCompare from "@/components/pages/MarketplaceCompare.astro"
-import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
-import GstSplitCompare from "@/components/pages/GstSplitCompare.astro"
-import OrderInventoryCompare from "@/components/pages/OrderInventoryCompare.astro"
-import ReportsPanel from "@/components/pages/ReportsPanel.astro"
+import D2CFragmentation from "@/components/pages/D2CFragmentation.astro"
+import D2CConvergence from "@/components/pages/D2CConvergence.astro"
+import D2CEcosystem from "@/components/pages/D2CEcosystem.astro"
+import D2CDashboard from "@/components/pages/D2CDashboard.astro"
+import D2CSalesPanel from "@/components/pages/D2CSalesPanel.astro"
+import D2CPaymentsPanel from "@/components/pages/D2CPaymentsPanel.astro"
+import D2CProfitability from "@/components/pages/D2CProfitability.astro"
+import D2CReconciliation from "@/components/pages/D2CReconciliation.astro"
+import D2CReturnsFlow from "@/components/pages/D2CReturnsFlow.astro"
+import D2CGstContext from "@/components/pages/D2CGstContext.astro"
+import D2CAccounting from "@/components/pages/D2CAccounting.astro"
+import D2CReportsPanel from "@/components/pages/D2CReportsPanel.astro"
+import D2CErpFlow from "@/components/pages/D2CErpFlow.astro"
 import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
-import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import D2CPlatformErpConnector from "@/components/pages/D2CPlatformErpConnector.astro"
 import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
-
-const fragments = [
-  { label: "Website", sub: "storefront sales" },
-  { label: "Amazon", sub: "marketplace" },
-  { label: "Flipkart", sub: "marketplace" },
-  { label: "Payments", sub: "settlements" },
-  { label: "Returns", sub: "reversals" },
-  { label: "GST", sub: "tax context" },
-]
-
-const channels = [
-  { name: "Website", init: "Web", revenue: "₹1,84,000", profit: "₹1,21,000", margin: "66%", orders: "3,210" },
-  { name: "Amazon", init: "Am", revenue: "₹2,10,000", profit: "₹1,56,000", margin: "74%", orders: "1,248" },
-  { name: "Flipkart", init: "Fk", revenue: "₹1,38,000", profit: "₹96,000", margin: "70%", orders: "986" },
-]
+import ErpConnector from "@/components/landing/sections/ErpConnector.astro"
+import DeepEcomLayer from "@/components/landing/sections/DeepEcomLayer.astro"
 
 const personaData = [
   {
-    title: "Founder / Business Owner",
-    role: "Strategic Growth",
-    desc: "See sales, profitability and cash realization across every channel.",
+    title: "Business Owner / Founder",
+    role: "One view",
+    desc: "See every channel and payment source without piecing reports together.",
     icon: '<path d="M3 11 12 3l9 8M5 10v10h14V10"/>',
   },
   {
     title: "CFO",
-    role: "Financial Control",
-    desc: "Understand channel-level financial performance and payment realization.",
+    role: "Financial control",
+    desc: "Understand consolidated sales, profitability and payment realization.",
     icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   },
   {
     title: "Accountant",
-    role: "Reconciliation",
-    desc: "Bring transaction data and detailed accounting together across ecommerce channels.",
+    role: "ERP accounting",
+    desc: "Bring transaction-level information into detailed ERP accounting.",
     icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+  {
+    title: "Finance Team",
+    role: "Less manual work",
+    desc: "Reduce fragmented reporting and reconciliation work.",
+    icon: '<path d="M3 3v18h18M8 17V9M13 17V5M18 17v-5"/>',
   },
 ]
 
 const faqs = [
-  { q: "How does DeepEcom work for D2C brands?", a: "DeepEcom brings supported website and marketplace transaction data together into one financial view — sales, profitability, payments and accounting." },
-  { q: "Can I connect my website and marketplaces?", a: "DeepEcom connects supported ecommerce channels so your sales, payments and transactions can be understood together." },
-  { q: "Can I see website and marketplace sales together?", a: "Yes. Sales from supported channels are consolidated into one view and can be compared side by side." },
-  { q: "Can I compare channel profitability?", a: "Yes. Profitability is visible per channel so you can see where your business genuinely makes money." },
-  { q: "Can I reconcile payments across channels?", a: "Yes. Expected vs received is compared for supported channels, with every difference surfaced." },
-  { q: "How does DeepEcom handle returns?", a: "Returns reverse the original sale and its tax through accounting, so revenue and tax ledgers stay balanced." },
-  { q: "How is GST represented?", a: "The GST context carried by a transaction is kept with the order and represented in the accounting." },
-  { q: "Can D2C orders be accounted for order-wise?", a: "Yes. Each order is accounted individually with its revenue, charges, GST and receivable." },
+  { q: "What does DeepEcom do for D2C brands?", a: "DeepEcom brings the platforms you sell on and the payment systems you use together into one financial view — sales, payments, profitability, reconciliation and accounting in one place." },
+  { q: "Can DeepEcom connect multiple selling platforms?", a: "DeepEcom connects supported selling channels — your website, marketplaces and other supported channels — so their transactions can be understood together." },
+  { q: "Can I connect marketplaces and my website?", a: "Yes. Supported website and marketplace channels are connected into the same financial layer, so sales and payments from each are visible side by side." },
+  { q: "Can I connect multiple payment gateways?", a: "Supported payment and settlement sources can be connected so collections from each are visible in one financial view." },
+  { q: "Which payment gateways are supported?", a: "Supported payment sources depend on your setup — the DeepEcom team confirms which gateways and settlement sources can be connected for your business." },
+  { q: "Can I see sales from different channels together?", a: "Yes. Sales from connected channels are consolidated into one view and can be compared side by side." },
+  { q: "Can I compare profitability across channels?", a: "Yes. Profitability is shown per channel — revenue after the deductions and supported costs your data carries — so you can see where the business genuinely makes money." },
+  { q: "Can I reconcile marketplace payments?", a: "Yes. Expected vs received is compared for connected marketplace settlements, with every difference surfaced." },
+  { q: "Can I reconcile payment-gateway transactions?", a: "Yes. Collections from connected payment sources are reconciled — expected vs received — so you don't piece together payment information from multiple systems." },
+  { q: "How are returns handled?", a: "Returns reverse the original sale and its tax through accounting, so revenue and tax ledgers stay balanced." },
+  { q: "How is GST represented?", a: "The GST context carried by a transaction is kept with the order — taxable value and GST by head — and represented in the accounting." },
+  { q: "Can D2C transactions be accounted for order-wise?", a: "Yes. Each order is accounted individually with its revenue, charges, GST and receivable." },
   { q: "Can accounting be maintained warehouse-wise?", a: "Yes. Warehouse context is part of the transaction and is carried into warehouse-wise accounting." },
-  { q: "Can DeepEcom handle marketplace charges?", a: "Yes. Supported marketplace charges and deductions are reflected in settlement and accounting." },
-  { q: "Can reports be downloaded?", a: "Yes. Reports on sales, profitability, payments and reconciliation are available for export." },
-  { q: "Can DeepEcom connect D2C data to Tally, SAP or Zoho?", a: "Yes. Prepared entries post into Tally, SAP or Zoho with the vouchers and ledgers your finance team expects." },
-  { q: "What is the difference between DeepEcom Platform and ERP Connector?", a: "The Platform helps you understand the business — profitability, reconciliation and reports. The ERP Connector turns the same transaction layer into detailed accounting in your ERP." },
+  { q: "Can DeepEcom connect D2C transactions to Tally?", a: "Yes. Prepared entries post into Tally with the vouchers and ledgers your finance team expects." },
+  { q: "Does DeepEcom support SAP?", a: "Yes. DeepEcom connects to SAP for posting detailed ecommerce accounting." },
+  { q: "Does DeepEcom support Zoho?", a: "Yes. Prepared entries post into Zoho Books." },
+  { q: "What is the difference between Platform and ERP Connector?", a: "The Platform helps you understand the D2C business — sales, profitability, reconciliation and reports. The ERP Connector turns the same transaction layer into detailed accounting in your ERP." },
+  { q: "Does DeepEcom replace our website or payment gateway?", a: "No. DeepEcom is a financial layer that connects the systems you already use. Your website and payment gateways keep working — DeepEcom brings their data together." },
 ]
 ---
 
 <PageLayout
-  title="D2C Brands — Multi-Channel Financial View & Accounting | DeepEcom"
-  description="DeepEcom gives D2C brands one financial view across website and marketplaces — with consolidated profitability, payment reconciliation and detailed ERP accounting."
+  title="D2C Brands — Run Every Channel From One Platform | DeepEcom"
+  description="DeepEcom connects your D2C selling platforms, marketplaces and payment systems into one financial view — sales, profitability, payment reconciliation, reporting and detailed ERP accounting."
 >
   <!-- 01 — HERO -->
   <D2CBrandsHero />
 
-  <!-- 02 — THE FRAGMENTATION PROBLEM -->
+  <!-- 02 — THE FRAGMENTED D2C BUSINESS -->
   <section class="section-band">
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
         <div class="max-w-lg reveal">
           <span class="eyebrow">THE PROBLEM</span>
-          <h2 class="h2-md mt-4">Your customers see one brand. Your financial data sees five systems.</h2>
+          <h2 class="h2-md mt-4">Your business is one. Your systems are many.</h2>
           <p class="lead mt-5">
-            As a D2C business grows, sales, payments, returns, marketplace deductions and accounting start living in different places.
+            As a D2C business grows, every new sales channel and payment system adds another source of data to understand, reconcile and account for.
           </p>
         </div>
-        <div class="reveal grid gap-3 sm:grid-cols-2">
-          {fragments.map((s) => (
-            <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
-              <div class="text-sm font-semibold text-ink-800">{s.label}</div>
-              <div class="mt-1 text-xs text-ink-400">{s.sub}</div>
-            </div>
-          ))}
+        <div class="reveal min-w-0">
+          <D2CFragmentation />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 03 — ONE ORDER → MULTIPLE FINANCIAL EVENTS -->
+  <!-- 03 — MANY PLATFORMS. MANY PAYMENT SYSTEMS. ONE DEEPECOM. -->
+
+
+  <!-- 04 — CONNECT YOUR ENTIRE SELLING ECOSYSTEM -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">CONNECT</span>
+          <h2 class="h2-md mt-4">Bring every selling channel into one place.</h2>
+          <p class="lead mt-5">
+            Your website, marketplaces and payment sources stay where they are — DeepEcom connects to them and brings the financial data together.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <D2CEcosystem />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — ONE UNIFIED BUSINESS VIEW -->
   <section>
     <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">THE TRAIL</span>
-        <h2 class="h2-md mt-4">One order creates a complete financial trail.</h2>
-        <p class="lead mt-5">Every order passes through sale, GST, payment, charges, returns and accounting — the exact events depend on the channel it came from.</p>
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">ONE VIEW</span>
+        <h2 class="h2-md mt-4">Stop stitching your business together manually.</h2>
+        <p class="lead mt-5">
+          Revenue, orders, payments, profit and margin across every channel and payment source — in one dashboard.
+        </p>
       </div>
       <div class="mt-10">
-        <TransactionDecomposition />
+        <D2CDashboard />
       </div>
     </div>
   </section>
 
-  <!-- 04 — UNIFIED SALES -->
-  <section>
-    <div class="sec">
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.25fr]">
-        <div class="max-w-lg reveal">
-          <span class="eyebrow">UNIFIED SALES</span>
-          <h2 class="h2-md mt-4">See every channel side by side.</h2>
-          <p class="lead mt-5">
-            Website plus marketplaces — one business view. Which channel sells more, which is more profitable, which has payment issues.
-          </p>
-        </div>
-        <div class="reveal overflow-x-auto rounded-2xl border border-ink-200 bg-white shadow-card">
-          <table class="w-full min-w-[32rem] border-collapse text-[0.8125rem]">
-            <thead>
-              <tr class="bg-ink-50">
-                {["Channel", "Orders", "Revenue", "Profit", "Margin"].map((h) => (
-                  <th class="px-4 py-3 text-left text-[0.64rem] font-bold uppercase tracking-wider text-ink-400">{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {channels.map((c) => (
-                <tr class="border-t border-ink-100">
-                  <td class="px-4 py-3">
-                    <span class="inline-flex items-center gap-2 font-bold text-ink-900">
-                      <span class="grid h-7 w-7 place-items-center rounded-md bg-brand-50 text-[0.7rem] font-extrabold text-brand-600">{c.init}</span>
-                      {c.name}
-                    </span>
-                  </td>
-                  <td class="px-4 py-3 tabular-nums text-ink-600">{c.orders}</td>
-                  <td class="px-4 py-3 tabular-nums text-ink-800">{c.revenue}</td>
-                  <td class="px-4 py-3 tabular-nums text-ink-800">{c.profit}</td>
-                  <td class="px-4 py-3"><span class="inline-flex rounded-full bg-success-50 px-2.5 py-0.5 text-xs font-bold text-success-700">{c.margin}</span></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 05 — MULTI-CHANNEL PROFITABILITY -->
+  <!-- 06 — SALES ACROSS EVERY CHANNEL -->
   <section class="section-band">
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div class="max-w-lg reveal">
-          <span class="eyebrow">MULTI-CHANNEL PROFITABILITY</span>
-          <h2 class="h2-md mt-4">Know which channels actually make you money.</h2>
+          <span class="eyebrow">UNIFIED SALES</span>
+          <h2 class="h2-md mt-4">See every sale, wherever it happened.</h2>
           <p class="lead mt-5">
-            High sales are not high profit. DeepEcom shows revenue after deductions per channel — so you can see where the margin really is.
+            Multiple channels become one sales view — every order, whatever platform it came from, in a single table.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <D2CSalesPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — PAYMENTS ACROSS EVERY GATEWAY -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">UNIFIED PAYMENTS</span>
+          <h2 class="h2-md mt-4">Bring every payment source into one financial view.</h2>
+          <p class="lead mt-5">
+            No more piecing together payment information from multiple systems. Every source — expected, received and any difference — in one place.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <D2CPaymentsPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — UNIFIED PROFITABILITY -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">UNIFIED PROFITABILITY</span>
+          <h2 class="h2-md mt-4">Know what your entire D2C business actually makes.</h2>
+          <p class="lead mt-5">
+            Don't just know what sold — know what made money. Revenue, deductions and profit across every channel, in one view.
           </p>
           <div class="mt-6">
             <a href="/platform/profitability" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
@@ -171,139 +186,65 @@ const faqs = [
             </a>
           </div>
         </div>
-        <div class="reveal">
-          <ProfitabilityPanel />
+        <div class="reveal min-w-0">
+          <D2CProfitability />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 06 — PAYMENT RECONCILIATION ACROSS CHANNELS -->
+  <!-- 09 — PAYMENT RECONCILIATION -->
   <section>
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div class="max-w-lg reveal">
           <span class="eyebrow">RECONCILIATION</span>
-          <h2 class="h2-md mt-4">Know what each channel should have paid — and what actually reached you.</h2>
+          <h2 class="h2-md mt-4">Know what should have reached you — and what actually did.</h2>
           <p class="lead mt-5">
-            Expected vs received across channels, with every difference flagged so nothing slips through.
+            Expected vs received across every payment source, with every difference surfaced and tracked.
           </p>
-          <ul class="mt-6 flex flex-col gap-3.5">
-            {
-              [
-                { t: "Expected vs received", s: "Every channel compared side by side" },
-                { t: "Differences flagged", s: "Nothing unreconciled slips through" },
-                { t: "Status at a glance", s: "Matched, difference and pending" },
-              ].map((x) => (
-                <li class="flex items-start gap-3">
-                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                  </span>
-                  <span class="text-sm leading-relaxed">
-                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
-                    <span class="text-ink-500">{x.s}</span>
-                  </span>
-                </li>
-              ))
-            }
-          </ul>
           <div class="mt-6">
             <a href="/platform/payment-reconciliation" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
               Explore Payment Reconciliation →
             </a>
           </div>
         </div>
-        <div class="reveal">
-          <ReconciliationPanel />
+        <div class="reveal min-w-0">
+          <D2CReconciliation />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 07 — GST & TAX -->
-  <section class="section-band">
-    <div class="sec">
-      <div class="grid items-start gap-10 lg:grid-cols-[1fr_1.45fr]">
-        <div class="max-w-lg reveal">
-          <span class="eyebrow">GST &amp; TAX</span>
-          <h2 class="h2-md mt-4">Keep the tax context connected to the sale.</h2>
-          <p class="lead mt-5">
-            Taxable value, GST by head and TCS/TDS stay with each order across every channel. DeepEcom grades each GSTIN node by comparing the marketplace's reported tax against what is booked into your books.
-          </p>
-          <ul class="mt-6 flex flex-col gap-3.5">
-            {
-              [
-                { t: "GST split by head", s: "CGST, SGST, IGST" },
-                { t: "TCS / TDS kept", s: "Within the entries they apply to" },
-                { t: "Graded by node", s: "Marketplace input vs. books" },
-              ].map((x) => (
-                <li class="flex items-start gap-3">
-                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                  </span>
-                  <span class="text-sm leading-relaxed">
-                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
-                    <span class="text-ink-500">{x.s}</span>
-                  </span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <div class="reveal">
-          <GstSplitCompare />
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- 10 — RETURNS & REFUNDS -->
+  
 
-  <!-- 08 — INVENTORY & WAREHOUSE -->
+  <!-- 11 — GST & TRANSACTION CONTEXT -->
   <section>
     <div class="sec">
-      <div class="grid items-start gap-10 lg:grid-cols-[1fr_1.45fr]">
-        <div class="max-w-lg reveal">
-          <span class="eyebrow">INVENTORY &amp; WAREHOUSE</span>
-          <h2 class="h2-md mt-4">Bring your orders and inventory together.</h2>
-          <p class="lead mt-5">
-            In a marketplace the order and the inventory are two different modules. DeepEcom grades each warehouse — for Fulfilled by Marketplace or third-party warehouses — by reconciling the order record against the stock movement.
-          </p>
-          <ul class="mt-6 flex flex-col gap-3.5">
-            {
-              [
-                { t: "Slit by warehouse", s: "Every order and SKU mapped to its node" },
-                { t: "Orders vs. stock out", s: "Graded for reconciliation gaps" },
-                { t: "Stock transfers posted", s: "Both source and destination" },
-              ].map((x) => (
-                <li class="flex items-start gap-3">
-                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                  </span>
-                  <span class="text-sm leading-relaxed">
-                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
-                    <span class="text-ink-500">{x.s}</span>
-                  </span>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-        <div class="reveal">
-          <OrderInventoryCompare />
-        </div>
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">GST &amp; TRANSACTION CONTEXT</span>
+        <h2 class="h2-md mt-4">Keep the transaction context together.</h2>
+        <p class="lead mt-5">
+          Channel, order, invoice, taxable value, GST and warehouse stay with each transaction — through accounting and into the ERP.
+        </p>
+      </div>
+      <div class="mt-10">
+        <D2CGstContext />
       </div>
     </div>
   </section>
 
-  <!-- 09 — DETAILED ACCOUNTING -->
+  <!-- 12 — DETAILED ACCOUNTING -->
   <section class="section-band">
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
-        <div class="reveal order-2 lg:order-1">
-          <ErpOutputVoucher />
+        <div class="reveal order-2 lg:order-1 min-w-0">
+          <D2CAccounting />
         </div>
-        <div class="order-1 lg:order-2">
+        <div class="order-1 lg:order-2 reveal">
           <span class="eyebrow">DETAILED ACCOUNTING</span>
-          <h2 class="h2-md mt-4">From D2C order to ERP accounting.</h2>
+          <h2 class="h2-md mt-4">From every channel to detailed ecommerce accounting.</h2>
           <p class="lead mt-5">
             Each order becomes a balanced journal — order-wise, GST-wise and warehouse-wise — posted into your ERP.
           </p>
@@ -331,68 +272,68 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 10 — REPORTS -->
+  <!-- 13 — REPORTS -->
   <section>
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
         <div class="max-w-lg reveal">
           <span class="eyebrow">REPORTS</span>
-          <h2 class="h2-md mt-4">See the numbers behind every channel.</h2>
+          <h2 class="h2-md mt-4">Get one reporting layer across your D2C business.</h2>
           <p class="lead mt-5">
             Sales, profitability, reconciliation and transactions — filtered, structured and ready to download.
           </p>
         </div>
-        <div class="reveal">
-          <ReportsPanel />
+        <div class="reveal min-w-0">
+          <D2CReportsPanel />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 11 — HOW IT WORKS -->
-  <section id="how-it-works" class="section-band">
+  
+
+  <!-- 15 — HOW IT WORKS -->
+  <section id="how-it-works">
     <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">HOW IT WORKS</span>
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">HOW IT WORKS</span>
         <h2 class="h2-md mt-4">Connect once. Get one financial view.</h2>
-        <p class="lead mt-5">Five stages from every channel to one set of books.</p>
+        <p class="lead mt-5">Five stages from every selling platform and payment source to one set of books.</p>
       </div>
       <HowItWorksSteps
         steps={[
-          { num: "01", label: "Connect", desc: "Connect supported ecommerce channels." },
-          { num: "02", label: "Collect", desc: "Bring relevant transaction information together." },
-          { num: "03", label: "Understand", desc: "Organize sales and financial data." },
-          { num: "04", label: "Reconcile", desc: "Compare payments and settlements." },
+          { num: "01", label: "Connect", desc: "Connect supported selling platforms and payment sources." },
+          { num: "02", label: "Collect", desc: "Bring transaction information into DeepEcom." },
+          { num: "03", label: "Unify", desc: "Bring fragmented channel data into one platform." },
+          { num: "04", label: "Understand", desc: "See sales, profitability and payment information." },
           { num: "05", label: "Account", desc: "Generate detailed accounting for the ERP." },
         ]}
       />
     </div>
   </section>
 
-  <!-- 12 — PLATFORM + ERP -->
-  <section>
+  <!-- 16 — PLATFORM + ERP CONNECTOR -->
+  <section class="section-band">
     <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">ONE SYSTEM</span>
-        <h2 class="h2-md mt-4">See the business. Then put it into the books.</h2>
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">ONE SYSTEM</span>
+        <h2 class="h2-md mt-4">One platform for visibility. One connector for accounting.</h2>
         <p class="lead mt-5">
-          The Platform helps you understand the business across channels. The ERP Connector turns the same transaction layer into detailed accounting in your ERP.
+          Platform = understand the D2C business. ERP Connector = put the detailed transactions into the books.
         </p>
       </div>
-      <div class="mt-10 reveal">
-        <PlatformErpConnector />
-      </div>
+      <DeepEcomLayer />
     </div>
   </section>
 
-  <!-- 13 — WHO IT'S FOR -->
-  <section class="section-band">
+  <!-- 17 — WHO IT'S FOR -->
+  <section>
     <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">WHO IT'S FOR</span>
-        <h2 class="h2-md mt-4">Built for growing D2C teams.</h2>
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for every D2C team that needs one view of the business.</h2>
       </div>
-      <div class="mt-10 grid gap-6 md:grid-cols-3">
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         {personaData.map((p) => (
           <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
@@ -409,14 +350,14 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 14 — CUSTOMER PROOF -->
+  <!-- 18 — CUSTOMER PROOF -->
   <section class="section-band">
     <div class="sec">
-      <CustomerProof />
+      <CustomerProof /> 
     </div>
   </section>
 
-  <!-- 15 — FAQ -->
+  <!-- 19 — FAQ -->
   <section>
     <div class="sec-narrow">
       <span class="eyebrow">FAQ</span>
@@ -432,14 +373,14 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 16 — FINAL CTA -->
-  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+  <!-- 20 — FINAL CTA -->
+  <section class="d2c-cta">
     <div class="mx-auto max-w-4xl px-6 text-center">
       <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-        One business. One financial view.
+        Stop managing your D2C business across disconnected systems.
       </h2>
       <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-        Connect your ecommerce channels, understand the numbers and bring detailed accounting into your ERP.
+        Bring your selling channels, payments, profitability, reconciliation and accounting into one connected platform.
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
         <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
@@ -455,6 +396,30 @@ const faqs = [
 </PageLayout>
 
 <style is:global>
+  .d2c-cta {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background:
+      radial-gradient(40rem 22rem at 78% -20%, rgba(123, 98, 254, 0.32), transparent 60%),
+      radial-gradient(30rem 20rem at 12% 120%, rgba(57, 34, 184, 0.5), transparent 60%),
+      linear-gradient(135deg, #0b1120 0%, #151238 55%, #1e1560 100%);
+  }
+  .d2c-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.35;
+    mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    -webkit-mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    pointer-events: none;
+  }
+  .d2c-cta > div {
+    position: relative;
+    z-index: 1;
+  }
   html {
     scroll-behavior: smooth;
   }

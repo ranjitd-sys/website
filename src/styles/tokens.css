@@ -87,14 +87,23 @@
 
   /* Semantic */
   --success-50: #f0fdf4;
+  --success-100: #dcfce7;
+  --success-200: #bbf7d0;
   --success-500: #22c55e;
   --success-600: #16a34a;
+  --success-700: #15803d;
   --warning-50: #fffbeb;
+  --warning-100: #fef3c7;
+  --warning-200: #fde68a;
   --warning-500: #f59e0b;
   --warning-600: #d97706;
+  --warning-700: #b45309;
   --danger-50: #fef2f2;
+  --danger-100: #fee2e2;
+  --danger-200: #fecaca;
   --danger-500: #ef4444;
   --danger-600: #dc2626;
+  --danger-700: #b91c1c;
   --info-50: var(--brand-50);
   --info-500: var(--brand-500);
 }
@@ -406,14 +415,23 @@
 
   /* Semantic states */
   --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
   --color-success-500: var(--success-500);
   --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
   --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-200: var(--warning-200);
   --color-warning-500: var(--warning-500);
   --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
   --color-danger-50: var(--danger-50);
+  --color-danger-100: var(--danger-100);
+  --color-danger-200: var(--danger-200);
   --color-danger-500: var(--danger-500);
   --color-danger-600: var(--danger-600);
+  --color-danger-700: var(--danger-700);
 
   /* Code / data */
   --color-code-bg: var(--code-bg);

@@ -1,0 +1,163 @@
+---
+const sources = [
+  { label: "Payment Gateway 01", sub: "website collections", tone: "ok" },
+  { label: "Payment Gateway 02", sub: "checkout collections", tone: "ok" },
+  { label: "Marketplace settlement", sub: "channel payouts", tone: "ok" },
+  { label: "Other supported source", sub: "additional collections", tone: "muted" },
+]
+const summary = [
+  { label: "Expected", value: "₹5,94,000" },
+  { label: "Received", value: "₹5,71,000" },
+  { label: "Difference", value: "₹23,000", warn: true },
+]
+---
+
+<style is:global>
+  .d2cp {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cp-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cp-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cp-bar .dots { display: flex; gap: 0.3rem; }
+  .d2cp-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2cp-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2cp-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2cp-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2cp-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2cp-bar .unified {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    color: var(--success-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cp-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0.6rem 1rem;
+  }
+  .d2cp-src {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0;
+  }
+  .d2cp-src + .d2cp-src { border-top: 1px solid var(--ink-100); }
+  .d2cp-src .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success-500);
+    flex: none;
+  }
+  .d2cp-src.muted .dot { background: var(--ink-300); }
+  .d2cp-src .l {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .d2cp-src .s {
+    font-size: 0.66rem;
+    color: var(--ink-400);
+  }
+  .d2cp-src .status {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--ink-100);
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cp-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    padding: 0.75rem 1rem 1rem;
+  }
+  @media (max-width: 30rem) {
+    .d2cp-summary { grid-template-columns: 1fr; }
+  }
+  .d2cp-card {
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2cp-card .k {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2cp-card .v {
+    margin-top: 0.28rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cp-card.warn .v { color: var(--danger-600); }
+  .d2cp-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cp">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cp-app reveal">
+      <div class="d2cp-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Payments across every source</span>
+        <span class="unified">Unified</span>
+      </div>
+      <div class="d2cp-list">
+        {sources.map((s) => (
+          <div class:list={["d2cp-src", s.tone === "muted" && "muted"]}>
+            <span class="dot" aria-hidden="true"></span>
+            <span><span class="l">{s.label}</span><br /><span class="s">{s.sub}</span></span>
+            <span class="status">Collected</span>
+          </div>
+        ))}
+      </div>
+      <div class="d2cp-summary">
+        {summary.map((x) => (
+          <div class:list={["d2cp-card", x.warn && "warn"]}>
+            <div class="k">{x.label}</div>
+            <div class="v">{x.value}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <p class="d2cp-note">Illustrative example — you don't piece together payment information from multiple systems.</p>
+  </div>
+</section>

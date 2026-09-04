@@ -1,0 +1,268 @@
+---
+const kpis = [
+  { label: "Revenue", value: "₹5,94,000", sub: "all channels", tone: "brand" },
+  { label: "Orders", value: "6,210", sub: "all channels", tone: "" },
+  { label: "Payments", value: "₹5,71,000", sub: "received", tone: "" },
+  { label: "Profit", value: "₹3,98,000", sub: "after deductions", tone: "brand" },
+  { label: "Margin", value: "67%", sub: "blended", tone: "" },
+]
+const channels = [
+  { name: "Website", revenue: "₹1,72,000", pct: 100, orders: "3,120" },
+  { name: "Amazon", revenue: "₹2,14,000", pct: 82, orders: "1,264" },
+  { name: "Flipkart", revenue: "₹1,38,000", pct: 58, orders: "998" },
+  { name: "Other channels", revenue: "₹70,000", pct: 32, orders: "828" },
+]
+const paymentSummary = [
+  { label: "Expected", value: "₹5,94,000", tone: "ok" },
+  { label: "Received", value: "₹5,71,000", tone: "ok" },
+  { label: "Difference", value: "₹23,000", tone: "warn" },
+]
+---
+
+<style is:global>
+  .d2cd {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cd-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cd-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cd-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .d2cd-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .d2cd-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2cd-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2cd-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2cd-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .d2cd-bar .all {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cd-kpis {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    padding: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .d2cd-kpis {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+  .d2cd-kpi {
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2cd-kpi .k {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2cd-kpi .v {
+    margin-top: 0.28rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cd-kpi .sub {
+    margin-top: 0.1rem;
+    font-size: 0.66rem;
+    color: var(--ink-400);
+  }
+  .d2cd-kpi.brand .v {
+    color: var(--brand-600);
+  }
+  .d2cd-body {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    border-top: 1px solid var(--ink-200);
+  }
+  @media (min-width: 48rem) {
+    .d2cd-body {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+  .d2cd-panel {
+    padding: 1rem;
+  }
+  .d2cd-panel + .d2cd-panel {
+    border-top: 1px solid var(--ink-200);
+  }
+  @media (min-width: 48rem) {
+    .d2cd-panel + .d2cd-panel {
+      border-top: 0;
+      border-left: 1px solid var(--ink-200);
+    }
+  }
+  .d2cd-panel-title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.8rem;
+  }
+  .d2cd-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.55rem 0;
+  }
+  .d2cd-row + .d2cd-row {
+    border-top: 1px solid var(--ink-100);
+  }
+  .d2cd-row .name {
+    width: 6.5rem;
+    flex: none;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .d2cd-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--ink-100);
+    overflow: hidden;
+  }
+  .d2cd-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-500), var(--brand-400));
+  }
+  .d2cd-row .rev {
+    width: 5.5rem;
+    flex: none;
+    text-align: right;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cd-pay {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+  }
+  @media (max-width: 30rem) {
+    .d2cd-pay {
+      grid-template-columns: 1fr;
+    }
+  }
+  .d2cd-paycard {
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .d2cd-paycard .k {
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .d2cd-paycard .v {
+    margin-top: 0.28rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cd-paycard.ok .v { color: var(--success-600); }
+  .d2cd-paycard.warn .v { color: var(--danger-600); }
+  .d2cd-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cd">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cd-app reveal">
+      <div class="d2cd-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Unified Dashboard</span>
+        <span class="all">All channels</span>
+      </div>
+      <div class="d2cd-kpis">
+        {kpis.map((k) => (
+          <div class:list={["d2cd-kpi", k.tone === "brand" && "brand"]}>
+            <div class="k">{k.label}</div>
+            <div class="v">{k.value}</div>
+            <div class="sub">{k.sub}</div>
+          </div>
+        ))}
+      </div>
+      <div class="d2cd-body">
+        <div class="d2cd-panel">
+          <div class="d2cd-panel-title">Sales by channel</div>
+          {channels.map((c) => (
+            <div class="d2cd-row">
+              <span class="name">{c.name}</span>
+              <div class="d2cd-track"><div class="d2cd-fill" style={`width:${c.pct}%`}></div></div>
+              <span class="rev">{c.revenue}</span>
+            </div>
+          ))}
+        </div>
+        <div class="d2cd-panel">
+          <div class="d2cd-panel-title">Payment summary</div>
+          <div class="d2cd-pay">
+            {paymentSummary.map((p) => (
+              <div class:list={["d2cd-paycard", p.tone]}>
+                <div class="k">{p.label}</div>
+                <div class="v">{p.value}</div>
+              </div>
+            ))}
+          </div>
+          <p class="d2cd-pay-note" style="margin-top:0.7rem;font-size:0.7rem;color:var(--ink-400)">Expected vs received across all connected sources.</p>
+        </div>
+      </div>
+    </div>
+    <p class="d2cd-note">Illustrative example — not a representation of actual DeepEcom customer performance.</p>
+  </div>
+</section>

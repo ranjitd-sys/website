@@ -1,0 +1,163 @@
+---
+const rows = [
+  { channel: "Website", init: "Wb", orders: "3,120", revenue: "₹1,72,000", share: "29%" },
+  { channel: "Amazon", init: "Am", orders: "1,264", revenue: "₹2,14,000", share: "36%" },
+  { channel: "Flipkart", init: "Fk", orders: "998", revenue: "₹1,38,000", share: "23%" },
+  { channel: "Other channels", init: "Ot", orders: "828", revenue: "₹70,000", share: "12%" },
+]
+---
+
+<style is:global>
+  .d2cs {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .d2cs-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .d2cs-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cs-bar .dots { display: flex; gap: 0.3rem; }
+  .d2cs-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .d2cs-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .d2cs-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .d2cs-bar .dots i:nth-child(3) { background: #86efac; }
+  .d2cs-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
+  .d2cs-bar .multi {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .d2cs-wrap {
+    overflow-x: auto;
+  }
+  .d2cs-table {
+    width: 100%;
+    min-width: 30rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .d2cs-table th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .d2cs-table th.right { text-align: right; }
+  .d2cs-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .d2cs-table td.right { text-align: right; }
+  .d2cs-table td.channel {
+    font-weight: 600;
+    color: var(--ink-900);
+  }
+  .d2cs-table tbody tr:hover { background: var(--ink-50); }
+  .d2cs-table tfoot td {
+    font-weight: 700;
+    color: var(--ink-900);
+    background: var(--ink-50);
+    border-top: 1px solid var(--ink-200);
+  }
+  .d2cs-init {
+    display: inline-grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.66rem;
+    font-weight: 800;
+    vertical-align: middle;
+  }
+  .d2cs-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: var(--ink-100);
+    color: var(--ink-600);
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+  .d2cs-note {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+</style>
+
+<section class="d2cs">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="d2cs-app reveal">
+      <div class="d2cs-bar">
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+        <span class="title">Sales across every channel</span>
+        <span class="multi">Consolidated</span>
+      </div>
+      <div class="d2cs-wrap">
+        <table class="d2cs-table">
+          <thead>
+            <tr>
+              <th>Channel</th>
+              <th class="right">Orders</th>
+              <th class="right">Revenue</th>
+              <th>Share</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <td class="channel"><span class="d2cs-init">{r.init}</span>{r.channel}</td>
+                <td class="right">{r.orders}</td>
+                <td class="right">{r.revenue}</td>
+                <td><span class="d2cs-share">{r.share}</span></td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td class="channel">Total</td>
+              <td class="right">6,210</td>
+              <td class="right">₹5,94,000</td>
+              <td>100%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="d2cs-note">Illustrative example — multiple channels consolidated into one sales view.</p>
+    </div>
+  </div>
+</section>

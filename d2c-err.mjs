@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+const logs = [];
+p.on('console', m => { if (m.type() === 'error' || m.type() === 'warning') logs.push('[' + m.type() + '] ' + m.text().slice(0,300)); });
+p.on('pageerror', e => logs.push('[pageerror] ' + e.message.slice(0,300)));
+await p.goto('http://localhost:4321/solutions/d2c-brands', { waitUntil: 'networkidle' });
+await p.waitForTimeout(1500);
+console.log(JSON.stringify({ logs }, null, 1));
+await p.screenshot({ path: '/tmp/d2c-section3.png', clip: { x:0, y:900, width:1440, height:900 } });
+await b.close();
