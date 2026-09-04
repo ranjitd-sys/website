@@ -14,14 +14,25 @@ const base: SVGProps<SVGSVGElement> = {
 export function LogoMark({ size = 26 }: { size?: number }) {
   return (
     <span
-      className="grid place-items-center rounded-[7px] bg-primary shadow-[inset_0_1px_0_rgba(255,255,255,0.25),0_2px_6px_rgba(79,70,229,0.35)]"
+      className="grid place-items-center rounded-full shadow-[0_2px_6px_rgba(15,23,42,0.25)]"
       style={{ width: size, height: size }}
       aria-hidden="true"
     >
-      <svg width={size * 0.5} height={size * 0.5} viewBox="0 0 24 24" fill="#fff">
-        <rect x="3" y="13" width="4.5" height="8" rx="1" />
-        <rect x="9.75" y="8" width="4.5" height="13" rx="1" />
-        <rect x="16.5" y="3" width="4.5" height="18" rx="1" />
+      <svg width={size} height={size} viewBox="0 0 512 512" fill="none" role="img" aria-label="DeepEcom">
+        <circle cx="256" cy="256" r="256" fill="#0b1120" />
+        <text
+          x="50%"
+          y="53%"
+          font-family="Inter, Arial, Helvetica, sans-serif"
+          font-size="260"
+          font-weight="bold"
+          fill="#ffffff"
+          text-anchor="middle"
+          dominant-baseline="middle"
+          letter-spacing="-5"
+        >
+          DE
+        </text>
       </svg>
     </span>
   )

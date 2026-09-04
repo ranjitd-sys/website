@@ -68,10 +68,10 @@ const faqs = [
   <ProfitHero />
 
   <!-- 02 — REVENUE IS NOT PROFIT -->
-  <section class="section-band">
-    <div class="sec">
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
-        <div class="max-w-lg reveal">
+        <div class="max-w-lg">
           <span class="eyebrow">THE TRUTH</span>
           <h2 class="h2-md mt-4">The number on the marketplace isn't the number you keep.</h2>
           <p class="lead mt-5">
@@ -87,13 +87,13 @@ const faqs = [
 
   <!-- 03 — WHAT GOES INTO PROFITABILITY -->
   <section>
-    <div class="sec">
-      <div class="max-w-3xl reveal">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
         <span class="eyebrow">THE INPUTS</span>
         <h2 class="h2-md mt-4">Profitability starts with the full transaction picture.</h2>
         <p class="lead mt-5">Sales, orders, charges, returns and payments are brought together so profitability reflects what actually happened.</p>
       </div>
-      <div class="mt-10 grid reveal gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {inputs.map((d) => (
           <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="text-sm font-semibold text-ink-800">{d.label}</div>
@@ -105,11 +105,11 @@ const faqs = [
   </section>
 
   <!-- 04 — COST & DEDUCTION BREAKDOWN -->
-  <section class="section-band">
-    <div class="sec">
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
-        <div class="max-w-lg reveal">
-          <span class="eyebrow">WHAT EATS THE MARGIN</span>
+        <div class="max-w-lg">
+          <span class="eyebrow">WHAT EATS THE MARGIN</span>   
           <h2 class="h2-md mt-4">See exactly what is eating into your margin.</h2>
           <p class="lead mt-5">
             Marketplace charges and returns are the biggest silent costs in ecommerce. DeepEcom surfaces them so you can see what's really driving — or eroding — profit.
@@ -140,23 +140,21 @@ const faqs = [
 
   <!-- 05 — BY ORDER / PRODUCT / MARKETPLACE -->
   <section>
-    <div class="sec">
-      <div class="max-w-3xl reveal">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
         <span class="eyebrow">GRANULAR PROFITABILITY</span>
         <h2 class="h2-md mt-4">Know which orders, products and marketplaces actually make money.</h2>
         <p class="lead mt-5">Revenue, costs, deductions and profit — compared by order, by product and by marketplace.</p>
       </div>
-      <div class="mt-10">
-        <ProfitTables />
-      </div>
+      <ProfitTables />
     </div>
   </section>
 
   <!-- 06 — RETURNS & REALIZATION -->
-  <section class="section-band">
-    <div class="sec">
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
-        <div class="max-w-lg reveal">
+        <div class="max-w-lg">
           <span class="eyebrow">REALIZATION</span>
           <h2 class="h2-md mt-4">What you sold. What you realized. What you made.</h2>
           <p class="lead mt-5">
@@ -213,8 +211,8 @@ const faqs = [
 
   <!-- 07 — HOW IT WORKS -->
   <section id="how-it-works">
-    <div class="sec">
-      <div class="max-w-3xl reveal">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-3xl">
         <span class="eyebrow">HOW IT WORKS</span>
         <h2 class="h2-md mt-4">From marketplace data to profitability.</h2>
         <p class="lead mt-5">Five stages turn channel data into a clear view of what you actually make.</p>
@@ -232,29 +230,31 @@ const faqs = [
   </section>
 
   <!-- 08 — PLATFORM + RECONCILIATION + ERP -->
-  <section class="section-band">
-    <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">ONE LAYER</span>
-        <h2 class="h2-md mt-4">Profitability, reconciliation and accounting — one connected system.</h2>
-        <p class="lead mt-5">
-          The Platform helps you understand profitability and reconcile payments. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
-        </p>
-      </div>
-      <div class="mt-12 reveal">
-        <PlatformErpConnector />
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg">
+          <span class="eyebrow">ONE LAYER</span>
+          <h2 class="h2 mt-4">Profitability, reconciliation and accounting — one connected system.</h2>
+          <p class="lead mt-5">
+            The Platform helps you understand profitability and reconcile payments. The ERP Connector takes the same transaction layer into detailed accounting inside your ERP.
+          </p>
+        </div>
+        <div class="reveal">
+          <PlatformErpConnector />
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 09 — WHO IT'S FOR -->
   <section>
-    <div class="sec">
-      <div class="max-w-2xl reveal">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
+      <div class="max-w-2xl">
         <span class="eyebrow">WHO IT'S FOR</span>
         <h2 class="h2-md mt-4">Built for the people who need to know the real numbers.</h2>
       </div>
-      <div class="mt-10 grid reveal gap-6 md:grid-cols-3">
+      <div class="mt-8 grid gap-6 md:grid-cols-3">
         {personas.map((p) => (
           <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
             <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
@@ -271,18 +271,18 @@ const faqs = [
   </section>
 
   <!-- 10 — CUSTOMER PROOF -->
-  <section class="section-band">
-    <div class="sec">
+  <section class="bg-muted">
+    <div class="mx-auto max-w-6xl px-6 py-10 lg:py-14">
       <CustomerProof />
     </div>
   </section>
 
   <!-- 11 — FAQ -->
   <section>
-    <div class="sec-narrow">
+    <div class="mx-auto max-w-3xl px-6 py-10 lg:py-14">
       <span class="eyebrow">FAQ</span>
       <h2 class="h2-md mt-4">Profitability, explained.</h2>
-      <div class="mt-10 flex flex-col gap-3 reveal">
+      <div class="mt-8 flex flex-col gap-3">
         {faqs.map((f, i) => (
           <details class="faq-item" open={i === 0}>
             <summary class="faq-q">{f.q}</summary>
@@ -318,6 +318,14 @@ const faqs = [
 <style is:global>
   html {
     scroll-behavior: smooth;
+  }
+  .h2-md {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    font-weight: 700;
+    color: var(--ink-950);
+    text-wrap: balance;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

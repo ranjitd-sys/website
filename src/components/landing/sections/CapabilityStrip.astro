@@ -48,14 +48,14 @@ const capabilities = [
     <div class="capability-grid">
       {
         capabilities.map((c, i) => (
-          <div class="capability-item reveal" data-delay={i * 60}>
-            <div class="icon-bubble">
+          <div class="capability-item reveal micro-card" data-delay={i * 60}>
+            <div class="icon-bubble micro-icon micro-ping">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d={c.icon} />
               </svg>
             </div>
             <div class="item-text">
-              <strong>{c.title}</strong>
+              <strong class="micro-underline">{c.title}</strong>
               <p>{c.desc}</p>
             </div>
           </div>

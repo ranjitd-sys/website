@@ -143,6 +143,11 @@ const accountingEntries = [
   .preview-wrapper {
     width: 100%;
     filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.3));
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .preview-wrapper:hover {
+    transform: translateY(-4px);
   }
 
   .accounting-card {
@@ -151,6 +156,11 @@ const accountingEntries = [
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transition: box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .preview-wrapper:hover .accounting-card {
+    box-shadow: 0 8px 20px rgba(9, 17, 32, 0.18);
   }
 
   .card-header {

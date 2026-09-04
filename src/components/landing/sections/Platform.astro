@@ -196,6 +196,11 @@ const barHeights = [25, 40, 30, 55, 35, 45, 60, 95, 65, 35, 55, 40, 30, 50, 45, 
   .dashboard-wrapper {
     width: 100%;
     filter: drop-shadow(0 25px 35px rgba(0, 0, 0, 0.3));
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .dashboard-wrapper:hover {
+    transform: translateY(-4px);
   }
 
   .dashboard-card {
@@ -206,6 +211,11 @@ const barHeights = [25, 40, 30, 55, 35, 45, 60, 95, 65, 35, 55, 40, 30, 50, 45, 
     flex-direction: column;
     gap: 1.5rem;
     container-type: inline-size;
+    transition: box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .dashboard-wrapper:hover .dashboard-card {
+    box-shadow: 0 8px 20px rgba(9, 17, 32, 0.18);
   }
 
   /* Dash Header */

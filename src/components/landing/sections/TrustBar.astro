@@ -57,6 +57,11 @@ const stats = [
     letter-spacing: -0.03em;
     color: var(--ink-950);
     font-variant-numeric: tabular-nums;
+    transition: color 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .trust-cell:hover .trust-value {
+    color: var(--brand-600);
+    transform: translateY(-1px);
   }
   .trust-value .unit {
     font-size: 0.75em;

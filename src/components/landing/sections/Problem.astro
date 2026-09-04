@@ -44,9 +44,9 @@ const events = [
       <div class="problem-points">
         {
           points.map((p) => (
-            <div class="problem-point">
+            <div class="problem-point micro-card">
               <svg
-                class="point-icon"
+                class="point-icon micro-icon"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -208,6 +208,14 @@ const events = [
   .event-dot {
     color: #a0aec0;
     font-size: 0.75rem;
+  }
+
+  .event-item {
+    transition: color 0.25s ease, transform 0.25s ease;
+  }
+  .event-item:hover {
+    color: #2c3ee9;
+    transform: translateY(-1px);
   }
 
   .problem-multiply {
