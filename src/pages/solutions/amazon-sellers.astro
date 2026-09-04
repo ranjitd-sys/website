@@ -16,6 +16,7 @@ import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
 import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+import OrderInventoryCompare from "@/components/pages/OrderInventoryCompare.astro"
 
 const streams = [
   { label: "Orders", sub: "Every sale" },
@@ -233,17 +234,17 @@ const faqs = [
   <section>
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
-        
+        <div class="mt-8">
+          <OrderInventoryCompare />
+        </div>
         <div class="order-1 lg:order-2">
           <span class="eyebrow">WAREHOUSE &amp; INVENTORY</span>
           <h2 class="h2-md mt-4">Know where your Amazon inventory belongs.</h2>
           <p class="lead mt-5">
             Orders, inventory and stock are accounted warehouse-wise — with stock transfers posted between locations. This is inventory accounting, not a warehouse management system.
           </p>
-          <div class="mt-8">
-            <WarehouseWise />
-          </div>
         </div>
+        
       </div>
     </div>
   </section>

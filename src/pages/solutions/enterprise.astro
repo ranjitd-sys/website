@@ -1,91 +1,455 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import EnterpriseHero from "@/components/pages/EnterpriseHero.astro"
+import TransactionDecomposition from "@/components/pages/TransactionDecomposition.astro"
+import MarketplaceCompare from "@/components/pages/MarketplaceCompare.astro"
+import ProfitabilityPanel from "@/components/pages/ProfitabilityPanel.astro"
+import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
+import SettlementDecomposition from "@/components/pages/SettlementDecomposition.astro"
+import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
+import GstWiseAccounting from "@/components/pages/GstWiseAccounting.astro"
+import OrderInventoryCompare from "@/components/pages/OrderInventoryCompare.astro"
+import ReportsPanel from "@/components/pages/ReportsPanel.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
+
+const complexityStreams = [
+  { label: "Marketplaces", sub: "many channels" },
+  { label: "Warehouses", sub: "multiple nodes" },
+  { label: "Orders", sub: "high volume" },
+  { label: "Returns", sub: "reversals" },
+  { label: "GST", sub: "per transaction" },
+  { label: "Payments", sub: "settlements" },
+  { label: "Inventory", sub: "stock movement" },
+]
+
+const personaData = [
+  {
+    title: "CFO",
+    role: "Financial Control",
+    desc: "Get one financial view across channels, warehouses and orders — with reconciliation and control finance can rely on.",
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+  },
+  {
+    title: "Finance / Accounting",
+    role: "Less manual work",
+    desc: "Replace manual ecommerce accounting and reconciliation with detailed, structured entries that post into the ERP.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+  {
+    title: "Business Leaders",
+    role: "Profitability",
+    desc: "Understand profitability and payment realization across every marketplace and warehouse.",
+    icon: '<path d="M3 3v18h18M8 17V9M13 17V5M18 17v-5"/>',
+  },
+  {
+    title: "Operations",
+    role: "Warehouse & stock context",
+    desc: "Keep warehouse and stock-transfer financial context, where supported.",
+    icon: '<path d="M3 7 12 2l9 5-9 5-9-5zM3 7v10l9 5 9-5V7M12 12v10"/>',
+  },
+]
+
+const faqs = [
+  { q: "How does DeepEcom support enterprise ecommerce businesses?", a: "DeepEcom connects marketplaces to a single financial layer so enterprise teams see profitability, reconcile payments and generate detailed accounting across orders, GST, warehouses and stock movements — into an ERP." },
+  { q: "Can multiple marketplaces be connected at once?", a: "Yes. Multiple supported marketplaces can be connected, and their transaction data consolidated into one financial view." },
+  { q: "Can DeepEcom consolidate marketplace data?", a: "Yes. Data from connected marketplaces is aggregated so finance teams see the whole ecommerce operation rather than channel by channel." },
+  { q: "Can enterprise teams see profitability across channels?", a: "Yes. Profitability is shown across marketplace, product and warehouse dimensions — revenue after the deductions and supported costs the data carries." },
+  { q: "How does payment reconciliation work at scale?", a: "DeepEcom compares expected settlements with what was actually received, keeps the transaction context on each settlement and flags every difference." },
+  { q: "Can accounting be generated order-wise?", a: "Yes. Each order is accounted individually with its revenue, taxes, charges and receivable." },
+  { q: "Can accounting be maintained warehouse-wise?", a: "Yes. Warehouse context is part of the transaction and is carried into warehouse-wise accounting." },
+  { q: "How is GST handled?", a: "GST context carried by each transaction is kept with the order and split by head — CGST, SGST and IGST — in the accounting." },
+  { q: "How are marketplace charges represented?", a: "Supported marketplace charges and deductions are kept separate in the settlement and reflected in accounting, so differences stay explainable." },
+  { q: "How are returns accounted for?", a: "Returns reverse the original sale and its tax through accounting, so revenue and tax ledgers stay balanced." },
+  { q: "Can stock transfers be accounted for?", a: "Yes. Transfers between warehouses are accounted with entries in both the source and destination." },
+  { q: "Does DeepEcom support Tally?", a: "Yes. Prepared entries post into Tally with the vouchers and ledgers your finance team expects." },
+  { q: "Does DeepEcom support SAP?", a: "Yes. DeepEcom connects to SAP for posting detailed ecommerce accounting." },
+  { q: "Does DeepEcom support Zoho?", a: "Yes. Prepared entries post into Zoho Books." },
+  { q: "What is the difference between DeepEcom Platform and ERP Connector?", a: "The Platform helps you understand the business — profitability, reconciliation and reports. The ERP Connector turns the same transaction layer into detailed accounting inside your ERP." },
+  { q: "Does DeepEcom replace our ERP?", a: "No. DeepEcom sits between your ecommerce systems and your ERP. Your ERP remains the system of record — DeepEcom makes it ecommerce-ready." },
+]
 ---
 
 <PageLayout
-  title="Enterprise — Ecommerce accounting at scale | DeepEcom"
-  description="DeepEcom Enterprise handles high transaction volume, multi-entity and multi-warehouse complexity, GST and enterprise ERP — with the controls and auditability finance requires."
+  title="Enterprise — Ecommerce Accounting at Scale | DeepEcom"
+  description="DeepEcom Enterprise brings ecommerce complexity under control — consolidating multiple marketplaces, warehouses and transactions into one financial layer with profitability, reconciliation, reporting and detailed ERP accounting."
 >
-  <PageHero
-    eyebrow="SOLUTIONS · BY BUSINESS"
-    title="Ecommerce accounting engineered for scale."
-    lead="High volume, multiple entities, warehouses and marketplaces, and enterprise ERP. DeepEcom brings order to the complexity and the controls finance depends on."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore ERP Connector
-      </a>
+  <!-- 01 — HERO -->
+  <EnterpriseHero />
+
+  <!-- 02 — THE PROBLEM -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.15fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">THE PROBLEM</span>
+          <h2 class="h2-md mt-4">At scale, every sale creates more complexity.</h2>
+          <p class="lead mt-5">
+            As transaction volume grows, disconnected marketplace data and manual financial processes become harder to manage. Many channels, warehouses, returns, taxes and payments all need to stay in step.
+          </p>
+        </div>
+        <div class="reveal grid gap-3 sm:grid-cols-2">
+          {complexityStreams.map((s) => (
+            <div class="rounded-xl border border-ink-200 bg-white p-4 shadow-card transition hover:border-ink-300 hover:shadow-md">
+              <div class="text-sm font-semibold text-ink-800">{s.label}</div>
+              <div class="mt-1 text-xs text-ink-400">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
-  </PageHero>
+  </section>
 
-  <FeatureGrid
-    eyebrow="ENTERPRISE"
-    title="Built for the complexity that breaks generic tools."
-    lead="Enterprise ecommerce is a matter of scale, entities and control. DeepEcom is designed around that reality."
-    columns={3}
-    center
-    features={[
-      {
-        title: "High transaction volume",
-        description: "Detailed accounting that holds up at enterprise order volumes.",
-        icon: "zap",
-      },
-      {
-        title: "Multi-entity complexity",
-        description: "Account across entities with the structure and separation you need.",
-        icon: "building",
-      },
-      {
-        title: "Multi-warehouse operations",
-        description: "Warehouse-wise accounting and stock transfers across locations.",
-        icon: "boxes",
-      },
-      {
-        title: "Multiple marketplaces",
-        description: "Consolidate many marketplaces into one accountable financial layer.",
-        icon: "globe",
-      },
-      {
-        title: "GST complexity",
-        description: "GST-wise accounting that keeps tax reporting accurate and auditable.",
-        icon: "scale",
-      },
-      {
-        title: "Enterprise ERP & SAP",
-        description: "Post detailed accounting into enterprise ERP, including SAP connectivity.",
-        icon: "bank",
-      },
-      {
-        title: "Controls and auditability",
-        description: "Structured entries and clear records that support your control environment.",
-        icon: "shield",
-      },
-    ]}
-  />
+  <!-- 03 — ONE ORDER → MANY EVENTS -->
+  <section>
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">THE TRAIL</span>
+        <h2 class="h2-md mt-4">One order creates more than a sale.</h2>
+        <p class="lead mt-5">Every order passes through sale, GST, charges, TCS, receivable, settlement, payment, returns and inventory. Multiply that by enterprise order volume — the accounting has to stay detailed anyway.</p>
+      </div>
+      <div class="mt-10">
+        <TransactionDecomposition />
+      </div>
+    </div>
+  </section>
 
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="THE ENTERPRISE OUTCOME"
-        title="Your ERP, ecommerce-ready at scale."
-        lead="DeepEcom makes your ERP ecommerce-ready — with the detail, controls and auditability an enterprise finance team expects."
-        center
+  <!-- 04 — MULTI-MARKETPLACE VISIBILITY -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">VISIBILITY</span>
+          <h2 class="h2-md mt-4">See the whole business across every channel.</h2>
+          <p class="lead mt-5">
+            One consolidated view of revenue, orders, profit and payment status across all connected marketplaces — not channel by channel.
+          </p>
+          <div class="mt-6">
+            <a href="/platform/dashboard" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
+              Explore the dashboard →
+            </a>
+          </div>
+        </div>
+        <div class="reveal min-w-0">
+          <MarketplaceCompare />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — PROFITABILITY -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">PROFITABILITY</span>
+          <h2 class="h2-md mt-4">Know where the business actually makes money.</h2>
+          <p class="lead mt-5">
+            Profitability across marketplace, product and warehouse — so you see which part of the operation earns and where margin is thin.
+          </p>
+          <div class="mt-6">
+            <a href="/platform/profitability" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
+              Explore Profitability →
+            </a>
+          </div>
+        </div>
+        <div class="reveal min-w-0">
+          <ProfitabilityPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — RECONCILIATION -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">RECONCILIATION</span>
+          <h2 class="h2-md mt-4">Reconcile marketplace payments at scale — without losing context.</h2>
+          <p class="lead mt-5">
+            Expected vs received, settlement by settlement, with the transactions behind every line flagged. Nothing slips through unreconciled.
+          </p>
+          <div class="mt-6">
+            <a href="/platform/payment-reconciliation" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">
+              Explore Payment Reconciliation →
+            </a>
+          </div>
+        </div>
+        <div class="reveal min-w-0">
+          <ReconciliationPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — CHARGES & DEDUCTIONS -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">CHARGES &amp; DEDUCTIONS</span>
+          <h2 class="h2-md mt-4">See what comes out before the money reaches you.</h2>
+          <p class="lead mt-5">
+            Gross sale, marketplace charges and supported deductions are kept separate, so the settlement and the receivable are clear in your books — even at high volume.
+          </p>
+        </div>
+        <div class="reveal">
+          <SettlementDecomposition />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — DETAILED ACCOUNTING -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">DETAILED ACCOUNTING</span>
+          <h2 class="h2-md mt-4">Turn every transaction into detailed accounting.</h2>
+          <p class="lead mt-5">
+            Each order becomes a balanced journal — order-wise, GST-wise and warehouse-wise — posted into your ERP.
+          </p>
+          <ul class="mt-6 flex flex-col gap-3.5">
+            {
+              [
+                { t: "Order-wise", s: "Not summary totals" },
+                { t: "GST-wise", s: "Split by head" },
+                { t: "Warehouse-wise", s: "Context kept" },
+              ].map((x) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed">
+                    <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                    <span class="text-ink-500">{x.s}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div class="reveal min-w-0">
+          <ErpOutputVoucher />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — GST & TAX -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">GST &amp; TAX</span>
+          <h2 class="h2-md mt-4">Keep the tax context connected to the transaction.</h2>
+          <p class="lead mt-5">
+            Taxable value, GST by head and TCS/TDS stay with each order as it moves into accounting and then into the ERP.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <GstWiseAccounting />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — WAREHOUSE & INVENTORY -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
+        <div class="reveal min-w-0 order-2 lg:order-1">
+          <OrderInventoryCompare />
+        </div>
+        <div class="max-w-lg reveal order-1 lg:order-2">
+          <span class="eyebrow">WAREHOUSE &amp; INVENTORY</span>
+          <h2 class="h2-md mt-4">Keep warehouse context inside the financial record.</h2>
+          <p class="lead mt-5">
+            Orders and stock are accounted warehouse-wise across locations, with stock transfers posted between them. This is inventory accounting, not a warehouse management system.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 — REPORTS -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">REPORTS</span>
+          <h2 class="h2-md mt-4">Give finance teams the information they need.</h2>
+          <p class="lead mt-5">
+            Dashboard, profitability, payment reconciliation and reports — structured and ready to download.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <ReportsPanel />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — HOW IT WORKS -->
+  <section id="how-it-works" class="section-band">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">One connected flow from marketplace to ERP.</h2>
+        <p class="lead mt-5">Five stages from connecting channels to detailed accounting in your ERP.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect supported ecommerce channels." },
+          { num: "02", label: "Collect", desc: "Bring transaction information into DeepEcom." },
+          { num: "03", label: "Understand", desc: "Create one financial view." },
+          { num: "04", label: "Reconcile", desc: "Match payment information." },
+          { num: "05", label: "Account", desc: "Generate detailed accounting for the ERP." },
+        ]}
       />
     </div>
   </section>
 
-  <CtaBand
-    title="Bring enterprise-scale ecommerce into your books."
-    lead="Detailed accounting and control across entities, warehouses, marketplaces and your ERP."
-  />
+  <!-- 13 — PLATFORM + ERP -->
+  <section>
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">ONE SYSTEM</span>
+        <h2 class="h2-md mt-4">One platform for visibility. One connector for accounting.</h2>
+        <p class="lead mt-5">
+          The Platform helps you understand the business. The ERP Connector turns the same transaction layer into detailed accounting in your ERP.
+        </p>
+      </div>
+      <div class="mt-10 reveal">
+        <PlatformErpConnector />
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — WHO IT'S FOR -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for enterprise finance and ecommerce teams.</h2>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        {personaData.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">{p.role}</span>
+            <h3 class="mt-1 text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 — CUSTOMER PROOF -->
+  <section>
+    <div class="sec">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 16 — FAQ -->
+  <section class="section-band">
+    <div class="sec-narrow">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Enterprise ecommerce accounting, explained.</h2>
+      <div class="mt-10 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 — FINAL CTA -->
+  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Bring your ecommerce complexity into one financial layer.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect your channels, understand your numbers and make your ERP ecommerce-ready.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Explore Platform →
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

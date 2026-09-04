@@ -1,0 +1,351 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const inputs = [
+  { label: "Amazon", sub: "marketplace" },
+  { label: "Flipkart", sub: "marketplace" },
+  { label: "Shopify", sub: "d2c" },
+  { label: "More channels", sub: "supported" },
+]
+const infraInputs = [
+  { label: "Warehouses", sub: "multi-node" },
+  { label: "Payments", sub: "settlements" },
+  { label: "Returns", sub: "reversals" },
+  { label: "Inventory", sub: "stock" },
+]
+const deepcomCap = [
+  { label: "Profitability", sub: "across channels" },
+  { label: "Reconciliation", sub: "at scale" },
+  { label: "Reports", sub: "structured exports" },
+  { label: "Accounting", sub: "detailed entries" },
+]
+const erp = [
+  { label: "Tally", sub: "XML sync" },
+  { label: "SAP", sub: "enterprise" },
+  { label: "Zoho", sub: "books" },
+]
+---
+
+<style is:global>
+  .eps-h {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(7rem, 12vh, 9rem) 0 clamp(3rem, 6vh, 4.5rem);
+    background:
+      radial-gradient(52rem 26rem at 82% -14%, rgba(44, 62, 233, 0.12), transparent 60%),
+      radial-gradient(38rem 20rem at 2% -10%, rgba(167, 139, 250, 0.1), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .eps-h-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .eps-h-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .eps-h-grid {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+  }
+  .eps-h-copy {
+    max-width: 35rem;
+  }
+  .eps-h-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .eps-h-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .eps-h-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.4rem, 4.4vw, 3.6rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .eps-h-title .accent {
+    color: var(--brand-500);
+  }
+  .eps-h-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .eps-h-actions {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .eps-h-note {
+    margin-top: 1.4rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .eps-h-note svg {
+    color: var(--brand-500);
+    flex: none;
+    margin-top: 0.1rem;
+  }
+  .eps-h-note b {
+    color: var(--ink-700);
+  }
+  .eps-h-visual {
+    width: 100%;
+  }
+  .eps-h-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .eps-h-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .eps-h-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .eps-h-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .eps-h-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .eps-h-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .eps-h-bar .dots i:nth-child(3) { background: #86efac; }
+  .eps-h-bar .name {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .eps-h-bar .tag {
+    margin-left: auto;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .eps-h-body {
+    padding: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+  @media (min-width: 30rem) {
+    .eps-h-body {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+  .eps-h-col {
+    border: 1px solid var(--ink-100);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    background: var(--ink-50);
+  }
+  .eps-h-col-title {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.55rem;
+  }
+  .eps-h-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.55rem;
+    background: #fff;
+  }
+  .eps-h-chip + .eps-h-chip {
+    margin-top: 0.4rem;
+  }
+  .eps-h-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-500);
+    flex: none;
+  }
+  .eps-h-chip .txt {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .eps-h-chip .sub {
+    font-size: 0.66rem;
+    color: var(--ink-400);
+  }
+  .eps-h-center {
+    border-radius: 0.85rem;
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+    color: #fff;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 16px 32px -16px rgba(44, 62, 233, 0.4);
+  }
+  .eps-h-center-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .eps-h-center-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .eps-h-center-tag {
+    margin-left: auto;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .eps-h-center-sub {
+    margin-top: 0.3rem;
+    font-size: 0.74rem;
+    opacity: 0.88;
+  }
+  .eps-h-flow-hint {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0;
+    color: var(--brand-400);
+  }
+  .eps-h-flow-hint svg {
+    display: block;
+  }
+  @media (max-width: 47.99rem) {
+    .eps-h {
+      padding-top: 5rem;
+    }
+    .eps-h-title {
+      font-size: clamp(2rem, 8.5vw, 2.6rem);
+    }
+  }
+</style>
+
+<section class="eps-h" data-hero>
+  <div class="eps-h-inner">
+    <div class="eps-h-grid">
+      <div class="eps-h-copy reveal">
+        <span class="eps-h-eyebrow"><span class="dot" aria-hidden="true"></span>For Enterprise</span>
+        <h1 class="eps-h-title">
+          Bring enterprise ecommerce complexity <span class="accent">under control.</span>
+        </h1>
+        <p class="eps-h-lead">
+          Connect your marketplaces, unify financial visibility, reconcile payments and generate detailed ecommerce accounting across orders, GST, warehouses and stock movements.
+        </p>
+        <div class="eps-h-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Talk to Enterprise Sales
+            <ArrowRight size={16} />
+          </a>
+          <a href="#how-it-works" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            See How It Works →
+          </a>
+        </div>
+        <p class="eps-h-note">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span>Your ERP manages your books. <b>DeepEcom makes them ecommerce-ready</b> — across every channel and warehouse.</span>
+        </p>
+      </div>
+
+      <div class="eps-h-visual reveal" data-delay="120">
+        <div class="eps-h-card">
+          <div class="eps-h-bar">
+            <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+            <span class="name">Ecommerce architecture</span>
+            <span class="tag">Enterprise</span>
+          </div>
+          <div class="eps-h-body">
+            <div class="eps-h-col">
+              <div class="eps-h-col-title">Marketplaces</div>
+              {inputs.map((i) => (
+                <div class="eps-h-chip"><span class="dot" aria-hidden="true"></span><span><span class="txt">{i.label}</span> <span class="sub">{i.sub}</span></span></div>
+              ))}
+              <div class="eps-h-flow-hint" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 0v12M4 8l6 6 6-6"/></svg>
+              </div>
+              <div class="eps-h-col-title">Infrastructure</div>
+              {infraInputs.map((i) => (
+                <div class="eps-h-chip"><span class="dot" aria-hidden="true"></span><span><span class="txt">{i.label}</span> <span class="sub">{i.sub}</span></span></div>
+              ))}
+            </div>
+
+            <div>
+              <div class="eps-h-center">
+                <div class="eps-h-center-head">
+                  <span class="eps-h-center-name">DeepEcom</span>
+                  <span class="eps-h-center-tag">One financial layer</span>
+                </div>
+                <div class="eps-h-center-sub">Platform + ERP Connector — the connective layer between channels and ERP</div>
+              </div>
+              <div style="margin-top: 0.7rem" class="eps-h-col">
+                <div class="eps-h-col-title">Capabilities</div>
+                {deepcomCap.map((c) => (
+                  <div class="eps-h-chip"><span class="dot" aria-hidden="true"></span><span><span class="txt">{c.label}</span> <span class="sub">{c.sub}</span></span></div>
+                ))}
+              </div>
+              <div class="eps-h-flow-hint" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 20 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 0v12M4 8l6 6 6-6"/></svg>
+              </div>
+              <div class="eps-h-col">
+                <div class="eps-h-col-title">ERP systems</div>
+                {erp.map((e) => (
+                  <div class="eps-h-chip"><span class="dot" aria-hidden="true" style="background:#16a34a"></span><span><span class="txt">{e.label}</span> <span class="sub">{e.sub}</span></span></div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

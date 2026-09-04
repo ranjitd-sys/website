@@ -1,0 +1,166 @@
+---
+const warehouses = [
+  {
+    code: "DEL-01",
+    name: "Delhi",
+    order: { units: "1,248", value: "₹18.4L" },
+    inventory: { units: "1,232", value: "₹18.1L" },
+    grade: "A",
+    note: "Orders match stock out",
+  },
+ 
+
+]
+const gradeClass = (g: string) =>
+  g === "A"
+    ? "background: var(--brand-50); color: var(--brand-700);"
+    : "background: var(--ink-100); color: var(--ink-700);"
+---
+
+<style is:global>
+  .oic {
+    padding-block: clamp(1.5rem, 3vh, 2.5rem);
+  }
+  .oic-grid {
+    display: grid;
+    grid-template-columns: 2fr;
+    gap: 1rem;
+  }
+  @media (min-width: 60rem) {
+    .oic-grid {
+      grid-template-columns: repeat( 1fr);
+      gap: 1.25rem;
+    }
+  }
+  .oic-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    padding: 1.25rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .oic-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .oic-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .oic-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .oic-code {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .oic-name {
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+  .oic-grade {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+  .oic-module {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    flex: 1;
+  }
+  .oic-module-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.5rem;
+  }
+  .oic-module-label svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .oic-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .oic-stat-label {
+    font-size: 0.6875rem;
+    color: var(--ink-400);
+  }
+  .oic-stat-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .oic-note {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--ink-200);
+    font-size: 0.75rem;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="oic" aria-label="Order and inventory comparison by warehouse">
+  <div class="oic-grid reveal">
+    {warehouses.map((w) => (
+      <article class="oic-card">
+        <div class="oic-head">
+          <div class="oic-title">
+            <div>
+              <div class="oic-code">{w.code}</div>
+              <div class="oic-name">{w.name}</div>
+            </div>
+          </div>
+          <span class="oic-grade" style={gradeClass(w.grade)}>
+            {w.grade} {w.grade === "A" ? "Match" : "Review"}
+          </span>
+        </div>
+
+        <div class="oic-module" style="margin-bottom: 0.75rem">
+          <div class="oic-module-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v18M19 3v18M5 9h14M5 15h14"/></svg>
+            Order module
+          </div>
+          <div class="oic-stats">
+            <div><div class="oic-stat-label">Units sold</div><div class="oic-stat-value">{w.order.units}</div></div>
+            <div><div class="oic-stat-label">Value</div><div class="oic-stat-value">{w.order.value}</div></div>
+          </div>
+        </div>
+
+        <div class="oic-module">
+          <div class="oic-module-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7 12 2l9 5-9 5-9-5zM3 7v10l9 5 9-5V7M12 12v10"/></svg>
+            Inventory module
+          </div>
+          <div class="oic-stats">
+            <div><div class="oic-stat-label">Stock out</div><div class="oic-stat-value">{w.inventory.units}</div></div>
+            <div><div class="oic-stat-label">Value</div><div class="oic-stat-value">{w.inventory.value}</div></div>
+          </div>
+        </div>
+
+        <div class="oic-note">{w.grade === "A" ? "✓" : "!"} {w.note}</div>
+      </article>
+    ))}
+  </div>
+</section>

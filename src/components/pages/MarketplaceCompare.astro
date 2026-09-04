@@ -81,8 +81,12 @@ const channels = [
   .mc-track span {
     height: 100%;
   }
+  .mc-table-wrap {
+    overflow-x: auto;
+  }
   .mc-table {
     width: 100%;
+    min-width: 34rem;
     border-collapse: collapse;
     font-size: 0.8125rem;
   }
@@ -168,6 +172,7 @@ const channels = [
         <div class="mc-track">
           {channels.map((c) => <span style={`width:${c.share}%;background:${c.color}`}></span>)}
         </div>
+        <div class="mc-table-wrap">
         <table class="mc-table">
           <thead>
             <tr>
@@ -195,6 +200,7 @@ const channels = [
             ))}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
     <p class="mc-note">One business. Multiple channels. One consolidated view.</p>

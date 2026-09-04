@@ -7,115 +7,121 @@ const warehouses = [
 ---
 
 <style is:global>
-  .ww {
-    padding-block: clamp(2.25rem, 4.5vh, 3.25rem);
-  }
-  .ww-grid {
-    margin-top: 2rem;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  @media (min-width: 48rem) {
-    .ww-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-  .ww-card {
-    padding: 1.5rem;
-    border: 1px solid var(--ink-200);
+  .ww-panel {
+    width: 100%;
+    max-width: 22rem;
+    background: #ffffff;
+    border: 1px solid var(--ink-200, #e2e8f0);
     border-radius: 1rem;
-    background: #fff;
-    box-shadow: var(--shadow-card);
-    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
   }
-  .ww-card:hover {
-    border-color: var(--ink-300);
-    box-shadow: var(--shadow-md);
-    transform: translateY(-2px);
+
+  .ww-panel-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-400, #64748b);
+    padding: 0.75rem 0.75rem 0.25rem;
   }
-  .ww-card-head {
+
+  .ww-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ww-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 0.625rem;
+    transition: background 0.15s ease;
+  }
+
+  .ww-row:hover {
+    background: var(--ink-50, #f8fafc);
+  }
+
+  .ww-info {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1rem;
   }
-  .ww-card-icon {
+
+  .ww-icon {
     display: grid;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.75rem;
-    background: var(--brand-50);
-    color: var(--brand-600);
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50, #eff6ff);
+    color: var(--brand-600, #2563eb);
+    flex-shrink: 0;
   }
-  .ww-card-icon svg {
-    width: 1.25rem;
-    height: 1.25rem;
-  }
-  .ww-card-code {
+
+  .ww-code {
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--ink-800);
+    color: var(--ink-900, #0f172a);
+    line-height: 1.2;
   }
-  .ww-card-name {
+
+  .ww-name {
     font-size: 0.75rem;
-    color: var(--ink-400);
+    color: var(--ink-400, #64748b);
   }
-  .ww-card-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+
+  .ww-metrics {
+    display: flex;
+    gap: 1.25rem;
+    text-align: right;
   }
-  .ww-stat {
-    padding: 0.75rem;
-    border-radius: 0.5rem;
-    background: var(--ink-50);
-  }
-  .ww-stat-label {
-    font-size: 0.6875rem;
+
+  .ww-metric-label {
+    font-size: 0.625rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--ink-400);
+    color: var(--ink-400, #94a3b8);
   }
-  .ww-stat-value {
-    margin-top: 0.25rem;
-    font-size: 1.125rem;
+
+  .ww-metric-val {
+    font-size: 0.875rem;
     font-weight: 700;
-    color: var(--ink-900);
+    color: var(--ink-800, #1e293b);
     font-variant-numeric: tabular-nums;
   }
 </style>
 
-<section class="ww">
-  <div class="mx-auto max-w-6xl px-6">
-    <div class="ww-grid reveal">
-      {warehouses.map((w) => (
-        <div class="ww-card">
-          <div class="ww-card-head">
-            <span class="ww-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M3 7 12 2l9 5-9 5-9-5zM3 7v10l9 5 9-5V7M12 12v10" />
-              </svg>
-            </span>
-            <div>
-              <div class="ww-card-code">{w.code}</div>
-              <div class="ww-card-name">{w.name}</div>
-            </div>
+<aside class="ww-panel">
+  <div class="ww-panel-title">Warehouses</div>
+  <div class="ww-list">
+    {warehouses.map((w) => (
+      <div class="ww-row">
+        <div class="ww-info">
+          <div class="ww-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7 12 2l9 5-9 5-9-5zM3 7v10l9 5 9-5V7M12 12v10" />
+            </svg>
           </div>
-          <div class="ww-card-stats">
-            <div class="ww-stat">
-              <div class="ww-stat-label">Orders</div>
-              <div class="ww-stat-value">{w.orders}</div>
-            </div>
-            <div class="ww-stat">
-              <div class="ww-stat-label">Revenue</div>
-              <div class="ww-stat-value">{w.revenue}</div>
-            </div>
+          <div>
+            <div class="ww-code">{w.code}</div>
+            <div class="ww-name">{w.name}</div>
           </div>
         </div>
-      ))}
-    </div>
+
+        <div class="ww-metrics">
+          <div>
+            <div class="ww-metric-label">Orders</div>
+            <div class="ww-metric-val">{w.orders}</div>
+          </div>
+          <div>
+            <div class="ww-metric-label">Revenue</div>
+            <div class="ww-metric-val">{w.revenue}</div>
+          </div>
+        </div>
+      </div>
+    ))}
   </div>
-</section>
+</aside>

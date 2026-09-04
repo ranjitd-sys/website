@@ -7,8 +7,8 @@ import ProfitabilityPanel from "@/components/pages/ProfitabilityPanel.astro"
 import ReconciliationPanel from "@/components/pages/ReconciliationPanel.astro"
 import MarketplaceCompare from "@/components/pages/MarketplaceCompare.astro"
 import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
-import GstWiseAccounting from "@/components/pages/GstWiseAccounting.astro"
-import WarehouseWise from "@/components/pages/WarehouseWise.astro"
+import GstSplitCompare from "@/components/pages/GstSplitCompare.astro"
+import OrderInventoryCompare from "@/components/pages/OrderInventoryCompare.astro"
 import ReportsPanel from "@/components/pages/ReportsPanel.astro"
 import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
 import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
@@ -223,22 +223,19 @@ const faqs = [
   <!-- 07 — GST & TAX -->
   <section class="section-band">
     <div class="sec">
-      <div class="grid items-center gap-10 lg:grid-cols-[1.3fr_1fr]">
-        <div class="reveal order-2 lg:order-1">
-          <GstWiseAccounting />
-        </div>
-        <div class="order-1 lg:order-2">
+      <div class="grid items-start gap-10 lg:grid-cols-[1fr_1.45fr]">
+        <div class="max-w-lg reveal">
           <span class="eyebrow">GST &amp; TAX</span>
           <h2 class="h2-md mt-4">Keep the tax context connected to the sale.</h2>
           <p class="lead mt-5">
-            Taxable value, GST by head and TCS/TDS stay with each order across every channel as it moves into accounting.
+            Taxable value, GST by head and TCS/TDS stay with each order across every channel. DeepEcom grades each GSTIN node by comparing the marketplace's reported tax against what is booked into your books.
           </p>
           <ul class="mt-6 flex flex-col gap-3.5">
             {
               [
                 { t: "GST split by head", s: "CGST, SGST, IGST" },
                 { t: "TCS / TDS kept", s: "Within the entries they apply to" },
-                { t: "Connected to the sale", s: "Tax context never detached" },
+                { t: "Graded by node", s: "Marketplace input vs. books" },
               ].map((x) => (
                 <li class="flex items-start gap-3">
                   <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
@@ -253,6 +250,9 @@ const faqs = [
             }
           </ul>
         </div>
+        <div class="reveal">
+          <GstSplitCompare />
+        </div>
       </div>
     </div>
   </section>
@@ -260,18 +260,18 @@ const faqs = [
   <!-- 08 — INVENTORY & WAREHOUSE -->
   <section>
     <div class="sec">
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
+      <div class="grid items-start gap-10 lg:grid-cols-[1fr_1.45fr]">
         <div class="max-w-lg reveal">
           <span class="eyebrow">INVENTORY &amp; WAREHOUSE</span>
-          <h2 class="h2-md mt-4">Understand where the sale happened — and where the inventory moved.</h2>
+          <h2 class="h2-md mt-4">Bring your orders and inventory together.</h2>
           <p class="lead mt-5">
-            Orders, inventory and stock are accounted warehouse-wise. This is inventory accounting, not a warehouse management system.
+            In a marketplace the order and the inventory are two different modules. DeepEcom grades each warehouse — for Fulfilled by Marketplace or third-party warehouses — by reconciling the order record against the stock movement.
           </p>
           <ul class="mt-6 flex flex-col gap-3.5">
             {
               [
-                { t: "Warehouse-wise accounting", s: "Orders mapped to their warehouse" },
-                { t: "Inventory in the books", s: "Movement accounted per SKU" },
+                { t: "Slit by warehouse", s: "Every order and SKU mapped to its node" },
+                { t: "Orders vs. stock out", s: "Graded for reconciliation gaps" },
                 { t: "Stock transfers posted", s: "Both source and destination" },
               ].map((x) => (
                 <li class="flex items-start gap-3">
@@ -288,7 +288,7 @@ const faqs = [
           </ul>
         </div>
         <div class="reveal">
-          <WarehouseWise />
+          <OrderInventoryCompare />
         </div>
       </div>
     </div>

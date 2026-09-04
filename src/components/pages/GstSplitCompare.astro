@@ -1,0 +1,184 @@
+---
+const summaries = [
+ 
+  {
+    state: "Karnataka (GSTIN 29)",
+    type: "Inter-state",
+    input: { taxable: "₹5,849.00", cgst: "—", sgst: "—", igst: "₹431.64" },
+    booked: { taxable: "₹5,849.00", cgst: "—", sgst: "—", igst: "₹431.64" },
+    grade: "A",
+    note: "Marketplace tax matches books",
+  },
+
+]
+const gradeClass = (g: string) =>
+  g === "A"
+    ? "background: var(--brand-50); color: var(--brand-700);"
+    : "background: var(--ink-100); color: var(--ink-700);"
+const cell = (v: string) =>
+  v === "—" ? `<span class="oic-muted">—</span>` : v
+---
+
+<style is:global>
+  .gsc {
+    padding-block: clamp(1.5rem, 3vh, 2.5rem);
+  }
+  .gsc-grid {
+    display: grid;
+    grid-template-columns: 2fr;
+    gap: 1rem;
+  }
+  @media (min-width: 60rem) {
+    .gsc-grid {
+      grid-template-columns: repeat( 1fr);
+      gap: 1.25rem;
+    }
+  }
+  .gsc-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    padding: 1.25rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+  .gsc-card:hover {
+    border-color: var(--ink-300);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .gsc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .gsc-title {
+    display: flex;
+    flex-direction: column;
+  }
+  .gsc-code {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .gsc-name {
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+  .gsc-type {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+  }
+  .gsc-grade {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border-radius: 999px;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+  }
+  .gsc-module {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+    flex: 1;
+  }
+  .gsc-module + .gsc-module {
+    margin-top: 0.75rem;
+  }
+  .gsc-module-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-bottom: 0.5rem;
+  }
+  .gsc-module-label svg {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  .gsc-heads {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    gap: 0.3rem;
+  }
+  .gsc-h {
+    font-size: 0.625rem;
+    color: var(--ink-400);
+  }
+  .gsc-v {
+    font-size: 0.8125rem;
+    font-weight: 650;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .gsc-muted {
+    color: var(--ink-300);
+  }
+  .gsc-note {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--ink-200);
+    font-size: 0.75rem;
+    color: var(--ink-500);
+  }
+</style>
+
+<section class="gsc" aria-label="GST split compared between marketplace and books">
+  <div class="gsc-grid reveal">
+    {summaries.map((s) => (
+      <article class="gsc-card">
+        <div class="gsc-head">
+          <div class="gsc-title">
+            <div class="gsc-code">{s.state}</div>
+            <div class="gsc-name">GSTIN-wise node</div>
+          </div>
+          <div class="gsc-type">{s.type}</div>
+        </div>
+
+        <div class="gsc-module">
+          <div class="gsc-module-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            Marketplace input
+          </div>
+          <div class="gsc-heads">
+            <div><div class="gsc-h">Taxable</div><div class="gsc-v">{s.input.taxable}</div></div>
+            <div><div class="gsc-h">CGST</div><div class="gsc-v" set:html={cell(s.input.cgst)} /></div>
+            <div><div class="gsc-h">SGST</div><div class="gsc-v" set:html={cell(s.input.sgst)} /></div>
+            <div><div class="gsc-h">IGST</div><div class="gsc-v" set:html={cell(s.input.igst)} /></div>
+          </div>
+        </div>
+
+        <div class="gsc-module">
+          <div class="gsc-module-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Booked in DeepEcom
+          </div>
+          <div class="gsc-heads">
+            <div><div class="gsc-h">Taxable</div><div class="gsc-v">{s.booked.taxable}</div></div>
+            <div><div class="gsc-h">CGST</div><div class="gsc-v" set:html={cell(s.booked.cgst)} /></div>
+            <div><div class="gsc-h">SGST</div><div class="gsc-v" set:html={cell(s.booked.sgst)} /></div>
+            <div><div class="gsc-h">IGST</div><div class="gsc-v" set:html={cell(s.booked.igst)} /></div>
+          </div>
+        </div>
+
+        <div class="gsc-note">
+          <span class="gsc-grade" style={gradeClass(s.grade)}>{s.grade} {s.grade === "A" ? "Match" : "Review"}</span>{" "}
+          <span style="margin-left: 0.4rem">{s.note}</span>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>
