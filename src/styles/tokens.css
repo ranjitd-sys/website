@@ -60,17 +60,17 @@
    2. Color palette
    ============================================================= */
 :root {
-/* Brand — DeepEcom indigo-blue (primary: #2C3EE9) */
-  --brand-50: #eef0fe;
-  --brand-100: #d8dcfc;
-  --brand-200: #b4bcfa;
-  --brand-300: #8a98f7;
-  --brand-400: #5c6ff2;
-  --brand-500: #2c3ee9;
-  --brand-600: #2735c9;
-  --brand-700: #202da3;
-  --brand-800: #1a247d;
-  --brand-900: #11184e;
+/* Brand — DeepEcom blue-violet (primary: #533AFD) */
+  --brand-50: #f0edff;
+  --brand-100: #e1dcff;
+  --brand-200: #c3b8ff;
+  --brand-300: #a08cff;
+  --brand-400: #7b62fe;
+  --brand-500: #533afd;
+  --brand-600: #462ce0;
+  --brand-700: #3922b8;
+  --brand-800: #2c1b8d;
+  --brand-900: #1e1560;
 
   /* Neutrals — cool, ink-leaning grays (Stripe-inspired) */
   --ink-50: #f8fafc;
@@ -197,12 +197,12 @@
    ============================================================= */
 :root {
   --gradient-hero:
-    radial-gradient(42rem 20rem at 74% -8%, rgba(99, 102, 241, 0.16), transparent 60%),
-    radial-gradient(38rem 18rem at 18% -4%, rgba(129, 140, 248, 0.12), transparent 58%),
-    radial-gradient(80rem 40rem at 50% 130%, rgba(44, 62, 233, 0.08), transparent 60%);
+    radial-gradient(42rem 20rem at 74% -8%, rgba(123, 98, 254, 0.16), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(160, 140, 255, 0.12), transparent 58%),
+    radial-gradient(80rem 40rem at 50% 130%, rgba(83, 58, 253, 0.08), transparent 60%);
   --gradient-hero-dark:
-    radial-gradient(42rem 20rem at 74% -8%, rgba(129, 140, 248, 0.2), transparent 60%),
-    radial-gradient(38rem 18rem at 18% -4%, rgba(99, 102, 241, 0.16), transparent 58%);
+    radial-gradient(42rem 20rem at 74% -8%, rgba(160, 140, 255, 0.2), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(123, 98, 254, 0.16), transparent 58%);
   --gradient-section:
     linear-gradient(180deg, transparent 0%, var(--surface-muted) 46%, var(--background) 100%);
   --gradient-brand: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-700) 100%);
