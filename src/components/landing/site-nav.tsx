@@ -400,7 +400,9 @@ export default function Navbar() {
       <nav className="mx-auto flex h-16 max-w-7xl items-center gap-6 px-6 lg:h-17" aria-label="Primary">
         <a href="/" onFocus={() => closeNow()} className="inline-flex items-center gap-2.5 text-[17.5px] font-bold tracking-tight text-foreground no-underline">
           <LogoMark />
-          DeepEcom
+          <div>
+          <span className="font-medium">Deep</span><span>Ecom</span>
+          </div>
         </a>
 
         <div className="relative ml-4 hidden items-center gap-1 lg:flex" onMouseLeave={clearIndicator}>
