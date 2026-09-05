@@ -1,5 +1,5 @@
 ---
-import { ArrowRight, Store, ShoppingBag, CreditCard, Building2 } from "lucide-react"
+import { Store, ShoppingBag, CreditCard, Building2 } from "lucide-react"
 
 const categories = [
   { n: "01", name: "SELLING CHANNELS", desc: "Websites and D2C stores that create orders outside the marketplaces.", icon: Store },
@@ -11,7 +11,6 @@ const categories = [
 const marketplaces = [
   {
     name: "Amazon",
-    href: "/integrations/amazon",
     tone: "amazon",
     mark: "amazon",
     desc: "Orders, settlements, fees and TCS/TDS into profitability, reconciliation and accounting.",
@@ -19,7 +18,6 @@ const marketplaces = [
   },
   {
     name: "Flipkart",
-    href: "/integrations/flipkart",
     tone: "flipkart",
     mark: "flipkart",
     desc: "Orders, settlements and commissions into the same financial layer.",
@@ -27,7 +25,6 @@ const marketplaces = [
   },
   {
     name: "Shopify",
-    href: "/integrations/shopify",
     tone: "shopify",
     mark: "shopify",
     desc: "Store sales and payouts brought into one financial picture.",
@@ -35,7 +32,6 @@ const marketplaces = [
   },
   {
     name: "Meesho",
-    href: "/integrations/marketplaces",
     tone: "meesho",
     mark: "meesho",
     desc: "Channel data aggregated into the same connected layer.",
@@ -43,7 +39,6 @@ const marketplaces = [
   },
   {
     name: "Myntra",
-    href: "/integrations/myntra",
     tone: "myntra",
     mark: "myntra",
     desc: "Myntra seller data into the same connected financial layer.",
@@ -51,7 +46,6 @@ const marketplaces = [
   },
   {
     name: "Ajio",
-    href: "/integrations/ajio",
     tone: "ajio",
     mark: "ajio",
     desc: "Ajio orders and settlements into the same financial layer.",
@@ -59,7 +53,6 @@ const marketplaces = [
   },
   {
     name: "JioMart",
-    href: "/integrations/jiomart",
     tone: "jiomart",
     mark: "jiomart",
     desc: "JioMart channel data aggregated into the same layer.",
@@ -67,7 +60,6 @@ const marketplaces = [
   },
   {
     name: "Nykaa",
-    href: "/integrations/nykaa",
     tone: "nykaa",
     mark: "nykaa",
     desc: "Nykaa seller data into the same connected financial layer.",
@@ -76,40 +68,37 @@ const marketplaces = [
 ]
 
 const gateways = [
-  { name: "Razorpay", mark: "gateway", href: "/integrations/payments", desc: "Gateway payments into reconciliation and accounting.", cap: "Reconciliation · Accounting" },
-  { name: "PayU", mark: "gateway", href: "/integrations/payments", desc: "Payment data into expected-vs-received matching.", cap: "Reconciliation · Accounting" },
-  { name: "Cashfree", mark: "gateway", href: "/integrations/payments", desc: "Gateway settlements into one financial view.", cap: "Reconciliation · Accounting" },
-  { name: "PhonePe", mark: "gateway", href: "/integrations/payments", desc: "UPI and payment data into reconciliation.", cap: "Reconciliation" },
-  { name: "Paytm", mark: "gateway", href: "/integrations/payments", desc: "Payments and settlements into reconciliation.", cap: "Reconciliation" },
-  { name: "Marketplace Settlements", mark: "mps", href: "/integrations/payments", desc: "Settlement to bank matching at order level.", cap: "Reconciliation" },
+  { name: "Razorpay", mark: "razorpay", desc: "Gateway payments into reconciliation and accounting.", cap: "Reconciliation · Accounting" },
+  { name: "PayU", mark: "payu", desc: "Payment data into expected-vs-received matching.", cap: "Reconciliation · Accounting" },
+  { name: "Cashfree", mark: "cashfree", desc: "Gateway settlements into one financial view.", cap: "Reconciliation · Accounting" },
+  { name: "PhonePe", mark: "phonepe", desc: "UPI and payment data into reconciliation.", cap: "Reconciliation" },
+  { name: "Paytm", mark: "paytm", desc: "Payments and settlements into reconciliation.", cap: "Reconciliation" },
+  { name: "Marketplace Settlements", mark: "mps", desc: "Settlement to bank matching at order level.", cap: "Reconciliation" },
 ]
 
 const shipping = [
-  { name: "Shiprocket", mark: "ship", href: "/integrations/shipping", desc: "Shipping partner data into fulfilment cost visibility.", cap: "Costs · Profitability" },
-  { name: "Delhivery", mark: "ship", href: "/integrations/shipping", desc: "Fulfilment costs reflected in profitability and accounting.", cap: "Costs · Profitability" },
-  { name: "Ekart", mark: "ship", href: "/integrations/shipping", desc: "Marketplace logistics data into cost visibility.", cap: "Costs" },
-  { name: "Blue Dart", mark: "ship", href: "/integrations/shipping", desc: "Express shipping costs connected to their orders.", cap: "Costs" },
-  { name: "Xpressbees", mark: "ship", href: "/integrations/shipping", desc: "Fulfilment and logistics costs into the financial picture.", cap: "Costs" },
+  { name: "Shiprocket", mark: "shiprocket", desc: "Shipping partner data into fulfilment cost visibility.", cap: "Costs · Profitability" },
+  { name: "Delhivery", mark: "delhivery", desc: "Fulfilment costs reflected in profitability and accounting.", cap: "Costs · Profitability" },
+  { name: "Ekart", mark: "ekart", desc: "Marketplace logistics data into cost visibility.", cap: "Costs" },
+  { name: "Blue Dart", mark: "bluedart", desc: "Express shipping costs connected to their orders.", cap: "Costs" },
+  { name: "Xpressbees", mark: "xpressbees", desc: "Fulfilment and logistics costs into the financial picture.", cap: "Costs" },
 ]
 
 const erps = [
   {
     name: "Tally",
-    href: "/integrations/tally",
     tone: "tally",
     desc: "Detailed ecommerce vouchers posted into Tally — order-wise, GST-wise, warehouse-wise.",
     cap: "Voucher posting · GST · Inventory",
   },
   {
     name: "SAP",
-    href: "/integrations/sap",
     tone: "sap",
     desc: "Ecommerce transactions structured for SAP accounting.",
     cap: "Accounting · Posting",
   },
   {
     name: "Zoho Books",
-    href: "/integrations/zoho",
     tone: "zoho",
     desc: "Ecommerce transactions accounted inside Zoho Books.",
     cap: "Accounting · Posting",
@@ -153,11 +142,10 @@ const erps = [
         <span class="eyebrow">MARKETPLACES</span>
         <h3 class="eco-dtitle">Bring marketplace transactions into DeepEcom.</h3>
       </div>
-      <a class="eco-all" href="/integrations/marketplaces">All marketplaces <ArrowRight size={15} /></a>
     </div>
-    <div class="eco-cards reveal" data-delay="120">
-      {marketplaces.map((m) => (
-        <a class="eco-card" href={m.href}>
+    <div class="eco-cards">
+      {marketplaces.map((m, i) => (
+        <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark ${m.tone}`}>
             {m.mark === "amazon" && <span class="mw-amazon">amazon</span>}
             {m.mark === "flipkart" && <span class="mw-flipkart">Flipkart <b class="mw-fk">f</b></span>}
@@ -175,8 +163,7 @@ const erps = [
               {m.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
-        </a>
+        </div>
       ))}
     </div>
 
@@ -187,11 +174,43 @@ const erps = [
         <h3 class="eco-dtitle">Bring payments into the same financial view.</h3>
       </div>
     </div>
-    <div class="eco-cards reveal" data-delay="120">
-      {gateways.map((p) => (
-        <a class="eco-card" href={p.href}>
-          <div class={`eco-mark ${p.mark}`}>
-            {p.mark === "mps" ? <CreditCard size={20} /> : <span class="eco-gw-letter">{p.name[0]}</span>}
+    <div class="eco-cards">
+      {gateways.map((p, i) => (
+        <div class="eco-card reveal" data-delay={i * 60}>
+          <div class={`eco-mark eco-mark-logo ${p.mark}`}>
+            {p.mark === "razorpay" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <path d="M10 2 4 24h7l2.5-9h4V24h10V2H19l-5 9h-2.6L13 2z" fill="#0A2540" />
+                <rect x="56" y="7" width="6" height="13" rx="1.2" transform="skewX(-18)" fill="#2279F2" />
+              </svg>
+            )}
+            {p.mark === "payu" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#0A2540">pay</text>
+                <text x="28" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#F15A2A">U</text>
+              </svg>
+            )}
+            {p.mark === "cashfree" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <circle cx="8" cy="13" r="5" fill="#F2F4F8" />
+                <path d="M8 18v3" stroke="#28327A" stroke-width="3" stroke-linecap="round" />
+                <path d="M8 4a8 8 0 0 1 8 8c0 2.4-1 3.5-2.5 4.2" stroke="#52B788" stroke-width="2.4" fill="none" stroke-linecap="round" />
+                <text x="16" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#28327A">cashfree</text>
+              </svg>
+            )}
+            {p.mark === "phonepe" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#111">phone</text>
+                <text x="47" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#5F259F">Pe</text>
+              </svg>
+            )}
+            {p.mark === "paytm" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <rect x="0" y="4" width="46" height="18" rx="9" fill="#00B9F5" />
+                <text x="23" y="18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="12" fill="#fff">Paytm</text>
+              </svg>
+            )}
+            {p.mark === "mps" && <CreditCard size={20} />}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{p.name}</div>
@@ -200,10 +219,9 @@ const erps = [
               {p.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
-        </a>
+        </div>
       ))}
-      <div class="eco-pay-note">
+      <div class="eco-pay-note reveal">
         <span class="eco-pay-flow">Payments → Expected → Received → Difference</span>
         <p class="eco-pay-desc">
           DeepEcom connects payment and settlement data to the Payment Reconciliation product —
@@ -218,13 +236,45 @@ const erps = [
         <span class="eyebrow">SHIPPING PARTNERS</span>
         <h3 class="eco-dtitle">Fulfilment costs, tied to the orders they belong to.</h3>
       </div>
-      <a class="eco-all" href="/integrations/shipping">All shipping partners <ArrowRight size={15} /></a>
     </div>
-    <div class="eco-cards eco-cards-ship reveal" data-delay="120">
-      {shipping.map((s) => (
-        <a class="eco-card" href={s.href}>
-          <div class={`eco-mark ${s.mark}`}>
-            <span class="eco-gw-letter">{s.name[0]}</span>
+    <div class="eco-cards eco-cards-ship">
+      {shipping.map((s, i) => (
+        <div class="eco-card reveal" data-delay={i * 60}>
+          <div class={`eco-mark eco-mark-logo ${s.mark}`}>
+            {s.mark === "shiprocket" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <path d="M4 19c1-3 4-6 9-9 4-2.4 8-3.6 11-4-3 4.6-6 9.4-6.6 13-.5 2.8-1.8 4.5-4.6 3.6-1.6-.5-2.4-1.6-2-3.6h2.6c.2-1 .8-1.8 1.6-2.4-2 1-4.4 2.4-6.4 4.4L4 19z" fill="#14B26A" />
+                <text x="24" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="13" fill="#101828">Shiprocket</text>
+              </svg>
+            )}
+            {s.mark === "delhivery" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <circle cx="7" cy="8" r="2.6" fill="#00A86B" />
+                <circle cx="7" cy="18" r="2.6" fill="#00A86B" />
+                <text x="14" y="19" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="14" fill="#111">e</text>
+                <text x="24" y="19" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#111">lhivery</text>
+              </svg>
+            )}
+            {s.mark === "ekart" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <path d="M4 8h46v10H4z" fill="#111" />
+                <text x="27" y="16" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="11" fill="#FF9F00">Ekart</text>
+              </svg>
+            )}
+            {s.mark === "bluedart" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <path d="M2 6h10a8 8 0 0 1 8 8h-4a4 4 0 0 0-4-4H8l8 10h-6l-6-9a3 3 0 0 1-2-3z" fill="#0072CE" />
+                <text x="34" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#0072CE">Blue</text>
+                <text x="66" y="19" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#111">Dart</text>
+              </svg>
+            )}
+            {s.mark === "xpressbees" && (
+              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
+                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#DB1F3C">Xpress</text>
+                <text x="52" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#101117">bees</text>
+                <circle cx="77" cy="10" r="2.4" fill="#F5B50A" />
+              </svg>
+            )}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{s.name}</div>
@@ -233,8 +283,7 @@ const erps = [
               {s.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
-        </a>
+        </div>
       ))}
     </div>
 
@@ -245,9 +294,9 @@ const erps = [
         <h3 class="eco-dtitle">Send ecommerce accounting into the ERP you already use.</h3>
       </div>
     </div>
-    <div class="eco-cards eco-cards-erp reveal" data-delay="120">
-      {erps.map((e) => (
-        <a class="eco-card" href={e.href}>
+    <div class="eco-cards eco-cards-erp">
+      {erps.map((e, i) => (
+        <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark eco-mark-erp ${e.tone}`}>
             {e.tone === "tally" && <span class="erp-tally">Tally</span>}
             {e.tone === "sap" && <span class="erp-sap">SAP</span>}
@@ -260,8 +309,7 @@ const erps = [
               {e.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
-        </a>
+        </div>
       ))}
     </div>
 
@@ -270,240 +318,272 @@ const erps = [
       DeepEcom makes your ERP ecommerce-ready. It doesn't replace it.
     </p>
   </div>
-
-  <style>
-    :global(.eco-section) { padding: clamp(1.5rem, 3vh, 2.5rem) 0 0; }
-    :global(.eco-title) { margin-top: 0.8rem; max-width: 44rem; }
-    :global(.eco-lead) { margin-top: 0.85rem; max-width: 40rem; }
-
-    :global(.eco-cats) {
-      margin-top: 1.75rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    @media (min-width: 52rem) { :global(.eco-cats) { grid-template-columns: repeat(4, 1fr); } }
-    :global(.eco-cat) {
-      border: 1px solid var(--ink-200);
-      border-radius: 1rem;
-      background: #fff;
-      box-shadow: var(--shadow-card);
-      padding: 1rem 1.15rem 1.1rem;
-    }
-    :global(.eco-cat-top) { display: flex; justify-content: space-between; align-items: center; }
-    :global(.eco-cat-num) {
-      font-size: 0.75rem;
-      font-weight: 800;
-      color: var(--brand-500);
-      letter-spacing: 0.08em;
-    }
-    :global(.eco-cat-icon) {
-      display: grid;
-      place-items: center;
-      width: 32px; height: 32px;
-      border-radius: 10px;
-      color: var(--brand-600);
-      background: var(--brand-50);
-      border: 1px solid var(--brand-100);
-    }
-    :global(.eco-cat-name) {
-      margin-top: 0.8rem;
-      font-size: 1.02rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--ink-900);
-    }
-    :global(.eco-cat-desc) {
-      margin-top: 0.3rem;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: var(--ink-500);
-    }
-
-    /* detail sections */
-    :global(.eco-detail) { padding-bottom: clamp(0.5rem, 1.5vh, 1rem); }
-    :global(.eco-dhead) {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-top: clamp(2.25rem, 4.5vh, 3.25rem);
-    }
-    :global(.eco-dtitle) {
-      margin-top: 0.55rem;
-      font-size: clamp(1.35rem, 2.3vw, 1.8rem);
-      line-height: 1.18;
-      letter-spacing: -0.025em;
-      font-weight: 700;
-      color: var(--ink-950);
-    }
-    :global(.eco-all) {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--brand-600);
-      white-space: nowrap;
-    }
-    :global(.eco-all:hover) { text-decoration: underline; }
-    :global(.eco-all svg) { flex: none; width: 15px; height: 15px; }
-
-    :global(.eco-cards) {
-      margin-top: 1.25rem;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    @media (min-width: 40rem) { :global(.eco-cards) { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 64rem) { :global(.eco-cards-erp) { grid-template-columns: repeat(3, 1fr); } }
-
-    :global(.eco-card) {
-      position: relative;
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
-      border: 1px solid var(--ink-200);
-      border-radius: 1rem;
-      background: #fff;
-      box-shadow: var(--shadow-card);
-      padding: 1.05rem 1.2rem;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-    :global(.eco-card:hover) {
-      transform: translateY(-2px);
-      border-color: var(--brand-200);
-      box-shadow: 0 14px 30px -10px rgba(15, 23, 42, 0.1);
-    }
-    :global(.eco-card-static) { cursor: default; }
-
-    :global(.eco-mark) {
-      flex: 0 0 60px;
-      display: grid;
-      place-items: center;
-      width: 60px;
-      min-width: 60px;
-      height: 60px;
-      border-radius: 12px;
-      border: 1px solid var(--ink-100);
-      background: var(--ink-50);
-      font-weight: 800;
-      font-size: 1.02rem;
-      color: var(--ink-900);
-      letter-spacing: -0.02em;
-    }
-    :global(.eco-mark.amazon) { background: #fff; }
-    :global(.eco-mark.flipkart) { background: #fff; }
-    :global(.eco-mark.shopify) { background: #fff; }
-    :global(.eco-mark.meesho) { background: #fff; }
-
-    :global(.mw-amazon) { font-family: Arial, sans-serif; font-weight: 600; font-size: 1.1rem; }
-    :global(.mw-flipkart) { color: #2874f0; font-style: italic; }
-    :global(.mw-fk) { background: #ff9f00; color: #fff; font-size: 0.62rem; padding: 1px 4px; border-radius: 2px; font-style: normal; }
-    :global(.mw-shopify) { font-weight: 700; font-size: 0.95rem; }
-    :global(.mw-meesho) { color: #f43f5e; font-weight: 700; }
-    :global(.mw-myntra) { color: #ed174d; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; }
-    :global(.mw-ajio) { color: #000; font-weight: 800; font-size: 0.98rem; letter-spacing: 0.02em; }
-    :global(.mw-jiomart) { color: #0f3cc9; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em; }
-    :global(.mw-nykaa) { color: #ec147c; font-weight: 800; font-size: 0.98rem; letter-spacing: -0.01em; }
-
-    :global(.eco-mark.pgw):global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
-    :global(.eco-mark.gateway), :global(.eco-mark.ship), :global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
-    :global(.eco-gw-letter) { font-weight: 800; font-size: 1.05rem; color: var(--brand-600); }
-
-    :global(.eco-mark-erp) { background: #fff; }
-    :global(.erp-tally) { font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 1.15rem; }
-    :global(.erp-sap) { background: #008fd3; color: #fff; font-size: 0.95rem; padding: 2px 8px; border: none; }
-    :global(.erp-zoho) { font-weight: 700; font-size: 0.92rem; }
-
-    :global(.eco-card-body) { flex: 1; min-width: 0; }
-    :global(.eco-card-name) {
-      font-size: 1.06rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--ink-950);
-    }
-    :global(.eco-card-desc) {
-      margin-top: 0.4rem;
-      font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--ink-500);
-    }
-    :global(.eco-card-cap) {
-      margin-top: 0.75rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    :global(.eco-tag) {
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--brand-700);
-      background: var(--brand-50);
-      border: 1px solid var(--brand-100);
-      border-radius: 999px;
-      padding: 0.25rem 0.6rem;
-    }
-    :global(.eco-card-arrow) {
-      align-self: center;
-      flex: none;
-      width: 22px;
-      height: 22px;
-      display: grid;
-      place-items: center;
-      color: var(--brand-500);
-      transition: transform 0.2s ease;
-    }
-    :global(.eco-card-arrow svg) { width: 16px; height: 16px; }
-    :global(.eco-card:hover .eco-card-arrow) { transform: translateX(3px); }
-
-    :global(.eco-pill) {
-      flex: 0 0 auto;
-      align-self: flex-start;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--brand-600);
-      background: var(--brand-50);
-      border: 1px solid var(--brand-100);
-      border-radius: 999px;
-      padding: 0.3rem 0.6rem;
-      white-space: nowrap;
-    }
-    :global(.eco-pay-note) {
-      grid-column: 1 / -1;
-      border: 1px dashed var(--brand-200);
-      border-radius: 1rem;
-      background: var(--brand-50);
-      padding: 1rem 1.25rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 1rem;
-    }
-    :global(.eco-pay-flow) {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--brand-700);
-      white-space: nowrap;
-    }
-    :global(.eco-pay-desc) {
-      flex: 1;
-      min-width: 15rem;
-      font-size: 0.85rem;
-      line-height: 1.6;
-      color: var(--ink-600);
-      margin: 0;
-    }
-
-    :global(.eco-erp-note) {
-      margin-top: 1.1rem;
-      text-align: center;
-      font-size: 0.92rem;
-      color: var(--ink-500);
-    }
-    :global(.eco-erp-note strong) { color: var(--brand-600); }
-  </style>
 </section>
+
+<style>
+  :global(.eco-section) { padding: clamp(1.5rem, 3vh, 2.5rem) 0 0; }
+  :global(.eco-title) { margin-top: 0.8rem; max-width: 44rem; }
+  :global(.eco-lead) { margin-top: 0.85rem; max-width: 40rem; }
+
+  :global(.eco-cats) {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 52rem) { :global(.eco-cats) { grid-template-columns: repeat(4, 1fr); } }
+  :global(.eco-cat) {
+    position: relative;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 10px 30px -14px rgba(11, 17, 32, 0.1);
+    padding: 1.1rem 1.2rem 1.2rem;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  :global(.eco-cat::before) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.06), transparent 62%);
+  }
+  :global(.eco-cat:hover) {
+    transform: translateY(-3px);
+    border-color: var(--brand-200);
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 22px 44px -18px rgba(83, 58, 253, 0.22),
+      0 14px 30px -12px rgba(11, 17, 32, 0.12);
+  }
+  :global(.eco-cat-top) { position: relative; display: flex; justify-content: space-between; align-items: center; }
+  :global(.eco-cat-num) {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--brand-500);
+    letter-spacing: 0.08em;
+  }
+  :global(.eco-cat-icon) {
+    display: grid;
+    place-items: center;
+    width: 32px; height: 32px;
+    border-radius: 10px;
+    color: var(--brand-600);
+    background: linear-gradient(180deg, #ffffff 0%, var(--brand-50) 100%);
+    border: 1px solid var(--brand-100);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 2px rgba(11, 17, 32, 0.05);
+  }
+  :global(.eco-cat-name) {
+    position: relative;
+    margin-top: 0.85rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink-950);
+  }
+  :global(.eco-cat-desc) {
+    position: relative;
+    margin-top: 0.3rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+
+  /* detail sections */
+  :global(.eco-detail) { padding-bottom: clamp(0.5rem, 1.5vh, 1rem); }
+  :global(.eco-dhead) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: clamp(2.25rem, 4.5vh, 3.25rem);
+  }
+  :global(.eco-dtitle) {
+    margin-top: 0.55rem;
+    font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+    line-height: 1.18;
+    letter-spacing: -0.025em;
+    font-weight: 700;
+    color: var(--ink-950);
+  }
+
+  :global(.eco-cards) {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 40rem) { :global(.eco-cards) { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) { :global(.eco-cards-erp) { grid-template-columns: repeat(3, 1fr); } }
+
+  :global(.eco-card) {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 10px 30px -14px rgba(11, 17, 32, 0.1);
+    padding: 1.15rem 1.25rem;
+    overflow: hidden;
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
+  }
+  :global(.eco-card::before) {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.05), transparent 62%);
+    opacity: 1;
+    transition: opacity 0.25s ease;
+  }
+  :global(.eco-card::after) {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 1.25rem;
+    right: 1.25rem;
+    height: 1px;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9) 20%, rgba(255, 255, 255, 0.9) 80%, transparent);
+  }
+  :global(.eco-card:hover) {
+    transform: translateY(-3px);
+    border-color: var(--brand-200);
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 22px 44px -18px rgba(83, 58, 253, 0.22),
+      0 14px 30px -12px rgba(11, 17, 32, 0.12);
+  }
+  :global(.eco-card:hover::before) { opacity: 1; }
+
+  :global(.eco-mark) {
+    position: relative;
+    flex: 0 0 52px;
+    display: grid;
+    place-items: center;
+    width: 52px;
+    min-width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1px solid rgba(11, 17, 32, 0.07);
+    background:
+      linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      0 1px 2px rgba(11, 17, 32, 0.05);
+    font-weight: 800;
+    color: var(--ink-900);
+  }
+  :global(.eco-mark.amazon), :global(.eco-mark.flipkart), :global(.eco-mark.shopify), :global(.eco-mark.meesho) { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
+
+  :global(.mw-amazon) { font-family: Arial, sans-serif; font-weight: 600; font-size: 0.8rem; }
+  :global(.mw-flipkart) { color: #2874f0; font-style: italic; font-size: 0.74rem; }
+  :global(.mw-fk) { background: #ff9f00; color: #fff; font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; font-style: normal; }
+  :global(.mw-shopify) { font-weight: 700; font-size: 0.82rem; }
+  :global(.mw-meesho) { color: #f43f5e; font-weight: 700; font-size: 0.78rem; }
+  :global(.mw-myntra) { color: #ed174d; font-weight: 800; font-size: 0.8rem; letter-spacing: -0.02em; }
+  :global(.mw-ajio) { color: #000; font-weight: 800; font-size: 0.9rem; letter-spacing: 0.02em; }
+  :global(.mw-jiomart) { color: #0f3cc9; font-weight: 800; font-size: 0.8rem; letter-spacing: -0.01em; }
+  :global(.mw-nykaa) { color: #ec147c; font-weight: 800; font-size: 0.88rem; letter-spacing: -0.01em; }
+
+  /* logo marks for payment + shipping brands */
+  :global(.eco-mark-logo) {
+    flex: 0 0 88px;
+    width: 88px;
+    min-width: 88px;
+    height: 52px;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid rgba(11, 17, 32, 0.07);
+    padding: 0 7px;
+  }
+  :global(.mw-svg) { width: 100%; height: 26px; display: block; }
+  :global(.eco-mark-logo svg text) { font-family: var(--font-sans, Inter, Arial, sans-serif); }
+  :global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
+  :global(.eco-mark-logo.mps) { flex: 0 0 52px; width: 52px; min-width: 52px; }
+
+  :global(.eco-mark-erp) { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); width: 52px; }
+  :global(.erp-tally) { font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 1.15rem; }
+  :global(.erp-sap) { background: #008fd3; color: #fff; font-size: 0.95rem; padding: 2px 8px; border: none; font-family: inherit; text-transform: none; letter-spacing: 0.04em; }
+  :global(.erp-zoho) { font-weight: 700; font-size: 0.8rem; text-align: center; line-height: 1.25; }
+
+  :global(.eco-card-body) { position: relative; flex: 1; min-width: 0; }
+  :global(.eco-card-name) {
+    font-size: 1.06rem;
+    font-weight: 700;
+    letter-spacing: -0.012em;
+    color: var(--ink-950);
+  }
+  :global(.eco-card-desc) {
+    margin-top: 0.35rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--ink-500);
+  }
+  :global(.eco-card-cap) {
+    margin-top: 0.8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  :global(.eco-tag) {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--ink-600);
+    background: #fff;
+    border: 1px solid var(--ink-100);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 1px rgba(11, 17, 32, 0.03);
+    border-radius: 999px;
+    padding: 0.26rem 0.62rem;
+  }
+  :global(.eco-card:hover .eco-tag) { color: var(--brand-700); border-color: var(--brand-200); background: var(--brand-50); }
+
+  :global(.eco-pay-note) {
+    grid-column: 1 / -1;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--brand-200);
+    border-radius: 14px;
+    background:
+      radial-gradient(120% 90% at 85% 0%, rgba(83, 58, 253, 0.08), transparent 55%),
+      linear-gradient(180deg, #ffffff 0%, var(--brand-50) 100%);
+    box-shadow: 0 10px 30px -16px rgba(83, 58, 253, 0.25), 0 1px 2px rgba(11, 17, 32, 0.04);
+    padding: 1.05rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+  :global(.eco-pay-flow) {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-700);
+    white-space: nowrap;
+  }
+  :global(.eco-pay-desc) {
+    flex: 1;
+    min-width: 15rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--ink-600);
+    margin: 0;
+  }
+
+  :global(.eco-erp-note) {
+    margin-top: 1.1rem;
+    text-align: center;
+    font-size: 0.92rem;
+    color: var(--ink-500);
+  }
+  :global(.eco-erp-note strong) { color: var(--brand-600); }
+</style>
