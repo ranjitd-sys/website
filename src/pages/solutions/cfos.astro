@@ -2,8 +2,6 @@
 import PageLayout from "@/layouts/PageLayout.astro"
 import CfoHero from "@/components/pages/CfoHero.astro"
 import CfoProblem from "@/components/pages/CfoProblem.astro"
-import CfoFinancialView from "@/components/pages/CfoFinancialView.astro"
-import CfoExecutiveDashboard from "@/components/pages/CfoExecutiveDashboard.astro"
 import CfoRealization from "@/components/pages/CfoRealization.astro"
 import CfoProfitability from "@/components/pages/CfoProfitability.astro"
 import CfoReconciliation from "@/components/pages/CfoReconciliation.astro"
@@ -15,10 +13,7 @@ import CfoBusinessToTransaction from "@/components/pages/CfoBusinessToTransactio
 import CfoPlatformErpConnector from "@/components/pages/CfoPlatformErpConnector.astro"
 import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
 import CustomerProof from "@/components/pages/CustomerProof.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
-import HeroDashboard from "@/components/landing/HeroDashboard.astro"
-import DashboardHero from "@/components/pages/DashboardHero.astro"
 import DashboardPreview from "@/components/landing/sections/DashboardPreview.astro"
 
 const personaData = [
@@ -171,13 +166,6 @@ const faqs = [
     </div>
   </section>
 
-  <!-- 09 — ACCOUNTING CONFIDENCE -->
-  <section class="section-band">
-    <div class="sec">
-      <CfoAccountingConfidence />
-    </div>
-  </section>
-
   <!-- 10 — MULTI-DIMENSIONAL VISIBILITY -->
   <section>
     <div class="sec">
@@ -302,6 +290,14 @@ const faqs = [
 </PageLayout>
 
 <style is:global>
+  /* Normalize section rhythm */
+  .cfo-section .sec,
+  main > section > .sec {
+    padding-block: clamp(3.5rem, 6vh, 5.5rem);
+  }
+  .section-band {
+    padding-block: 0;
+  }
   .cfo-cta {
     position: relative;
     overflow: hidden;

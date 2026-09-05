@@ -64,23 +64,3 @@ const dimensions = [
     .cfmv-grid { grid-template-columns: 1fr; }
   }
 </style>
-
-<section class="cfmv">
-  <div class="mx-auto max-w-6xl px-6 reveal">
-    <h2 class="cfmv-title">Look at the business from the dimensions that matter.</h2>
-    <p class="cfmv-lead">
-      Slice revenue, profit, and realization across any combination of dimensions. Every view ties back to the underlying ecommerce transactions and accounting entries.
-    </p>
-    <div class="cfmv-grid">
-      {dimensions.map((d) => (
-        <div class="cfmv-card">
-          <div class="dim">{d.title}</div>
-          <div class="val">Configurable</div>
-          <ul>
-            {d.values.map((v) => <li>{v}</li>)}
-          </ul>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
