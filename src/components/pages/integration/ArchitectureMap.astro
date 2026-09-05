@@ -1,35 +1,92 @@
 ---
+// ArchitectureSection.astro
+
 const inputs = [
-  { name: "Marketplaces", items: ["Amazon", "Flipkart", "Shopify", "Meesho"] },
-  { name: "Selling Platforms", items: ["Website", "D2C store"] },
-  { name: "Payment Systems", items: ["Gateways", "Settlements"] },
+  { name: "Marketplaces", icon: "bag", items: ["Amazon", "Flipkart", "Meesho", "Myntra", "Ajio", "JioMart"] },
+  { name: "Selling Platforms", icon: "globe", items: ["Website", "D2C Store", "Shopify"] },
+  { name: "Shipping Partners", icon: "truck", items: ["Shiprocket", "Delhivery", "Ekart", "Blue Dart", "Xpressbees"] },
+  { name: "Payment Gateways", icon: "card", items: ["Razorpay", "PayU", "Cashfree", "PhonePe", "Paytm"] },
 ]
 
-const platformRows = [
-  { label: "Platform", items: ["Dashboard", "Profitability", "Payment Reconciliation", "Reports"] },
-  { label: "ERP Connector", items: ["Accounting", "GST", "Inventory", "Stock Transfers"] },
+const coreEngineModules = [
+  { 
+    category: "Financial Engine", 
+    badge: "Real-time sync",
+    items: [
+      { name: "Dashboard", desc: "Live Metrics" }, 
+      { name: "Profitability", desc: "SKU-level margins" }, 
+      { name: "Payment Reconciliation", desc: "Gateway matching" }, 
+      { name: "Reports", desc: "MIS & P&L" }
+    ] 
+  },
+  { 
+    category: "ERP Connector", 
+    badge: "Automated posting",
+    items: [
+      { name: "Accounting", desc: "Voucher automation" }, 
+      { name: "GST", desc: "Tax filing readiness" }, 
+      { name: "Inventory", desc: "Stock valuation" }, 
+      { name: "Stock Transfers", desc: "Multi-warehouse" }
+    ] 
+  },
 ]
 
-const erps = ["Tally", "SAP", "Zoho"]
+const erpBoxes = [
+  { name: "Tally Prime", icon: "book", version: "v3.0+", status: "Active Sync", items: ["GST Invoicing", "Voucher Sync", "Ledger Mapping"] },
+  { name: "SAP S/4HANA", icon: "server", version: "Enterprise", status: "Real-time API", items: ["Enterprise Ledger", "Auto Journals", "Multi-Currency"] },
+  { name: "Zoho Books", icon: "cloud", version: "Cloud API", status: "Connected", items: ["Cloud Accounts", "Bank Feed Sync", "Tax Compliance"] },
+]
 ---
 
 <section class="arch section-band">
   <div class="sec">
-    <span class="eyebrow">DEEPECOM ARCHITECTURE</span>
-    <h2 class="h2-md arch-title">Everything connects to one financial layer.</h2>
+    <div class="arch-badge-pill">
+      <span class="pulsing-dot"></span>
+      <span>UNIFIED FINANCIAL LAYER</span>
+    </div>
+    <h2 class="h2-md arch-title">Everything connects to one intelligent core.</h2>
     <p class="lead arch-lead">
-      Inputs come in one way. Inside DeepEcom they become both a clear view of the business and
-      the detailed accounting your ERP needs.
+      Raw data flows in from all your channels. DeepEcom normalizes, reconciles, and transforms it into audit-ready accounting entries instantly.
     </p>
   </div>
 
-  <div class="arch-map reveal">
+  <div class="arch-map reveal" id="arch-map">
+    <!-- SVG connector canvas -->
+    <svg class="arch-connector-canvas" id="arch-connector-svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="arch-in-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c7c9d9" stop-opacity="0.35" />
+          <stop offset="100%" stop-color="#533afd" stop-opacity="0.9" />
+        </linearGradient>
+        <linearGradient id="arch-out-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#533afd" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#462ce0" stop-opacity="0.6" />
+        </linearGradient>
+        <marker id="arch-arrow-in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#533afd" />
+        </marker>
+        <marker id="arch-arrow-out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#462ce0" />
+        </marker>
+      </defs>
+    </svg>
+
     <!-- INPUTS -->
     <div class="arch-col">
-      <span class="arch-col-label">INPUTS</span>
+      <span class="arch-col-label">DATA SOURCES & CHANNELS</span>
       {inputs.map((g) => (
-        <div class="arch-group">
-          <span class="arch-group-name">{g.name}</span>
+        <div class="arch-group" data-card="source">
+          <span class="arch-group-name">
+            <span class="arch-group-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                {g.icon === "bag" && (<><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></>)}
+                {g.icon === "globe" && (<><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></>)}
+                {g.icon === "truck" && (<><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></>)}
+                {g.icon === "card" && (<><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></>)}
+              </svg>
+            </span>
+            {g.name}
+          </span>
           <div class="arch-tags">
             {g.items.map((i) => <span class="arch-tag in">{i}</span>)}
           </div>
@@ -37,141 +94,557 @@ const erps = ["Tally", "SAP", "Zoho"]
       ))}
     </div>
 
-    <!-- ARROWS -->
+    <!-- Mobile-only flow arrow -->
     <div class="arch-flow" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </div>
 
-    <!-- DEEPECOM -->
-    <div class="arch-core">
-      <span class="arch-core-name">DEEPECOM</span>
+    <!-- DEEPECOM CORE (Fully enhanced modern SaaS look) -->
+    <div class="arch-core" id="core-box">
+      <div class="arch-core-header">
+        <div class="core-brand-group">
+          <div class="core-logo-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <span class="arch-core-name">DEEPECOM CORE</span>
+            <span class="arch-core-sub">Autonomous Financial Engine</span>
+          </div>
+        </div>
+    
+      </div>
+
       <div class="arch-rows">
-        {platformRows.map((r) => (
+        {coreEngineModules.map((mod) => (
           <div class="arch-row">
-            <span class="arch-row-label">{r.label}</span>
-            <div class="arch-tags arch-tags-stack">
-              {r.items.map((i) => <span class="arch-tag core">{i}</span>)}
+            <div class="arch-row-top">
+              <span class="arch-row-label">{mod.category}</span>
+              <span class="arch-row-badge">{mod.badge}</span>
+            </div>
+            <div class="arch-grid-features">
+              {mod.items.map((item) => (
+                <div class="core-feature-card">
+                  <span class="feature-title">{item.name}</span>
+                  <span class="feature-desc">{item.desc}</span>
+                </div>
+              ))}
             </div>
           </div>
         ))}
       </div>
     </div>
 
-    <!-- ARROWS -->
     <div class="arch-flow arch-flow-accent" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
     </div>
 
-    <!-- ERP -->
+    <!-- ERP INTEGRATIONS (Structured & High-End) -->
     <div class="arch-col arch-col-out">
-      <span class="arch-col-label">ERP</span>
-      <div class="arch-group">
-        <div class="arch-tags arch-tags-stack">
-          {erps.map((i) => <span class="arch-tag out">{i}</span>)}
+      <span class="arch-col-label">ERP & DESTINATIONS</span>
+      {erpBoxes.map((g) => (
+        <div class="arch-group arch-erp-group" data-card="output">
+          <div class="erp-card-header">
+            <span class="arch-group-name">
+              <span class="arch-group-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  {g.icon === "book" && (<><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h12"/></>)}
+                  {g.icon === "server" && (<><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></>)}
+                  {g.icon === "cloud" && (<><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></>)}
+                </svg>
+              </span>
+              {g.name}
+            </span>
+            <span class="erp-version-badge">{g.version}</span>
+          </div>
+          <div class="arch-tags">
+            {g.items.map((i) => <span class="arch-tag out">{i}</span>)}
+          </div>
         </div>
-      </div>
+      ))}
     </div>
   </div>
 
   <style>
+    /* Section & Container Polish */
+    .arch.section-band {
+      background: linear-gradient(180deg, #fafafa 0%, #f4f5f7 100%);
+      padding: clamp(3rem, 6vh, 6rem) 0;
+      overflow: hidden;
+    }
+
+    .arch-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(83, 58, 253, 0.08);
+      border: 1px solid rgba(83, 58, 253, 0.2);
+      padding: 0.35rem 0.85rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--brand-600, #533afd);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .pulsing-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--brand-500, #533afd);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(83, 58, 253, 0.4);
+      animation: pulseGlow 2s infinite;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(83, 58, 253, 0.6); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(83, 58, 253, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(83, 58, 253, 0); }
+    }
+
     :global(.arch-map) {
-      max-width: var(--container-wide);
+      position: relative;
+      max-width: 1200px;
       margin-inline: auto;
-      padding-inline: var(--space-gutter);
-      padding-bottom: clamp(1.75rem, 3.4vh, 3rem);
+      padding-inline: var(--space-gutter, 1.5rem);
       display: grid;
       grid-template-columns: 1fr;
       align-items: center;
       justify-items: center;
-      gap: 1rem;
+      gap: 1.5rem;
     }
+
+    :global(.arch-connector-canvas) {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: visible;
+      display: none;
+    }
+
+    :global(.arch-line) {
+      fill: none;
+      stroke-width: 2px;
+      stroke-linecap: round;
+      stroke-dasharray: 4 8;
+      opacity: 0.85;
+      animation: archFlowAnim 12s linear infinite;
+    }
+
+    @keyframes archFlowAnim {
+      from { stroke-dashoffset: 200; }
+      to { stroke-dashoffset: 0; }
+    }
+
+    :global(.arch-col),
+    :global(.arch-core),
+    :global(.arch-flow) {
+      position: relative;
+      z-index: 1;
+    }
+
     :global(.arch-col) {
       width: 100%;
-      max-width: 20rem;
+      max-width: 22rem;
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
+      gap: 1rem;
     }
-    :global(.arch-col-out) { align-items: center; }
+
     :global(.arch-col-label) {
       font-size: 0.72rem;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ink-400);
+      color: #8c90a4;
+      margin-bottom: -0.25rem;
     }
+
+    /* Input & Output Card Styles */
     :global(.arch-group) {
-      background: #fff;
-      border: 1px solid var(--ink-200);
-      border-radius: 1rem;
-      padding: 0.8rem 1rem;
-      box-shadow: var(--shadow-card);
+      background: #ffffff;
+      border: 1px solid rgba(220, 224, 232, 0.7);
+      border-radius: 1.15rem;
+      padding: 1rem 1.15rem;
+      box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.06);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
+
+    :global(.arch-group:hover) {
+      border-color: rgba(83, 58, 253, 0.35);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px -12px rgba(83, 58, 253, 0.15);
+    }
+
     :global(.arch-group-name) {
-      display: block;
-      font-size: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.78rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: var(--ink-500);
-      margin-bottom: 0.55rem;
+      color: #475569;
+      margin-bottom: 0.75rem;
     }
-    :global(.arch-tags) { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    :global(.arch-tags-stack) { flex-direction: column; align-items: center; gap: 0.45rem; }
+
+    :global(.arch-group-icon) {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #533afd;
+      background: rgba(83, 58, 253, 0.08);
+      border-radius: 7px;
+    }
+
+    :global(.arch-group-icon svg) { width: 14px; height: 14px; }
+
+    :global(.arch-tags) { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+
     :global(.arch-tag) {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
       border-radius: 8px;
       padding: 0.4rem 0.75rem;
+      transition: all 0.15s ease;
     }
-    :global(.arch-tag.in) { color: var(--ink-600); background: var(--ink-50); border: 1px solid var(--ink-100); }
-    :global(.arch-tag.core) { color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); }
-    :global(.arch-tag.out) { color: var(--brand-700); background: var(--brand-50); border: 1px solid var(--brand-200); }
 
-    :global(.arch-flow) { width: 26px; height: 26px; color: var(--ink-400); transform: rotate(90deg); }
+    :global(.arch-tag.in) {
+      color: #334155;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    :global(.arch-tag.in:hover) {
+      background: rgba(83, 58, 253, 0.04);
+      border-color: rgba(83, 58, 253, 0.25);
+      color: #533afd;
+    }
+
+    :global(.arch-tag.out) {
+      color: #4338ca;
+      background: rgba(83, 58, 253, 0.05);
+      border: 1px solid rgba(83, 58, 253, 0.15);
+      font-weight: 600;
+    }
+    :global(.arch-tag.out:hover) {
+      background: rgba(83, 58, 253, 0.1);
+      border-color: rgba(83, 58, 253, 0.3);
+    }
+
+    .erp-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .erp-card-header :global(.arch-group-name) {
+      margin-bottom: 0;
+    }
+
+    .erp-version-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: #f1f5f9;
+      color: #64748b;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    /* Mobile flow arrows */
+    :global(.arch-flow) { width: 28px; height: 28px; color: #94a3b8; transform: rotate(90deg); flex-shrink: 0; }
     :global(.arch-flow svg) { width: 22px; height: 22px; }
-    :global(.arch-flow-accent) { color: var(--brand-500); }
+    :global(.arch-flow-accent) { color: #533afd; }
 
+    /* ULTRA-MODERN SAAS CENTER CORE */
     :global(.arch-core) {
+      position: relative;
       width: 100%;
-      max-width: 26rem;
-      padding: 1.2rem;
-      border-radius: 1.25rem;
-      background: linear-gradient(135deg, #533afd 0%, #462ce0 100%);
-      box-shadow: 0 18px 44px -12px rgba(83, 58, 253, 0.5);
+      max-width: 28rem;
+      padding: 1.6rem;
+      border-radius: 1.5rem;
+      background: linear-gradient(145deg, #4f46e5 0%, #3730a3 100%);
+      box-shadow: 0 25px 60px -15px rgba(79, 70, 229, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
+
+    :global(.arch-core::before) {
+      content: "";
+      position: absolute;
+      inset: -50% -50% auto auto;
+      width: 16rem;
+      height: 16rem;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 70%);
+      pointer-events: none;
+    }
+
+    .arch-core-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .core-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .core-logo-badge {
+      width: 36px;
+      height: 36px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    .core-logo-badge svg { width: 18px; height: 18px; }
+
     :global(.arch-core-name) {
       display: block;
-      text-align: center;
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 800;
       letter-spacing: 0.08em;
-      margin-bottom: 0.85rem;
+      line-height: 1.2;
     }
-    :global(.arch-row) {
-      text-align: center;
-      padding: 0.75rem;
-      border-radius: 0.9rem;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.16);
-    }
-    :global(.arch-row + .arch-row) { margin-top: 0.65rem; }
-    :global(.arch-row-label) {
+
+    .arch-core-sub {
       display: block;
-      color: rgba(255,255,255,0.8);
-      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    .core-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 2rem;
+      color: #34d399;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      background: #34d399;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #34d399;
+    }
+
+    :global(.arch-rows) {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    :global(.arch-row) {
+      padding: 0.95rem;
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      backdrop-filter: blur(8px);
+      transition: background-color 0.2s ease;
+    }
+
+    :global(.arch-row:hover) {
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .arch-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.65rem;
+    }
+
+    :global(.arch-row-label) {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 0.55rem;
     }
 
+    .arch-row-badge {
+      font-size: 0.62rem;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.85);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    .arch-grid-features {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .core-feature-card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      padding: 0.55rem 0.7rem;
+      transition: all 0.15s ease;
+    }
+
+    .core-feature-card:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .feature-title {
+      display: block;
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .feature-desc {
+      display: block;
+      color: rgba(255, 255, 255, 0.65);
+      font-size: 0.68rem;
+      font-weight: 400;
+      margin-top: 0.1rem;
+    }
+
+    /* Desktop Viewport Alignment */
     @media (min-width: 48rem) {
-      :global(.arch-map) { grid-template-columns: 1fr auto 1.2fr auto 1fr; }
-      :global(.arch-flow) { transform: none; }
+      :global(.arch-map) {
+        grid-template-columns: 1fr 56px 1.3fr 56px 1fr;
+        column-gap: 1.5rem;
+        row-gap: 1rem;
+        align-items: stretch;
+      }
+      :global(.arch-connector-canvas) { display: block; }
+      :global(.arch-flow) {
+        transform: none;
+        margin-top: 2.5rem;
+        opacity: 0;
+      }
       :global(.arch-map > *) { width: 100%; }
-      :global(.arch-col-out .arch-tags) { flex-direction: column; }
+
+      /* Balance right ERP column height with the center core */
+      :global(.arch-col.arch-col-out) {
+        justify-content: space-between;
+        padding-top: 1.5rem;
+        padding-bottom: 0.3rem;
+      }
     }
   </style>
+
+  <script>
+    function initArchFlow(root: HTMLElement) {
+      const svg = root.querySelector<SVGSVGElement>("#arch-connector-svg");
+      const core = root.querySelector<HTMLElement>("#core-box") ;
+      if (!svg || !core) return;
+
+      const defs = svg.querySelector("defs")!;
+
+      function relRect(el: Element, containerRect: DOMRect) {
+        const r = el.getBoundingClientRect();
+        return {
+          left: r.left - containerRect.left,
+          right: r.right - containerRect.left,
+          cy: r.top - containerRect.top + r.height / 2,
+        };
+      }
+
+      function curve(x1: number, y1: number, x2: number, y2: number) {
+        const midX = (x1 + x2) / 2;
+        return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+      }
+
+      function isDesktop() {
+        return window.matchMedia("(min-width: 48rem)").matches;
+      }
+
+      function addParticle(color: string, dur: string, delay: number, d: string) {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("r", "3");
+        circle.setAttribute("fill", color);
+        circle.setAttribute("opacity", "0.9");
+        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+        anim.setAttribute("dur", dur);
+        anim.setAttribute("repeatCount", "indefinite");
+        anim.setAttribute("begin", `${delay}s`);
+        anim.setAttribute("path", d);
+        circle.appendChild(anim);
+        svg!.appendChild(circle);
+      }
+
+      function render() {
+        const containerRect = root.getBoundingClientRect();
+        svg!.setAttribute("viewBox", `0 0 ${containerRect.width} ${containerRect.height}`);
+
+        Array.from(svg!.children).forEach((child) => {
+          if (child !== defs) svg!.removeChild(child);
+        });
+
+        if (!isDesktop()) return;
+
+        const coreRect = relRect(core , containerRect);
+        const sources = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));
+        const outputs = Array.from(root.querySelectorAll<HTMLElement>('[data-card="output"]'));
+
+        sources.forEach((el, i) => {
+          const r = relRect(el, containerRect);
+          const d = curve(r.right, r.cy, coreRect.left - 6, coreRect.cy);
+          const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          p.setAttribute("class", "arch-line");
+          p.setAttribute("d", d);
+          p.setAttribute("stroke", "url(#arch-in-grad)");
+          p.setAttribute("marker-end", "url(#arch-arrow-in)");
+          svg!.appendChild(p);
+          addParticle("#533afd", "2.8s", i * 0.3, d);
+        });
+
+        outputs.forEach((el, i) => {
+          const r = relRect(el, containerRect);
+          const d = curve(coreRect.right + 6, coreRect.cy, r.left, r.cy);
+          const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          p.setAttribute("class", "arch-line");
+          p.setAttribute("d", d);
+          p.setAttribute("stroke", "url(#arch-out-grad)");
+          p.setAttribute("marker-end", "url(#arch-arrow-out)");
+          svg!.appendChild(p);
+          addParticle("#462ce0", "2.4s", i * 0.3, d);
+        });
+      }
+
+      render();
+      const ro = new ResizeObserver(render);
+      ro.observe(root);
+      window.addEventListener("resize", render);
+      window.setTimeout(render, 150);
+    }
+
+    document.querySelectorAll<HTMLElement>("#arch-map").forEach(initArchFlow);
+  </script>
 </section>

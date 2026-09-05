@@ -4,133 +4,334 @@ const clusters = [
     label: "SELL",
     tone: "sell",
     items: ["Website", "Amazon", "Flipkart", "Shopify"],
+    desc: "Fragmented storefronts & marketplaces"
   },
   {
     label: "COLLECT",
     tone: "collect",
     items: ["Payments", "Settlements", "Fees", "Refunds"],
+    desc: "Unsynced payment gateways & payouts"
   },
   {
     label: "ACCOUNT",
     tone: "account",
     items: ["Tally", "SAP", "Zoho", "Ledgers"],
+    desc: "Disconnected books & ERP ledgers"
   },
 ]
 
-const mismatches = ["Different reports", "Different formats", "Different numbers", "Different timelines"]
+const mismatches = [
+  "Different reports", 
+  "Different formats", 
+  "Different numbers", 
+  "Different timelines"
+]
 ---
 
-<section class="fwall-section section-band reveal">
+<section class="fwall-section section-band reveal" aria-label="The Problem: Fragmented e-commerce systems">
   <div class="sec">
-    <span class="eyebrow">THE PROBLEM</span>
+    <div class="fwall-badge">
+      <span class="pulse-dot"></span>
+      <span>THE PROBLEM</span>
+    </div>
     <h2 class="h2-md fwall-title">Every new channel adds another system to manage.</h2>
     <p class="lead fwall-lead">
-      Selling across more channels usually means more dashboards, more exports and more manual
-      stitching. Each one reports the same business a slightly different way.
+      Selling across more channels usually means more dashboards, more exports, and more manual 
+      stitching. Each one reports your business a slightly different way.
     </p>
   </div>
 
   <div class="fwall-canvas reveal" data-delay="120">
+    <!-- Connecting Ambient Vector Grid behind cards -->
+    <div class="fwall-matrix-bg" aria-hidden="true"></div>
+
     <div class="fwall-grid">
-      {clusters.map((c) => (
-        <div class="fwall-cluster">
-          <span class={`fwall-clabel ${c.tone}`}>{c.label}</span>
+      {clusters.map((c, colIndex) => (
+        <div class={`fwall-cluster ${c.tone}`} style={`--col: ${colIndex}`}>
+          <div class="cluster-header">
+            <span class={`fwall-clabel ${c.tone}`}>{c.label}</span>
+            <span class="cluster-desc">{c.desc}</span>
+          </div>
+          
           <div class="fwall-items">
             {c.items.map((item, i) => (
-              <span class={`fwall-chip ${c.tone}`} style={`--i:${i}`}>{item}</span>
+              <div class={`fwall-chip ${c.tone}`} style={`--i:${i}`}>
+                <span class="chip-status-dot"></span>
+                <span class="chip-text">{item}</span>
+              </div>
             ))}
           </div>
         </div>
       ))}
     </div>
-    <div class="fwall-divider" aria-hidden="true"></div>
-    <div class="fwall-broken">
-      {mismatches.map((m, i) => (
-        <span class="fwall-mismatch" style={`--i:${i}`}>{m}</span>
-      ))}
+
+    <!-- Friction/Mismatch Indicator Bar -->
+    <div class="fwall-friction-zone">
+      <div class="friction-line" aria-hidden="true"></div>
+      <div class="fwall-broken">
+        {mismatches.map((m, i) => (
+          <div class="fwall-mismatch" style={`--i:${i}`}>
+            <svg class="mismatch-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor">
+              <path d="M12 4L4 12M4 4l8 8" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>{m}</span>
+          </div>
+        ))}
+      </div>
+      <div class="friction-line" aria-hidden="true"></div>
     </div>
-    <p class="fwall-caption">
-      The systems don't connect. So the numbers don't line up — and someone has to make them.
-    </p>
+
+    <div class="fwall-caption-box">
+      <p class="fwall-caption">
+        <strong>The systems don't connect.</strong> So the numbers don't line up — and someone has to spend hours making them match.
+      </p>
+    </div>
   </div>
 
   <style>
-    :global(.fwall-section) { border-block: 1px solid var(--ink-100); }
-    :global(.fwall-title) { margin-top: 0.8rem; max-width: 42rem; }
-    :global(.fwall-lead) { margin-top: 0.85rem; max-width: 40rem; }
+    :global(.fwall-section) { 
+      border-block: 1px solid var(--ink-100); 
+      background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+      position: relative;
+      overflow: hidden;
+    }
 
-    :global(.fwall-canvas) {
-      max-width: var(--container-wide);
-      margin-inline: auto;
-      padding-inline: var(--space-gutter);
-      padding-bottom: clamp(2.5rem, 5vh, 4rem);
-    }
-    :global(.fwall-grid) {
-      display: grid;
-      gap: 1.1rem;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 48rem) {
-      :global(.fwall-grid) { grid-template-columns: repeat(3, 1fr); }
-    }
-    :global(.fwall-cluster) {
-      border: 1px solid var(--ink-200);
-      border-radius: 1rem;
-      background: #fff;
-      box-shadow: var(--shadow-card);
-      padding: 1.1rem 1.2rem 1.3rem;
-    }
-    :global(.fwall-clabel) {
+    :global(.fwall-badge) {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      background: var(--brand-50, #eef2ff);
+      border: 1px solid var(--brand-100, #e0e7ff);
+      border-radius: 999px;
       font-size: 0.68rem;
       font-weight: 800;
       letter-spacing: 0.12em;
-      display: inline-block;
-      padding: 0.28rem 0.6rem;
+      color: var(--brand-700, #4f46e5);
+      margin-bottom: 0.5rem;
+    }
+
+    :global(.pulse-dot) {
+      width: 6px;
+      height: 6px;
+      background: var(--brand-600, #4f46e5);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--brand-600, #4f46e5);
+      animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+      0%, 100% { opacity: 0.4; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+
+    :global(.fwall-title) { margin-top: 0.4rem; max-width: 44rem; }
+    :global(.fwall-lead) { margin-top: 0.85rem; max-width: 42rem; }
+
+    :global(.fwall-canvas) {
+      position: relative;
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      margin-top: 2.5rem;
+      padding-inline: var(--space-gutter);
+      padding-bottom: clamp(3rem, 6vh, 5rem);
+    }
+
+    /* Ambient Matrix background grid */
+    :global(.fwall-matrix-bg) {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+      background-size: 24px 24px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    :global(.fwall-grid) {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 48rem) {
+      :global(.fwall-grid) { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    :global(.fwall-cluster) {
+      border: 1px solid var(--ink-200, #e2e8f0);
+      border-radius: 1.25rem;
+      background: #ffffff;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+      padding: 1.5rem;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    :global(.fwall-cluster:hover) {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.08);
+      border-color: var(--ink-300, #cbd5e1);
+    }
+
+    :global(.fwall-cluster::before) {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+    :global(.fwall-cluster.sell::before) { background: var(--brand-600, #4f46e5); }
+    :global(.fwall-cluster.collect::before) { background: #64748b; }
+    :global(.fwall-cluster.account::before) { background: #0284c7; }
+
+    :global(.cluster-header) {
+      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    :global(.fwall-clabel) {
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.75rem;
       border-radius: 999px;
-      margin-bottom: 0.85rem;
+      width: fit-content;
     }
-    :global(.fwall-clabel.sell) { background: var(--brand-50); color: var(--brand-700); }
-    :global(.fwall-clabel.collect) { background: var(--ink-100); color: var(--ink-600); }
-    :global(.fwall-clabel.account) { background: #eef6ff; color: #1e5fb0; }
+    :global(.fwall-clabel.sell) { background: var(--brand-50, #eef2ff); color: var(--brand-700, #4338ca); }
+    :global(.fwall-clabel.collect) { background: var(--ink-100, #f1f5f9); color: var(--ink-700, #334155); }
+    :global(.fwall-clabel.account) { background: #e0f2fe; color: #0369a1; }
 
-    :global(.fwall-items) { display: flex; flex-direction: column; gap: 0.5rem; }
+    :global(.cluster-desc) {
+      font-size: 0.75rem;
+      color: var(--ink-400, #94a3b8);
+      font-weight: 500;
+      margin-top: 0.2rem;
+    }
+
+    :global(.fwall-items) { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 0.65rem; 
+    }
+
     :global(.fwall-chip) {
-      display: block;
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.88rem;
       font-weight: 600;
-      color: var(--ink-700, #334155);
-      background: var(--ink-50);
-      border: 1px solid var(--ink-100);
-      border-radius: 9px;
-      padding: 0.55rem 0.8rem;
+      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      transition: all 0.2s ease;
     }
-    :global(.fwall-chip.sell) { background: var(--brand-50); border-color: var(--brand-100); color: var(--brand-800); }
-    :global(.fwall-chip.collect) { background: var(--ink-50); border-color: var(--ink-200); }
-    :global(.fwall-chip.account) { background: #f3f9ff; border-color: #dbeafe; color: #17468f; }
 
-    /* what sits between the clusters */
+    :global(.chip-status-dot) {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.4;
+    }
+
+    :global(.fwall-chip.sell) { 
+      background: var(--brand-50, #eef2ff); 
+      border: 1px solid var(--brand-100, #e0e7ff); 
+      color: var(--brand-900, #312e81); 
+    }
+    :global(.fwall-chip.collect) { 
+      background: var(--ink-50, #f8fafc); 
+      border: 1px solid var(--ink-200, #e2e8f0); 
+      color: var(--ink-800, #1e293b);
+    }
+    :global(.fwall-chip.account) { 
+      background: #f0f9ff; 
+      border: 1px solid #bae6fd; 
+      color: #0369a1; 
+    }
+
+    /* Friction Zone & Mismatches */
+    :global(.fwall-friction-zone) {
+      position: relative;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    :global(.friction-line) {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--ink-200, #cbd5e1), transparent);
+    }
+
     :global(.fwall-broken) {
-      margin-top: 1.25rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    :global(.fwall-mismatch) {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #b91c1c;
+      background: #fef2f2;
+      border: 1px dashed #fecaca;
+      border-radius: 999px;
+      padding: 0.4rem 0.95rem;
+      box-shadow: 0 2px 4px rgba(185, 28, 28, 0.03);
+      animation: fadeInMismatch 0.5s ease-out calc(var(--i) * 0.1s) backwards;
+    }
+
+    :global(.mismatch-icon) {
+      width: 13px;
+      height: 13px;
+      color: #ef4444;
+      flex-shrink: 0;
+    }
+
+    :global(.fwall-caption-box) {
+      margin-top: 1.5rem;
+      display: flex;
       justify-content: center;
     }
-    :global(.fwall-mismatch) {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--ink-500);
-      background: #fff;
-      border: 1px dashed var(--ink-300, #cbd5e1);
-      border-radius: 999px;
-      padding: 0.35rem 0.85rem;
-      opacity: 0.7;
-    }
+
     :global(.fwall-caption) {
-      margin-top: 1rem;
       text-align: center;
-      font-size: 0.95rem;
-      color: var(--ink-500);
+      font-size: 1.02rem;
+      color: var(--ink-600, #475569);
+      max-width: 36rem;
+      background: #ffffff;
+      border: 1px solid var(--ink-200, #e2e8f0);
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    }
+
+    :global(.fwall-caption strong) {
+      color: var(--ink-900, #0f172a);
+      font-weight: 700;
+    }
+
+    @keyframes fadeInMismatch {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 48rem) {
+      :global(.friction-line) { display: none; }
     }
   </style>
 </section>

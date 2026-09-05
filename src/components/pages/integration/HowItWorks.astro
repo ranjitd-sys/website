@@ -1,4 +1,6 @@
 ---
+import PlatformErpConnector from "../PlatformErpConnector.astro";
+
 const steps = [
   { n: "01", title: "Choose your systems", desc: "Select the marketplaces, payment systems and ERP your business already runs on." },
   { n: "02", title: "Connect", desc: "Connect the supported systems to DeepEcom — the data they hold starts flowing in." },
@@ -15,17 +17,7 @@ const steps = [
       <h2 class="h2-md how-title">Connect your ecosystem in a few steps.</h2>
     </div>
 
-    <ol class="how-steps">
-      {steps.map((s, i) => (
-        <li class="how-step reveal" style={`--d:${i * 70}`} data-delay={i * 70}>
-          <span class="how-num">{s.n}</span>
-          <div>
-            <div class="how-title-sub">{s.title}</div>
-            <p class="how-desc">{s.desc}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
+    <PlatformErpConnector/>
   </div>
 
   <style>

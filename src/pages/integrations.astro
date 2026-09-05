@@ -45,8 +45,7 @@ const directory = [
   <!-- 05 INTEGRATION CATEGORIES -->
   <EcosystemShowcase />
 
-  <!-- 12 WHAT HAPPENS AFTER -->
-  <AfterConnected />
+
 
   <!-- 13 PRODUCT OUTCOMES -->
   <OutcomeBlocks />
@@ -55,40 +54,9 @@ const directory = [
   <HowItWorks />
 
   <!-- 16 PLATFORM + ERP CONNECTOR -->
-  <PlatformErpCombo />
 
-  <!-- 17 INTEGRATION DIRECTORY -->
-  <section id="directory" class="dir section-band">
-    <div class="sec">
-      <div class="dir-head">
-        <span class="eyebrow eyebrow-center">INTEGRATION DIRECTORY</span>
-        <h2 class="h2-md dir-title">Every integration, in one place.</h2>
-        <p class="lead dir-lead">The supported systems today — and where each one plugs into the DeepEcom layer.</p>
-      </div>
 
-      <div class="dir-panel reveal">
-        <div class="dir-search">
-          <Search size={16} />
-          <input class="dir-input" type="search" placeholder="Search integrations…" aria-label="Search integrations" />
-          <span class="dir-count">{directory.length} integrations</span>
-        </div>
-        <div class="dir-grid">
-          {directory.map((d) => (
-            <a class="dir-card" href={d.href}>
-              <div class="dir-card-top">
-                <span class="dir-name">{d.name}</span>
-                <span class="dir-cat">{d.cat}</span>
-              </div>
-              <div class="dir-cap">
-                {d.cap.split(" · ").map((t) => <span class="dir-tag">{t}</span>)}
-              </div>
-              <span class="dir-link">View integration<ArrowDown size={14} /></span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
+
 
   <!-- 18 FAQ -->
   <section class="faq">
