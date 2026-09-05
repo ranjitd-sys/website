@@ -1,0 +1,105 @@
+---
+const steps = [
+  { label: "DATA COMES TOGETHER", sub: "Marketplaces · Payments · Fees" },
+  { label: "UNDERSTAND", sub: "Dashboard · Profitability" },
+  { label: "RECONCILE", sub: "Payments · Settlements" },
+  { label: "REPORT", sub: "Business Reports" },
+  { label: "ACCOUNT", sub: "Detailed Ecommerce Accounting" },
+  { label: "ERP", sub: "Tally · SAP · Zoho" },
+]
+---
+
+<section class="after section-band">
+  <div class="sec after-head">
+    <span class="eyebrow eyebrow-center">WHAT HAPPENS AFTER</span>
+    <h2 class="h2-md after-title">Connecting systems is only the beginning.</h2>
+    <p class="lead after-lead">
+      Once your systems are connected, the data starts working. It becomes understanding,
+      reconciliation, reporting and accounting — not just a pile of synced records.
+    </p>
+  </div>
+
+  <div class="after-flow reveal">
+    {steps.map((s, i) => (
+      <>
+        <div class="after-node">
+          <span class="after-node-index">{String(i + 1).padStart(2, "0")}</span>
+          <span class="after-node-label">{s.label}</span>
+          <span class="after-node-sub">{s.sub}</span>
+        </div>
+        {i < steps.length - 1 && (
+          <div class="after-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        )}
+      </>
+    ))}
+  </div>
+
+  <style>
+    :global(.after-head) { text-align: center; }
+    :global(.after-title) { margin-top: 0.9rem; max-width: 42rem; margin-inline: auto; }
+    :global(.after-lead) { margin-top: 1rem; max-width: 40rem; margin-inline: auto; }
+
+    :global(.after-flow) {
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      padding-inline: var(--space-gutter);
+      padding-bottom: clamp(2.5rem, 5vh, 4rem);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    :global(.after-node) {
+      width: 100%;
+      max-width: 22rem;
+      text-align: center;
+      background: #fff;
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      box-shadow: var(--shadow-card);
+      padding: 0.85rem 1.15rem;
+    }
+    :global(.after-node-index) {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: var(--brand-500);
+    }
+    :global(.after-node-label) {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: var(--ink-950);
+    }
+    :global(.after-node-sub) {
+      display: block;
+      margin-top: 0.15rem;
+      font-size: 0.75rem;
+      color: var(--ink-500);
+    }
+    :global(.after-arrow) {
+      width: 22px; height: 22px;
+      color: var(--brand-400);
+      transform: rotate(90deg);
+    }
+    :global(.after-arrow svg) { width: 18px; height: 18px; }
+
+    :global(.after-node:nth-of-type(1)) { border-color: var(--ink-300, #cbd5e1); }
+    :global(.after-node:nth-of-type(3)) { border-color: var(--brand-200); }
+    :global(.after-node:last-of-type) { background: linear-gradient(135deg, #533afd, #462ce0); border-color: transparent; }
+    :global(.after-node:last-of-type .after-node-label) { color: #fff; }
+    :global(.after-node:last-of-type .after-node-sub) { color: rgba(255,255,255,0.75); }
+    :global(.after-node:last-of-type .after-node-index) { color: rgba(255,255,255,0.75); }
+
+    @media (min-width: 48rem) {
+      :global(.after-flow) { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 0.35rem; }
+      :global(.after-arrow) { transform: none; }
+      :global(.after-node) { width: auto; flex: 1 1 0; min-width: 9.5rem; max-width: 12.5rem; }
+    }
+  </style>
+</section>

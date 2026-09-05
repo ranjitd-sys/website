@@ -1,0 +1,309 @@
+---
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const leftCluster = [
+  { name: "Amazon", tone: "amazon" },
+  { name: "Flipkart", tone: "flipkart" },
+  { name: "Shopify", tone: "shopify" },
+]
+
+const systems = [
+  "Amazon", "Flipkart", "Shopify", "Payments",
+  "Settlements", "Returns", "Fees", "Inventory",
+  "Tally", "SAP", "Zoho",
+]
+
+const oneView = [
+  "Sales", "Payments", "Profitability", "Reconciliation", "Reports", "Accounting",
+]
+---
+
+<section class="ihero" aria-label="DeepEcom integrations">
+  <div class="ihero-glow" aria-hidden="true"></div>
+
+  <div class="ihero-inner">
+    <!-- LEFT: copy -->
+    <div class="ihero-copy reveal">
+      <span class="eyebrow">INTEGRATIONS</span>
+      <h1 class="ihero-title">
+        Your business runs on many systems.
+        <span class="ihero-accent">Your numbers shouldn't.</span>
+      </h1>
+      <p class="ihero-lead">
+        Connect your selling channels, marketplaces, payment systems and ERP to one financial
+        layer with DeepEcom. Different systems in. One clear financial picture out.
+      </p>
+      <div class="ihero-ctas">
+        <a href="#ecosystem" class={buttonVariants({ size: "lg" })}>
+          Explore Integrations
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class={buttonVariants({ variant: "outline", size: "lg" })}>
+          Book a Demo
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT: drama visual -->
+    <div class="ihero-visual reveal" data-delay="120" aria-label="Many systems connect into DeepEcom, which produces one business view">
+      <svg class="ihero-svg" viewBox="0 0 620 460" fill="none" role="img" aria-hidden="true">
+        <defs>
+          <linearGradient id="ih-conn" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#c3b8ff" stop-opacity="0.4" />
+            <stop offset="1" stop-color="#533afd" />
+          </linearGradient>
+          <radialGradient id="ih-core" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#533afd" stop-opacity="0.32" />
+            <stop offset="1" stop-color="#533afd" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+
+        <!-- connector streams from left cluster into core -->
+        <path class="ih-stream" d="M40 70 C160 70 300 130 312 205" />
+        <path class="ih-stream" d="M40 128 C170 140 300 170 312 212" />
+        <path class="ih-stream" d="M40 190 C170 190 300 210 312 220" />
+        <path class="ih-stream" d="M40 246 C170 240 300 235 312 228" />
+
+        <!-- fragmented system chips (left) -->
+        <g class="ih-frag">
+          <circle cx="120" cy="70" r="4" fill="#533afd" />
+          <circle cx="120" cy="128" r="4" fill="#533afd" />
+          <circle cx="120" cy="190" r="4" fill="#533afd" />
+          <circle cx="120" cy="246" r="4" fill="#533afd" />
+          <circle cx="196" cy="96" r="4" fill="#533afd" opacity="0.55" />
+          <circle cx="196" cy="164" r="4" fill="#533afd" opacity="0.55" />
+          <circle cx="196" cy="224" r="4" fill="#533afd" opacity="0.55" />
+        </g>
+      </svg>
+
+      <!-- right stream outgoing -->
+      <svg class="ihero-svg ihero-svg-right" viewBox="0 0 620 460" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="ih-out" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stop-color="#533afd" />
+            <stop offset="1" stop-color="#c3b8ff" stop-opacity="0.4" />
+          </linearGradient>
+        </defs>
+        <path class="ih-stream ih-stream-out" d="M312 205 C470 120 560 120 588 150" />
+        <path class="ih-stream ih-stream-out" d="M312 212 C470 205 560 205 588 215" />
+        <path class="ih-stream ih-stream-out" d="M312 220 C470 290 560 290 588 280" />
+      </svg>
+
+      <div class="ihero-layout">
+        <!-- fragmented systems (left) -->
+        <div class="ih-cluster ih-left">
+          <span class="ih-cluster-label">MANY SYSTEMS</span>
+          {systems.map((s, i) => (
+            <span class="syschip" style={`--i:${i}`}>{s}</span>
+          ))}
+        </div>
+
+        <!-- core -->
+        <div class="ih-core">
+          <span class="ih-core-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M16 4L28 10L16 16L4 10Z" fill="#fff"/><path d="M4 14L16 20L28 14" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/><path d="M4 18L16 24L28 18" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </span>
+          <span class="ih-core-name">DEEPECOM</span>
+          <span class="ih-core-sub">The accounting layer</span>
+        </div>
+
+        <!-- one business view (right) -->
+        <div class="ih-cluster ih-right">
+          <span class="ih-cluster-label">ONE BUSINESS VIEW</span>
+          <div class="ih-out-grid">
+            {oneView.map((o, i) => (
+              <span class="outchip" style={`--i:${i}`}>{o}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    :global(.ihero) {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: clamp(6rem, 10vh, 7.5rem) 0 clamp(2rem, 4vh, 3.5rem);
+    }
+    :global(.ihero-glow) {
+      position: absolute;
+      inset: -10% -5% auto;
+      z-index: -2;
+      height: 42rem;
+      background:
+        radial-gradient(50rem 26rem at 74% -6%, rgba(83, 58, 253, 0.14), transparent 62%),
+        radial-gradient(38rem 20rem at 12% -4%, rgba(127, 125, 252, 0.1), transparent 58%);
+      pointer-events: none;
+    }
+    :global(.ihero-inner) {
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      padding-inline: var(--space-gutter);
+      display: grid;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    :global(.ihero-copy) { max-width: 40rem; }
+
+    :global(.ihero-title) {
+      margin-top: 0.95rem;
+      font-size: clamp(1.9rem, 4vw, 2.9rem);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+      font-weight: 800;
+      color: var(--ink-950);
+      text-wrap: balance;
+    }
+    :global(.ihero-accent) { color: var(--brand-600); }
+    :global(.ihero-lead) {
+      margin-top: 0.85rem;
+      font-size: clamp(1rem, 1.3vw, 1.15rem);
+      line-height: 1.7;
+      color: var(--ink-500);
+      max-width: 36rem;
+    }
+    :global(.ihero-ctas) {
+      margin-top: 1.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    /* visual layout */
+    :global(.ihero-visual) {
+      position: relative;
+      min-height: 320px;
+    }
+    :global(.ihero-svg) {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      overflow: visible;
+    }
+    :global(.ihero-svg-right) { display: none; }
+    :global(.ih-stream) {
+      stroke: url(#ih-conn);
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 1 0;
+      opacity: 0.5;
+    }
+    :global(.ih-frag circle) {
+      animation: ih-pulse 2.8s ease-in-out infinite;
+    }
+
+    :global(.ihero-layout) {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 42% 26% 32%;
+      align-items: center;
+      gap: 1rem;
+    }
+    :global(.ih-cluster) {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    :global(.ih-left) { align-items: flex-start; }
+    :global(.ih-right) { align-items: flex-start; padding-left: 0.75rem; }
+    :global(.ih-cluster-label) {
+      font-size: 0.66rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-400);
+      margin-bottom: 0.15rem;
+    }
+    :global(.syschip) {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink-600);
+      background: #fff;
+      border: 1px solid var(--ink-200);
+      border-radius: 8px;
+      padding: 0.42rem 0.7rem;
+      box-shadow: var(--shadow-card);
+    }
+    :global(.ih-out-grid) {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.45rem;
+    }
+    :global(.outchip) {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--brand-700, #462ce0);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-200);
+      border-radius: 8px;
+      padding: 0.42rem 0.7rem;
+    }
+    :global(.ih-core) {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 1.6rem 1rem;
+      border-radius: 1.1rem;
+      background: linear-gradient(135deg, #533afd 0%, #462ce0 100%);
+      box-shadow: 0 18px 40px -12px rgba(83, 58, 253, 0.5);
+      text-align: center;
+    }
+    :global(.ih-core::before) {
+      content: "";
+      position: absolute;
+      inset: -3rem -3rem;
+      z-index: -1;
+      background: radial-gradient(closest-side, rgba(83, 58, 253, 0.35), transparent 70%);
+    }
+    :global(.ih-core-mark svg) { width: 26px; height: 26px; }
+    :global(.ih-core-name) {
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+    }
+    :global(.ih-core-sub) {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 60rem) {
+      :global(.ihero-inner) { grid-template-columns: 1fr; }
+      :global(.ih-core) { width: 100%; padding: 1.2rem 1rem; }
+      :global(.ihero-visual) { min-height: 260px; }
+      :global(.ihero-layout) { grid-template-columns: 40% 24% 36%; }
+      :global(.syschip), :global(.outchip) { font-size: 0.72rem; padding: 0.35rem 0.55rem; }
+      :global(.ih-out-grid) { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 38rem) {
+      :global(.ihero-layout) {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 0.9rem;
+        position: static;
+      }
+      :global(.ihero-svg) { display: none; }
+      :global(.ihero-visual) { min-height: 0; }
+      :global(.ih-cluster-label) { display: none; }
+      :global(.ih-left) { flex-direction: row; flex-wrap: wrap; gap: 0.4rem; }
+      :global(.ih-right) { padding-left: 0; }
+    }
+
+    @keyframes ih-pulse {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      :global(.ih-frag circle) { animation: none; }
+      :global(.ih-stream) { animation: none; }
+    }
+  </style>
+</section>

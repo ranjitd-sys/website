@@ -1,0 +1,111 @@
+---
+const platform = ["Dashboard", "Profitability", "Payment Reconciliation", "Reports"]
+const connector = ["Accounting", "GST", "Inventory", "Stock Transfers"]
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<section class="pcombo section-band">
+  <div class="sec">
+    <div class="pcombo-head">
+      <span class="eyebrow eyebrow-center">PLATFORM + ERP CONNECTOR</span>
+      <h2 class="h2-md pcombo-title">One connected ecosystem. Two powerful layers.</h2>
+      <p class="lead pcombo-lead">
+        The Platform helps you understand the business. The ERP Connector puts the detailed
+        ecommerce transactions into the books.
+      </p>
+    </div>
+
+    <div class="pcombo-diagram reveal">
+      <div class="pcombo-row">
+        <span class="pcombo-row-label">DEEPECOM PLATFORM</span>
+        <div class="pcombo-tags">
+          {platform.map((t) => <span class="pcombo-tag">{t}</span>)}
+        </div>
+      </div>
+
+      <div class="pcombo-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+      <div class="pcombo-row pcombo-row-accent">
+        <span class="pcombo-row-label">ERP CONNECTOR</span>
+        <div class="pcombo-tags">
+          {connector.map((t) => <span class="pcombo-tag pcombo-tag-accent">{t}</span>)}
+        </div>
+      </div>
+
+      <div class="pcombo-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+      <div class="pcombo-row">
+        <span class="pcombo-row-label">ERP</span>
+        <div class="pcombo-tags">
+          {erps.map((t) => <span class="pcombo-tag pcombo-tag-erp">{t}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    :global(.pcombo-head) { text-align: center; }
+    :global(.pcombo-title) { margin-top: 0.8rem; max-width: 44rem; margin-inline: auto; }
+    :global(.pcombo-lead) { margin-top: 0.85rem; max-width: 36rem; margin-inline: auto; }
+
+    :global(.pcombo-diagram) {
+      margin-top: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    :global(.pcombo-row) {
+      width: 100%;
+      max-width: 34rem;
+      text-align: center;
+      background: #fff;
+      border: 1px solid var(--ink-200);
+      border-radius: 1.1rem;
+      box-shadow: var(--shadow-card);
+      padding: 0.95rem 1.5rem;
+    }
+    :global(.pcombo-row-accent) {
+      background: linear-gradient(135deg, #533afd, #462ce0);
+      border-color: transparent;
+    }
+    :global(.pcombo-row-label) {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-500);
+      margin-bottom: 0.6rem;
+    }
+    :global(.pcombo-row-accent .pcombo-row-label) { color: rgba(255,255,255,0.8); }
+    :global(.pcombo-tags) { display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; }
+    :global(.pcombo-tag) {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-700, #334155);
+      background: var(--ink-50);
+      border: 1px solid var(--ink-200);
+      border-radius: 8px;
+      padding: 0.4rem 0.8rem;
+    }
+    :global(.pcombo-tag-accent) { color: #fff; background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); }
+    :global(.pcombo-tag-erp) { color: var(--brand-700); background: var(--brand-50); border-color: var(--brand-200); }
+    :global(.pcombo-arrow) {
+      width: 24px; height: 24px;
+      color: var(--brand-400);
+      transform: rotate(90deg);
+    }
+    :global(.pcombo-arrow svg) { width: 20px; height: 20px; }
+
+    @media (min-width: 48rem) {
+      :global(.pcombo-diagram) { flex-direction: row; justify-content: center; }
+      :global(.pcombo-row) { max-width: 22rem; }
+      :global(.pcombo-arrow) { transform: none; }
+    }
+  </style>
+</section>

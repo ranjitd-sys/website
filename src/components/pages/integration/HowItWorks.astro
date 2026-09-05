@@ -1,0 +1,80 @@
+---
+const steps = [
+  { n: "01", title: "Choose your systems", desc: "Select the marketplaces, payment systems and ERP your business already runs on." },
+  { n: "02", title: "Connect", desc: "Connect the supported systems to DeepEcom — the data they hold starts flowing in." },
+  { n: "03", title: "Bring data together", desc: "Orders, settlements, fees and returns become one structured financial record." },
+  { n: "04", title: "Understand", desc: "Get one view of sales, profitability and payments across every channel." },
+  { n: "05", title: "Account", desc: "Send detailed ecommerce accounting to the ERP your books run on." },
+]
+---
+
+<section id="how-it-works" class="how">
+  <div class="sec">
+    <div class="how-head">
+      <span class="eyebrow eyebrow-center">HOW IT WORKS</span>
+      <h2 class="h2-md how-title">Connect your ecosystem in a few steps.</h2>
+    </div>
+
+    <ol class="how-steps">
+      {steps.map((s, i) => (
+        <li class="how-step reveal" style={`--d:${i * 70}`} data-delay={i * 70}>
+          <span class="how-num">{s.n}</span>
+          <div>
+            <div class="how-title-sub">{s.title}</div>
+            <p class="how-desc">{s.desc}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <style>
+    :global(.how) { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
+    :global(.how-head) { text-align: center; }
+    :global(.how-title) { margin-top: 0.8rem; }
+
+    :global(.how-steps) {
+      margin: 1.75rem auto 0;
+      max-width: 52rem;
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    :global(.how-step) {
+      position: relative;
+      display: flex;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--ink-100);
+    }
+    :global(.how-step:last-child) { border-bottom: none; }
+    :global(.how-num) {
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+      color: var(--brand-600);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+    }
+    :global(.how-title-sub) {
+      font-size: 1.06rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink-950);
+    }
+    :global(.how-desc) {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--ink-500);
+      max-width: 34rem;
+    }
+  </style>
+</section>

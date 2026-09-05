@@ -1,0 +1,123 @@
+---
+import { Eye, Scale, TrendingUp, BookOpen } from "lucide-react"
+
+const outcomes = [
+  {
+    icon: Eye,
+    num: "01",
+    title: "UNDERSTAND",
+    desc: "Connected marketplace and commerce data — cleaned, joined and structured so you can actually read it.",
+    line: "Connected data.",
+  },
+  {
+    icon: Scale,
+    num: "02",
+    title: "RECONCILE",
+    desc: "Expected payments matched against received amounts, order by order, so gaps surface instead of hiding.",
+    line: "Expected vs received.",
+  },
+  {
+    icon: TrendingUp,
+    num: "03",
+    title: "PROFITABILITY",
+    desc: "Revenue, fees and costs combined into a true picture of what the business actually makes.",
+    line: "Know what you make.",
+  },
+  {
+    icon: BookOpen,
+    num: "04",
+    title: "ACCOUNT",
+    desc: "Every ecommerce transaction turned into detailed accounting your ERP can post.",
+    line: "Ecommerce → ERP accounting.",
+  },
+]
+---
+
+<section class="outcomes">
+  <div class="sec">
+    <div class="outcomes-head">
+      <span class="eyebrow">PRODUCT OUTCOMES</span>
+      <h2 class="h2-md outcomes-title">Every connection should lead to a business outcome.</h2>
+      <p class="lead outcomes-lead">
+        An integration is only valuable for what it does next. Every system you connect feeds one of
+        the DeepEcom products.
+      </p>
+    </div>
+
+    <div class="outcomes-grid">
+      {outcomes.map((o, i) => {
+        const Icon = o.icon
+        return (
+          <div class="outcome reveal" style={`--d:${i * 80}`} data-delay={i * 80}>
+            <div class="outcome-top">
+              <span class="outcome-num">{o.num}</span>
+              <span class="outcome-icon"><Icon size={20} /></span>
+            </div>
+            <div class="outcome-title">{o.title}</div>
+            <p class="outcome-desc">{o.desc}</p>
+            <div class="outcome-line">{o.line}</div>
+          </div>
+        )
+      })}
+    </div>
+  </div>
+
+  <style>
+    :global(.outcomes) { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
+    :global(.outcomes-head) { max-width: 44rem; }
+    :global(.outcomes-title) { margin-top: 0.8rem; }
+    :global(.outcomes-lead) { margin-top: 0.85rem; max-width: 38rem; }
+
+    :global(.outcomes-grid) {
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 56rem) { :global(.outcomes-grid) { grid-template-columns: repeat(4, 1fr); } }
+    :global(.outcome) {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: var(--shadow-card);
+      padding: 1.2rem 1.3rem;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+    }
+    :global(.outcome:hover) { transform: translateY(-3px); border-color: var(--brand-200); }
+    :global(.outcome-top) { display: flex; align-items: center; justify-content: space-between; }
+    :global(.outcome-num) { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; color: var(--brand-500); }
+    :global(.outcome-icon) {
+      display: grid;
+      place-items: center;
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      color: var(--brand-600);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+    }
+    :global(.outcome-title) {
+      margin-top: 0.9rem;
+      font-size: 1.08rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      color: var(--ink-950);
+    }
+    :global(.outcome-desc) {
+      margin-top: 0.45rem;
+      font-size: 0.875rem;
+      line-height: 1.65;
+      color: var(--ink-500);
+      flex: 1;
+    }
+    :global(.outcome-line) {
+      margin-top: 1rem;
+      padding-top: 0.85rem;
+      border-top: 1px solid var(--ink-100);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--brand-600);
+    }
+  </style>
+</section>

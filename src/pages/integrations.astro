@@ -1,88 +1,267 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import IntegrationHero from "@/components/pages/integration/IntegrationHero.astro"
+import FragmentationWall from "@/components/pages/integration/FragmentationWall.astro"
+import ConnectedLayer from "@/components/pages/integration/ConnectedLayer.astro"
+import ArchitectureMap from "@/components/pages/integration/ArchitectureMap.astro"
+import EcosystemShowcase from "@/components/pages/integration/EcosystemShowcase.astro"
+import AfterConnected from "@/components/pages/integration/AfterConnected.astro"
+import OutcomeBlocks from "@/components/pages/integration/OutcomeBlocks.astro"
+import HowItWorks from "@/components/pages/integration/HowItWorks.astro"
+import PlatformErpCombo from "@/components/pages/integration/PlatformErpCombo.astro"
+import IntegrationFaq from "@/components/landing/integration-faq"
 import { buttonVariants } from "@/components/landing/ui/button"
-import { ArrowRight } from "lucide-react"
-import HeroDiagram from "@/components/landing/HeroDiagram.astro"
-import DeepEcomLayer from "@/components/landing/sections/DeepEcomLayer.astro"
+import { Search, ArrowDown } from "lucide-react"
+import Navbar from "@/components/landing/site-nav"
 
-const features = [
-  {
-    title: "Marketplace Data Aggregation",
-    description: "Connect Amazon, Flipkart, Shopify and other channels into a single layer.",
-    icon: "layers",
-  },
-  {
-    title: "Payment Reconciliation",
-    description: "Match expected settlements to actual payments and flag discrepancies.",
-    icon: "wallet",
-  },
-  {
-    title: "GST-Ready Accounting",
-    description: "Detailed, order-level accounting entries that map to your ERP.",
-    icon: "calculator",
-  },
-  {
-    title: "ERP Posting",
-    description: "Post complete accounting entries directly into Tally, SAP or Zoho.",
-    icon: "building",
-  },
-  {
-    title: "Warehouse & Stock Transfers",
-    description: "Track inventory movement and stock transfers between warehouses.",
-    icon: "boxes",
-  },
-  {
-    title: "TCS & TDS Handling",
-    description: "Ecommerce tax deductions captured and accounted correctly.",
-    icon: "shield",
-  },
+const directory = [
+  { name: "Amazon", cat: "Marketplaces", href: "/integrations/amazon", cap: "Sales · Payments · Reconciliation" },
+  { name: "Flipkart", cat: "Marketplaces", href: "/integrations/flipkart", cap: "Sales · Payments · Reconciliation" },
+  { name: "Shopify", cat: "Marketplaces", href: "/integrations/shopify", cap: "Sales · Payments · Accounting" },
+  { name: "Meesho", cat: "Marketplaces", href: "/integrations/marketplaces", cap: "Sales · Payments" },
+  { name: "Tally", cat: "ERP", href: "/integrations/tally", cap: "Accounting · GST · Inventory" },
+  { name: "SAP", cat: "ERP", href: "/integrations/sap", cap: "Accounting · Posting" },
+  { name: "Zoho Books", cat: "ERP", href: "/integrations/zoho", cap: "Accounting · Posting" },
 ]
-
-const marketplaces = ["Amazon", "Flipkart", "Shopify", "Other Channels"]
-const erps = ["Tally", "SAP", "Zoho"]
 ---
 
 <PageLayout
-  title="Integrations — Your stack, connected."
-  description="DeepEcom connects ecommerce marketplaces to your ERP. Amazon, Flipkart, Shopify and other channels in, detailed accounting out to Tally, SAP and Zoho."
+  title="Ecommerce Integrations — DeepEcom"
+  description="DeepEcom connects your marketplaces, payment systems and ERP into one financial layer. Amazon, Flipkart, Shopify, Tally, SAP, Zoho and more."
 >
-  <PageHero
-    eyebrow="INTEGRATIONS"
-    title="Your stack, connected."
-    lead="DeepEcom sits between your ecommerce marketplaces and your ERP. Marketplace data flows in, and detailed accounting flows out to the systems your finance team already runs on."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
+
+  <!-- 01 HERO -->
+  <IntegrationHero />
+
+  <!-- 02 PROBLEM / CHAOS -->
+  <FragmentationWall />
+
+  <!-- 03 THE CONNECTED LAYER -->
+  <ConnectedLayer />
+
+  <!-- 04 DEEPECOM ARCHITECTURE -->
+  <ArchitectureMap />
+
+  <!-- 05 INTEGRATION CATEGORIES -->
+  <EcosystemShowcase />
+
+  <!-- 12 WHAT HAPPENS AFTER -->
+  <AfterConnected />
+
+  <!-- 13 PRODUCT OUTCOMES -->
+  <OutcomeBlocks />
+
+  <!-- 15 HOW IT WORKS -->
+  <HowItWorks />
+
+  <!-- 16 PLATFORM + ERP CONNECTOR -->
+  <PlatformErpCombo />
+
+  <!-- 17 INTEGRATION DIRECTORY -->
+  <section id="directory" class="dir section-band">
+    <div class="sec">
+      <div class="dir-head">
+        <span class="eyebrow eyebrow-center">INTEGRATION DIRECTORY</span>
+        <h2 class="h2-md dir-title">Every integration, in one place.</h2>
+        <p class="lead dir-lead">The supported systems today — and where each one plugs into the DeepEcom layer.</p>
+      </div>
+
+      <div class="dir-panel reveal">
+        <div class="dir-search">
+          <Search size={16} />
+          <input class="dir-input" type="search" placeholder="Search integrations…" aria-label="Search integrations" />
+          <span class="dir-count">{directory.length} integrations</span>
+        </div>
+        <div class="dir-grid">
+          {directory.map((d) => (
+            <a class="dir-card" href={d.href}>
+              <div class="dir-card-top">
+                <span class="dir-name">{d.name}</span>
+                <span class="dir-cat">{d.cat}</span>
+              </div>
+              <div class="dir-cap">
+                {d.cap.split(" · ").map((t) => <span class="dir-tag">{t}</span>)}
+              </div>
+              <span class="dir-link">View integration<ArrowDown class="dir-arrow" size={14} /></span>
+            </a>
+          ))}
+        </div>
+      </div>
     </div>
-  </PageHero>
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <DeepEcomLayer/>
-
-    
   </section>
 
-  <FeatureGrid
-    eyebrow="CAPABILITIES"
-    title="Everything connects, nothing is rebuilt."
-    lead="DeepEcom handles the heavy lifting of ecommerce data and accounting so your marketplaces and ERP work together without custom glue."
-    features={features}
-    columns={3}
-    center
-  />
+  <!-- 18 FAQ -->
+  <section class="faq">
+    <div class="sec-narrow">
+      <span class="eyebrow eyebrow-center">FAQ</span>
+      <h2 class="h2-md faq-title">Integration questions, answered.</h2>
+      <IntegrationFaq client:visible />
+    </div>
+  </section>
 
-  <CtaBand
-    title="Connect your marketplaces to your books."
-    lead="See how DeepEcom brings your channels and ERP together."
-  />
+  <!-- 19 FINAL CTA -->
+  <section class="ifinal">
+    <div class="sec">
+      <div class="ifinal-card">
+        <h2 class="ifinal-title">Connect your business. Simplify your numbers.</h2>
+        <p class="ifinal-lead">
+          Bring the systems behind your ecommerce business into one connected financial layer.
+        </p>
+        <div class="ifinal-ctas">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+          </a>
+          <a href="/platform" class="ifinal-ghost">
+            Explore Platform
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  /* Density pass — keep the 19-section rhythm but tighten vertical padding */
+  :global(main .sec),
+  :global(main .sec-narrow) {
+    padding-block: clamp(1.75rem, 3.4vh, 3rem);
+  }
+:global(.after-flow),
+    :global(.arch-map),
+    :global(.fwall-canvas) {
+      padding-top: clamp(1.25rem, 2vh, 2rem);
+      padding-bottom: clamp(1.5rem, 3vh, 2.75rem);
+    }
+
+  /* ---------- integration directory ---------- */
+  .dir-head { text-align: center; }
+  .dir-title { margin-top: 0.9rem; }
+  .dir-lead { margin-top: 0.75rem; max-width: 36rem; margin-inline: auto; }
+
+  .dir-panel {
+    margin-top: 2rem;
+    max-width: 60rem;
+    margin-inline: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .dir-search {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1.25rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-400);
+  }
+  .dir-search svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+  .dir-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.95rem;
+    color: var(--ink-900);
+    font-family: inherit;
+  }
+  .dir-input::placeholder { color: var(--ink-400); }
+  .dir-count { font-size: 0.75rem; font-weight: 600; color: var(--ink-400); white-space: nowrap; }
+  .dir-grid { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 40rem) { .dir-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 56rem) { .dir-grid { grid-template-columns: repeat(3, 1fr); } }
+  .dir-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1rem 1.15rem;
+    border-right: 1px solid var(--ink-100);
+    border-bottom: 1px solid var(--ink-100);
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+  }
+  .dir-card:hover { background: var(--ink-50); box-shadow: inset 0 0 0 1px var(--brand-200); }
+  .dir-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .dir-name { font-size: 1rem; font-weight: 700; color: var(--ink-950); }
+  .dir-cat { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brand-600); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 999px; padding: 0.22rem 0.55rem; }
+  .dir-cap { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .dir-tag { font-size: 0.7rem; font-weight: 600; color: var(--ink-600); background: var(--ink-50); border: 1px solid var(--ink-100); border-radius: 999px; padding: 0.22rem 0.55rem; }
+  .dir-link { margin-top: auto; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; color: var(--brand-600); }
+  .dir-arrow { transition: transform 0.2s ease; flex: none; width: 14px; height: 14px; }
+  .dir-card:hover .dir-arrow { transform: translate(3px, 3px); }
+
+  /* FAQ scoped fixes */
+  .faq button svg {
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
+  .faq-title { margin-top: 0.8rem; text-align: center; }
+
+  /* ---------- final cta ---------- */
+  .ifinal { padding: clamp(2rem, 4vh, 3rem) 0 clamp(4rem, 8vh, 6rem); }
+  .ifinal-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    text-align: center;
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(60% 80% at 50% 0%, rgba(123, 98, 254, 0.35), transparent 70%),
+      linear-gradient(150deg, #1e1560 0%, #2c1b8d 45%, #533afd 130%);
+    padding: clamp(3rem, 7vw, 5rem) var(--space-gutter);
+    color: #fff;
+  }
+  .ifinal-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+    mask-image: radial-gradient(70% 60% at 50% 0%, #000, transparent);
+  }
+  .ifinal-title {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    max-width: 44rem;
+    margin-inline: auto;
+    text-wrap: balance;
+  }
+  .ifinal-lead {
+    margin: 1rem auto 0;
+    max-width: 36rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.75);
+  }
+  .ifinal-ctas {
+    margin-top: 1.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+  .ifinal-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 999px;
+    padding: 0.65rem 1.4rem;
+    transition: background 0.2s ease;
+  }
+  .ifinal-ghost:hover { background: rgba(255,255,255,0.1); }
+</style>

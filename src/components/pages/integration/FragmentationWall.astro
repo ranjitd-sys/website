@@ -1,0 +1,136 @@
+---
+const clusters = [
+  {
+    label: "SELL",
+    tone: "sell",
+    items: ["Website", "Amazon", "Flipkart", "Shopify"],
+  },
+  {
+    label: "COLLECT",
+    tone: "collect",
+    items: ["Payments", "Settlements", "Fees", "Refunds"],
+  },
+  {
+    label: "ACCOUNT",
+    tone: "account",
+    items: ["Tally", "SAP", "Zoho", "Ledgers"],
+  },
+]
+
+const mismatches = ["Different reports", "Different formats", "Different numbers", "Different timelines"]
+---
+
+<section class="fwall-section section-band reveal">
+  <div class="sec">
+    <span class="eyebrow">THE PROBLEM</span>
+    <h2 class="h2-md fwall-title">Every new channel adds another system to manage.</h2>
+    <p class="lead fwall-lead">
+      Selling across more channels usually means more dashboards, more exports and more manual
+      stitching. Each one reports the same business a slightly different way.
+    </p>
+  </div>
+
+  <div class="fwall-canvas reveal" data-delay="120">
+    <div class="fwall-grid">
+      {clusters.map((c) => (
+        <div class="fwall-cluster">
+          <span class={`fwall-clabel ${c.tone}`}>{c.label}</span>
+          <div class="fwall-items">
+            {c.items.map((item, i) => (
+              <span class={`fwall-chip ${c.tone}`} style={`--i:${i}`}>{item}</span>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="fwall-divider" aria-hidden="true"></div>
+    <div class="fwall-broken">
+      {mismatches.map((m, i) => (
+        <span class="fwall-mismatch" style={`--i:${i}`}>{m}</span>
+      ))}
+    </div>
+    <p class="fwall-caption">
+      The systems don't connect. So the numbers don't line up — and someone has to make them.
+    </p>
+  </div>
+
+  <style>
+    :global(.fwall-section) { border-block: 1px solid var(--ink-100); }
+    :global(.fwall-title) { margin-top: 0.8rem; max-width: 42rem; }
+    :global(.fwall-lead) { margin-top: 0.85rem; max-width: 40rem; }
+
+    :global(.fwall-canvas) {
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      padding-inline: var(--space-gutter);
+      padding-bottom: clamp(2.5rem, 5vh, 4rem);
+    }
+    :global(.fwall-grid) {
+      display: grid;
+      gap: 1.1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 48rem) {
+      :global(.fwall-grid) { grid-template-columns: repeat(3, 1fr); }
+    }
+    :global(.fwall-cluster) {
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: var(--shadow-card);
+      padding: 1.1rem 1.2rem 1.3rem;
+    }
+    :global(.fwall-clabel) {
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      display: inline-block;
+      padding: 0.28rem 0.6rem;
+      border-radius: 999px;
+      margin-bottom: 0.85rem;
+    }
+    :global(.fwall-clabel.sell) { background: var(--brand-50); color: var(--brand-700); }
+    :global(.fwall-clabel.collect) { background: var(--ink-100); color: var(--ink-600); }
+    :global(.fwall-clabel.account) { background: #eef6ff; color: #1e5fb0; }
+
+    :global(.fwall-items) { display: flex; flex-direction: column; gap: 0.5rem; }
+    :global(.fwall-chip) {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--ink-700, #334155);
+      background: var(--ink-50);
+      border: 1px solid var(--ink-100);
+      border-radius: 9px;
+      padding: 0.55rem 0.8rem;
+    }
+    :global(.fwall-chip.sell) { background: var(--brand-50); border-color: var(--brand-100); color: var(--brand-800); }
+    :global(.fwall-chip.collect) { background: var(--ink-50); border-color: var(--ink-200); }
+    :global(.fwall-chip.account) { background: #f3f9ff; border-color: #dbeafe; color: #17468f; }
+
+    /* what sits between the clusters */
+    :global(.fwall-broken) {
+      margin-top: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    :global(.fwall-mismatch) {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--ink-500);
+      background: #fff;
+      border: 1px dashed var(--ink-300, #cbd5e1);
+      border-radius: 999px;
+      padding: 0.35rem 0.85rem;
+      opacity: 0.7;
+    }
+    :global(.fwall-caption) {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.95rem;
+      color: var(--ink-500);
+    }
+  </style>
+</section>

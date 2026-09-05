@@ -1,0 +1,177 @@
+---
+const inputs = [
+  { name: "Marketplaces", items: ["Amazon", "Flipkart", "Shopify", "Meesho"] },
+  { name: "Selling Platforms", items: ["Website", "D2C store"] },
+  { name: "Payment Systems", items: ["Gateways", "Settlements"] },
+]
+
+const platformRows = [
+  { label: "Platform", items: ["Dashboard", "Profitability", "Payment Reconciliation", "Reports"] },
+  { label: "ERP Connector", items: ["Accounting", "GST", "Inventory", "Stock Transfers"] },
+]
+
+const erps = ["Tally", "SAP", "Zoho"]
+---
+
+<section class="arch section-band">
+  <div class="sec">
+    <span class="eyebrow">DEEPECOM ARCHITECTURE</span>
+    <h2 class="h2-md arch-title">Everything connects to one financial layer.</h2>
+    <p class="lead arch-lead">
+      Inputs come in one way. Inside DeepEcom they become both a clear view of the business and
+      the detailed accounting your ERP needs.
+    </p>
+  </div>
+
+  <div class="arch-map reveal">
+    <!-- INPUTS -->
+    <div class="arch-col">
+      <span class="arch-col-label">INPUTS</span>
+      {inputs.map((g) => (
+        <div class="arch-group">
+          <span class="arch-group-name">{g.name}</span>
+          <div class="arch-tags">
+            {g.items.map((i) => <span class="arch-tag in">{i}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- ARROWS -->
+    <div class="arch-flow" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- DEEPECOM -->
+    <div class="arch-core">
+      <span class="arch-core-name">DEEPECOM</span>
+      <div class="arch-rows">
+        {platformRows.map((r) => (
+          <div class="arch-row">
+            <span class="arch-row-label">{r.label}</span>
+            <div class="arch-tags arch-tags-stack">
+              {r.items.map((i) => <span class="arch-tag core">{i}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- ARROWS -->
+    <div class="arch-flow arch-flow-accent" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </div>
+
+    <!-- ERP -->
+    <div class="arch-col arch-col-out">
+      <span class="arch-col-label">ERP</span>
+      <div class="arch-group">
+        <div class="arch-tags arch-tags-stack">
+          {erps.map((i) => <span class="arch-tag out">{i}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    :global(.arch-map) {
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      padding-inline: var(--space-gutter);
+      padding-bottom: clamp(1.75rem, 3.4vh, 3rem);
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: center;
+      gap: 1rem;
+    }
+    :global(.arch-col) {
+      width: 100%;
+      max-width: 20rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+    :global(.arch-col-out) { align-items: center; }
+    :global(.arch-col-label) {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-400);
+    }
+    :global(.arch-group) {
+      background: #fff;
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      padding: 0.8rem 1rem;
+      box-shadow: var(--shadow-card);
+    }
+    :global(.arch-group-name) {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-500);
+      margin-bottom: 0.55rem;
+    }
+    :global(.arch-tags) { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    :global(.arch-tags-stack) { flex-direction: column; align-items: center; gap: 0.45rem; }
+    :global(.arch-tag) {
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.4rem 0.75rem;
+    }
+    :global(.arch-tag.in) { color: var(--ink-600); background: var(--ink-50); border: 1px solid var(--ink-100); }
+    :global(.arch-tag.core) { color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.3); }
+    :global(.arch-tag.out) { color: var(--brand-700); background: var(--brand-50); border: 1px solid var(--brand-200); }
+
+    :global(.arch-flow) { width: 26px; height: 26px; color: var(--ink-400); transform: rotate(90deg); }
+    :global(.arch-flow svg) { width: 22px; height: 22px; }
+    :global(.arch-flow-accent) { color: var(--brand-500); }
+
+    :global(.arch-core) {
+      width: 100%;
+      max-width: 26rem;
+      padding: 1.2rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, #533afd 0%, #462ce0 100%);
+      box-shadow: 0 18px 44px -12px rgba(83, 58, 253, 0.5);
+    }
+    :global(.arch-core-name) {
+      display: block;
+      text-align: center;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.85rem;
+    }
+    :global(.arch-row) {
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 0.9rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    :global(.arch-row + .arch-row) { margin-top: 0.65rem; }
+    :global(.arch-row-label) {
+      display: block;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+    }
+
+    @media (min-width: 48rem) {
+      :global(.arch-map) { grid-template-columns: 1fr auto 1.2fr auto 1fr; }
+      :global(.arch-flow) { transform: none; }
+      :global(.arch-map > *) { width: 100%; }
+      :global(.arch-col-out .arch-tags) { flex-direction: column; }
+    }
+  </style>
+</section>

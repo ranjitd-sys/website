@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type FocusEvent, type KeyboardEvent } from "react"
+import { useCallback, useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type MouseEvent as ReactMouseEvent } from "react"
 import {
   ArrowRight,
   Boxes,
@@ -94,10 +94,11 @@ function iconFor(key?: string): LucideIcon {
   return Command
 }
 
-// --- Hooks & State Controller ---
+// --- Enhanced Hover & Pin State Controller ---
 
 function useHoverNav() {
   const [open, setOpen] = useState<string | null>(null)
+  const [pinned, setPinned] = useState<string | null>(null)
   const timers = useRef({ open: null as ReturnType<typeof setTimeout> | null, close: null as ReturnType<typeof setTimeout> | null })
   const triggerRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const panelRefs = useRef<Record<string, HTMLDivElement | null>>({})
@@ -112,22 +113,36 @@ function useHoverNav() {
 
   const openSoon = useCallback(
     (id: string) => {
+      if (pinned) return
       clearTimers()
       setOpen((currentOpen) => {
-        if (currentOpen && currentOpen !== id) {
-          return id
-        }
+        if (currentOpen && currentOpen !== id) return id
         timers.current.open = setTimeout(() => setOpen(id), OPEN_DELAY)
         return currentOpen
       })
     },
-    [clearTimers],
+    [clearTimers, pinned],
   )
 
   const closeSoon = useCallback(() => {
+    if (pinned) return
     clearTimers()
     timers.current.close = setTimeout(() => setOpen(null), CLOSE_DELAY)
-  }, [clearTimers])
+  }, [clearTimers, pinned])
+
+  const togglePin = useCallback(
+    (id: string) => {
+      clearTimers()
+      if (pinned === id) {
+        setPinned(null)
+        setOpen(null)
+      } else {
+        setPinned(id)
+        setOpen(id)
+      }
+    },
+    [clearTimers, pinned],
+  )
 
   const suppressFocusOpen = useCallback(() => {
     suppressFocusUntil.current = Date.now() + 220
@@ -160,6 +175,7 @@ function useHoverNav() {
   const closeNow = useCallback(
     (refocusTrigger?: string) => {
       clearTimers()
+      setPinned(null)
       suppressFocusOpen()
       setOpen(null)
       if (refocusTrigger) {
@@ -173,7 +189,10 @@ function useHoverNav() {
   useEffect(() => {
     const onPointerDown = (e: MouseEvent) => {
       cancelSuppress()
-      if (open && !(e.target as HTMLElement).closest("[data-nav-root]")) setOpen(null)
+      if (open && !(e.target as HTMLElement).closest("[data-nav-root]")) {
+        setPinned(null)
+        setOpen(null)
+      }
     }
     const onKey = (e: globalThis.KeyboardEvent) => {
       if (e.key !== "Escape" || !open) return
@@ -192,7 +211,7 @@ function useHoverNav() {
     }
   }, [open, clearTimers, closeNow, cancelSuppress])
 
-  return { open, openSoon, closeSoon, keepOpen: clearTimers, openNow, closeNow, isFocusSuppressed, triggerRefs, panelRefs }
+  return { open, pinned, openSoon, closeSoon, togglePin, keepOpen: clearTimers, openNow, closeNow, isFocusSuppressed, triggerRefs, panelRefs }
 }
 
 // --- Smooth GPU-Accelerated Variants ---
@@ -221,18 +240,18 @@ function PanelListLink({ link, variants = itemVariants }: { link: NavLink; varia
     <motion.div variants={variants} className="list-none">
       <a
         href={link.href}
-        className="group flex items-center justify-between rounded-xl px-3.5 py-3 transition-colors hover:bg-muted/80"
+        className="group flex items-center justify-between rounded-xl px-3.5 py-3 transition-colors hover:bg-muted/80 focus:bg-muted/80 focus:outline-none"
       >
         <div className="flex items-center gap-3">
-          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground">
+          <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-focus:bg-primary group-focus:text-primary-foreground">
             <Icon size={16} />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-medium text-foreground transition-colors group-hover:text-primary">{link.label}</span>
+            <span className="text-sm font-medium text-foreground transition-colors group-hover:text-primary group-focus:text-primary">{link.label}</span>
             {link.description && <span className="mt-0.5 text-xs text-muted-foreground">{link.description}</span>}
           </div>
         </div>
-        <ArrowRight size={13} className="-translate-x-2 text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-primary" />
+        <ArrowRight size={13} className="-translate-x-2 text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-primary group-focus:translate-x-0 group-focus:opacity-100 group-focus:text-primary" />
       </a>
     </motion.div>
   )
@@ -263,7 +282,7 @@ function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants 
           </div>
           <a
             href={item.featured.href}
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-all hover:scale-105"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <span>Explore Platform</span>
             <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
@@ -324,7 +343,7 @@ function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants
           </p>
           <a
             href="/resources/webinars"
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary"
+            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary focus:outline-none focus:underline"
           >
             Watch Session <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
           </a>
@@ -343,6 +362,7 @@ const PANEL_WIDTHS: Record<string, string> = {
 type NavPanelProps = {
   item: NavItem
   open: boolean
+  pinned: boolean
   registerPanel: (id: string, el: HTMLDivElement | null) => void
   onKeyDown: (e: KeyboardEvent<HTMLElement>, item: NavItem) => void
   onFocusOut: (e: FocusEvent<HTMLElement>, item: NavItem) => void
@@ -350,7 +370,7 @@ type NavPanelProps = {
   onKeepOpen: () => void
 }
 
-function NavPanel({ item, open, registerPanel, onKeyDown, onFocusOut, onClose, onKeepOpen }: NavPanelProps) {
+function NavPanel({ item, open, pinned, registerPanel, onKeyDown, onFocusOut, onClose, onKeepOpen }: NavPanelProps) {
   if (item.type !== "menu" || !item.groups) return null
 
   const width = PANEL_WIDTHS[item.id] ?? "w-[500px]"
@@ -365,7 +385,7 @@ function NavPanel({ item, open, registerPanel, onKeyDown, onFocusOut, onClose, o
           aria-label={item.label}
           data-nav-panel={item.id}
           onMouseEnter={onKeepOpen}
-          onMouseLeave={onClose}
+          onMouseLeave={() => !pinned && onClose()}
           onKeyDown={(e) => onKeyDown(e, item)}
           onBlur={(e) => onFocusOut(e, item)}
           variants={panelVariants}
@@ -374,7 +394,8 @@ function NavPanel({ item, open, registerPanel, onKeyDown, onFocusOut, onClose, o
           exit="exit"
           className={`absolute left-1/2 top-full z-50 mt-3 -translate-x-1/2 ${width}`}
         >
-          <div className="overflow-hidden rounded-[24px] border border-border/80 bg-popover/95 shadow-[0_25px_60px_rgba(0,0,0,0.15)] ring-1 ring-black/5 backdrop-blur-2xl dark:shadow-[0_25px_60px_rgba(0,0,0,0.5)]">
+          {/* Changed bg-popover/95 to solid bg-popover for reduced transparency */}
+          <div className="overflow-hidden rounded-[24px] border border-border/80 bg-popover shadow-[0_25px_60px_rgba(0,0,0,0.2)] ring-1 ring-border/20 dark:shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
             {item.id === "products" && <ProductsPanel item={item} variants={itemVariants} />}
             {item.id === "solutions" && <SolutionsPanel item={item} variants={itemVariants} />}
             {item.id === "resources" && <ResourcesPanel item={item} variants={itemVariants} />}
@@ -388,31 +409,36 @@ function NavPanel({ item, open, registerPanel, onKeyDown, onFocusOut, onClose, o
 type NavTriggerProps = {
   item: NavItem
   open: boolean
+  pinned: boolean
   onFocus?: () => void
+  onClick?: (e: ReactMouseEvent<HTMLButtonElement>) => void
   onKeyDown?: (e: KeyboardEvent<HTMLButtonElement>) => void
   registerTrigger?: (id: string, el: HTMLButtonElement | null) => void
 }
 
-function NavTrigger({ item, open, onFocus, onKeyDown, registerTrigger }: NavTriggerProps) {
+function NavTrigger({ item, open, pinned, onFocus, onClick, onKeyDown, registerTrigger }: NavTriggerProps) {
   const isMenu = item.type === "menu"
-  const baseCls = "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium transition-colors rounded-lg"
-  const stateCls = open ? "text-foreground font-semibold bg-muted/60" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
+  const baseCls = "relative z-10 inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/40"
+  const stateCls = open ? "text-foreground font-semibold bg-muted/80 ring-1 ring-border/50" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
 
   if (isMenu) {
     return (
       <button
         ref={(el) => registerTrigger?.(item.id, el)}
+        type="button"
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? `nav-panel-${item.id}` : undefined}
         data-nav-trigger={item.id}
         onMouseEnter={onFocus}
         onFocus={onFocus}
+        onClick={onClick}
         onKeyDown={onKeyDown}
         className={`${baseCls} ${stateCls}`}
       >
         {item.label}
         <ChevronDown size={13} className={`transition-transform duration-300 ${open ? "rotate-180 text-primary" : "opacity-50"}`} />
+        {pinned && <span className="absolute -top-1 -right-1 size-2 rounded-full bg-primary" />}
       </button>
     )
   }
@@ -498,7 +524,7 @@ export default function Navbar() {
   const [mobileExpanded, setMobileExpanded] = useState<string[]>([])
   const [hovered, setHovered] = useState<string | null>(null)
 
-  const { open, openSoon, closeSoon, keepOpen, openNow, closeNow, isFocusSuppressed, triggerRefs, panelRefs } = useHoverNav()
+  const { open, pinned, openSoon, closeSoon, togglePin, keepOpen, openNow, closeNow, isFocusSuppressed, triggerRefs, panelRefs } = useHoverNav()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12)
@@ -517,9 +543,10 @@ export default function Navbar() {
   const pillId = hovered ?? open
 
   const onTriggerKeyDown = (e: KeyboardEvent<HTMLButtonElement>, item: NavItem) => {
-    if (e.key === "ArrowDown") {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
       e.preventDefault()
-      openAndFocus(item.id)
+      if (e.key === "ArrowDown") openAndFocus(item.id)
+      else togglePin(item.id)
     }
   }
 
@@ -536,7 +563,7 @@ export default function Navbar() {
 
   const onPanelFocusOut = (e: FocusEvent<HTMLElement>, item: NavItem) => {
     const next = e.relatedTarget as Node | null
-    if (!e.currentTarget.contains(next)) closeNow(item.id)
+    if (!e.currentTarget.contains(next) && pinned !== item.id) closeNow(item.id)
   }
 
   return (
@@ -544,7 +571,7 @@ export default function Navbar() {
       <header
         data-nav-root
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled || open ? "border-b border-border/40 bg-background shadow-xs" : "border-transparent bg-transparent"
+          scrolled || open ? "border-b border-border/40 bg-background/95 backdrop-blur-md shadow-xs" : "border-transparent bg-transparent"
         }`}
       >
         <nav className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-6 lg:h-20" aria-label="Primary">
@@ -572,11 +599,8 @@ export default function Navbar() {
                   onMouseEnter={() => {
                     setHovered(item.id)
                     keepOpen()
-                    if (isMenu) {
-                      openSoon(item.id)
-                    } else {
-                      closeSoon()
-                    }
+                    if (isMenu) openSoon(item.id)
+                    else closeSoon()
                   }}
                   onFocusCapture={() => setHovered(item.id)}
                 >
@@ -590,10 +614,13 @@ export default function Navbar() {
                   <NavTrigger
                     item={item}
                     open={open === item.id}
+                    pinned={pinned === item.id}
                     onFocus={() => {
                       setHovered(item.id)
-                      if (isMenu && !isFocusSuppressed()) openNow(item.id)
-                      else closeNow()
+                      if (isMenu && !isFocusSuppressed() && !pinned) openNow(item.id)
+                    }}
+                    onClick={() => {
+                      if (isMenu) togglePin(item.id)
                     }}
                     onKeyDown={(e) => isMenu && onTriggerKeyDown(e, item)}
                     registerTrigger={(id: string, el: HTMLButtonElement | null) => {
@@ -609,6 +636,7 @@ export default function Navbar() {
                 key={item.id}
                 item={item}
                 open={open === item.id}
+                pinned={pinned === item.id}
                 registerPanel={(id: string, el: HTMLDivElement | null) => {
                   panelRefs.current[id] = el
                 }}

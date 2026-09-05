@@ -1,0 +1,168 @@
+---
+const products = ["Sales", "Profitability", "Payments", "Reconciliation", "Reports", "Accounting"]
+const engine = ["CONNECT", "UNDERSTAND", "RECONCILE", "ACCOUNT"]
+---
+
+<section class="clayer">
+  <div class="sec">
+    <div class="clayer-head">
+      <span class="eyebrow">THE CONNECTED LAYER</span>
+      <h2 class="h2-md clayer-title">One layer between your business and the systems behind it.</h2>
+      <p class="lead clayer-lead">
+        DeepEcom doesn't replace any of your systems. It sits between them, connects their data,
+        and turns it into something your business can actually use.
+      </p>
+    </div>
+
+    <div class="clayer-diagram reveal" data-delay="120" role="img" aria-label="Multiple systems connect into DeepEcom, which turns them into one business view">
+      <!-- stage -->
+      <div class="cl-stage">
+        <span class="cl-stage-label">MULTIPLE SYSTEMS</span>
+        <div class="cl-pills">
+          <span class="cl-pill">Marketplaces</span>
+          <span class="cl-pill">Payments</span>
+          <span class="cl-pill">Fees</span>
+          <span class="cl-pill">Settlements</span>
+          <span class="cl-pill">Returns</span>
+        </div>
+      </div>
+
+      <div class="cl-arrow" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+      <!-- DeepEcom core -->
+      <div class="cl-core">
+        <span class="cl-core-name">DEEPECOM</span>
+        <div class="cl-engine">
+          {engine.map((e, i) => (
+            <span class="cl-engine-item" style={`--i:${i}`}>{e}</span>
+          ))}
+        </div>
+      </div>
+
+      <div class="cl-arrow cl-arrow-accent" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </div>
+
+      <!-- one view -->
+      <div class="cl-stage cl-stage-out">
+        <div class="cl-pills cl-pills-out">
+          {products.map((p, i) => (
+            <span class="cl-pill cl-pill-out" style={`--i:${i}`}>{p}</span>
+          ))}
+        </div>
+        <span class="cl-stage-label cl-stage-label-out">ONE BUSINESS VIEW</span>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    :global(.clayer) {
+      padding: clamp(1.5rem, 3vh, 2.5rem) 0;
+    }
+    :global(.clayer-head) { max-width: 42rem; }
+    :global(.clayer-title) { margin-top: 0.8rem; }
+    :global(.clayer-lead) { margin-top: 0.85rem; }
+
+    :global(.clayer-diagram) {
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: center;
+      gap: 0.85rem;
+    }
+
+    :global(.cl-stage) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    :global(.cl-stage-label) {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-400);
+      text-align: center;
+    }
+    :global(.cl-stage-label-out) { color: var(--brand-600); }
+    :global(.cl-stage-out) { flex-direction: column-reverse; }
+
+    :global(.cl-pills) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      max-width: 34rem;
+    }
+    :global(.cl-pill) {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--ink-600);
+      background: #fff;
+      border: 1px solid var(--ink-200);
+      border-radius: 999px;
+      padding: 0.42rem 0.85rem;
+      box-shadow: var(--shadow-card);
+    }
+    :global(.cl-pill-out) {
+      color: var(--brand-700);
+      background: var(--brand-50);
+      border-color: var(--brand-200);
+    }
+
+    :global(.cl-arrow) {
+      width: 26px; height: 26px;
+      color: var(--ink-400);
+      transform: rotate(90deg);
+    }
+    :global(.cl-arrow svg) { width: 22px; height: 22px; }
+    :global(.cl-arrow-accent) { color: var(--brand-500); }
+
+    :global(.cl-core) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 40rem;
+      padding: 1.15rem 1.5rem 1.3rem;
+      border-radius: 1.25rem;
+      background: linear-gradient(135deg, #533afd 0%, #462ce0 100%);
+      box-shadow: 0 18px 44px -12px rgba(83, 58, 253, 0.5);
+    }
+    :global(.cl-core-name) {
+      color: #fff;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+    :global(.cl-engine) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    :global(.cl-engine-item) {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 999px;
+      padding: 0.45rem 1rem;
+    }
+
+    @media (min-width: 48rem) {
+      :global(.clayer-diagram) {
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+      }
+      :global(.cl-arrow) { transform: none; }
+      :global(.cl-stage-out) { flex-direction: column; }
+      :global(.cl-stage) { align-items: center; }
+    }
+  </style>
+</section>

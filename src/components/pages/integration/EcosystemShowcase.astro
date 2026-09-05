@@ -1,0 +1,429 @@
+---
+import { ArrowRight, Store, ShoppingBag, CreditCard, Building2 } from "lucide-react"
+
+const categories = [
+  { n: "01", name: "SELLING CHANNELS", desc: "Websites and D2C stores that create orders outside the marketplaces.", icon: Store },
+  { n: "02", name: "MARKETPLACES", desc: "The platforms where orders and settlements originate.", icon: ShoppingBag },
+  { n: "03", name: "PAYMENTS", desc: "Gateways and marketplace settlements that move the money.", icon: CreditCard },
+  { n: "04", name: "ERP", desc: "The systems your finance team runs the books on.", icon: Building2 },
+]
+
+const marketplaces = [
+  {
+    name: "Amazon",
+    href: "/integrations/amazon",
+    tone: "amazon",
+    mark: "amazon",
+    desc: "Orders, settlements, fees and TCS/TDS into profitability, reconciliation and accounting.",
+    cap: "Profitability · Reconciliation · Accounting",
+  },
+  {
+    name: "Flipkart",
+    href: "/integrations/flipkart",
+    tone: "flipkart",
+    mark: "flipkart",
+    desc: "Orders, settlements and commissions into the same financial layer.",
+    cap: "Profitability · Reconciliation · Accounting",
+  },
+  {
+    name: "Shopify",
+    href: "/integrations/shopify",
+    tone: "shopify",
+    mark: "shopify",
+    desc: "Store sales and payouts brought into one financial picture.",
+    cap: "Sales · Payments · Accounting",
+  },
+  {
+    name: "Meesho",
+    href: "/integrations",
+    tone: "meesho",
+    mark: "meesho",
+    desc: "Channel data aggregated into the same connected layer.",
+    cap: "Sales · Payments · Accounting",
+  },
+]
+
+const payments = [
+  { name: "Payment Gateway", mark: "pgw", desc: "Expected and received payment data into reconciliation.", cap: "Reconciliation" },
+  { name: "Marketplace Settlements", mark: "mps", desc: "Settlement to bank matching at order level.", cap: "Reconciliation" },
+]
+
+const erps = [
+  {
+    name: "Tally",
+    href: "/integrations/tally",
+    tone: "tally",
+    desc: "Detailed ecommerce vouchers posted into Tally — order-wise, GST-wise, warehouse-wise.",
+    cap: "Voucher posting · GST · Inventory",
+  },
+  {
+    name: "SAP",
+    href: "/integrations/sap",
+    tone: "sap",
+    desc: "Ecommerce transactions structured for SAP accounting.",
+    cap: "Accounting · Posting",
+  },
+  {
+    name: "Zoho Books",
+    href: "/integrations/zoho",
+    tone: "zoho",
+    desc: "Ecommerce transactions accounted inside Zoho Books.",
+    cap: "Accounting · Posting",
+  },
+]
+---
+
+<section id="ecosystem" class="eco-section">
+  <div class="sec">
+    <span class="eyebrow">THE ECOSYSTEM</span>
+    <h2 class="h2-md eco-title">Connect the systems your business already runs on.</h2>
+    <p class="lead eco-lead">
+      DeepEcom connects the verified systems ecommerce businesses rely on — and is built to keep
+      growing as your stack does.
+    </p>
+
+    <!-- 05 CATEGORY BLOCKS -->
+    <div class="eco-cats reveal">
+      {categories.map((c) => {
+        const Icon = c.icon
+        return (
+          <div class="eco-cat">
+            <div class="eco-cat-top">
+              <span class="eco-cat-num">{c.n}</span>
+              <span class="eco-cat-icon"><Icon size={18} /></span>
+            </div>
+            <div class="eco-cat-name">{c.name}</div>
+            <p class="eco-cat-desc">{c.desc}</p>
+          </div>
+        )
+      })}
+    </div>
+  </div>
+</section>
+
+<section class="eco-detail">
+  <div class="sec">
+    <!-- 06 MARKETPLACES -->
+    <div class="eco-dhead reveal">
+      <div>
+        <span class="eyebrow">MARKETPLACES</span>
+        <h3 class="eco-dtitle">Bring marketplace transactions into DeepEcom.</h3>
+      </div>
+      <a class="eco-all" href="/integrations/marketplaces">All marketplaces <ArrowRight size={15} /></a>
+    </div>
+    <div class="eco-cards reveal" data-delay="120">
+      {marketplaces.map((m) => (
+        <a class="eco-card" href={m.href}>
+          <div class={`eco-mark ${m.tone}`}>
+            {m.mark === "amazon" && <span class="mw-amazon">amazon</span>}
+            {m.mark === "flipkart" && <span class="mw-flipkart">Flipkart <b class="mw-fk">f</b></span>}
+            {m.mark === "shopify" && <span class="mw-shopify">shopify</span>}
+            {m.mark === "meesho" && <span class="mw-meesho">meesho</span>}
+          </div>
+          <div class="eco-card-body">
+            <div class="eco-card-name">{m.name}</div>
+            <p class="eco-card-desc">{m.desc}</p>
+            <div class="eco-card-cap">
+              {m.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
+            </div>
+          </div>
+          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
+        </a>
+      ))}
+    </div>
+
+    <!-- 07 PAYMENTS -->
+    <div class="eco-dhead eco-dhead-pay reveal">
+      <div>
+        <span class="eyebrow">PAYMENTS</span>
+        <h3 class="eco-dtitle">Bring payments into the same financial view.</h3>
+      </div>
+    </div>
+    <div class="eco-cards reveal" data-delay="120">
+      {payments.map((p, i) => (
+        <div class="eco-card eco-card-static">
+          <div class={`eco-mark ${p.mark}`}>
+            <CreditCard size={20} />
+          </div>
+          <div class="eco-card-body">
+            <div class="eco-card-name">{p.name}</div>
+            <p class="eco-card-desc">{p.desc}</p>
+            <div class="eco-card-cap">
+              {p.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
+            </div>
+          </div>
+          {i === 1 && <span class="eco-pill">Reconciliation</span>}
+        </div>
+      ))}
+      <div class="eco-pay-note">
+        <span class="eco-pay-flow">Payments → Expected → Received → Difference</span>
+        <p class="eco-pay-desc">
+          DeepEcom connects payment and settlement data to the Payment Reconciliation product —
+          so you always know what you should have received versus what actually arrived.
+        </p>
+      </div>
+    </div>
+
+    <!-- 11 ERP -->
+    <div class="eco-dhead eco-dhead-erp reveal">
+      <div>
+        <span class="eyebrow">ERP</span>
+        <h3 class="eco-dtitle">Send ecommerce accounting into the ERP you already use.</h3>
+      </div>
+    </div>
+    <div class="eco-cards eco-cards-erp reveal" data-delay="120">
+      {erps.map((e) => (
+        <a class="eco-card" href={e.href}>
+          <div class={`eco-mark eco-mark-erp ${e.tone}`}>
+            {e.tone === "tally" && <span class="erp-tally">Tally</span>}
+            {e.tone === "sap" && <span class="erp-sap">SAP</span>}
+            {e.tone === "zoho" && <span class="erp-zoho">Zoho Books</span>}
+          </div>
+          <div class="eco-card-body">
+            <div class="eco-card-name">{e.name}</div>
+            <p class="eco-card-desc">{e.desc}</p>
+            <div class="eco-card-cap">
+              {e.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
+            </div>
+          </div>
+          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
+        </a>
+      ))}
+    </div>
+
+    <p class="eco-erp-note reveal">
+      Marketplace and commerce data → <strong>DeepEcom</strong> → detailed ecommerce accounting → your ERP.
+      DeepEcom makes your ERP ecommerce-ready. It doesn't replace it.
+    </p>
+  </div>
+
+  <style>
+    :global(.eco-section) { padding: clamp(1.5rem, 3vh, 2.5rem) 0 0; }
+    :global(.eco-title) { margin-top: 0.8rem; max-width: 44rem; }
+    :global(.eco-lead) { margin-top: 0.85rem; max-width: 40rem; }
+
+    :global(.eco-cats) {
+      margin-top: 1.75rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 52rem) { :global(.eco-cats) { grid-template-columns: repeat(4, 1fr); } }
+    :global(.eco-cat) {
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: var(--shadow-card);
+      padding: 1rem 1.15rem 1.1rem;
+    }
+    :global(.eco-cat-top) { display: flex; justify-content: space-between; align-items: center; }
+    :global(.eco-cat-num) {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--brand-500);
+      letter-spacing: 0.08em;
+    }
+    :global(.eco-cat-icon) {
+      display: grid;
+      place-items: center;
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      color: var(--brand-600);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+    }
+    :global(.eco-cat-name) {
+      margin-top: 0.8rem;
+      font-size: 1.02rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink-900);
+    }
+    :global(.eco-cat-desc) {
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--ink-500);
+    }
+
+    /* detail sections */
+    :global(.eco-detail) { padding-bottom: clamp(0.5rem, 1.5vh, 1rem); }
+    :global(.eco-dhead) {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: clamp(2.25rem, 4.5vh, 3.25rem);
+    }
+    :global(.eco-dtitle) {
+      margin-top: 0.55rem;
+      font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+      line-height: 1.18;
+      letter-spacing: -0.025em;
+      font-weight: 700;
+      color: var(--ink-950);
+    }
+    :global(.eco-all) {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--brand-600);
+      white-space: nowrap;
+    }
+    :global(.eco-all:hover) { text-decoration: underline; }
+    :global(.eco-all svg) { flex: none; width: 15px; height: 15px; }
+
+    :global(.eco-cards) {
+      margin-top: 1.25rem;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    @media (min-width: 40rem) { :global(.eco-cards) { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 64rem) { :global(.eco-cards-erp) { grid-template-columns: repeat(3, 1fr); } }
+
+    :global(.eco-card) {
+      position: relative;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      border: 1px solid var(--ink-200);
+      border-radius: 1rem;
+      background: #fff;
+      box-shadow: var(--shadow-card);
+      padding: 1.05rem 1.2rem;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    :global(.eco-card:hover) {
+      transform: translateY(-2px);
+      border-color: var(--brand-200);
+      box-shadow: 0 14px 30px -10px rgba(15, 23, 42, 0.1);
+    }
+    :global(.eco-card-static) { cursor: default; }
+
+    :global(.eco-mark) {
+      flex: 0 0 60px;
+      display: grid;
+      place-items: center;
+      width: 60px;
+      min-width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      border: 1px solid var(--ink-100);
+      background: var(--ink-50);
+      font-weight: 800;
+      font-size: 1.02rem;
+      color: var(--ink-900);
+      letter-spacing: -0.02em;
+    }
+    :global(.eco-mark.amazon) { background: #fff; }
+    :global(.eco-mark.flipkart) { background: #fff; }
+    :global(.eco-mark.shopify) { background: #fff; }
+    :global(.eco-mark.meesho) { background: #fff; }
+
+    :global(.mw-amazon) { font-family: Arial, sans-serif; font-weight: 600; font-size: 1.1rem; }
+    :global(.mw-flipkart) { color: #2874f0; font-style: italic; }
+    :global(.mw-fk) { background: #ff9f00; color: #fff; font-size: 0.62rem; padding: 1px 4px; border-radius: 2px; font-style: normal; }
+    :global(.mw-shopify) { font-weight: 700; font-size: 0.95rem; }
+    :global(.mw-meesho) { color: #f43f5e; font-weight: 700; }
+
+    :global(.eco-mark.pgw), :global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
+
+    :global(.eco-mark-erp) { background: #fff; }
+    :global(.erp-tally) { font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 1.15rem; }
+    :global(.erp-sap) { background: #008fd3; color: #fff; font-size: 0.95rem; padding: 2px 8px; border: none; }
+    :global(.erp-zoho) { font-weight: 700; font-size: 0.92rem; }
+
+    :global(.eco-card-body) { flex: 1; min-width: 0; }
+    :global(.eco-card-name) {
+      font-size: 1.06rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--ink-950);
+    }
+    :global(.eco-card-desc) {
+      margin-top: 0.4rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--ink-500);
+    }
+    :global(.eco-card-cap) {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    :global(.eco-tag) {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--brand-700);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+      border-radius: 999px;
+      padding: 0.25rem 0.6rem;
+    }
+    :global(.eco-card-arrow) {
+      align-self: center;
+      flex: none;
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      color: var(--brand-500);
+      transition: transform 0.2s ease;
+    }
+    :global(.eco-card-arrow svg) { width: 16px; height: 16px; }
+    :global(.eco-card:hover .eco-card-arrow) { transform: translateX(3px); }
+
+    :global(.eco-pill) {
+      flex: 0 0 auto;
+      align-self: flex-start;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--brand-600);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+      border-radius: 999px;
+      padding: 0.3rem 0.6rem;
+      white-space: nowrap;
+    }
+    :global(.eco-pay-note) {
+      grid-column: 1 / -1;
+      border: 1px dashed var(--brand-200);
+      border-radius: 1rem;
+      background: var(--brand-50);
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+    }
+    :global(.eco-pay-flow) {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--brand-700);
+      white-space: nowrap;
+    }
+    :global(.eco-pay-desc) {
+      flex: 1;
+      min-width: 15rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--ink-600);
+      margin: 0;
+    }
+
+    :global(.eco-erp-note) {
+      margin-top: 1.1rem;
+      text-align: center;
+      font-size: 0.92rem;
+      color: var(--ink-500);
+    }
+    :global(.eco-erp-note strong) { color: var(--brand-600); }
+  </style>
+</section>
