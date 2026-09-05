@@ -2,18 +2,8 @@
 // PipelineHero.astro
 // Architecture flow visual: Sources -> DeepEcom core -> Unified View
 //
-// WHAT WAS BROKEN BEFORE:
-// The connector <path> coordinates were hand-typed constants tuned for one
-// specific viewBox (800x540) and one specific card count (8 left / 6 right).
-// Cards actually render in a flex column, so their real Y positions depend
-// on font-rendering, gaps, and how many cards exist. The hardcoded numbers
-// didn't match reality, which is why the lines on the right drifted and
-// poked out above the "Unified View" label instead of meeting the cards.
-//
-// FIX: don't hardcode any coordinates. Measure the real DOM positions of
-// the core box and every card at runtime (and again on resize), then draw
-// the bezier paths to match exactly. This is correct for any number of
-// source/output cards and any card height.
+// Connector paths are measured from real DOM rects at runtime (and on
+// resize), never hand-typed constants — see script below.
 
 const sources = [
   { name: "Amazon", category: "Market", icon: "box" },
@@ -34,38 +24,39 @@ const outputs = [
   { label: "Fin Reports", sub: "Audit-ready" },
   { label: "Auto Ledger", sub: "ERP synced" },
 ];
+
+// Unique per-instance suffix so <defs> ids never collide when this
+// component is rendered more than once on a page.
+const uid = Math.random().toString(36).slice(2, 9);
 ---
 
-<div class="pipeline-visual-hero" aria-label="DeepEcom Architecture Flow">
-  <!-- SVG is now an empty canvas; JS below fills it with paths measured from
-       the real card/core positions, so it can never drift out of alignment. -->
+<div class="pipeline-visual-hero" aria-label="DeepEcom Architecture Flow" data-uid={uid}>
   <svg
     class="hero-flow-canvas"
-    id="hero-flow-canvas"
+    id={`hero-flow-canvas-${uid}`}
     preserveAspectRatio="none"
     aria-hidden="true"
   >
     <defs>
-      <linearGradient id="hero-in" x1="0%" y1="0%" x2="100%" y2="0%">
+      <linearGradient id={`hero-in-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" stop-color="#cbd5e1" stop-opacity="0.25" />
         <stop offset="100%" stop-color="#5b4dfb" stop-opacity="0.8" />
       </linearGradient>
-      <linearGradient id="hero-out" x1="0%" y1="0%" x2="100%" y2="0%">
+      <linearGradient id={`hero-out-${uid}`} x1="0%" y1="0%" x2="100%" y2="0%">
         <stop offset="0%" stop-color="#5b4dfb" stop-opacity="0.8" />
         <stop offset="100%" stop-color="#10a37f" stop-opacity="0.55" />
       </linearGradient>
-      <filter id="hero-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <filter id={`hero-glow-${uid}`} x="-20%" y="-20%" width="140%" height="140%">
         <feGaussianBlur stdDeviation="2" result="blur" />
         <feComposite in="SourceGraphic" in2="blur" operator="over" />
       </filter>
-      <marker id="arrow-in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id={`arrow-in-${uid}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" fill="#5b4dfb" />
       </marker>
-      <marker id="arrow-out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id={`arrow-out-${uid}`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M 0 0 L 10 5 L 0 10 z" fill="#10a37f" />
       </marker>
     </defs>
-    <!-- paths + particles injected here at runtime -->
   </svg>
 
   <div class="hero-grid-layout">
@@ -145,8 +136,7 @@ const outputs = [
 
     <!-- ENGINE CORE COLUMN -->
     <div class="hero-col center-col">
-      <div class="engine-core-box" id="core-box">
-        <div class="core-ring"></div>
+      <div class="engine-core-box" id={`core-box-${uid}`}>
         <div class="core-inner">
           <div class="core-logo-badge">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -206,7 +196,7 @@ const outputs = [
     --surface: #fbfbfe;
     --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px -14px rgba(15, 23, 42, 0.12);
     --shadow-card-hover: 0 4px 10px rgba(91, 77, 251, 0.08), 0 18px 32px -14px rgba(91, 77, 251, 0.18);
-    --shadow-core: 0 30px 60px -18px rgba(91, 77, 251, 0.28);
+    --shadow-core: 0 20px 40px -20px rgba(15, 23, 42, 0.18);
   }
 
   .pipeline-visual-hero {
@@ -401,39 +391,16 @@ const outputs = [
 
   .engine-core-box {
     position: relative;
-    border-radius: 26px;
-    padding: 2px;
     width: 100%;
     z-index: 2;
-    box-shadow: var(--shadow-core);
-  }
-
-  /* Slowly rotating conic-gradient ring, clipped to a 2px border by the
-     white inner panel sitting on top of it — the "premium SaaS" halo. */
-  .core-ring {
-    position: absolute;
-    inset: 0;
+    background: #ffffff;
+    border: 1px solid var(--border-subtle);
     border-radius: 26px;
-    background: conic-gradient(
-      from 0deg,
-      var(--brand-indigo) 0deg,
-      var(--brand-indigo-2) 90deg,
-      var(--brand-emerald) 180deg,
-      var(--brand-indigo-2) 270deg,
-      var(--brand-indigo) 360deg
-    );
-    animation: ringSpin 6s linear infinite;
-    opacity: 0.9;
-  }
-
-  @keyframes ringSpin {
-    to { transform: rotate(360deg); }
+    box-shadow: var(--shadow-core);
   }
 
   .core-inner {
     position: relative;
-    background: #ffffff;
-    border-radius: 24px;
     padding: 2.1rem 1.25rem 1.75rem;
     text-align: center;
   }
@@ -521,20 +488,34 @@ const outputs = [
     .cards-box { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
     .engine-core-box { max-width: 300px; margin: 0 auto; }
   }
+
+  /* Respect reduced-motion: kill the decorative loops, keep the fade-in */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.hero-line) { animation: none; }
+    .spread-ring, .glow-dot, .pulse-dot { animation: none; opacity: 0; }
+    .pulse-dot { opacity: 1; }
+    .h-card { animation-duration: 0.01s; }
+  }
 </style>
 
 <script>
-  // Draws every connector by MEASURING real DOM rects, instead of trusting
-  // hand-typed coordinates. This is the actual fix for the right-hand-side
-  // drift/overshoot: the old paths assumed a fixed 800x540 canvas with an
-  // exact number of evenly-spaced cards, which broke the moment real
-  // rendered heights (fonts, wrapping, card count) differed from that guess.
+  // Draws every connector by MEASURING real DOM rects at runtime, rather
+  // than trusting hand-typed coordinates — correct for any card count or
+  // rendered height. IDs are scoped per-instance (data-uid) so this also
+  // works safely if the component is used more than once on a page.
   function initHeroFlow(root: HTMLElement) {
-    const svg = root.querySelector<SVGSVGElement>("#hero-flow-canvas");
-    const core = root.querySelector<HTMLElement>("#core-box");
-    if (!svg || !core) return;
+    if (root.dataset.flowInit === "1") return; // guard against double-init
+    root.dataset.flowInit = "1";
 
-    const defs = svg.querySelector("defs")!;
+    const uid = root.dataset.uid;
+    const svg = root.querySelector<SVGSVGElement>(`#hero-flow-canvas-${uid}`);
+    const core = root.querySelector<HTMLElement>(`#core-box-${uid}`);
+    if (!svg || !core || !uid) return;
+
+    const defs = svg.querySelector("defs");
+    if (!defs) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     function relRect(el: Element, containerRect: DOMRect) {
       const r = el.getBoundingClientRect();
@@ -552,33 +533,33 @@ const outputs = [
       return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
     }
 
+    function addParticle(d: string, color: string, dur: string, delay: number) {
+      if (reduceMotion || !svg) return;
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("r", "3");
+      circle.setAttribute("fill", color);
+      circle.setAttribute("opacity", "0.9");
+      const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+      anim.setAttribute("dur", dur);
+      anim.setAttribute("repeatCount", "indefinite");
+      anim.setAttribute("begin", `${delay}s`);
+      anim.setAttribute("path", d);
+      circle.appendChild(anim);
+      svg.appendChild(circle);
+    }
+
     function render() {
+      if (!svg || !defs) return;
       const containerRect = root.getBoundingClientRect();
-      if(!svg)return;
       svg.setAttribute("viewBox", `0 0 ${containerRect.width} ${containerRect.height}`);
 
-      // wipe previous paths/particles, keep <defs>
       Array.from(svg.children).forEach((child) => {
         if (child !== defs) svg.removeChild(child);
       });
 
-      const coreRect = relRect(core , containerRect);
+      const coreRect = relRect(core, containerRect);
       const sourceCards = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));
       const outputCards = Array.from(root.querySelectorAll<HTMLElement>('[data-card="output"]'));
-
-      const addParticle = (d: string, color: string, dur: string, delay: number) => {
-        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-        circle.setAttribute("r", "3");
-        circle.setAttribute("fill", color);
-        circle.setAttribute("opacity", "0.9");
-        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
-        anim.setAttribute("dur", dur);
-        anim.setAttribute("repeatCount", "indefinite");
-        anim.setAttribute("begin", `${delay}s`);
-        anim.setAttribute("path", d);
-        circle.appendChild(anim);
-        svg.appendChild(circle);
-      };
 
       sourceCards.forEach((card, i) => {
         const r = relRect(card, containerRect);
@@ -586,12 +567,10 @@ const outputs = [
         const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
         p.setAttribute("class", "hero-line hero-line-in");
         p.setAttribute("d", d);
-        p.setAttribute("stroke", "url(#hero-in)");
-        p.setAttribute("filter", "url(#hero-glow)");
-        p.setAttribute("marker-end", "url(#arrow-in)");
+        p.setAttribute("stroke", `url(#hero-in-${uid})`);
+        p.setAttribute("filter", `url(#hero-glow-${uid})`);
+        p.setAttribute("marker-end", `url(#arrow-in-${uid})`);
         svg.appendChild(p);
-        // Every inbound line gets its own particle, staggered so the flow
-        // reads as a continuous stream converging into the core.
         addParticle(d, "#5b4dfb", "2.8s", i * 0.35);
       });
 
@@ -601,23 +580,46 @@ const outputs = [
         const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
         p.setAttribute("class", "hero-line hero-line-out");
         p.setAttribute("d", d);
-        p.setAttribute("stroke", "url(#hero-out)");
-        p.setAttribute("filter", "url(#hero-glow)");
-        p.setAttribute("marker-end", "url(#arrow-out)");
+        p.setAttribute("stroke", `url(#hero-out-${uid})`);
+        p.setAttribute("filter", `url(#hero-glow-${uid})`);
+        p.setAttribute("marker-end", `url(#arrow-out-${uid})`);
         svg.appendChild(p);
-        // Same idea fanning back out, on its own stagger so it reads as
-        // "processed data leaving the core" rather than a static wire.
         addParticle(d, "#10a37f", "2.4s", i * 0.3);
       });
     }
 
+    // Coalesce ResizeObserver + window-resize into a single rAF-scheduled
+    // render so a resize never triggers two full rebuild passes back to
+    // back (which was restarting every particle animation each time).
+    let scheduled = false;
+    function scheduleRender() {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        scheduled = false;
+        render();
+      });
+    }
+
     render();
-    const ro = new ResizeObserver(() => render());
+    const ro = new ResizeObserver(scheduleRender);
     ro.observe(root);
-    window.addEventListener("resize", render);
-    // Re-measure once more after fonts/layout settle.
-    window.setTimeout(render, 150);
+    window.addEventListener("resize", scheduleRender);
+    const settleTimeout = window.setTimeout(render, 150);
+
+    // Clean up if Astro view transitions swap this page out from under us.
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        ro.disconnect();
+        window.removeEventListener("resize", scheduleRender);
+        window.clearTimeout(settleTimeout);
+      },
+      { once: true }
+    );
   }
 
-  document.querySelectorAll<HTMLElement>(".pipeline-visual-hero").forEach(initHeroFlow);
+  document
+    .querySelectorAll<HTMLElement>(".pipeline-visual-hero")
+    .forEach(initHeroFlow);
 </script>
