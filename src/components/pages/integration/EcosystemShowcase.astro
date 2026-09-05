@@ -35,17 +35,61 @@ const marketplaces = [
   },
   {
     name: "Meesho",
-    href: "/integrations",
+    href: "/integrations/marketplaces",
     tone: "meesho",
     mark: "meesho",
     desc: "Channel data aggregated into the same connected layer.",
     cap: "Sales · Payments · Accounting",
   },
+  {
+    name: "Myntra",
+    href: "/integrations/myntra",
+    tone: "myntra",
+    mark: "myntra",
+    desc: "Myntra seller data into the same connected financial layer.",
+    cap: "Profitability · Reconciliation · Accounting",
+  },
+  {
+    name: "Ajio",
+    href: "/integrations/ajio",
+    tone: "ajio",
+    mark: "ajio",
+    desc: "Ajio orders and settlements into the same financial layer.",
+    cap: "Profitability · Reconciliation · Accounting",
+  },
+  {
+    name: "JioMart",
+    href: "/integrations/jiomart",
+    tone: "jiomart",
+    mark: "jiomart",
+    desc: "JioMart channel data aggregated into the same layer.",
+    cap: "Sales · Payments · Accounting",
+  },
+  {
+    name: "Nykaa",
+    href: "/integrations/nykaa",
+    tone: "nykaa",
+    mark: "nykaa",
+    desc: "Nykaa seller data into the same connected financial layer.",
+    cap: "Profitability · Reconciliation · Accounting",
+  },
 ]
 
-const payments = [
-  { name: "Payment Gateway", mark: "pgw", desc: "Expected and received payment data into reconciliation.", cap: "Reconciliation" },
-  { name: "Marketplace Settlements", mark: "mps", desc: "Settlement to bank matching at order level.", cap: "Reconciliation" },
+const gateways = [
+  { name: "Razorpay", mark: "gateway", href: "/integrations/payments", desc: "Gateway payments into reconciliation and accounting.", cap: "Reconciliation · Accounting" },
+  { name: "PayU", mark: "gateway", href: "/integrations/payments", desc: "Payment data into expected-vs-received matching.", cap: "Reconciliation · Accounting" },
+  { name: "Cashfree", mark: "gateway", href: "/integrations/payments", desc: "Gateway settlements into one financial view.", cap: "Reconciliation · Accounting" },
+  { name: "PhonePe", mark: "gateway", href: "/integrations/payments", desc: "UPI and payment data into reconciliation.", cap: "Reconciliation" },
+  { name: "Paytm", mark: "gateway", href: "/integrations/payments", desc: "Payments and settlements into reconciliation.", cap: "Reconciliation" },
+  { name: "Marketplace Settlements", mark: "mps", href: "/integrations/payments", desc: "Settlement to bank matching at order level.", cap: "Reconciliation" },
+]
+
+const shipping = [
+  { name: "Shiprocket", mark: "ship", href: "/integrations/shipping", desc: "Shipping partner data into fulfilment cost visibility.", cap: "Costs · Profitability" },
+  { name: "Delhivery", mark: "ship", href: "/integrations/shipping", desc: "Fulfilment costs reflected in profitability and accounting.", cap: "Costs · Profitability" },
+  { name: "Ekart", mark: "ship", href: "/integrations/shipping", desc: "Marketplace logistics data into cost visibility.", cap: "Costs" },
+  { name: "Blue Dart", mark: "ship", href: "/integrations/shipping", desc: "Express shipping costs connected to their orders.", cap: "Costs" },
+  { name: "Xpressbees", mark: "ship", href: "/integrations/shipping", desc: "Fulfilment and logistics costs into the financial picture.", cap: "Costs" },
 ]
 
 const erps = [
@@ -119,6 +163,10 @@ const erps = [
             {m.mark === "flipkart" && <span class="mw-flipkart">Flipkart <b class="mw-fk">f</b></span>}
             {m.mark === "shopify" && <span class="mw-shopify">shopify</span>}
             {m.mark === "meesho" && <span class="mw-meesho">meesho</span>}
+            {m.mark === "myntra" && <span class="mw-myntra">Myntra</span>}
+            {m.mark === "ajio" && <span class="mw-ajio">AJIO</span>}
+            {m.mark === "jiomart" && <span class="mw-jiomart">JioMart</span>}
+            {m.mark === "nykaa" && <span class="mw-nykaa">Nykaa</span>}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{m.name}</div>
@@ -140,10 +188,10 @@ const erps = [
       </div>
     </div>
     <div class="eco-cards reveal" data-delay="120">
-      {payments.map((p, i) => (
-        <div class="eco-card eco-card-static">
+      {gateways.map((p) => (
+        <a class="eco-card" href={p.href}>
           <div class={`eco-mark ${p.mark}`}>
-            <CreditCard size={20} />
+            {p.mark === "mps" ? <CreditCard size={20} /> : <span class="eco-gw-letter">{p.name[0]}</span>}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{p.name}</div>
@@ -152,8 +200,8 @@ const erps = [
               {p.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-          {i === 1 && <span class="eco-pill">Reconciliation</span>}
-        </div>
+          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
+        </a>
       ))}
       <div class="eco-pay-note">
         <span class="eco-pay-flow">Payments → Expected → Received → Difference</span>
@@ -162,6 +210,32 @@ const erps = [
           so you always know what you should have received versus what actually arrived.
         </p>
       </div>
+    </div>
+
+    <!-- 08 SHIPPING PARTNERS -->
+    <div class="eco-dhead eco-dhead-ship reveal">
+      <div>
+        <span class="eyebrow">SHIPPING PARTNERS</span>
+        <h3 class="eco-dtitle">Fulfilment costs, tied to the orders they belong to.</h3>
+      </div>
+      <a class="eco-all" href="/integrations/shipping">All shipping partners <ArrowRight size={15} /></a>
+    </div>
+    <div class="eco-cards eco-cards-ship reveal" data-delay="120">
+      {shipping.map((s) => (
+        <a class="eco-card" href={s.href}>
+          <div class={`eco-mark ${s.mark}`}>
+            <span class="eco-gw-letter">{s.name[0]}</span>
+          </div>
+          <div class="eco-card-body">
+            <div class="eco-card-name">{s.name}</div>
+            <p class="eco-card-desc">{s.desc}</p>
+            <div class="eco-card-cap">
+              {s.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
+            </div>
+          </div>
+          <span class="eco-card-arrow"><ArrowRight size={16} /></span>
+        </a>
+      ))}
     </div>
 
     <!-- 11 ERP -->
@@ -329,8 +403,14 @@ const erps = [
     :global(.mw-fk) { background: #ff9f00; color: #fff; font-size: 0.62rem; padding: 1px 4px; border-radius: 2px; font-style: normal; }
     :global(.mw-shopify) { font-weight: 700; font-size: 0.95rem; }
     :global(.mw-meesho) { color: #f43f5e; font-weight: 700; }
+    :global(.mw-myntra) { color: #ed174d; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.02em; }
+    :global(.mw-ajio) { color: #000; font-weight: 800; font-size: 0.98rem; letter-spacing: 0.02em; }
+    :global(.mw-jiomart) { color: #0f3cc9; font-weight: 800; font-size: 0.95rem; letter-spacing: -0.01em; }
+    :global(.mw-nykaa) { color: #ec147c; font-weight: 800; font-size: 0.98rem; letter-spacing: -0.01em; }
 
-    :global(.eco-mark.pgw), :global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
+    :global(.eco-mark.pgw):global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
+    :global(.eco-mark.gateway), :global(.eco-mark.ship), :global(.eco-mark.mps) { color: var(--brand-600); background: var(--brand-50); border-color: var(--brand-100); }
+    :global(.eco-gw-letter) { font-weight: 800; font-size: 1.05rem; color: var(--brand-600); }
 
     :global(.eco-mark-erp) { background: #fff; }
     :global(.erp-tally) { font-family: Georgia, serif; font-style: italic; font-weight: 700; font-size: 1.15rem; }

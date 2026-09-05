@@ -9,25 +9,68 @@ import AfterConnected from "@/components/pages/integration/AfterConnected.astro"
 import OutcomeBlocks from "@/components/pages/integration/OutcomeBlocks.astro"
 import HowItWorks from "@/components/pages/integration/HowItWorks.astro"
 import PlatformErpCombo from "@/components/pages/integration/PlatformErpCombo.astro"
-import IntegrationFaq from "@/components/landing/integration-faq"
 import { buttonVariants } from "@/components/landing/ui/button"
-import { Search, ArrowDown } from "lucide-react"
 import Navbar from "@/components/landing/site-nav"
 
-const directory = [
-  { name: "Amazon", cat: "Marketplaces", href: "/integrations/amazon", cap: "Sales · Payments · Reconciliation" },
-  { name: "Flipkart", cat: "Marketplaces", href: "/integrations/flipkart", cap: "Sales · Payments · Reconciliation" },
-  { name: "Shopify", cat: "Marketplaces", href: "/integrations/shopify", cap: "Sales · Payments · Accounting" },
-  { name: "Meesho", cat: "Marketplaces", href: "/integrations/marketplaces", cap: "Sales · Payments" },
-  { name: "Tally", cat: "ERP", href: "/integrations/tally", cap: "Accounting · GST · Inventory" },
-  { name: "SAP", cat: "ERP", href: "/integrations/sap", cap: "Accounting · Posting" },
-  { name: "Zoho Books", cat: "ERP", href: "/integrations/zoho", cap: "Accounting · Posting" },
+const faqs = [
+  {
+    q: "What systems can I connect to DeepEcom?",
+    a: "DeepEcom connects the systems verified on this page: marketplaces like Amazon, Flipkart, Shopify and Meesho, and ERPs like Tally, SAP and Zoho Books. The ecosystem is designed to grow — new connections are added based on what customers actually run on.",
+  },
+  {
+    q: "Which marketplaces are supported?",
+    a: "Amazon, Flipkart, Shopify and Meesho are supported today. Each marketplace sends its data into DeepEcom in its own format, and DeepEcom turns it into one consistent financial layer.",
+  },
+  {
+    q: "Does DeepEcom integrate with payment gateways?",
+    a: "Yes. DeepEcom connects payment settlement data so you can match what you expected to receive against what actually arrived — the core of the Payment Reconciliation product.",
+  },
+  {
+    q: "Does DeepEcom connect with Tally?",
+    a: "Yes. DeepEcom posts detailed ecommerce accounting into Tally — order-wise, GST-wise and warehouse-wise, including TCS/TDS and stock transfers.",
+  },
+  {
+    q: "Does DeepEcom connect with SAP?",
+    a: "Yes. DeepEcom structures ecommerce transactions into detailed accounting for SAP systems.",
+  },
+  {
+    q: "Does DeepEcom connect with Zoho Books?",
+    a: "Yes. DeepEcom accounts ecommerce transactions inside Zoho Books with the same detail and structure.",
+  },
+  {
+    q: "What data flows into DeepEcom after a system is connected?",
+    a: "Orders, settlements, fees, returns, inventory movement, taxes and payment records — the transaction data those systems already hold. DeepEcom doesn't ask you to re-enter anything.",
+  },
+  {
+    q: "What happens after a system is connected?",
+    a: "The data comes together, then it becomes useful: sales and profitability on the Platform dashboard, expected-vs-received reconciliation, reports, and detailed accounting through the ERP Connector.",
+  },
+  {
+    q: "Does DeepEcom replace my ERP?",
+    a: "No. DeepEcom is the layer that makes your ERP ecommerce-ready. Your ERP stays the system of record — DeepEcom puts the right ecommerce transactions into it, in detail.",
+  },
+  {
+    q: "How is an integration different from ERP accounting?",
+    a: "Connecting a system brings data in. Accounting is what DeepEcom does with it: classifying revenue, fees, taxes and payouts into correct, ERP-ready entries rather than a raw stream of records.",
+  },
+  {
+    q: "Can I connect multiple systems at the same time?",
+    a: "Yes. Most DeepEcom customers run several marketplaces and one ERP together. Every addition lands in the same financial layer, so nothing fragments as you grow.",
+  },
+  {
+    q: "Does DeepEcom connect to shipping or logistics platforms?",
+    a: "Not as a shipping or tracking platform. Shipping and logistics partners like Shiprocket, Delhivery, Ekart, Blue Dart and Xpressbees connect so fulfilment costs land in profitability and accounting — but DeepEcom doesn't generate or track shipments. If a specific logistics workflow matters to you, tell us.",
+  },
+  {
+    q: "Are the integration details and data fields always up to date?",
+    a: "Each integration page describes what that system connects and what DeepEcom does with the data. Capabilities are only listed where they're verified — nothing is advertised before it exists.",
+  },
 ]
 ---
 
 <PageLayout
   title="Ecommerce Integrations — DeepEcom"
-  description="DeepEcom connects your marketplaces, payment systems and ERP into one financial layer. Amazon, Flipkart, Shopify, Tally, SAP, Zoho and more."
+  description="DeepEcom connects your marketplaces, shipping partners, payment gateways and ERP into one financial layer. Amazon, Flipkart, Shopify, Myntra, Tally, SAP, Zoho and more."
 >
 
   <!-- 01 HERO -->
@@ -63,7 +106,14 @@ const directory = [
     <div class="sec-narrow">
       <span class="eyebrow eyebrow-center">FAQ</span>
       <h2 class="h2-md faq-title">Integration questions, answered.</h2>
-      <IntegrationFaq client:visible />
+      <div class="faq-list">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
     </div>
   </section>
 
@@ -101,77 +151,64 @@ const directory = [
       padding-bottom: clamp(1.5rem, 3vh, 2.75rem);
     }
 
-  /* ---------- integration directory ---------- */
-  .dir-head { text-align: center; }
-  .dir-title { margin-top: 0.9rem; }
-  .dir-lead { margin-top: 0.75rem; max-width: 36rem; margin-inline: auto; }
-
-  .dir-panel {
-    margin-top: 2rem;
-    max-width: 60rem;
-    margin-inline: auto;
-    border: 1px solid var(--ink-200);
-    border-radius: 1.25rem;
-    background: #fff;
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-  }
-  .dir-search {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.8rem 1.25rem;
-    border-bottom: 1px solid var(--ink-100);
-    color: var(--ink-400);
-  }
-  .dir-search svg {
-    flex: none;
-    width: 16px;
-    height: 16px;
-  }
-  .dir-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 0.95rem;
-    color: var(--ink-900);
-    font-family: inherit;
-  }
-  .dir-input::placeholder { color: var(--ink-400); }
-  .dir-count { font-size: 0.75rem; font-weight: 600; color: var(--ink-400); white-space: nowrap; }
-  .dir-grid { display: grid; grid-template-columns: 1fr; }
-  @media (min-width: 40rem) { .dir-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 56rem) { .dir-grid { grid-template-columns: repeat(3, 1fr); } }
-  .dir-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    padding: 1rem 1.15rem;
-    border-right: 1px solid var(--ink-100);
-    border-bottom: 1px solid var(--ink-100);
-    transition: background 0.15s ease, box-shadow 0.15s ease;
-  }
-  .dir-card:hover { background: var(--ink-50); box-shadow: inset 0 0 0 1px var(--brand-200); }
-  .dir-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-  .dir-name { font-size: 1rem; font-weight: 700; color: var(--ink-950); }
-  .dir-cat { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--brand-600); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 999px; padding: 0.22rem 0.55rem; }
-  .dir-cap { display: flex; flex-wrap: wrap; gap: 0.35rem; }
-  .dir-tag { font-size: 0.7rem; font-weight: 600; color: var(--ink-600); background: var(--ink-50); border: 1px solid var(--ink-100); border-radius: 999px; padding: 0.22rem 0.55rem; }
-  .dir-link { margin-top: auto; display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; color: var(--brand-600); }
-  .dir-arrow { transition: transform 0.2s ease; flex: none; width: 14px; height: 14px; }
-  .dir-card:hover .dir-arrow { transform: translate(3px, 3px); }
-
-  /* FAQ scoped fixes */
-  .faq button svg {
-    flex: none;
-    width: 16px;
-    height: 16px;
-  }
-
   /* ---------- FAQ ---------- */
   .faq { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
   .faq-title { margin-top: 0.8rem; text-align: center; }
+  .faq-list {
+    margin-top: 1.75rem;
+    max-width: 46rem;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .faq-item[open] {
+    border-color: var(--brand-200);
+    box-shadow: 0 8px 24px -12px rgba(83, 58, 253, 0.18);
+  }
+  .faq-q {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1.15rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink-950);
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q::after {
+    content: "";
+    flex: none;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid var(--ink-400);
+    border-bottom: 2px solid var(--ink-400);
+    transform: rotate(45deg);
+    margin-top: -3px;
+    transition: transform 0.2s ease, margin-top 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after {
+    transform: rotate(-135deg);
+    margin-top: 3px;
+  }
+  .faq-q:hover { color: var(--brand-600); }
+  .faq-a {
+    padding: 0 1.15rem 1rem;
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    color: var(--ink-500);
+    max-width: 42rem;
+  }
 
   /* ---------- final cta ---------- */
   .ifinal { padding: clamp(2rem, 4vh, 3rem) 0 clamp(4rem, 8vh, 6rem); }

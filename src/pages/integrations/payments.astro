@@ -1,0 +1,83 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/PageHero.astro"
+import FeatureGrid from "@/components/pages/FeatureGrid.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import SectionHeading from "@/components/landing/section-heading.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight } from "lucide-react"
+
+const gateways = [
+  { name: "Razorpay", desc: "Gateway payments into reconciliation and accounting" },
+  { name: "PayU", desc: "Payment data into expected-vs-received matching" },
+  { name: "Cashfree", desc: "Gateway settlements into one financial view" },
+  { name: "PhonePe", desc: "UPI and payment data into reconciliation" },
+  { name: "Paytm", desc: "Payments and settlements into reconciliation" },
+]
+---
+
+<PageLayout
+  title="Payment Gateway Integrations — DeepEcom"
+  description="Connect payment gateway and settlement data with DeepEcom so expected payments match what actually arrives — reconciled and accounted."
+>
+  <PageHero
+    eyebrow="INTEGRATIONS · PAYMENTS"
+    title="Know what you should have received versus what arrived."
+    lead="DeepEcom connects your payment gateways so expected and actual payment data come together, get reconciled, and flow into accounting."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="/contact" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a href="/integrations" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        All Integrations
+      </a>
+    </div>
+  </PageHero>
+
+  <section class="mx-auto max-w-6xl px-6 py-16">
+    <SectionHeading
+      eyebrow="PAYMENT GATEWAYS"
+      title="Payment data, in one reconciliation."
+      lead="Each gateway reports payments differently. DeepEcom brings them together so every rupee can be matched to an order."
+      center
+    />
+    <div class="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2">
+      {
+        gateways.map((g) => (
+          <div class="flex items-start gap-4 rounded-2xl border border-ink-200 bg-white p-6 shadow-sm">
+            <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-50 text-sm font-bold text-brand-600">
+              {g.name[0]}
+            </span>
+            <span>
+              <span class="flex items-center gap-2 text-lg font-semibold tracking-tight text-ink-900">
+                {g.name}
+              </span>
+              <span class="mt-1 block text-sm text-muted-foreground">{g.desc}</span>
+            </span>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <FeatureGrid
+    eyebrow="CAPABILITIES"
+    title="Payments, reconciled to the rupee."
+    lead="Gateway and settlement data becomes part of the same financial layer as sales."
+    features={[
+      { title: "Expected vs Received", description: "Match what you should have received against what arrived.", icon: "wallet" },
+      { title: "Reconciliation", description: "Payment and settlement matching at order level.", icon: "refresh" },
+      { title: "Accounting", description: "Payment transactions classified into ERP-ready entries.", icon: "receipt" },
+      { title: "ERP Posting", description: "Payment data posted into Tally, SAP or Zoho.", icon: "building" },
+    ]}
+    columns={4}
+    center
+  />
+
+  <CtaBand
+    title="Reconcile every payment, automatically."
+    lead="See how DeepEcom matches expected and received payment data."
+  />
+</PageLayout>
