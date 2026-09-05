@@ -1,8 +1,8 @@
 ---
 const businessReports = [
-  { label: "Profitability Summary", cols: ["Channel", "Revenue", "Profit", "Margin"], sample: ["Amazon", "₹16.4L", "₹4.6L", "28%"], period: "Monthly" },
+  { label: "Profitability Summary", cols: ["Channel", "Revenue", "Profit", "Margin"], sample: ["Amazon", "₹16.4L", "₹4.6L"], period: "Monthly" },
   { label: "Payment Reconciliation", cols: ["Source", "Expected", "Received", "Variance"], sample: ["Payment Gateway 01", "₹15.2L", "₹15.2L", "₹0"], period: "Weekly" },
-  { label: "Realization Analysis", cols: ["Month", "Realization %", "Variance", "Status"], sample: ["Mar", "96%", "+2%", "Good"], period: "Monthly" },
+
 ]
 ---
 <style is:global>
@@ -31,8 +31,8 @@ const businessReports = [
   .cfrep-bar .dots i:nth-child(3) { background: #86efac; }
   .cfrep-bar .title { margin-left: 0.25rem; font-size: 0.78rem; font-weight: 700; color: var(--ink-800); }
   .cfrep-title { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.8rem; }
-  .cfrep-grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-  @media (min-width: 48rem) { .cfrep-grid { grid-template-columns: repeat(3, 1fr); } }
+  .cfrep-grid { display: grid; grid-template-columns: 2fr; gap: 1.25rem; }
+  @media (min-width: 48rem) { .cfrep-grid { grid-template-columns: repeat(2, 1fr); } }
   .cfrep-card {
     border: 1px solid var(--ink-200);
     border-radius: 0.85rem;
