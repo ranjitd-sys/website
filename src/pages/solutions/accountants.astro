@@ -16,6 +16,7 @@ import MatchStates from "@/components/pages/MatchStates.astro"
 import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
 import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { ArrowRight } from "lucide-react"
+import PlatformErpConnector from "@/components/pages/PlatformErpConnector.astro"
 
 const personaData = [
   {
@@ -260,38 +261,7 @@ const faqs = [
           The Platform carries marketplace visibility and reconciliation. The ERP Connector turns the same transaction layer into detailed accounting.
         </p>
       </div>
-      <div class="mt-10 grid gap-6 md:grid-cols-2">
-        <div class="rounded-2xl border border-ink-200 bg-white p-7 shadow-card transition hover:border-ink-300 hover:shadow-md">
-          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Platform</span>
-          <h3 class="mt-1 text-lg font-bold text-ink-900">Understand the business.</h3>
-          <ul class="mt-4 flex flex-col gap-2.5">
-            {
-              ["Marketplace data aggregation", "Dashboard & marketplace performance", "Profitability", "Payment reconciliation", "Reports"].map((x) => (
-                <li class="flex items-center gap-2.5 text-sm text-ink-600">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="flex-none text-brand-500" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                  {x}
-                </li>
-              ))
-            }
-          </ul>
-          <a href="/platform" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">Explore Platform →</a>
-        </div>
-        <div class="rounded-2xl border border-brand-200 bg-gradient-to-b from-brand-50 to-white p-7 shadow-card transition hover:border-brand-300 hover:shadow-md">
-          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">ERP Connector</span>
-          <h3 class="mt-1 text-lg font-bold text-ink-900">Account every transaction.</h3>
-          <ul class="mt-4 flex flex-col gap-2.5">
-            {
-              ["Order-wise accounting", "GST-wise accounting", "Warehouse-wise accounting", "Returns, refunds & TCS/TDS", "ERP posting — Tally · SAP · Zoho"].map((x) => (
-                <li class="flex items-center gap-2.5 text-sm text-ink-600">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="flex-none text-brand-500" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                  {x}
-                </li>
-              ))
-            }
-          </ul>
-          <a href="/erp-connector" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">Explore ERP Connector →</a>
-        </div>
-      </div>
+      <PlatformErpConnector/>
     </div>
   </section>
 
