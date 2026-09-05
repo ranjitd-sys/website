@@ -1,101 +1,556 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
+import AccountantHero from "@/components/pages/AccountantHero.astro"
+import TransactionDecomposition from "@/components/pages/TransactionDecomposition.astro"
+import WorkedExample from "@/components/pages/WorkedExample.astro"
+import OrderWiseAccounting from "@/components/pages/OrderWiseAccounting.astro"
+import GstWiseAccounting from "@/components/pages/GstWiseAccounting.astro"
+import SettlementFlow from "@/components/pages/SettlementFlow.astro"
+import TcsTdsFlow from "@/components/pages/TcsTdsFlow.astro"
+import ReturnsReversal from "@/components/pages/ReturnsReversal.astro"
+import WarehouseWise from "@/components/pages/WarehouseWise.astro"
+import StockTransferVisual from "@/components/pages/StockTransferVisual.astro"
+import InventoryAccounting from "@/components/pages/InventoryAccounting.astro"
+import ErpPostingSection from "@/components/pages/ErpPostingSection.astro"
+import MatchStates from "@/components/pages/MatchStates.astro"
+import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { ArrowRight } from "lucide-react"
+
+const personaData = [
+  {
+    title: "Staff Accountant",
+    role: "Detailed entries",
+    desc: "Move from copy-pasting spreadsheets to structured, balanced entries where every figure is traceable to its order.",
+    icon: '<path d="M6 2h8l4 4v16H6zM14 2v4h4"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  },
+  {
+    title: "Senior Accountant",
+    role: "GST & reconciliation",
+    desc: "Review order-wise and GST-wise detail, and reconcile settlements without stitching data across spreadsheets.",
+    icon: '<path d="M12 3v18M8 21h8M4 6h16M6 6 3 11a3 3 0 0 0 6 0L6 6zM18 6l-3 5a3 3 0 0 0 6 0l-3-5z"/>',
+  },
+  {
+    title: "Accounting Manager",
+    role: "Posting & month-end",
+    desc: "Review prepared entries, post them to the ERP and close the month with the books balanced and complete.",
+    icon: '<path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  },
+  {
+    title: "Finance Team",
+    role: "One connected layer",
+    desc: "Less manual work, fewer spreadsheets and a single financial view of the ecommerce business.",
+    icon: '<path d="M3 3v18h18M8 17V9M13 17V5M18 17v-5"/>',
+  },
+]
+
+const faqs = [
+  { q: "What does DeepEcom do for my accounting team?", a: "DeepEcom connects marketplace data and structured transaction detail into a financial layer. For accountants, that means orders, settlements, returns and inventory movements are turned into detailed, balanced accounting entries that are ready to post in your ERP." },
+  { q: "How is a single ecommerce order accounted?", a: "Each order is accounted order-wise. The sale, GST, marketplace charges, TCS/TDS and the receivable are represented as distinct, structured entries — not a single summary posting." },
+  { q: "Is accounting done GST-wise?", a: "Yes. GST is split by head — CGST, SGST and IGST — and kept with each order, so tax ledgers and GST reporting have the detail they need." },
+  { q: "How are marketplace fees and charges accounted?", a: "Marketplace deductions — commission, shipping, collection fees and other charges — are captured as distinct charge entries so revenue stays separate from the deductions that sit on top of it." },
+  { q: "How are TCS and TDS handled?", a: "The TCS/TDS context carried by marketplace transactions is preserved and represented in the accounting entries, along with the order detail itself." },
+  { q: "How are returns and refunds accounted?", a: "A return reverses the original sale accounting — including the related GST — through its own reversal and adjustment entries, so revenue and tax ledgers stay balanced." },
+  { q: "Can accounting be maintained warehouse-wise?", a: "Yes. Warehouse context is part of each transaction and is carried into warehouse-wise accounting, so each location's books stay separate." },
+  { q: "How are stock transfers accounted?", a: "A stock transfer is accounted as a movement between warehouse stock ledgers — stock out from one warehouse and stock in for another — so inventory value follows the goods." },
+  { q: "Is inventory accounting included?", a: "Yes. Sales, returns and stock transfers update inventory with their quantity and value, giving you stock movement alongside the financial entries." },
+  { q: "How are settlements and payouts accounted?", a: "The path from sale to settled payment is accounted step by step — from receivable, through marketplace deductions, to the amount actually received." },
+  { q: "Which ERPs does DeepEcom post to?", a: "The ERP Connector posts to Tally, SAP and Zoho Books today. Supported systems are confirmed as part of setup so the entries align with your ERP structure." },
+  { q: "How does ERP posting work?", a: "Prepared entries are posted into your ERP as vouchers or documents aligned to the ERP's structure — for example a voucher in Tally, a document in SAP or an entry in Zoho Books — with the source order kept as reference." },
+  { q: "Does DeepEcom replace our ERP?", a: "No. DeepEcom makes your ERP ecommerce-ready. It stays the system of record and accounting — DeepEcom brings the detailed, structured ecommerce transactions to it." },
+  { q: "Can we keep our existing chart of accounts and GL mapping?", a: "Yes. Transactions are mapped to your accounting structure so the entries use the ledgers and mapping your finance team already works with." },
+  { q: "Can we trace an accounting entry back to its order?", a: "Yes. Every entry carries the order, invoice and source reference, so you can trace any figure in the books back to the transaction it came from." },
+]
 ---
 
 <PageLayout
-  title="Accountants — Detailed ecommerce accounting and ERP posting | DeepEcom"
-  description="DeepEcom gives accountants order-level accounting, GST, marketplace fees, TCS/TDS, returns, warehouse accounting, stock transfers and ERP posting."
+  title="Accountants — Stop manual ecommerce accounting | DeepEcom"
+  description="DeepEcom turns ecommerce orders into detailed, balanced accounting entries — order-wise, GST-wise and warehouse-wise — for Tally, SAP and Zoho Books."
 >
-  <PageHero
-    eyebrow="SOLUTIONS · BY ROLE"
-    title="Accounting detail your ERP actually needs."
-    lead="Ecommerce accounting is about detail — order by order, fee by fee, return by return. DeepEcom turns that complexity into entries you can post with confidence."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore ERP Connector
-      </a>
+  <!-- 01 — HERO -->
+  <AccountantHero />
+
+  <!-- 02 — THE PROBLEM · 03 — ONE ORDER CREATES MANY EVENTS -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">THE PROBLEM</span>
+        <h2 class="h2-md mt-4">Ecommerce accounting is complicated.</h2>
+        <p class="lead mt-5">
+          An ecommerce order is not just an order. One order creates a sale, fees, GST, TCS/TDS, returns, settlements, inventory movements and stock transfers — each with its own accounting treatment.
+        </p>
+      </div>
+      <div class="mt-2">
+        <TransactionDecomposition />
+      </div>
+      <p class="mt-0 text-center text-sm font-medium tracking-wide text-ink-400">
+        ONE ORDER → MANY ACCOUNTING EVENTS
+      </p>
     </div>
-  </PageHero>
+  </section>
 
-  <FeatureGrid
-    eyebrow="ACCOUNTANTS"
-    title="Every ecommerce transaction, correctly accounted."
-    lead="From order-level entries to ERP posting, DeepEcom handles the detail that manual ecommerce accounting struggles to keep up with."
-    columns={3}
-    center
-    features={[
-      {
-        title: "Detailed accounting",
-        description: "Complete, structured entries instead of vague summary postings.",
-        icon: "table",
-      },
-      {
-        title: "Order-level accounting",
-        description: "Each order accounted individually, with the revenue and charges that belong to it.",
-        icon: "receipt",
-      },
-      {
-        title: "GST",
-        description: "GST-wise accounting that keeps tax reporting accurate.",
-        icon: "scale",
-      },
-      {
-        title: "Marketplace fees",
-        description: "Commissions and deductions captured as distinct, accurate accounting entries.",
-        icon: "wallet",
-      },
-      {
-        title: "TCS/TDS",
-        description: "TCS and TDS-related accounting handled precisely.",
-        icon: "calculator",
-      },
-      {
-        title: "Returns and refunds",
-        description: "Returns accounted accurately, keeping receivables and ledgers aligned.",
-        icon: "refresh",
-      },
-      {
-        title: "Warehouse accounting",
-        description: "Inventory and stock accounted at the warehouse level.",
-        icon: "boxes",
-      },
-      {
-        title: "Stock transfers",
-        description: "Movements between warehouses accounted accurately.",
-        icon: "truck",
-      },
-      {
-        title: "ERP posting",
-        description: "Prepared entries posted directly into your ERP, ready for review.",
-        icon: "bank",
-      },
-    ]}
-  />
+  <!-- 04 · 13 — FROM TRANSACTION TO ACCOUNTING -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">TRANSACTION → ACCOUNTING</span>
+        <h2 class="h2-md mt-4">One order. One complete, balanced set of entries.</h2>
+        <p class="lead mt-5">
+          DeepEcom structures every transaction — sale, GST, fees, TCS/TDS and your receivable — into balanced accounting entries you can review and post.
+        </p>
+      </div>
+      <div class="mt-10">
+        <WorkedExample />
+      </div>
+    </div>
+  </section>
 
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="THE ACCOUNTANT OUTCOME"
-        title="Entries you can post without second-guessing."
-        lead="DeepEcom prepares the detail — GST, fees, TCS/TDS, returns and stock transfers — so your ERP posting is accurate and complete."
-        center
+  <!-- 05 · 06 · 07 — ORDER-WISE + GST-WISE + FEES -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">DETAILED ACCOUNTING</span>
+        <h2 class="h2-md mt-4">Order-wise. GST-wise. Fee-wise.</h2>
+        <p class="lead mt-5">
+          Every order becomes its own set of entries — with GST split by head and marketplace charges kept as distinct ledgers.
+        </p>
+      </div>
+      <div class="mt-6 details-grid">
+        <OrderWiseAccounting />
+        <GstWiseAccounting />
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 · 08 — MARKETPLACE CHARGES · SETTLEMENT & PAYMENT -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">SETTLEMENTS & PAYMENTS</span>
+        <h2 class="h2-md mt-4">From sale to settled payment, accounted.</h2>
+        <p class="lead mt-5">
+          Marketplace charges, expected settlements, TCS/TDS and actual payouts — each stage accounted and reconcilable.
+        </p>
+      </div>
+      <div class="settle-grid">
+        <SettlementFlow />
+        <TcsTdsFlow />
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — RETURNS & REFUNDS -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">RETURNS & REFUNDS</span>
+        <h2 class="h2-md mt-4">A return reverses the sale — entry for entry.</h2>
+        <p class="lead mt-5">
+          Returns produce their own accounting: the original sale, its GST and the settlement adjustment are reversed so ledgers stay balanced.
+        </p>
+      </div>
+      <div class="rr-wrap">
+        <ReturnsReversal />
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · 11 · 12 — WAREHOUSE-WISE · INVENTORY · STOCK TRANSFERS -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">WAREHOUSES & INVENTORY</span>
+        <h2 class="h2-md mt-4">Warehouse-wise. Inventory-wise. Movement-wise.</h2>
+        <p class="lead mt-5">
+          Accounting keeps the warehouse context of every order, and stock — including transfers between warehouses — is carried with its value.
+        </p>
+      </div>
+      <div class="mt-6 wh-top">
+        <WarehouseWise />
+        <StockTransferVisual />
+      </div>
+      <div class="inv-band">
+        <InventoryAccounting />
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 — ERP POSTING -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">ERP POSTING</span>
+        <h2 class="h2-md mt-4">Entries your ERP understands.</h2>
+        <p class="lead mt-5">
+          Prepared entries post into your ERP with the vouchers, ledgers and source references your finance team expects.
+        </p>
+      </div>
+      <div class="erp-band">
+        <ErpPostingSection />
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 — REPORTS & RECONCILIATION -->
+  <section>
+    <div class="sec">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.2fr]">
+        <div>
+          <div class="reveal">
+            <span class="eyebrow">REPORTS & RECONCILIATION</span>
+            <h2 class="h2-md mt-4">Reports for the books. Reconciliation without spreadsheets.</h2>
+            <p class="lead mt-5">
+              Filter, review and download the reports accountants actually need — and see expected vs received across settlements with every difference surfaced.
+            </p>
+            <ul class="mt-6 flex flex-col gap-3.5">
+              {
+                [
+                  { t: "Order-wise & GST reports", s: "Detail for every entry and tax head" },
+                  { t: "Settlement, receivable & fee reports", s: "Charges and payouts structured" },
+                  { t: "Warehouse, inventory & transfer reports", s: "Stock context alongside the books" },
+                ].map((x) => (
+                  <li class="flex items-start gap-3">
+                    <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-lg bg-brand-50 text-brand-600">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    </span>
+                    <span class="text-sm leading-relaxed">
+                      <b class="font-semibold text-ink-900">{x.t}.</b>{" "}
+                      <span class="text-ink-500">{x.s}</span>
+                    </span>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+        <div class="recon-band reveal min-w-0">
+          <MatchStates />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 — HOW IT WORKS -->
+  <section class="section-band" id="how-it-works">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">HOW IT WORKS</span>
+        <h2 class="h2-md mt-4">From connected marketplaces to clean books.</h2>
+        <p class="lead mt-5">Five stages from marketplace data to posting-ready accounting in your ERP.</p>
+      </div>
+      <HowItWorksSteps
+        steps={[
+          { num: "01", label: "Connect", desc: "Connect supported marketplaces, payment sources and warehouses." },
+          { num: "02", label: "Collect", desc: "Bring orders, settlements, returns and inventory into DeepEcom." },
+          { num: "03", label: "Structure", desc: "Map transactions to your accounting structure and GST." },
+          { num: "04", label: "Account", desc: "Generate order-wise, GST-wise, warehouse-wise entries." },
+          { num: "05", label: "Post", desc: "Post prepared entries to Tally, SAP or Zoho Books." },
+        ]}
       />
     </div>
   </section>
 
-  <CtaBand
-    title="Turn ecommerce complexity into clean accounting."
-    lead="Order-level detail, GST, fees and stock transfers — ready for your ERP."
-  />
+  <!-- 17 — PLATFORM + ERP CONNECTOR -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">ONE SYSTEM</span>
+        <h2 class="h2-md mt-4">One layer for the books. One layer for the business.</h2>
+        <p class="lead mt-5">
+          The Platform carries marketplace visibility and reconciliation. The ERP Connector turns the same transaction layer into detailed accounting.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2">
+        <div class="rounded-2xl border border-ink-200 bg-white p-7 shadow-card transition hover:border-ink-300 hover:shadow-md">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Platform</span>
+          <h3 class="mt-1 text-lg font-bold text-ink-900">Understand the business.</h3>
+          <ul class="mt-4 flex flex-col gap-2.5">
+            {
+              ["Marketplace data aggregation", "Dashboard & marketplace performance", "Profitability", "Payment reconciliation", "Reports"].map((x) => (
+                <li class="flex items-center gap-2.5 text-sm text-ink-600">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="flex-none text-brand-500" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {x}
+                </li>
+              ))
+            }
+          </ul>
+          <a href="/platform" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">Explore Platform →</a>
+        </div>
+        <div class="rounded-2xl border border-brand-200 bg-gradient-to-b from-brand-50 to-white p-7 shadow-card transition hover:border-brand-300 hover:shadow-md">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-600">ERP Connector</span>
+          <h3 class="mt-1 text-lg font-bold text-ink-900">Account every transaction.</h3>
+          <ul class="mt-4 flex flex-col gap-2.5">
+            {
+              ["Order-wise accounting", "GST-wise accounting", "Warehouse-wise accounting", "Returns, refunds & TCS/TDS", "ERP posting — Tally · SAP · Zoho"].map((x) => (
+                <li class="flex items-center gap-2.5 text-sm text-ink-600">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" class="flex-none text-brand-500" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {x}
+                </li>
+              ))
+            }
+          </ul>
+          <a href="/erp-connector" class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:underline" style="text-underline-offset:0.2em">Explore ERP Connector →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 — WHO IT'S FOR -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">WHO IT'S FOR</span>
+        <h2 class="h2-md mt-4">Built for every accountant on the ecommerce books.</h2>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {personaData.map((p) => (
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl bg-brand-50 text-brand-600">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <Fragment set:html={p.icon} />
+              </svg>
+            </div>
+            <span class="text-xs font-bold uppercase tracking-wider text-brand-600">{p.role}</span>
+            <h3 class="mt-1 text-lg font-bold text-ink-900">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-500">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 — CUSTOMER PROOF -->
+  <section>
+    <div class="sec">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- 20 — FAQ -->
+  <section class="section-band">
+    <div class="sec-narrow">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Questions accountants ask before they start.</h2>
+      <div class="mt-10 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="faq-item" open={i === 0}>
+            <summary class="faq-q">{f.q}</summary>
+            <p class="faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 — FINAL CTA -->
+  <section class="acc-cta">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Bring your ecommerce business and your books together.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect your marketplaces, understand your business and automate ecommerce accounting.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Talk to an Expert
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  /* Normalize section rhythm (consistent with CFO page) */
+  main > section > .sec,
+  main > section > .sec-narrow {
+    padding-block: clamp(3rem, 5.5vh, 4.75rem);
+  }
+  .section-band {
+    padding-block: 0;
+  }
+
+  /* Detailed accounting: order-wise + GST side by side */
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 64rem) {
+    .details-grid {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      align-items: start;
+    }
+  }
+  .details-grid .owa,
+  .details-grid .gst-section {
+    padding-block: 0;
+  }
+  .details-grid > *,
+  .settle-grid > *,
+  .wh-top > *,
+  .inv-band > *,
+  .erp-band > *,
+  .recon-band > * {
+    min-width: 0;
+  }
+  .details-grid .max-w-6xl {
+    max-width: none;
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+
+  /* Settlements: charges + TCS/TDS side by side */
+  .settle-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  @media (min-width: 64rem) {
+    .settle-grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      align-items: stretch;
+    }
+  }
+  .settle-grid .sf,
+  .settle-grid .tcs {
+    padding-block: 0;
+  }
+  .settle-grid .max-w-6xl {
+    max-width: none;
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+
+  /* Returns */
+  .rr-wrap .rr {
+    padding-block: 1.5rem 0;
+  }
+
+  /* Warehouses + stock transfer, then inventory table */
+  .wh-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: center;
+  }
+  @media (min-width: 56rem) {
+    .wh-top {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    }
+  }
+  .wh-top .ww-panel {
+    max-width: none;
+  }
+  .wh-top .st {
+    padding-block: 0;
+  }
+  .wh-top .st-visual {
+    margin-top: 0;
+  }
+  .wh-top .max-w-6xl {
+    max-width: none;
+    padding-inline: 0;
+    margin-inline: 0;
+  }
+  .inv-band {
+    margin-top: 1.5rem;
+  }
+  .inv-band .inv {
+    padding-block: 0;
+  }
+  .inv-band .max-w-6xl {
+    max-width: none;
+  }
+
+  /* ERP posting */
+  .erp-band .erp-post {
+    padding-block: 0;
+  }
+
+  /* Reconciliation */
+  .recon-band .ms {
+    padding-block: 0;
+  }
+
+  /* Final CTA — dark navy + brand gradient */
+  .acc-cta {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background:
+      radial-gradient(40rem 22rem at 78% -20%, rgba(123, 98, 254, 0.32), transparent 60%),
+      radial-gradient(30rem 20rem at 12% 120%, rgba(57, 34, 184, 0.5), transparent 60%),
+      linear-gradient(135deg, #0b1120 0%, #151238 55%, #1e1560 100%);
+  }
+  .acc-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.35;
+    mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    -webkit-mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    pointer-events: none;
+  }
+  .acc-cta > div {
+    position: relative;
+    z-index: 1;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

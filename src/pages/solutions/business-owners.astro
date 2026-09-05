@@ -1,86 +1,983 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
-import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
+import BusinessOwnerHero from "@/components/pages/BusinessOwnerHero.astro"
+import RealizationFlow from "@/components/pages/RealizationFlow.astro"
+import OwnerProfitability from "@/components/pages/OwnerProfitability.astro"
+import ChannelPerformance from "@/components/pages/ChannelPerformance.astro"
+import ReportPreview from "@/components/pages/ReportPreview.astro"
+import BusinessMetrics from "@/components/pages/BusinessMetrics.astro"
+import CustomerProof from "@/components/pages/CustomerProof.astro"
 import { ArrowRight } from "lucide-react"
+
+const soldStats = [
+  { label: "Gross sales", value: "₹4,21,740" },
+  { label: "Orders", value: "2,976" },
+  { label: "Average order", value: "₹142" },
+  { label: "Channels", value: "3" },
+]
+
+const channelsShare = [
+  { name: "Amazon", share: "50%", amount: "₹2,10,000", color: "var(--brand-500)" },
+  { name: "Flipkart", share: "33%", amount: "₹1,38,000", color: "var(--brand-400)" },
+  { name: "Shopify", share: "17%", amount: "₹73,740", color: "var(--brand-300)" },
+]
+
+const products = [
+  { sku: "SKU-2048", product: "Ceramic Mug Set", orders: "1,240", revenue: "₹12.4L", profit: "₹4.1L", margin: "33%" },
+  { sku: "SKU-3011", product: "Cotton T-Shirt", orders: "3,860", revenue: "₹18.9L", profit: "₹4.9L", margin: "26%" },
+  { sku: "SKU-0577", product: "Leather Wallet", orders: "640", revenue: "₹8.2L", profit: "₹3.6L", margin: "44%" },
+  { sku: "SKU-8810", product: "Desk Lamp", orders: "1,980", revenue: "₹11.7L", profit: "₹2.4L", margin: "20.5%" },
+  { sku: "SKU-4492", product: "Water Bottle", orders: "4,120", revenue: "₹9.1L", profit: "₹1.3L", margin: "14%" },
+]
+
+const cashCards = [
+  { label: "Received & banked", value: "₹3,82,180", desc: "Verified against settlements" },
+  { label: "Pending settlement", value: "₹18,600", desc: "Due on the next payout" },
+  { label: "Under reconciliation", value: "₹5,160", desc: "Difference, surfaced to chase" },
+]
+
+const ledgers = ["Sales A/c", "Output GST", "Charges A/c", "TCS / TDS", "Receivable A/c", "Customer A/c"]
+const erps = ["Tally", "SAP", "Zoho Books"]
+
+const faqs = [
+  { q: "I run the business — I don't do the ops. Do I still get value from this?", a: "Yes. DeepEcom is built for the owner's view. The marketplaces, payment data and books connect once, and from then on you have dashboard visibility, profitability, reconciliation and reports without chasing the team for spreadsheets." },
+  { q: "Which marketplaces can I connect?", a: "DeepEcom connects supported marketplaces — including Amazon, Flipkart, Shopify and Meesho — along with the payments, returns and settlements attached to them. Supported systems are confirmed as part of setup." },
+  { q: "Marketplace dashboards already show my sales. Why DeepEcom?", a: "Marketplace dashboards show what that channel reports. DeepEcom shows the whole business — what you sold, what you were paid, what you made after every fee and return, and how channels compare — from one connected source." },
+  { q: "Will the money DeepEcom shows match my bank statement?", a: "That's exactly what payment reconciliation does — expected settlement versus actual received, with every difference surfaced. You see what has banked, what's pending and what needs a follow-up." },
+  { q: "Does DeepEcom replace my accountant or ERP?", a: "No. Your ERP stays the system of record. DeepEcom turns every transaction into structured, order-wise accounting that is ready to post into Tally, SAP or Zoho Books." },
+  { q: "I'm not hands-on with accounting. Is that a problem?", a: "Not for you. The accounting detail is prepared by DeepEcom for your finance team. Your part is the answers — sales, money received, profit and performance — in the dashboard and reports." },
+  { q: "Who else in the business can use the numbers?", a: "The dashboard, profitability, reconciliation and reports are part of the DeepEcom Platform, so few heads can see the same connected numbers instead of separate spreadsheets." },
+  { q: "How do we start?", a: "Book a demo. Connecting is a one-time setup, and from there the data flows — so the questions you ask today are answered from day one." },
+]
 ---
 
 <PageLayout
-  title="Business Owners — Understand your ecommerce business | DeepEcom"
-  description="DeepEcom helps business owners see actual profitability, marketplace performance and money received vs expected, reducing dependence on finance teams."
+  title="Business Owners — Know what you're really making | DeepEcom"
+  description="DeepEcom gives business owners one connected view of ecommerce — what you sold, what you received, what you made and where every transaction lands in accounting."
 >
-  <PageHero
-    eyebrow="SOLUTIONS · BY ROLE"
-    title="Know what your ecommerce business is really making."
-    lead="Marketplace numbers rarely tell you your true profit. DeepEcom shows actual profitability, what you get paid versus what you expect, and how each product and channel performs."
-  >
-    <div class="flex flex-wrap items-center justify-center gap-3">
-      <a href="/contact" class={buttonVariants({ size: "lg" })}>
-        Book a Demo
-        <ArrowRight size={16} />
-      </a>
-      <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
-        Explore Platform
-      </a>
-    </div>
-  </PageHero>
+  <!-- HERO — SOLD → RECEIVED → MADE → ACCOUNTED -->
+  <BusinessOwnerHero />
 
-  <FeatureGrid
-    eyebrow="BUSINESS OWNERS"
-    title="Run your business on what actually happened."
-    lead="Instead of waiting on reports you can't verify, get the answers you need directly — from data that is reconciled and accounted."
-    columns={3}
-    center
-    features={[
-      {
-        title: "Actual profitability",
-        description: "See real profit after marketplace fees, deductions and returns.",
-        icon: "trend",
-      },
-      {
-        title: "Marketplace performance",
-        description: "Understand how each marketplace performs and contributes to the business.",
-        icon: "chart",
-      },
-      {
-        title: "Money received vs expected",
-        description: "Confirm what you should have been paid against what you actually received.",
-        icon: "wallet",
-      },
-      {
-        title: "Product & channel performance",
-        description: "See which products and channels actually drive profit.",
-        icon: "package",
-      },
-      {
-        title: "Business visibility",
-        description: "A clear, current picture of the whole business, without digging through data.",
-        icon: "gauge",
-      },
-      {
-        title: "Less finance dependency",
-        description: "Get the numbers you need directly, instead of waiting on finance.",
-        icon: "zap",
-      },
-    ]}
-  />
-
-  <section class="bg-muted py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <SectionHeading
-        eyebrow="THE OWNER OUTCOME"
-        title="Run the business, not the spreadsheets."
-        lead="DeepEcom turns marketplace data into the answers you need — profitability, payments and performance — so you can act on what is true."
-        center
-      />
+  <!-- THE OWNER'S PROBLEM -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center">THE OWNER'S PROBLEM</span>
+        <h2 class="h2-md mt-4">You run the business. You don't do the ops.</h2>
+        <p class="lead mt-5">
+          The team operates — listings, packing, shipping, returns. You run the business. But the numbers it runs on hide
+          across marketplaces, a payment portal, a bank statement and a spreadsheet only one person really understands.
+        </p>
+      </div>
+      <div class="bo-frag mt-8">
+        <div class="bo-frag-card">
+          <span class="bo-frag-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M6 18v-6M10 18V7M14 18v-9M18 18V4"/></svg>
+          </span>
+          <b>Amazon & Flipkart</b>
+          <p>Sales that look healthy before the fees.</p>
+        </div>
+        <div class="bo-frag-card">
+          <span class="bo-frag-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18M16 14h.01"/></svg>
+          </span>
+          <b>Payment portal</b>
+          <p>Money received, hard to match to orders.</p>
+        </div>
+        <div class="bo-frag-card">
+          <span class="bo-frag-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6"/></svg>
+          </span>
+          <b>Someone's spreadsheet</b>
+          <p>The "actual" numbers — updated on a delay.</p>
+        </div>
+      </div>
+      <p class="bo-frag-line mt-6">
+        DeepEcom connects the same data into <b>one financial picture</b> — and answers the ten questions owners actually ask.
+      </p>
     </div>
   </section>
 
-  <CtaBand
-    title="See your business the way it actually is."
-    lead="Real profitability, reconciled payments and clear performance — on your own."
-  />
+  <!-- 01 — HOW MUCH DID I SELL? -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">SOLD</span>01 · HOW MUCH DID I SELL?</span>
+        <h2 class="h2-md mt-4">The top line, from every channel. In one number.</h2>
+        <p class="lead mt-5">
+          No tab-switching, no “let me check Amazon”. One connected number for the whole business — orders, revenue and
+          average order value across every marketplace.
+        </p>
+      </div>
+      <div class="bo-stats mt-8">
+        {soldStats.map((s) => (
+          <div class="bo-stat reveal">
+            <span class="k">{s.label}</span>
+            <span class="v">{s.value}</span>
+          </div>
+        ))}
+      </div>
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Dashboard</span>
+        <span class="bo-chip">Reports</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — WHERE ARE MY SALES COMING FROM? -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">SOLD</span>02 · WHERE ARE MY SALES COMING FROM?</span>
+        <h2 class="h2-md mt-4">Marketplace performance, at a glance.</h2>
+        <p class="lead mt-5">
+          Channel-by-channel sales, side by side. Volume shows where your attention is — margin shows where your money is.
+        </p>
+      </div>
+      <div class="bo-share-app mt-8 reveal">
+        <div class="bo-share-track" aria-hidden="true">
+          {channelsShare.map((c) => <span style={`width:${c.share};background:${c.color}`}></span>)}
+        </div>
+        <div class="bo-share-legend">
+          {channelsShare.map((c) => (
+            <div class="bo-share-row">
+              <span class="dot" style={`background:${c.color}`}></span>
+              <span class="name">{c.name}</span>
+              <span class="amt">{c.amount}</span>
+              <span class="pct">{c.share}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Marketplace performance</span>
+        <span class="bo-chip">Dashboard</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — IS MY MONEY COMING IN AS EXPECTED? -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">RECEIVED</span>03 · IS MY MONEY COMING IN AS EXPECTED?</span>
+        <h2 class="h2-md mt-4">From sold to banked — with the difference sized.</h2>
+        <p class="lead mt-5">
+          Every settlement is checked against your orders: what was expected, what actually arrived and what needs chasing.
+          No estimating, no “should have been paid”.
+        </p>
+      </div>
+      <RealizationFlow />
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Payment reconciliation</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — AM I ACTUALLY MAKING A PROFIT? -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">MADE</span>04 · AM I ACTUALLY MAKING A PROFIT?</span>
+        <h2 class="h2-md mt-4">Profit after fees, costs and returns — not the sales number.</h2>
+        <p class="lead mt-5">
+          Marketplaces show you sales. DeepEcom shows what's left — every charge, cost and reversal taken out, down to a
+          clean profit and margin for the business.
+        </p>
+      </div>
+      <OwnerProfitability />
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Profitability</span>
+        <span class="bo-chip">Dashboard</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — HOW DO MY CHANNELS COMPARE? -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">MADE</span>05 · HOW DO MY CHANNELS COMPARE?</span>
+        <h2 class="h2-md mt-4">Which channel makes money — by profit, not just volume.</h2>
+        <p class="lead mt-5">
+          The same comparison for margin and profitability across Amazon, Flipkart, Shopify and more — so growth goes where
+          the money actually is.
+        </p>
+      </div>
+      <ChannelPerformance />
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Marketplace performance</span>
+        <span class="bo-chip">Profitability</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — WHICH PRODUCTS ARE MAKING MONEY? -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">MADE</span>06 · WHICH PRODUCTS ARE MAKING MONEY?</span>
+        <h2 class="h2-md mt-4">Product-level profitability, from SKU analytics.</h2>
+        <p class="lead mt-5">
+          Know what to stock, what to push and what to fix — every product with its orders, revenue, profit and margin in one table.
+        </p>
+      </div>
+      <div class="bo-pt-app mt-8 reveal">
+        <div class="bo-pt-bar">
+          <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          <span class="title">Profitability · By Product</span>
+          <span class="seg">Aug 2026</span>
+        </div>
+        <div class="bo-pt-wrap">
+          <table class="bo-pt-table">
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>Product</th>
+                <th class="r">Orders</th>
+                <th class="r">Revenue</th>
+                <th class="r">Profit</th>
+                <th class="r">Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((p) => (
+                <tr>
+                  <td class="sku">{p.sku}</td>
+                  <td class="name">{p.product}</td>
+                  <td class="r">{p.orders}</td>
+                  <td class="r">{p.revenue}</td>
+                  <td class="r profit">{p.profit}</td>
+                  <td class="r"><span class="bo-margin">{p.margin}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="bo-vis-note">The same profit logic runs per order and per product — one standard, everywhere.</p>
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Profitability</span>
+        <span class="bo-chip">Reports</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — HOW DOES EVERYONE ELSE SEE THE SAME NUMBERS? -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">VIEW</span>07 · HOW DOES EVERYONE SEE THE SAME NUMBERS?</span>
+        <h2 class="h2-md mt-4">One set of reports. No more version of the truth.</h2>
+        <p class="lead mt-5">
+          Sales, orders, payments, profitability and performance — reports built from the same connected data, so the whole
+          team argues over facts instead of spreadsheets.
+        </p>
+      </div>
+      <ReportPreview />
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Reports</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 — HOW IS THE BUSINESS PERFORMING OVERALL? -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">VIEW</span>08 · HOW IS THE BUSINESS PERFORMING OVERALL?</span>
+        <h2 class="h2-md mt-4">The owner's scoreboard — is this month good?</h2>
+        <p class="lead mt-5">
+          Sales, receipts, profit and returns on one screen, with the trend that tells you whether the business is getting
+          better at making money.
+        </p>
+      </div>
+      <BusinessMetrics />
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Dashboard</span>
+        <span class="bo-chip">Profitability</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 — WHAT IS THE TRUE STATE OF MY CASH? -->
+  <section>
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">CASH</span>09 · WHAT'S THE TRUE STATE OF MY CASH?</span>
+        <h2 class="h2-md mt-4">What's banked, what's on its way, what needs chasing.</h2>
+        <p class="lead mt-5">
+          Reconciliation turns settlement data into a clear cash picture — verified money in, expected money on the next
+          payout and differences surfaced rather than buried.
+        </p>
+      </div>
+      <div class="bo-cash mt-8">
+        {cashCards.map((c) => (
+          <div class="bo-cash-card reveal">
+            <span class="k">{c.label}</span>
+            <span class="v">{c.value}</span>
+            <span class="d">{c.desc}</span>
+          </div>
+        ))}
+      </div>
+      <p class="bo-vis-note">Cash position ≠ the sale total. It's what's actually arrived — plus what you can plan for.</p>
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">Payment reconciliation</span>
+        <span class="bo-chip">Reports</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 — WHERE DOES THE ACCOUNTING LAND? -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="mx-auto max-w-3xl text-center reveal">
+        <span class="eyebrow eyebrow-center"><span class="bo-step">ACCOUNTED</span>10 · WHERE DOES THE ACCOUNTING LAND?</span>
+        <h2 class="h2-md mt-4">Every transaction, accounted — inside your ERP.</h2>
+        <p class="lead mt-5">
+          The same orders become structured accounting: sales, GST, charges, TCS/TDS and receivables, posted order-wise into
+          Tally, SAP or Zoho Books — ready for your finance team.
+        </p>
+      </div>
+      <div class="bo-erp-flow mt-8">
+        <div class="bo-erp-node reveal">
+          <span class="bo-erp-label">FROM SALE TO LEDGERS</span>
+          <div class="bo-chip-grid">
+            {ledgers.map((l) => <span class="bo-chip">{l}</span>)}
+          </div>
+        </div>
+        <div class="bo-erp-arrow" aria-hidden="true">→</div>
+        <div class="bo-erp-node reveal" data-delay="100">
+          <span class="bo-erp-label">POSTED TO YOUR ERP</span>
+          <div class="bo-chip-grid">
+            {erps.map((e) => <span class="bo-chip bo-chip-brand">{e}</span>)}
+          </div>
+          <p class="bo-erp-note">As vouchers & documents your finance team recognises</p>
+        </div>
+      </div>
+      <p class="bo-vis-note">DeepEcom makes your ERP ecommerce-ready — it does not replace it. <a href="/erp-connector" class="bo-link">Explore ERP Connector →</a></p>
+      <div class="bo-where">
+        <span class="lab">Where you'll find it</span>
+        <span class="bo-chip">ERP Connector</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONE SOURCE — ZERO ASYMMETRY -->
+  <section>
+    <div class="sec">
+      <div class="bo-zero mt-2">
+        <div class="mx-auto max-w-3xl text-center reveal">
+          <span class="eyebrow eyebrow-center">THE SAME STORY</span>
+          <h2 class="h2-md mt-4">Every answer comes from one connected source.</h2>
+          <p class="lead mt-5">
+            No asymmetry between what you see and what finance sees. Ask the question, dig deeper, trace the detail — it's
+            the same data layers: the dashboard, profitability, payment reconciliation, reports and marketplace performance.
+          </p>
+        </div>
+        <div class="bo-zero-steps mt-8">
+          <div class="bo-zero-step reveal">
+            <span class="n">01</span>
+            <b>Ask</b>
+            <p>The dashboard answers on the spot — sales, receipts, profit, performance.</p>
+          </div>
+          <div class="bo-zero-step reveal" data-delay="100">
+            <span class="n">02</span>
+            <b>Dig</b>
+            <p>Open profitability, reconciliation and reports to go one level deeper.</p>
+          </div>
+          <div class="bo-zero-step reveal" data-delay="200">
+            <span class="n">03</span>
+            <b>Trace</b>
+            <p>Every number ties back to the underlying orders, settlements and accounting.</p>
+          </div>
+        </div>
+        <p class="bo-zero-line mt-6">That's how an owner asks a question in the morning — and answers it before lunch.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER PROOF -->
+  <section class="section-band">
+    <div class="sec">
+      <CustomerProof />
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="sec-narrow">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2-md mt-4">Questions owners ask before they hand over the first spreadsheet.</h2>
+      <div class="mt-8 flex flex-col gap-3">
+        {faqs.map((f, i) => (
+          <details class="bo-faq-item" open={i === 0}>
+            <summary class="bo-faq-q">{f.q}</summary>
+            <p class="bo-faq-a">{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="bo-cta">
+    <div class="mx-auto max-w-4xl px-6 text-center">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+        Bring your ecommerce business and your books together.
+      </h2>
+      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
+        Connect your marketplaces, understand your business and automate ecommerce accounting.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+          Talk to an Expert
+        </a>
+      </div>
+    </div>
+  </section>
 </PageLayout>
+
+<style is:global>
+  /* Normalize section rhythm — tighter than the accountant page to keep the owner flow scannable */
+  main > section > .sec,
+  main > section > .sec-narrow {
+    padding-block: clamp(2rem, 3.5vh, 3.25rem);
+  }
+  .section-band {
+    padding-block: 0;
+  }
+
+  /* Numbered-section stage pill */
+  .bo-step {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.26rem 0.65rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-600);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    margin-right: 0.65rem;
+    white-space: nowrap;
+  }
+
+  /* Problem band — fragmented sources */
+  .bo-frag {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  @media (min-width: 48rem) {
+    .bo-frag {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .bo-frag-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: var(--shadow-sm);
+  }
+  .bo-frag-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.65rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    margin-bottom: 0.35rem;
+  }
+  .bo-frag-card b {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .bo-frag-card p {
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--ink-500);
+  }
+  .bo-frag-line {
+    text-align: center;
+    font-size: 0.9375rem;
+    color: var(--ink-500);
+  }
+  .bo-frag-line b {
+    color: var(--brand-600);
+    font-weight: 700;
+  }
+
+  /* 01 — flagship stats */
+  .bo-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+  }
+  @media (min-width: 40rem) {
+    .bo-stats {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .bo-stat {
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+  }
+  .bo-stat .k {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bo-stat .v {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: clamp(1.3rem, 2vw, 1.7rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 02 — channel share */
+  .bo-share-app {
+    max-width: 40rem;
+    margin-inline: auto;
+    padding: 1.05rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .bo-share-track {
+    display: flex;
+    gap: 3px;
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--ink-100);
+  }
+  .bo-share-track span {
+    height: 100%;
+  }
+  .bo-share-legend {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+  .bo-share-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 0.6rem;
+    align-items: center;
+    font-size: 0.8125rem;
+  }
+  .bo-share-row .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .bo-share-row .name {
+    font-weight: 600;
+    color: var(--ink-700);
+  }
+  .bo-share-row .amt {
+    color: var(--ink-400);
+    font-variant-numeric: tabular-nums;
+  }
+  .bo-share-row .pct {
+    font-weight: 800;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* 06 — product table */
+  .bo-pt-app {
+    max-width: 48rem;
+    margin-inline: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .bo-pt-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .bo-pt-bar .dots { display: flex; gap: 0.3rem; }
+  .bo-pt-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .bo-pt-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .bo-pt-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .bo-pt-bar .dots i:nth-child(3) { background: #86efac; }
+  .bo-pt-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .bo-pt-bar .seg {
+    margin-left: auto;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--ink-400);
+  }
+  .bo-pt-wrap {
+    overflow-x: auto;
+  }
+  .bo-pt-table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .bo-pt-table th {
+    padding: 0.7rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .bo-pt-table th.r { text-align: right; }
+  .bo-pt-table td {
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .bo-pt-table td.r { text-align: right; }
+  .bo-pt-table tr:last-child td { border-bottom: 0; }
+  .bo-pt-table tbody tr:hover { background: var(--ink-50); }
+  .bo-pt-table .sku { font-weight: 600; color: var(--ink-400); }
+  .bo-pt-table .name { font-weight: 700; color: var(--ink-900); }
+  .bo-pt-table .profit { font-weight: 700; color: var(--success-700); }
+  .bo-margin {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.14rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    color: var(--success-700);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  /* Note under visuals */
+  .bo-vis-note {
+    margin-top: 0.7rem;
+    text-align: center;
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+  }
+  .bo-link {
+    font-weight: 600;
+    color: var(--brand-600);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* 09 — cash cards */
+  .bo-cash {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    max-width: 48rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 48rem) {
+    .bo-cash {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .bo-cash-card {
+    padding: 1.15rem 1.25rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+  }
+  .bo-cash-card .k {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bo-cash-card .v {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: clamp(1.35rem, 2.2vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .bo-cash-card .d {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+  .bo-cash-card:nth-child(2) {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+
+  /* 10 — ERP flow */
+  .bo-erp-flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    align-items: center;
+    max-width: 52rem;
+    margin-inline: auto;
+  }
+  @media (min-width: 56rem) {
+    .bo-erp-flow {
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+  }
+  .bo-erp-node {
+    padding: 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    text-align: center;
+  }
+  .bo-erp-node:last-child {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+  .bo-erp-label {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bo-chip-grid {
+    margin-top: 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .bo-erp-arrow {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--brand-400);
+    transform: rotate(90deg);
+  }
+  @media (min-width: 56rem) {
+    .bo-erp-arrow {
+      transform: none;
+    }
+  }
+  .bo-erp-note {
+    margin-top: 0.9rem;
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+
+  /* Where you'll find it — chips */
+  .bo-where {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+  }
+  .bo-where .lab {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    margin-right: 0.25rem;
+  }
+  .bo-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    color: var(--ink-600);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+  .bo-chip-brand {
+    background: var(--brand-50);
+    border-color: var(--brand-100);
+    color: var(--brand-700);
+  }
+
+  /* Zero-asymmetry section */
+  .bo-zero {
+    max-width: 60rem;
+    margin-inline: auto;
+    padding: clamp(1.6rem, 3vw, 2.4rem);
+    border: 1px solid var(--ink-200);
+    border-radius: 1.4rem;
+    background:
+      radial-gradient(34rem 16rem at 80% -30%, rgba(83, 58, 253, 0.1), transparent 60%),
+      #fff;
+    box-shadow: var(--shadow-card);
+  }
+  .bo-zero-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+  @media (min-width: 48rem) {
+    .bo-zero-steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .bo-zero-step {
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: var(--ink-50);
+    text-align: center;
+  }
+  .bo-zero-step .n {
+    display: block;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--brand-500);
+  }
+  .bo-zero-step b {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .bo-zero-step p {
+    margin-top: 0.3rem;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ink-500);
+  }
+  .bo-zero-line {
+    text-align: center;
+    font-size: 0.9375rem;
+    color: var(--ink-500);
+  }
+
+  /* FAQ */
+  .bo-faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .bo-faq-item:hover {
+    border-color: var(--ink-300);
+  }
+  .bo-faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .bo-faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .bo-faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .bo-faq-q::after {
+    transform: rotate(45deg);
+  }
+  .bo-faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+
+  /* Final CTA — dark navy + brand gradient */
+  .bo-cta {
+    position: relative;
+    overflow: hidden;
+    padding: clamp(4rem, 8vw, 6rem) 0;
+    background:
+      radial-gradient(40rem 22rem at 78% -20%, rgba(123, 98, 254, 0.32), transparent 60%),
+      radial-gradient(30rem 20rem at 12% 120%, rgba(57, 34, 184, 0.5), transparent 60%),
+      linear-gradient(135deg, #0b1120 0%, #151238 55%, #1e1560 100%);
+  }
+  .bo-cta::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+    background-size: 26px 26px;
+    opacity: 0.35;
+    mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    -webkit-mask-image: radial-gradient(60% 80% at 50% 30%, #000, transparent);
+    pointer-events: none;
+  }
+  .bo-cta > div {
+    position: relative;
+    z-index: 1;
+  }
+</style>

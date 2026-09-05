@@ -1,0 +1,137 @@
+---
+const reports = [
+  { name: "Sales report", cat: "Sales", range: "Aug 2026", source: "All marketplaces", users: "Owner · Finance", icon: "bar" },
+  { name: "Orders report", cat: "Orders", range: "Aug 2026", source: "All marketplaces", users: "Owner · Finance", icon: "file" },
+  { name: "Payment reconciliation", cat: "Payments", range: "Aug 2026", source: "Amazon · Flipkart", users: "Owner · Finance", icon: "check" },
+  { name: "Profitability report", cat: "Profitability", range: "Aug 2026", source: "All marketplaces", users: "Owner · CFO", icon: "trend" },
+  { name: "Marketplace performance", cat: "Performance", range: "Aug 2026", source: "All marketplaces", users: "Owner · Ops", icon: "grid" },
+]
+
+const ICONS: Record<string, string> = {
+  bar: '<path d="M3 21h18M6 17v-6M10 17V7M14 17v-9M18 17V4"/>',
+  file: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6"/>',
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  trend: '<path d="M3 17l6-6 4 4 8-8M21 3v0h-6M21 3v6"/>',
+  grid: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+}
+---
+
+<style is:global>
+  .rpv {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .rpv-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .rpv-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rpv-bar .dots { display: flex; gap: 0.3rem; }
+  .rpv-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .rpv-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .rpv-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .rpv-bar .dots i:nth-child(3) { background: #86efac; }
+  .rpv-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .rpv-bar .badge {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .rpv-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0.3rem 0.75rem 0.7rem;
+  }
+  .rpv-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+    padding: 0.6rem 0.5rem;
+    border-radius: 0.65rem;
+    transition: background var(--transition-fast);
+  }
+  .rpv-row:hover { background: var(--ink-50); }
+  .rpv-row + .rpv-row { border-top: 1px solid var(--ink-100); border-radius: 0; }
+  .rpv-icon {
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.6rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    flex: none;
+  }
+  .rpv-icon svg { width: 1.05rem; height: 1.05rem; }
+  .rpv-info {
+    min-width: 0;
+    flex: 1;
+  }
+  .rpv-name {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .rpv-meta {
+    margin-top: 0.1rem;
+    font-size: 0.68rem;
+    color: var(--ink-400);
+  }
+  .rpv-users {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--ink-50);
+    border: 1px solid var(--ink-200);
+    color: var(--ink-500);
+    font-size: 0.66rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+</style>
+
+<section class="rpv">
+  <div class="rpv-app reveal">
+    <div class="rpv-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Reports</span>
+      <span class="badge">One data source</span>
+    </div>
+    <div class="rpv-list">
+      {reports.map((r) => (
+        <div class="rpv-row">
+          <span class="rpv-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={ICONS[r.icon]} /></svg></span>
+          <div class="rpv-info">
+            <div class="rpv-name">{r.name}</div>
+            <div class="rpv-meta">{r.cat} · {r.range} · {r.source}</div>
+          </div>
+          <span class="rpv-users">Seen by {r.users}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

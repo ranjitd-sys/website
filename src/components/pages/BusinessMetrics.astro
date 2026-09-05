@@ -1,0 +1,166 @@
+---
+const metrics = [
+  { label: "Gross sales", value: "₹4,21,740", delta: "+3.2%", up: true, note: "2,976 orders · 3 channels" },
+  { label: "Received", value: "₹3,82,180", delta: "98.7%", up: true, note: "of expected settlement" },
+  { label: "Profit", value: "₹1,13,340", delta: "+2.1 pts", up: true, note: "margin improving" },
+  { label: "Returns", value: "₹18,720", delta: "−1.4%", up: false, note: "4.4% of sales, down" },
+]
+const bars = [3, 4, 3, 5, 4, 6, 5, 6, 7, 6, 7, 8]
+---
+
+<style is:global>
+  .bm {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .bm-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .bm-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .bm-bar .dots { display: flex; gap: 0.3rem; }
+  .bm-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .bm-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .bm-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .bm-bar .dots i:nth-child(3) { background: #86efac; }
+  .bm-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .bm-bar .seg {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--ink-400);
+  }
+  .bm-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    padding: 0.75rem;
+  }
+  @media (min-width: 36rem) {
+    .bm-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  .bm-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 0;
+    padding: 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .bm-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .bm-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bm-delta {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 0.12rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .bm-delta.up {
+    background: var(--success-50);
+    color: var(--success-700);
+  }
+  .bm-delta.down {
+    background: var(--danger-50);
+    color: var(--danger-600);
+  }
+  .bm-value {
+    font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+  .bm-foot {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .bm-note {
+    font-size: 0.72rem;
+    color: var(--ink-400);
+    line-height: 1.4;
+  }
+  .bm-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 2rem;
+  }
+  .bm-bars span {
+    width: 3px;
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(180deg, var(--brand-300), var(--brand-500));
+    opacity: 0.75;
+  }
+  .bm-note-line {
+    margin: 0;
+    padding: 0 1rem 1rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="bm">
+  <div class="bm-app reveal">
+    <div class="bm-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Business Performance</span>
+      <span class="seg">Sep 2026</span>
+    </div>
+    <div class="bm-grid">
+      {metrics.map((m) => (
+        <div class="bm-card">
+          <div class="bm-top">
+            <span class="bm-label">{m.label}</span>
+            <span class:list={["bm-delta", m.up ? "up" : "down"]}>{m.delta}</span>
+          </div>
+          <div class="bm-value">{m.value}</div>
+          <div class="bm-foot">
+            <span class="bm-note">{m.note}</span>
+            <span class="bm-bars" aria-hidden="true">
+              {bars.map((h, i) => <span style={`height:${h * 2 + (i % 2) * 2}px`}></span>)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

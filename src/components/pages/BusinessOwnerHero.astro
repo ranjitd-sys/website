@@ -1,0 +1,258 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+import BusinessOwnerDashboard from "@/components/pages/BusinessOwnerDashboard.astro"
+
+const stages = [
+  { name: "SOLD", desc: "Gross sales across every channel" },
+  { name: "RECEIVED", desc: "Money you can actually verify" },
+  { name: "MADE", desc: "Profit after fees, costs & returns" },
+  { name: "ACCOUNTED", desc: "Every transaction lands in your ERP" },
+]
+---
+
+<style is:global>
+  .boh {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5.25rem, 9vh, 7.25rem) 0 0;
+    background:
+      radial-gradient(46rem 24rem at 78% -12%, rgba(83, 58, 253, 0.13), transparent 60%),
+      radial-gradient(34rem 18rem at 4% -6%, rgba(127, 125, 252, 0.1), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .boh-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .boh-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .boh-grid {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+  }
+
+  /* ---------- Left ---------- */
+  .boh-copy {
+    max-width: 35rem;
+  }
+  .boh-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .boh-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .boh-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.15rem, 3.9vw, 3.3rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .boh-title .accent {
+    color: var(--brand-500);
+  }
+  .boh-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .boh-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .boh-note {
+    margin-top: 1.35rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--ink-400);
+  }
+  .boh-note svg {
+    color: var(--brand-500);
+    flex: none;
+  }
+  .boh-note b {
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+
+  /* ---------- Right: side-stage labels above dashboard ---------- */
+  .boh-visual {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+  .boh-stage-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+  .boh-stage {
+    min-width: 0;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+    box-shadow: var(--shadow-sm);
+  }
+  .boh-stage .n {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--brand-600);
+  }
+  .boh-stage .d {
+    margin-top: 0.15rem;
+    font-size: 0.62rem;
+    line-height: 1.35;
+    color: var(--ink-500);
+  }
+  .boh-stage.live {
+    border-color: var(--brand-300);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ---------- Journey strip under hero ---------- */
+  .boh-journey {
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+    border-top: 1px solid var(--ink-200);
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .boh-journey .boh-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    padding-block: 1.25rem 1.5rem;
+  }
+  @media (min-width: 56rem) {
+    .boh-journey .boh-inner {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+  }
+  .boh-step {
+    position: relative;
+    display: flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    min-width: 0;
+  }
+  .boh-step .n {
+    flex: none;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    color: var(--brand-500);
+  }
+  .boh-step p {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--ink-500);
+  }
+  .boh-step p b {
+    font-weight: 600;
+    color: var(--ink-700);
+  }
+  @media (min-width: 56rem) {
+    .boh-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -0.85rem;
+      top: 0.55rem;
+      width: 1.1rem;
+      height: 1px;
+      background: linear-gradient(90deg, var(--brand-300), transparent);
+    }
+  }
+</style>
+
+<section class="boh">
+  <div class="boh-inner">
+    <div class="boh-grid">
+      <div class="boh-copy reveal">
+        <span class="boh-eyebrow"><span class="dot"></span>Solutions · By Role</span>
+        <h1 class="boh-title">
+          Know what you sold. Know what you received. Know what you{" "}
+          <span class="accent">actually made.</span>
+        </h1>
+        <p class="boh-lead">
+          If you run the business, your day is spent answering a simple question —
+          “how are we doing?”. DeepEcom connects your marketplaces, payments and
+          books into one financial picture, so every answer is one click away instead
+          of a chase.
+        </p>
+        <div class="boh-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            Explore Platform
+          </a>
+        </div>
+        <div class="boh-note">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Built for owners who run the business — <b>not for the team that operates it day to day.</b></span>
+        </div>
+      </div>
+
+      <div class="boh-visual">
+        <div class="boh-stage-row" aria-hidden="true">
+          {stages.map((s, i) => (
+            <div class:list={["boh-stage", i === 0 && "live"]}>
+              <div class="n">{s.name}</div>
+              <div class="d">{s.desc}</div>
+            </div>
+          ))}
+        </div>
+        <div class="reveal" data-delay="120">
+          <BusinessOwnerDashboard />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="boh-journey" aria-label="The DeepEcom journey for business owners">
+    <div class="boh-inner">
+      {stages.map((s) => (
+        <div class="boh-step">
+          <span class="n">{s.name}</span>
+          <p><b>{s.desc}</b></p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

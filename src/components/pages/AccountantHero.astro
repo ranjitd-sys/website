@@ -1,0 +1,426 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+
+const journalLines = [
+  { txn: "Sales", ledger: "Sales — Amazon", amount: "₹2,117.80", side: "credit" },
+  { txn: "Output GST", ledger: "CGST + SGST", amount: "₹381.20", side: "credit" },
+  { txn: "Marketplace Charges", ledger: "Amazon Charges A/c", amount: "₹315.00", side: "debit" },
+  { txn: "Receivable", ledger: "Receivable — Amazon", amount: "₹2,154.80", side: "debit" },
+]
+---
+
+<style is:global>
+  .ah {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5.75rem, 10vh, 8rem) 0 clamp(2.5rem, 4.5vh, 3.5rem);
+    background:
+      radial-gradient(46rem 24rem at 76% -10%, rgba(83, 58, 253, 0.12), transparent 60%),
+      radial-gradient(34rem 18rem at 8% -6%, rgba(127, 125, 252, 0.1), transparent 55%),
+      linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+  }
+  .ah-inner {
+    width: 100%;
+    max-width: 86rem;
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .ah-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.25rem, 4vw, 3.5rem);
+    align-items: center;
+  }
+  @media (min-width: 72rem) {
+    .ah-grid {
+      grid-template-columns: 0.95fr 1.05fr;
+    }
+  }
+
+  /* ---------- Left column ---------- */
+  .ah-copy {
+    max-width: 34rem;
+  }
+  .ah-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+  .ah-eyebrow .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+  }
+  .ah-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.3rem, 4.1vw, 3.4rem);
+    line-height: 1.06;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .ah-title .accent {
+    color: var(--brand-500);
+  }
+  .ah-lead {
+    margin-top: 1.05rem;
+    font-size: clamp(1.0625rem, 1.3vw, 1.1875rem);
+    line-height: 1.65;
+    color: var(--ink-500);
+  }
+  .ah-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .ah-note {
+    margin-top: 1.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ink-400);
+  }
+  .ah-note svg {
+    color: var(--success-500);
+    flex: none;
+  }
+  .ah-note b {
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+
+  /* ---------- Right column: animated pipeline ---------- */
+  .ah-visual {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(0.75rem, 1.5vw, 1.25rem) 0;
+  }
+  .ah-node {
+    width: 100%;
+    max-width: 27rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1.125rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .ah-node-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    background: var(--ink-50);
+  }
+  .ah-node-head .tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .ah-node-head .id {
+    margin-left: auto;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-400);
+    font-variant-numeric: tabular-nums;
+  }
+  .ah-order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+  }
+  .ah-order-src {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .ah-order-src .ic {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .ah-order-src .ic svg {
+    width: 0.95rem;
+    height: 0.95rem;
+  }
+  .ah-order-amt {
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* DeepEcom processing card */
+  .ah-engine {
+    background: linear-gradient(180deg, #ffffff 0%, var(--brand-50) 140%);
+  }
+  .ah-engine-body {
+    padding: 0.75rem 1rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .ah-line {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.42rem 0.6rem;
+    border: 1px solid var(--ink-100);
+    border-radius: 0.55rem;
+    background: #fff;
+    font-size: 0.75rem;
+  }
+  .ah-line .txn {
+    font-weight: 600;
+    color: var(--ink-800);
+  }
+  .ah-line .ledger {
+    color: var(--ink-400);
+    font-size: 0.7rem;
+    margin-left: 0.25rem;
+  }
+  .ah-line .amt {
+    margin-left: auto;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: 0.78rem;
+  }
+  .ah-line .amt.credit {
+    color: var(--success-600);
+  }
+  .ah-line .amt.debit {
+    color: var(--danger-600);
+  }
+
+  /* ERP node */
+  .ah-erp {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    padding: 0.9rem 1rem;
+  }
+  .ah-erp-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.55rem 0.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.6rem;
+    background: #fff;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .ah-erp-chip .chk {
+    color: var(--success-500);
+  }
+  .ah-erp-foot {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--ink-100);
+    background: var(--ink-50);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .ah-erp-foot .ok {
+    margin-left: auto;
+    color: var(--success-600);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Animated connector between nodes */
+  .ah-connector {
+    position: relative;
+    width: 1.5rem;
+    height: clamp(1.5rem, 2.5vh, 1.9rem);
+    display: flex;
+    justify-content: center;
+  }
+  .ah-connector::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--brand-200), var(--brand-400));
+    opacity: 0.7;
+  }
+  .ah-packet {
+    position: absolute;
+    top: -2px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-500);
+    box-shadow: 0 0 0 3px rgba(83, 58, 253, 0.15);
+    animation: ah-flow 1.8s linear infinite;
+  }
+  .ah-packet.p2 {
+    animation-delay: 0.6s;
+  }
+  .ah-packet.p3 {
+    animation-delay: 1.2s;
+  }
+  @keyframes ah-flow {
+    0% {
+      top: 0;
+      opacity: 0;
+    }
+    15% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      top: calc(100% - 7px);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .ah {
+      padding-top: 4.75rem;
+    }
+    .ah-title {
+      font-size: clamp(1.95rem, 8vw, 2.4rem);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ah-packet {
+      animation: none;
+      opacity: 0;
+    }
+    .ah-connector::before {
+      background: var(--brand-200);
+    }
+  }
+</style>
+
+<section class="ah" data-hero>
+  <div class="ah-inner">
+    <div class="ah-grid">
+      <!-- Left column -->
+      <div class="ah-copy reveal">
+        <span class="ah-eyebrow"><span class="dot" aria-hidden="true"></span>Solutions · By Role · Accountants</span>
+        <h1 class="ah-title">
+          Stop accounting ecommerce orders <span class="accent">manually.</span>
+        </h1>
+        <p class="ah-lead">
+          An ecommerce order is never one transaction. It's a sale, GST, marketplace fees, TCS/TDS, returns, settlements and stock movements. DeepEcom turns all of it into detailed, balanced accounting entries — ready to post in your ERP.
+        </p>
+        <div class="ah-actions">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo
+            <ArrowRight size={16} />
+          </a>
+          <a href="/erp-connector" class={buttonVariants({ variant: "outline", size: "lg" })}>
+            Explore ERP Connector
+          </a>
+        </div>
+        <p class="ah-note">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+          Marketplace order in. <b>ERP-ready accounting out.</b>
+        </p>
+      </div>
+
+      <!-- Right column: animated pipeline -->
+      <div class="ah-visual reveal" data-delay="120" aria-label="Illustration: a marketplace order flows through DeepEcom into detailed accounting entries posted to your ERP">
+        <!-- Marketplace order node -->
+        <div class="ah-node">
+          <div class="ah-node-head">
+            <span class="tag">Marketplace Order</span>
+            <span class="id">Amazon · 14 Jun 2023</span>
+          </div>
+          <div class="ah-order">
+            <span class="ah-order-src">
+              <span class="ic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM9 8h6M9 12h6"/></svg>
+              </span>
+              ORD-104928
+            </span>
+            <span class="ah-order-amt">₹2,499</span>
+          </div>
+        </div>
+
+        <div class="ah-connector" aria-hidden="true">
+          <span class="ah-packet"></span>
+          <span class="ah-packet p2"></span>
+          <span class="ah-packet p3"></span>
+        </div>
+
+        <!-- DeepEcom processing node -->
+        <div class="ah-node ah-engine">
+          <div class="ah-node-head">
+            <span class="tag" style="color:var(--brand-600)">DeepEcom</span>
+            <span class="id">Detailed accounting</span>
+          </div>
+          <div class="ah-engine-body">
+            {journalLines.map((l) => (
+              <div class="ah-line">
+                <span class="txn">{l.txn}</span>
+                <span class="ledger">{l.ledger}</span>
+                <span class:list={["amt", l.side]}>{l.amount}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div class="ah-connector" aria-hidden="true">
+          <span class="ah-packet"></span>
+          <span class="ah-packet p2"></span>
+          <span class="ah-packet p3"></span>
+        </div>
+
+        <!-- ERP node -->
+        <div class="ah-node">
+          <div class="ah-erp">
+            <span class="ah-erp-chip"><span class="chk">✓</span> Tally</span>
+            <span class="ah-erp-chip"><span class="chk">✓</span> SAP</span>
+            <span class="ah-erp-chip"><span class="chk">✓</span> Zoho</span>
+          </div>
+          <div class="ah-erp-foot">
+            Posted to your ERP
+            <span class="ok">JRNL-45892 ✓</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

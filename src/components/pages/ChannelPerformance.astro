@@ -1,0 +1,185 @@
+---
+const channels = [
+  { name: "Amazon", init: "Am", sales: "₹2,10,000", orders: "1,248", profit: "₹58,000", margin: "27.6%", received: "₹1,93,210", share: 50, color: "var(--brand-500)" },
+  { name: "Flipkart", init: "Fk", sales: "₹1,38,000", orders: "986", profit: "₹32,000", margin: "23.2%", received: "₹1,24,340", share: 33, color: "var(--brand-400)" },
+  { name: "Shopify", init: "Sy", sales: "₹73,740", orders: "742", profit: "₹23,340", margin: "31.7%", received: "₹64,630", share: 17, color: "var(--brand-300)" },
+]
+---
+
+<style is:global>
+  .cpf {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .cpf-app {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .cpf-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cpf-bar .dots { display: flex; gap: 0.3rem; }
+  .cpf-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .cpf-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .cpf-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .cpf-bar .dots i:nth-child(3) { background: #86efac; }
+  .cpf-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .cpf-bar .seg {
+    margin-left: auto;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--ink-400);
+  }
+  .cpf-body {
+    padding: 0.8rem;
+  }
+  .cpf-legend {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0 0 0.5rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--ink-400);
+  }
+  .cpf-track {
+    display: flex;
+    gap: 2px;
+    height: 6px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--ink-100);
+  }
+  .cpf-track span { height: 100%; }
+  .cpf-wrap {
+    overflow-x: auto;
+    margin-top: 0.25rem;
+  }
+  .cpf-table {
+    width: 100%;
+    min-width: 34rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .cpf-table th {
+    padding: 0.55rem 0;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .cpf-table th.r { text-align: right; }
+  .cpf-table td {
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .cpf-table td.r { text-align: right; }
+  .cpf-table tr:last-child td { border-bottom: 0; }
+  .cpf-table tbody tr:hover { background: var(--ink-50); }
+  .cpf-name {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .cpf-init {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.5rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+  .cpf-name b {
+    font-weight: 700;
+    color: var(--ink-900);
+  }
+  .cpf-profit {
+    font-weight: 700;
+    color: var(--success-700);
+  }
+  .cpf-margin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.14rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    color: var(--success-700);
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .cpf-note {
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+    text-align: center;
+  }
+</style>
+
+<section class="cpf">
+  <div class="cpf-app reveal">
+    <div class="cpf-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Channel Performance</span>
+      <span class="seg">Aug 2026</span>
+    </div>
+    <div class="cpf-body">
+      <div class="cpf-legend">Sales by channel</div>
+      <div class="cpf-track" aria-hidden="true">
+        {channels.map((c) => <span style={`width:${c.share}%;background:${c.color}`}></span>)}
+      </div>
+      <div class="cpf-wrap">
+        <table class="cpf-table">
+          <thead>
+            <tr>
+              <th>Marketplace</th>
+              <th class="r">Sales</th>
+              <th class="r">Orders</th>
+              <th class="r">Profit</th>
+              <th class="r">Margin</th>
+              <th class="r">Received</th>
+            </tr>
+          </thead>
+          <tbody>
+            {channels.map((c) => (
+              <tr>
+                <td>
+                  <span class="cpf-name">
+                    <span class="cpf-init">{c.init}</span>
+                    <b>{c.name}</b>
+                  </span>
+                </td>
+                <td class="r">{c.sales}</td>
+                <td class="r">{c.orders}</td>
+                <td class="r cpf-profit">{c.profit}</td>
+                <td class="r"><span class="cpf-margin">{c.margin}</span></td>
+                <td class="r">{c.received}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <p class="cpf-note">The story lives in the margin — not in gross sales.</p>
+</section>

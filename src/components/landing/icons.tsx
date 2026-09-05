@@ -23,13 +23,13 @@ export function LogoMark({ size = 26 }: { size?: number }) {
         <text
           x="50%"
           y="53%"
-          font-family="Inter, Arial, Helvetica, sans-serif"
-          font-size="260"
-          font-weight="bold"
+          fontFamily="Inter, Arial, Helvetica, sans-serif"
+          fontSize="260"
+          fontWeight="bold"
           fill="#ffffff"
-          text-anchor="middle"
-          dominant-baseline="middle"
-          letter-spacing="-5"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          letterSpacing="-5"
         >
           DE
         </text>

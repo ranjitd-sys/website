@@ -1,0 +1,208 @@
+---
+const steps = [
+  { label: "Gross sales", value: "₹4,21,740", tone: "base" },
+  { label: "Marketplace charges", value: "− ₹34,400", tone: "down" },
+  { label: "Cost of goods & freight", value: "− ₹2,74,000", tone: "down" },
+  { label: "Profit", value: "₹1,13,340", tone: "profit" },
+]
+---
+
+<style is:global>
+  .opf {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  @media (min-width: 56rem) {
+    .opf {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    }
+  }
+  .opf-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .opf-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .opf-bar .dots { display: flex; gap: 0.3rem; }
+  .opf-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .opf-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .opf-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .opf-bar .dots i:nth-child(3) { background: #86efac; }
+  .opf-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .opf-bar .seg {
+    margin-left: auto;
+    font-size: 0.66rem;
+    font-weight: 700;
+    color: var(--ink-400);
+  }
+  .opf-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    font-size: 0.8125rem;
+  }
+  .opf-row:last-child {
+    border-bottom: 0;
+  }
+  .opf-row .k {
+    color: var(--ink-500);
+    font-weight: 500;
+  }
+  .opf-row .v {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .opf-row.down .v {
+    color: var(--danger-600);
+  }
+  .opf-row.profit {
+    background: linear-gradient(180deg, var(--success-50), var(--success-50));
+  }
+  .opf-row.profit .k {
+    color: var(--success-700);
+    font-weight: 700;
+  }
+  .opf-row.profit .v {
+    color: var(--success-700);
+    font-size: 1.05rem;
+  }
+
+  .opf-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1.35rem 1.5rem;
+  }
+  .opf-metric {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+  .opf-metric .big {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--success-700);
+    font-variant-numeric: tabular-nums;
+  }
+  .opf-metric .cap {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .opf-stack {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+  .opf-line .lab {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-500);
+  }
+  .opf-track {
+    margin-top: 0.3rem;
+    display: flex;
+    height: 8px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--ink-100);
+  }
+  .opf-track span.profit {
+    background: linear-gradient(90deg, var(--success-500), var(--success-600));
+  }
+  .opf-track span.cost {
+    background: var(--ink-200);
+  }
+  .opf-foot {
+    margin-top: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--ink-100);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+  }
+  @media (min-width: 30rem) {
+    .opf-foot {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  .opf-foot .cell {
+    font-size: 0.72rem;
+    color: var(--ink-400);
+  }
+  .opf-foot .cell b {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+</style>
+
+<section class="opf">
+  <div class="opf-card reveal" aria-label="Profit waterfall example">
+    <div class="opf-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Profitability — Aug 2026</span>
+      <span class="seg">All marketplaces</span>
+    </div>
+    {steps.map((s) => (
+      <div class:list={["opf-row", s.tone]}>
+        <span class="k">{s.label}</span>
+        <span class="v">{s.value}</span>
+      </div>
+    ))}
+  </div>
+
+  <div class="opf-card reveal" data-delay="120">
+    <div class="opf-panel">
+      <div class="opf-metric">
+        <span class="big">26.9%</span>
+        <span class="cap">Profit margin</span>
+      </div>
+      <div class="opf-stack">
+        <div class="opf-line">
+          <div class="lab"><span>Profit</span><span>₹1,13,340</span></div>
+          <div class="opf-track"><span class="profit" style="width:29%"></span><span class="cost" style="width:71%"></span></div>
+        </div>
+        <div class="opf-line">
+          <div class="lab"><span>Costs, fees & charges</span><span>₹3,08,400</span></div>
+          <div class="opf-track"><span class="cost" style="width:73%"></span><span class="profit" style="width:27%"></span></div>
+        </div>
+      </div>
+      <div class="opf-foot">
+        <div class="cell">Average profit per order<b>₹38</b></div>
+        <div class="cell">Orders in period<b>2,976</b></div>
+        <div class="cell">Margin vs last month<b>+2.1 pts</b></div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,282 @@
+---
+const stages = [
+  { label: "Sold", value: "₹4,21,740", sub: "2,976 orders", icon: "receipt", tone: "" },
+  { label: "Deductions", value: "− ₹34,400", sub: "fees, shipping, charges", icon: "wallet", tone: "down" },
+  { label: "Expected", value: "₹3,87,340", sub: "8 settlements", icon: "scale", tone: "brand" },
+  { label: "Received", value: "₹3,82,180", sub: "entered your bank", icon: "bank", tone: "" },
+]
+
+const rows = [
+  { order: "ORD-104928", expected: "₹2,499", received: "₹2,499", diff: "₹0", status: "Matched", cls: "ok" },
+  { order: "ORD-104929", expected: "₹1,499", received: "₹1,385", diff: "₹114", status: "Difference", cls: "warn" },
+  { order: "ORD-104930", expected: "₹3,200", received: "₹3,200", diff: "₹0", status: "Matched", cls: "ok" },
+  { order: "ORD-104931", expected: "₹899", received: "—", diff: "₹899", status: "Pending", cls: "muted" },
+  { order: "ORD-104932", expected: "₹1,750", received: "₹1,736", diff: "₹14", status: "Difference", cls: "warn" },
+]
+
+const ICONS: Record<string, string> = {
+  receipt: '<path d="M6 3h12a2 2 0 0 1 2 2v16l-3-2-3 2-3-2-3 2-3-2-3 2V5a2 2 0 0 1 2-2zM9 8h6M9 12h6"/>',
+  wallet: '<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM3 9h18M16 14h.01"/>',
+  scale: '<path d="M12 3v18M8 21h8M4 6h16M6 6 3 11a3 3 0 0 0 6 0L6 6zM18 6l-3 5a3 3 0 0 0 6 0l-3-5z"/>',
+  bank: '<path d="M3 10h18M5 10l1 9h12l1-9M2 6l10-3 10 3H2zM12 14h.01"/>',
+}
+---
+
+<style is:global>
+  .rf {
+    padding-block: clamp(1rem, 2vh, 1.5rem);
+  }
+  .rf-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+  }
+  @media (min-width: 56rem) {
+    .rf-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .rf-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    min-width: 0;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+  }
+  .rf-stage.brand {
+    border-color: var(--brand-200);
+    background: linear-gradient(180deg, var(--brand-50), #fff);
+  }
+  @media (min-width: 56rem) {
+    .rf-stage:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -0.62rem;
+      top: 50%;
+      width: 0.55rem;
+      height: 1px;
+      background: var(--brand-300);
+    }
+  }
+  .rf-icon {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.6rem;
+    background: var(--brand-50);
+    color: var(--brand-600);
+  }
+  .rf-icon svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  .rf-stage .k {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-400);
+    letter-spacing: 0.02em;
+  }
+  .rf-stage .v {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .rf-stage.down .v {
+    color: var(--danger-600);
+  }
+  .rf-stage .sub {
+    font-size: 0.7rem;
+    color: var(--ink-400);
+  }
+  .rf-band {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .rf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.32rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border: 1px solid var(--ink-200);
+    background: #fff;
+    color: var(--ink-600);
+  }
+  .rf-chip i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .rf-chip.ok { color: var(--success-700); border-color: var(--success-200); background: var(--success-50); }
+  .rf-chip.ok i { background: var(--success-500); }
+  .rf-chip.warn { color: var(--warning-700); border-color: var(--warning-200); background: var(--warning-50); }
+  .rf-chip.warn i { background: var(--warning-500); }
+  .rf-chip.muted { color: var(--ink-500); }
+  .rf-chip.muted i { background: var(--ink-300); }
+  .rf-chip .num {
+    margin-left: 0.1rem;
+  }
+  .rf-note {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--ink-400);
+  }
+
+  .rf-app {
+    margin-top: 0.85rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .rf-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rf-bar .dots { display: flex; gap: 0.3rem; }
+  .rf-bar .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-200); }
+  .rf-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .rf-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .rf-bar .dots i:nth-child(3) { background: #86efac; }
+  .rf-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .rf-bar .live {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    color: var(--success-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .rf-bar .live::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success-500);
+  }
+  .rf-wrap {
+    overflow-x: auto;
+  }
+  .rf-table {
+    width: 100%;
+    min-width: 28rem;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+  }
+  .rf-table th {
+    padding: 0.5rem 1rem;
+    text-align: left;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+    background: var(--ink-50);
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .rf-table th.r { text-align: right; }
+  .rf-table td {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    color: var(--ink-600);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .rf-table td.r { text-align: right; }
+  .rf-table tr:last-child td { border-bottom: 0; }
+  .rf-table .ord { font-weight: 700; color: var(--ink-900); }
+  .rf-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.14rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+  }
+  .rf-status.ok { background: var(--success-50); color: var(--success-700); }
+  .rf-status.warn { background: var(--warning-50); color: var(--warning-700); }
+  .rf-status.muted { background: var(--ink-50); color: var(--ink-500); }
+</style>
+
+<section class="rf">
+  <div class="rf-grid">
+    {stages.map((s) => (
+      <div class:list={["rf-stage", s.tone]}>
+        <span class="rf-icon" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={ICONS[s.icon]} /></svg></span>
+        <div>
+          <div class="k">{s.label}</div>
+          <div class="v">{s.value}</div>
+          <div class="sub">{s.sub}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <div class="rf-band">
+    <span class="rf-chip ok"><i></i>Matched <span class="num">6 settlements</span></span>
+    <span class="rf-chip warn"><i></i>With difference <span class="num">2 settlements · ₹5,160</span></span>
+    <span class="rf-chip muted"><i></i>Pending payout <span class="num">1 settlement · ₹18,600</span></span>
+    <span class="rf-note">Every settlement reconcilable to the order — not an estimate.</span>
+  </div>
+
+  <div class="rf-app reveal" aria-label="Settlement reconciliation example">
+    <div class="rf-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Payment Reconciliation</span>
+      <span class="live">Reconciling</span>
+    </div>
+    <div class="rf-wrap">
+      <table class="rf-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th class="r">Expected</th>
+            <th class="r">Received</th>
+            <th class="r">Difference</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr>
+              <td class="ord">{r.order}</td>
+              <td class="r">{r.expected}</td>
+              <td class="r">{r.received}</td>
+              <td class="r">{r.diff}</td>
+              <td><span class:list={["rf-status", r.cls]}>{r.status}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>

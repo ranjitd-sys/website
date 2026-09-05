@@ -1,0 +1,244 @@
+---
+const kpis = [
+  { label: "Gross sales", value: "₹4,21,740", sub: "2,976 orders", tone: "ink" },
+  { label: "Received", value: "₹3,82,180", sub: "of ₹3,87,340 expected", tone: "ink" },
+  { label: "Profit", value: "₹1,13,340", sub: "after fees, costs & returns", tone: "success" },
+  { label: "Margin", value: "26.9%", sub: "across all channels", tone: "ink" },
+]
+const channels = [
+  { name: "Amazon", share: 50, amount: "₹2,10,000", color: "var(--brand-500)" },
+  { name: "Flipkart", share: 33, amount: "₹1,38,000", color: "var(--brand-400)" },
+  { name: "Shopify", share: 17, amount: "₹73,740", color: "var(--brand-300)" },
+]
+const trend = [42, 55, 48, 62, 58, 71, 66, 78, 72, 84, 80, 92]
+---
+
+<style is:global>
+  .bod {
+    width: 100%;
+  }
+  .bod-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 1.1rem;
+    background: #fff;
+    box-shadow: var(--shadow-card), 0 1.25rem 3.5rem -2rem rgba(46, 27, 141, 0.18);
+    overflow: hidden;
+  }
+  .bod-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1rem;
+    background: linear-gradient(180deg, #ffffff, var(--ink-50));
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .bod-bar .dots {
+    display: flex;
+    gap: 0.3rem;
+  }
+  .bod-bar .dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ink-200);
+  }
+  .bod-bar .dots i:nth-child(1) { background: #fca5a5; }
+  .bod-bar .dots i:nth-child(2) { background: #fcd34d; }
+  .bod-bar .dots i:nth-child(3) { background: #86efac; }
+  .bod-bar .title {
+    margin-left: 0.25rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ink-800);
+  }
+  .bod-bar .seg {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    color: var(--brand-700);
+    font-size: 0.66rem;
+    font-weight: 700;
+  }
+  .bod-kpis {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+    padding: 1rem 1rem 0.25rem;
+  }
+  @media (min-width: 30rem) {
+    .bod-kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+  .bod-kpi {
+    min-width: 0;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: linear-gradient(180deg, #fff, var(--ink-50));
+  }
+  .bod-kpi .k {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bod-kpi .v {
+    margin-top: 0.3rem;
+    font-size: clamp(1.05rem, 1.5vw, 1.28rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink-950);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .bod-kpi .sub {
+    margin-top: 0.15rem;
+    font-size: 0.68rem;
+    color: var(--ink-400);
+    white-space: nowrap;
+  }
+  .bod-kpi.success .v {
+    color: var(--success-700);
+  }
+  .bod-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.7rem;
+    padding: 0.75rem 1rem 1rem;
+  }
+  @media (min-width: 30rem) {
+    .bod-panel {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    }
+  }
+  .bod-box {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.75rem;
+    background: var(--ink-50);
+    padding: 0.8rem 0.9rem;
+  }
+  .bod-box h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+  .bod-box h4 i {
+    width: 6px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--brand-500);
+  }
+  .bod-stack {
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .bod-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .bod-row .n {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-600);
+  }
+  .bod-row .track {
+    grid-column: 1 / -1;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--ink-100);
+    overflow: hidden;
+  }
+  .bod-row .track span {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+  }
+  .bod-row .amt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--ink-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .bod-bars {
+    margin-top: 0.75rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 3.4rem;
+  }
+  .bod-bars span {
+    flex: 1;
+    border-radius: 3px 3px 1px 1px;
+    background: linear-gradient(180deg, var(--brand-300), var(--brand-500));
+    opacity: 0.85;
+  }
+  .bod-bars span:nth-child(even) {
+    background: linear-gradient(180deg, var(--brand-400), var(--brand-600));
+  }
+  .bod-caption {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink-400);
+  }
+</style>
+
+<div class="bod" aria-label="Business overview dashboard example">
+  <div class="bod-card">
+    <div class="bod-bar">
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <span class="title">Business Overview</span>
+      <span class="seg">Aug 2026 · All marketplaces</span>
+    </div>
+    <div class="bod-kpis">
+      {kpis.map((k) => (
+        <div class:list={["bod-kpi", k.tone]}>
+          <div class="k">{k.label}</div>
+          <div class="v">{k.value}</div>
+          <div class="sub">{k.sub}</div>
+        </div>
+      ))}
+    </div>
+    <div class="bod-panel">
+      <div class="bod-box">
+        <h4><i></i> Sales by channel</h4>
+        <div class="bod-stack">
+          {channels.map((c) => (
+            <div class="bod-row">
+              <span class="n">{c.name}</span>
+              <span class="amt">{c.amount}</span>
+              <span class="track"><span style={`width:${c.share}%;background:${c.color}`}></span></span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bod-box">
+        <h4><i></i> Sales trend</h4>
+        <div class="bod-bars" aria-hidden="true">
+          {trend.map((h) => <span style={`height:${h}%`}></span>)}
+        </div>
+        <div class="bod-caption"><span>This year</span><span>Profitability · Reconciliation</span></div>
+      </div>
+    </div>
+  </div>
+</div>
