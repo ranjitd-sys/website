@@ -151,25 +151,23 @@ const faqs = [
   <!-- 08 — EXCEPTIONS -->
   <section>
     <div class="sec">
-      <div class="mx-auto max-w-3xl text-center reveal">
-        <span class="eyebrow eyebrow-center">EXCEPTIONS</span>
-        <h2 class="h2-md mt-4">Every reconciliation mismatch, in one place.</h2>
-        <p class="lead mt-5">
-          Payment mismatches, missing settlements and refund differences are surfaced automatically — before they become month-end surprises.
-        </p>
-      </div>
-      <div class="mt-10">
-        <CfoFinancialExceptions />
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.4fr]">
+        <div class="max-w-lg reveal">
+          <span class="eyebrow">EXCEPTIONS</span>
+          <h2 class="h2-md mt-4">Every reconciliation mismatch, in one place.</h2>
+          <p class="lead mt-5">
+            Payment mismatches, missing settlements and refund differences are surfaced automatically — before they become month-end surprises.
+          </p>
+        </div>
+        <div class="reveal min-w-0">
+          <CfoFinancialExceptions />
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 10 — MULTI-DIMENSIONAL VISIBILITY -->
-  <section>
-    <div class="sec">
-      <CfoMultiDimensional />
-    </div>
-  </section>
+
 
   <!-- 11 — REPORTS -->
   <section class="section-band">
