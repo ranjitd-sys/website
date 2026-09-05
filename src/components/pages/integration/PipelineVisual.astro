@@ -1,0 +1,567 @@
+---
+// PipelineHero.astro
+// Architecture flow visual: Sources -> DeepEcom core -> Unified View
+//
+// WHAT WAS BROKEN BEFORE:
+// The connector <path> coordinates were hand-typed constants tuned for one
+// specific viewBox (800x540) and one specific card count (8 left / 6 right).
+// Cards actually render in a flex column, so their real Y positions depend
+// on font-rendering, gaps, and how many cards exist. The hardcoded numbers
+// didn't match reality, which is why the lines on the right drifted and
+// poked out above the "Unified View" label instead of meeting the cards.
+//
+// FIX: don't hardcode any coordinates. Measure the real DOM positions of
+// the core box and every card at runtime (and again on resize), then draw
+// the bezier paths to match exactly. This is correct for any number of
+// source/output cards and any card height.
+
+const sources = [
+  { name: "Amazon", category: "Market", icon: "box" },
+  { name: "Flipkart", category: "Market", icon: "shopping-bag" },
+  { name: "Shopify", category: "Store", icon: "store" },
+  { name: "Payments", category: "Gateway", icon: "credit-card" },
+  { name: "Settlements", category: "Banking", icon: "landmark" },
+  { name: "Returns", category: "Logistics", icon: "refresh-cw" },
+  { name: "Inventory", category: "WMS", icon: "clipboard" },
+  { name: "Tally / ERP", category: "Finance", icon: "bar-chart" },
+];
+
+const outputs = [
+  { label: "Sales Sync", sub: "Real-time stream" },
+  { label: "Payment Recon", sub: "100% matched" },
+  { label: "Profitability", sub: "SKU-level margins" },
+  { label: "Reconciliation", sub: "Automated ledger" },
+  { label: "Fin Reports", sub: "Audit-ready" },
+  { label: "Auto Ledger", sub: "ERP synced" },
+];
+---
+
+<div class="pipeline-visual-hero" aria-label="DeepEcom Architecture Flow">
+  <!-- SVG is now an empty canvas; JS below fills it with paths measured from
+       the real card/core positions, so it can never drift out of alignment. -->
+  <svg
+    class="hero-flow-canvas"
+    id="hero-flow-canvas"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <defs>
+      <linearGradient id="hero-in" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#cbd5e1" stop-opacity="0.3" />
+        <stop offset="100%" stop-color="#533afd" stop-opacity="0.85" />
+      </linearGradient>
+      <linearGradient id="hero-out" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#533afd" stop-opacity="0.85" />
+        <stop offset="100%" stop-color="#059669" stop-opacity="0.6" />
+      </linearGradient>
+      <filter id="hero-glow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="2" result="blur" />
+        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+      </filter>
+      <marker id="arrow-in" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#533afd" />
+      </marker>
+      <marker id="arrow-out" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#059669" />
+      </marker>
+    </defs>
+    <!-- paths + particles injected here at runtime -->
+  </svg>
+
+  <div class="hero-grid-layout">
+    <!-- SOURCES COLUMN -->
+    <div class="hero-col">
+      <div class="col-lbl"><span class="dot warning"></span> Sources</div>
+      <div class="cards-box">
+        {
+          sources.map((s, i) => (
+            <div class="h-card" data-card="source" style={`--d: ${i * 0.03}s`}>
+              <div class="icon-wrap">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  {s.icon === "box" && (
+                    <>
+                      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                      <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                      <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </>
+                  )}
+                  {s.icon === "shopping-bag" && (
+                    <>
+                      <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                      <line x1="3" y1="6" x2="21" y2="6" />
+                      <path d="M16 10a4 4 0 0 1-8 0" />
+                    </>
+                  )}
+                  {s.icon === "store" && (
+                    <>
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                      <polyline points="9 22 9 12 15 12 15 22" />
+                    </>
+                  )}
+                  {s.icon === "credit-card" && (
+                    <>
+                      <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                      <line x1="1" y1="10" x2="23" y2="10" />
+                    </>
+                  )}
+                  {s.icon === "landmark" && (
+                    <>
+                      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    </>
+                  )}
+                  {s.icon === "refresh-cw" && (
+                    <>
+                      <polyline points="1 4 1 10 7 10" />
+                      <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                    </>
+                  )}
+                  {s.icon === "clipboard" && (
+                    <>
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                      <polyline points="14 2 14 8 20 8" />
+                      <line x1="16" y1="13" x2="8" y2="13" />
+                      <line x1="16" y1="17" x2="8" y2="17" />
+                    </>
+                  )}
+                  {s.icon === "bar-chart" && (
+                    <>
+                      <line x1="18" y1="20" x2="18" y2="10" />
+                      <line x1="12" y1="20" x2="12" y2="4" />
+                      <line x1="6" y1="20" x2="6" y2="14" />
+                    </>
+                  )}
+                </svg>
+              </div>
+              <div class="c-info">
+                <span class="c-title">{s.name}</span>
+                <span class="c-sub">{s.category}</span>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- ENGINE CORE COLUMN -->
+    <div class="hero-col center-col">
+      <div class="engine-core-box" id="core-box">
+        <div class="core-glow-bg"></div>
+        <div class="core-logo-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M12 3l10 5.5-10 5.5L2 8.5 12 3z" stroke-linejoin="round" />
+            <path d="M2 13.5l10 5.5 10-5.5" stroke-linecap="round" stroke-linejoin="round" />
+            <path d="M2 18.5l10 5.5 10-5.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <h3 class="core-heading">DeepEcom</h3>
+        <p class="core-subtext">Accounting Layer</p>
+        <div class="core-live-pill">
+          <span class="pulse-dot"></span> Live Sync
+        </div>
+      </div>
+    </div>
+
+    <!-- UNIFIED VIEW COLUMN -->
+    <div class="hero-col">
+      <div class="col-lbl right"><span class="dot success"></span> Unified View</div>
+      <div class="cards-box">
+        {
+          outputs.map((o, i) => (
+            <div class="h-card out-card" data-card="output" style={`--d: ${i * 0.04 + 0.15}s`}>
+              <div class="c-info">
+                <span class="c-title">{o.label}</span>
+                <span class="c-sub emerald">{o.sub}</span>
+              </div>
+              <div class="check-box">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor">
+                  <path d="M13.333 4L6 11.333 2.667 8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --card-bg: #ffffff;
+    --text-dark: #0f172a;
+    --text-muted: #64748b;
+    --brand-indigo: #533afd;
+    --brand-indigo-light: #eef2ff;
+    --brand-emerald: #059669;
+    --brand-emerald-light: #ecfdf5;
+    --brand-amber: #d97706;
+    --border-subtle: #f1f5f9;
+    --border-hover: #cbd5e1;
+    --shadow-card: 0 8px 20px -3px rgba(0, 0, 0, 0.04);
+    --shadow-core: 0 24px 48px -12px rgba(83, 58, 253, 0.22);
+  }
+
+  .pipeline-visual-hero {
+    position: relative;
+    width: 100%;
+    max-width: 840px;
+    margin-inline: auto;
+    padding: 1.5rem 0;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .hero-flow-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  :global(.hero-line) {
+    fill: none;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-dasharray: 3 7;
+    opacity: 0.85;
+    animation: heroFlowAnim 14s linear infinite;
+  }
+
+  @keyframes heroFlowAnim {
+    from { stroke-dashoffset: 200; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  .hero-grid-layout {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 170px 1fr;
+    gap: 3.25rem;
+    align-items: center;
+  }
+
+  .hero-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .col-lbl {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    padding-left: 0.2rem;
+  }
+
+  .col-lbl.right {
+    justify-content: flex-end;
+    padding-right: 0.2rem;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .dot.warning { background: var(--brand-amber); box-shadow: 0 0 6px rgba(217, 119, 6, 0.4); }
+  .dot.success { background: var(--brand-emerald); box-shadow: 0 0 6px rgba(5, 150, 105, 0.4); }
+
+  .cards-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .h-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 0.5rem 0.75rem;
+    box-shadow: var(--shadow-card);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    animation: hCardFade 0.4s ease-out var(--d) backwards;
+  }
+
+  .h-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.07);
+  }
+
+  .out-card {
+    justify-content: space-between;
+    background: linear-gradient(90deg, #ffffff 0%, #f4fdf8 100%);
+    border-color: #d1fae5;
+  }
+
+  .icon-wrap {
+    width: 28px;
+    height: 28px;
+    background: #f8fafc;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-indigo);
+    flex-shrink: 0;
+  }
+
+  .icon-wrap svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .c-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .c-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .c-sub {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .emerald {
+    color: var(--brand-emerald);
+  }
+
+  .check-box {
+    width: 18px;
+    height: 18px;
+    background: var(--brand-emerald-light);
+    color: var(--brand-emerald);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .check-box svg {
+    width: 9px;
+    height: 9px;
+  }
+
+  .center-col {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .engine-core-box {
+    position: relative;
+    background: var(--card-bg);
+    border-radius: 24px;
+    padding: 2rem 1rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: var(--shadow-core);
+    border: 1px solid rgba(83, 58, 253, 0.22);
+    z-index: 2;
+  }
+
+  .core-glow-bg {
+    position: absolute;
+    inset: -3px;
+    border-radius: 24px;
+    background: radial-gradient(circle, rgba(83, 58, 253, 0.3) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .core-logo-badge {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--brand-indigo-light) 0%, #e0e7ff 100%);
+    color: var(--brand-indigo);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.75rem auto;
+    box-shadow: 0 8px 16px -3px rgba(83, 58, 253, 0.35);
+  }
+
+  .core-logo-badge svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .core-heading {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin: 0 0 0.2rem 0;
+    letter-spacing: -0.02em;
+  }
+
+  .core-subtext {
+    font-size: 0.64rem;
+    color: var(--text-muted);
+    margin: 0 0 1.25rem 0;
+    font-weight: 500;
+  }
+
+  .core-live-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.8rem;
+    background: var(--brand-emerald-light);
+    color: var(--brand-emerald);
+    font-size: 0.64rem;
+    font-weight: 700;
+    border-radius: 20px;
+    border: 1px solid #a7f3d0;
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--brand-emerald);
+    border-radius: 50%;
+    animation: corePulse 1.8s infinite;
+  }
+
+  @keyframes corePulse {
+    0%, 100% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 6px var(--brand-emerald); }
+  }
+
+  @keyframes hCardFade {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    .hero-grid-layout {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .hero-flow-canvas { display: none; }
+    .cards-box { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+    .engine-core-box { max-width: 280px; margin: 0 auto; }
+  }
+</style>
+
+<script>
+  // Draws every connector by MEASURING real DOM rects, instead of trusting
+  // hand-typed coordinates. This is the actual fix for the right-hand-side
+  // drift/overshoot: the old paths assumed a fixed 800x540 canvas with an
+  // exact number of evenly-spaced cards, which broke the moment real
+  // rendered heights (fonts, wrapping, card count) differed from that guess.
+  function initHeroFlow(root: HTMLElement) {
+    const svg = root.querySelector<SVGSVGElement>("#hero-flow-canvas");
+    const core = root.querySelector<HTMLElement>("#core-box");
+    if (!svg || !core) return;
+
+    const defs = svg.querySelector("defs")!;
+
+    function relRect(el: Element, containerRect: DOMRect) {
+      const r = el.getBoundingClientRect();
+      return {
+        left: r.left - containerRect.left,
+        right: r.right - containerRect.left,
+        top: r.top - containerRect.top,
+        bottom: r.bottom - containerRect.top,
+        cy: r.top - containerRect.top + r.height / 2,
+      };
+    }
+
+    function curve(x1: number, y1: number, x2: number, y2: number) {
+      const midX = (x1 + x2) / 2;
+      return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+    }
+
+    function render() {
+      const containerRect = root.getBoundingClientRect();
+      svg.setAttribute("viewBox", `0 0 ${containerRect.width} ${containerRect.height}`);
+
+      // wipe previous paths/particles, keep <defs>
+      Array.from(svg.children).forEach((child) => {
+        if (child !== defs) svg.removeChild(child);
+      });
+
+      const coreRect = relRect(core, containerRect);
+      const sourceCards = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));
+      const outputCards = Array.from(root.querySelectorAll<HTMLElement>('[data-card="output"]'));
+
+      const addParticle = (d: string, color: string, dur: string, delay: number) => {
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("r", "3");
+        circle.setAttribute("fill", color);
+        circle.setAttribute("opacity", "0.9");
+        const anim = document.createElementNS("http://www.w3.org/2000/svg", "animateMotion");
+        anim.setAttribute("dur", dur);
+        anim.setAttribute("repeatCount", "indefinite");
+        anim.setAttribute("begin", `${delay}s`);
+        anim.setAttribute("path", d);
+        circle.appendChild(anim);
+        svg.appendChild(circle);
+      };
+
+      sourceCards.forEach((card, i) => {
+        const r = relRect(card, containerRect);
+        const d = curve(r.right, r.cy, coreRect.left - 6, coreRect.cy);
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("class", "hero-line hero-line-in");
+        p.setAttribute("d", d);
+        p.setAttribute("stroke", "url(#hero-in)");
+        p.setAttribute("filter", "url(#hero-glow)");
+        p.setAttribute("marker-end", "url(#arrow-in)");
+        svg.appendChild(p);
+        // Every inbound line gets its own particle, staggered so the flow
+        // reads as a continuous stream converging into the core.
+        addParticle(d, "#533afd", "2.8s", i * 0.35);
+      });
+
+      outputCards.forEach((card, i) => {
+        const r = relRect(card, containerRect);
+        const d = curve(coreRect.right + 6, coreRect.cy, r.left, r.cy);
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("class", "hero-line hero-line-out");
+        p.setAttribute("d", d);
+        p.setAttribute("stroke", "url(#hero-out)");
+        p.setAttribute("filter", "url(#hero-glow)");
+        p.setAttribute("marker-end", "url(#arrow-out)");
+        svg.appendChild(p);
+        // Same idea fanning back out, on its own stagger so it reads as
+        // "processed data leaving the core" rather than a static wire.
+        addParticle(d, "#059669", "2.4s", i * 0.3);
+      });
+    }
+
+    render();
+    const ro = new ResizeObserver(() => render());
+    ro.observe(root);
+    window.addEventListener("resize", render);
+    // Re-measure once more after fonts/layout settle.
+    window.setTimeout(render, 150);
+  }
+
+  document.querySelectorAll<HTMLElement>(".pipeline-visual-hero").forEach(initHeroFlow);
+</script>
