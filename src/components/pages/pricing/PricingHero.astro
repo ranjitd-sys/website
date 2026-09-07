@@ -1,0 +1,78 @@
+---
+interface Props {
+  eyebrow?: string
+  title: string
+  lead?: string
+}
+const { eyebrow = "Pricing", title, lead } = Astro.props
+---
+
+<section class="pricing-hero" data-hero aria-labelledby="pricing-hero-title">
+  <div class="pricing-hero-inner">
+    {eyebrow && <span class="pricing-hero-eyebrow">{eyebrow}</span>}
+    <h1 id="pricing-hero-title" class="pricing-hero-title">{title}</h1>
+    {lead && <p class="pricing-hero-lead">{lead}</p>}
+    <div class="pricing-hero-actions"><slot /></div>
+  </div>
+</section>
+
+<style is:global>
+  .pricing-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(6rem, 11vh, 7.5rem) 0 clamp(2.25rem, 4.5vh, 3.25rem);
+    text-align: center;
+  }
+  .pricing-hero::before {
+    content: "";
+    position: absolute;
+    inset: -10% -5% auto;
+    z-index: -2;
+    height: 34rem;
+    background:
+      radial-gradient(44rem 22rem at 70% -8%, rgba(83, 58, 253, 0.12), transparent 62%),
+      radial-gradient(32rem 16rem at 16% -4%, rgba(127, 125, 252, 0.09), transparent 58%);
+    pointer-events: none;
+  }
+  .pricing-hero-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+  }
+  .pricing-hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.72rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-500);
+  }
+  .pricing-hero-eyebrow::before,
+  .pricing-hero-eyebrow::after {
+    content: "";
+    width: 1.25rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--brand-500);
+  }
+  .pricing-hero-title {
+    margin: 0.9rem auto 0;
+    max-width: 46rem;
+    font-size: clamp(2rem, 4.4vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    font-weight: var(--font-weight-bold);
+    text-wrap: balance;
+    color: var(--ink-950);
+  }
+  .pricing-hero-lead {
+    margin: 1.05rem auto 0;
+    max-width: 38rem;
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.7;
+    color: var(--ink-500);
+  }
+</style>

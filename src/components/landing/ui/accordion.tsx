@@ -97,3 +97,25 @@ export function AccordionPanel({ className, children, ...props }: AccordionPanel
     </div>
   )
 }
+
+
+
+type FAQ = {
+  question: string;
+  answer: React.ReactNode; // or string
+};
+
+export function FaqAccordion({ faqs, className }: { faqs: FAQ[]; className?: string }) {
+  return (
+    <Accordion className={className}>
+      {faqs.map((faq, i) => (
+        <AccordionItem key={i} value={`pricing-faq-${i}`}>
+          <AccordionTrigger>{faq.question}</AccordionTrigger>
+          <AccordionPanel className="text-sm/relaxed text-muted-foreground">
+            <div className="max-w-2xl">{faq.answer}</div>
+          </AccordionPanel>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+}
