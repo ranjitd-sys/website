@@ -5,8 +5,8 @@ import ErpAtAGlance from "@/components/pages/ErpAtAGlance.astro"
 import ErpOutputVoucher from "@/components/pages/ErpOutputVoucher.astro"
 import ErpPostingSection from "@/components/pages/ErpPostingSection.astro"
 import HowItWorksSteps from "@/components/pages/HowItWorksSteps.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
-import { ArrowRight } from "lucide-react"
 
 const personas = [
   {
@@ -162,25 +162,14 @@ const faqs = [
   </section>
 
   <!-- 08 — FINAL CTA -->
-  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
-    <div class="mx-auto max-w-4xl px-6 text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-        Make your ERP ready for ecommerce.
-      </h2>
-      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-        Connect your marketplaces to detailed, structured ecommerce accounting.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
-          Book a Demo
-          <ArrowRight size={16} />
-        </a>
-        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
-          Talk to an Expert
-        </a>
-      </div>
-    </div>
-  </section>
+  <CtaBand
+    dark
+    cardClass="eec-cta-card"
+    title="Make your ERP ready for ecommerce."
+    lead="Connect your marketplaces to detailed, structured ecommerce accounting."
+    secondary="Talk to an Expert"
+    secondaryHref="/contact"
+  />
 </PageLayout>
 
 <style is:global>
@@ -191,6 +180,13 @@ const faqs = [
     html {
       scroll-behavior: auto;
     }
+  }
+  .cta-band-card--dark.eec-cta-card {
+    border-color: rgba(255, 255, 255, 0.14);
+    background:
+      radial-gradient(52% 70% at 50% 0%, rgba(139, 121, 255, 0.3), transparent 70%),
+      linear-gradient(150deg, #1e1560 0%, #2c1b8d 45%, #533afd 130%);
+    box-shadow: 0 24px 60px -24px rgba(30, 21, 96, 0.55);
   }
   .faq-item {
     border: 1px solid var(--ink-200);

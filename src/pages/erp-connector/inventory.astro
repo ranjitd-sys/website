@@ -65,25 +65,34 @@ const faqs = [
   <section class="section-band">
     <div class="sec">
       <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-        <div>
+        <div class="reveal">
           <span class="eyebrow">WHY IT MATTERS</span>
           <h2 class="h2-md mt-4">An ecommerce sale changes more than your revenue.</h2>
           <p class="lead mt-5">
             Every order touches inventory, a warehouse, returns, stock availability and accounting. If the movement isn't captured, your books drift from your actual stock.
           </p>
+          <div class="mt-6 flex items-center gap-2.5">
+            <span class="inv-chip">1 ORDER</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-400" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <span class="inv-chip inv-chip-many">MANY ACCOUNTING EVENTS</span>
+          </div>
         </div>
-        <div class="reveal flex flex-col gap-2">
+        <div class="reveal flex flex-col gap-0" data-delay="100">
           {orderImpact.map((o, i) => (
             <>
-              <div class:list={["rounded-xl border p-4", i === 3 ? "border-brand-200 bg-brand-50" : "border-ink-200 bg-white"]}>
-                <div class="flex items-center justify-between">
-                  <span class:list={["text-sm font-semibold", i === 3 ? "text-brand-700" : "text-ink-800"]}>{o.label}</span>
-                  <span class:list={["text-sm font-bold tabular-nums", i === 3 ? "text-brand-700" : "text-ink-900"]}>{o.value}</span>
-                </div>
+              <div
+                class:list={[
+                  "inv-impact-row",
+                  i === 3 ? "inv-impact-row--hl" : "",
+                  i === orderImpact.length - 1 ? "inv-impact-row--last" : "",
+                ]}
+              >
+                <span class="inv-impact-label">{o.label}</span>
+                <span class="inv-impact-value">{o.value}</span>
               </div>
               {i < orderImpact.length - 1 && (
-                <div class="flex justify-center text-ink-300" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 3v18M6 17l6 6 6-6"/></svg>
+                <div class="flex justify-center py-1 text-brand-300" aria-hidden="true">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M6 17l6 6 6-6"/></svg>
                 </div>
               )}
             </>
@@ -94,16 +103,16 @@ const faqs = [
   </section>
 
   <!-- 03 — AT A GLANCE: THREE MOTIFS -->
-  <section>
-    <div class="sec">
-      <div class="max-w-3xl reveal">
-        <span class="eyebrow">WHAT IT DOES</span>
-        <h2 class="h2-md mt-4">Order → inventory → warehouse → accounting → ERP.</h2>
-        <p class="lead mt-5">Three movements, one accounting thread — everything connected in the books.</p>
-      </div>
-      <InventoryAtAGlance />
+ <section>
+  <div class="sec">
+    <div class="max-w-3xl reveal">
+      <span class="eyebrow">END-TO-END WORKFLOW</span>
+      <h2 class="h2-md mt-4">From purchase order to general ledger—completely in sync.</h2>
+      <p class="lead mt-5">Every physical move instantly updates your financial books. Zero manual entry, zero reconciliation lag.</p>
     </div>
-  </section>
+    <InventoryAtAGlance />
+  </div>
+</section>
 
   <!-- 04 — INVENTORY ACROSS WAREHOUSES -->
   <section class="section-band">
@@ -301,22 +310,25 @@ const faqs = [
   </section>
 
   <!-- 13 — FINAL CTA -->
-  <section class="bg-gradient-to-br from-brand-600 to-brand-800 py-12 lg:py-16">
-    <div class="mx-auto max-w-4xl px-6 text-center">
-      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-        Keep every ecommerce movement connected to your books.
-      </h2>
-      <p class="mx-auto mt-4 max-w-2xl text-lg text-white/80">
-        Connect orders, returns, warehouses and stock transfers with detailed ecommerce accounting in your ERP.
-      </p>
-      <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-700 shadow-lg transition hover:bg-ink-50">
-          Book a Demo
-          <ArrowRight size={16} />
-        </a>
-        <a href="/contact" class="inline-flex items-center gap-2 rounded-lg border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
-          Talk to an Expert
-        </a>
+  <section class="inv-cta">
+    <div class="inv-cta-inner">
+      <div class="inv-cta-card">
+        <div class="inv-cta-glow" aria-hidden="true"></div>
+        <h2 class="inv-cta-title">
+          Keep every ecommerce movement connected to your books.
+        </h2>
+        <p class="inv-cta-lead">
+          Connect orders, returns, warehouses and stock transfers with detailed ecommerce accounting in your ERP.
+        </p>
+        <div class="inv-cta-actions">
+          <a href="/contact" class="inv-cta-primary">
+            Book a Demo
+            <ArrowRight size={15} />
+          </a>
+          <a href="/contact" class="inv-cta-ghost">
+            Talk to an Expert
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -331,6 +343,147 @@ const faqs = [
       scroll-behavior: auto;
     }
   }
+
+  /* 02 — order impact chips + rows */
+  .inv-chip {
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--brand-200);
+    background: var(--brand-50);
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: var(--brand-700);
+  }
+  .inv-chip-many {
+    border-color: var(--ink-200);
+    background: #fff;
+    color: var(--ink-500);
+  }
+  .inv-impact-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1.05rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    font-size: 0.875rem;
+  }
+  .inv-impact-row--hl {
+    border-color: var(--brand-300);
+    background: linear-gradient(180deg, #fff, var(--brand-50));
+    box-shadow: 0 4px 14px rgba(83, 58, 253, 0.08);
+  }
+  .inv-impact-row--last {
+    border-color: var(--success-200);
+  }
+  .inv-impact-label {
+    font-weight: 600;
+    color: var(--ink-700);
+  }
+  .inv-impact-row--hl .inv-impact-label {
+    color: var(--brand-700);
+  }
+  .inv-impact-value {
+    font-weight: 700;
+    color: var(--ink-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .inv-impact-row--hl .inv-impact-value {
+    color: var(--brand-700);
+  }
+  .inv-impact-row--last .inv-impact-value {
+    color: var(--success-600);
+  }
+
+  /* 13 — final CTA card */
+  .inv-cta {
+    padding: clamp(3rem, 6vh, 5rem) 0 0;
+  }
+  .inv-cta-inner {
+    width: 100%;
+  }
+  .inv-cta-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(2.5rem, 6vw, 4.5rem) var(--space-gutter);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: linear-gradient(135deg, #0a0b22, #111648 46%, #241b78);
+    text-align: center;
+  }
+  .inv-cta-glow {
+    position: absolute;
+    z-index: -1;
+    inset: -40% -20% auto;
+    height: 90%;
+    background: radial-gradient(40% 60% at 50% 0%, rgba(83, 58, 253, 0.45), transparent 70%);
+  }
+  .inv-cta-title {
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    font-weight: 800;
+    color: #fff;
+    text-wrap: balance;
+  }
+  .inv-cta-lead {
+    max-width: 34rem;
+    margin: 1.1rem auto 0;
+    font-size: clamp(0.9375rem, 1.1vw, 1.0625rem);
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.72);
+  }
+  .inv-cta-actions {
+    margin-top: 1.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  .inv-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: var(--radius-full);
+    background: #fff;
+    color: var(--brand-700);
+    font-size: 0.875rem;
+    font-weight: 700;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform var(--transition-fast), background var(--transition-fast);
+  }
+  .inv-cta-primary:hover {
+    transform: translateY(-2px);
+    background: #f4f4ff;
+  }
+  .inv-cta-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.6rem;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+  }
+  .inv-cta-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .inv-cta-primary:hover {
+      transform: none;
+    }
+  }
+
   .faq-item {
     border: 1px solid var(--ink-200);
     border-radius: 0.9rem;

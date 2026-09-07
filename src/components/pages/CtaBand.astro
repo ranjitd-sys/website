@@ -10,8 +10,9 @@ interface Props {
   secondary?: string
   secondaryHref?: string
   dark?: boolean
+  cardClass?: string
 }
-const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secondaryHref, dark = false } = Astro.props
+const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secondaryHref, dark = false, cardClass } = Astro.props
 ---
 
 <style is:global>
@@ -19,23 +20,18 @@ const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secon
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    padding: clamp(2.25rem, 5vw, 4rem) 0;
+    padding: clamp(3rem, 6vh, 5rem) 0 0;
   }
   .cta-band-inner {
     width: 100%;
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
   }
   .cta-band-card {
     position: relative;
-    border: 1px solid var(--ink-200);
-    border-radius: 1.5rem;
-    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
-    box-shadow: var(--shadow-card);
-    overflow: hidden;
-    padding: clamp(2.5rem, 6vw, 4.5rem) var(--space-gutter);
+    padding: clamp(3rem, 7vw, 5rem) var(--space-gutter);
     text-align: center;
+    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
+    border-top: 1px solid var(--ink-200);
+    overflow: hidden;
   }
   .cta-band-card::before {
     content: "";
@@ -46,9 +42,8 @@ const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secon
     pointer-events: none;
   }
   .cta-band-card--dark {
-    border-color: rgba(255, 255, 255, 0.12);
+    border-top-color: rgba(255, 255, 255, 0.06);
     background: linear-gradient(135deg, #0a0b22 0%, #111648 46%, #241b78 100%);
-    box-shadow: 0 24px 60px -24px rgba(10, 11, 34, 0.6);
   }
   .cta-band-card--dark::before {
     height: 26rem;
@@ -73,6 +68,9 @@ const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secon
     margin-inline: auto;
     text-wrap: balance;
   }
+  .cta-band-title--light {
+    color: #ffffff;
+  }
   .cta-band-lead {
     position: relative;
     margin: 1rem auto 0;
@@ -93,7 +91,7 @@ const { title, lead, cta = "Book a Demo", ctaHref = "/contact", secondary, secon
 
 <section class="cta-band">
   <div class="cta-band-inner">
-    <div class={"cta-band-card" + (dark ? " cta-band-card--dark" : "")}>
+    <div class={"cta-band-card" + (dark ? " cta-band-card--dark" : "") + (cardClass ? ` ${cardClass}` : "")}>
       <h2 class="cta-band-title">{title}</h2>
       {lead && <p class="cta-band-lead">{lead}</p>}
       <div class="cta-band-actions">

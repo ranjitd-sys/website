@@ -291,7 +291,7 @@ function GroupCard({ group, variants }: { group: NavGroup; variants?: Variants }
 
 function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
   return (
-    <div className="grid grid-cols-[1fr_0.32fr] gap-4 p-5">
+    <div className="grid grid-cols-[1fr_0.46fr] gap-4 p-5">
       <div className="grid grid-cols-2 gap-4">
         {item.groups?.map((g) => (
           <GroupCard key={g.title} group={g} variants={variants} />
@@ -306,7 +306,7 @@ function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants 
           <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 ring-1 ring-white/15">
             DeepEcom Platform
           </span>
-          <h4 className="mt-3 text-base font-semibold leading-snug text-white">
+          <h4 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white">
             See your own marketplace data flowing through DeepEcom.
           </h4>
           <p className="mt-1.5 text-xs leading-relaxed text-white/70">

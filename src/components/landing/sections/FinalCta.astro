@@ -7,72 +7,75 @@ const microNotes = [
 
 <section class="cta-banner-wrapper" id="get-started">
   <div class="cta-banner">
-    
-    <!-- Left Group: Logo + Typography -->
-    <div class="cta-content-left">
-      <!-- Circular Logo Avatar -->
-      <div class="logo-avatar">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="brand-icon">
-          <path d="M16 4L6 9.5V22.5L16 28L26 22.5V9.5L16 4Z" stroke="#533afd" stroke-width="2.5" stroke-linejoin="round"/>
-          <path d="M10 12L16 15.5L22 12" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M10 16.5L16 20L22 16.5" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+    <div class="cta-banner-inner">
+      <!-- Left Group: Logo + Typography -->
+      <div class="cta-content-left">
+        <!-- Circular Logo Avatar -->
+        <div class="logo-avatar">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="brand-icon">
+            <path d="M16 4L6 9.5V22.5L16 28L26 22.5V9.5L16 4Z" stroke="#533afd" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M10 12L16 15.5L22 12" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 16.5L16 20L22 16.5" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Text Container -->
+        <div class="text-group">
+          <h2 class="banner-title">
+            Bring your ecommerce business<br />and your books together.
+          </h2>
+          <p class="banner-lead">
+            Connect your marketplaces. Understand your business.<br />Automate your accounting.
+          </p>
+        </div>
       </div>
 
-      <!-- Text Container -->
-      <div class="text-group">
-        <h2 class="banner-title">
-          Bring your ecommerce business<br />and your books together.
-        </h2>
-        <p class="banner-lead">
-          Connect your marketplaces. Understand your business.<br />Automate your accounting.
-        </p>
+      <!-- Right Group: Buttons + Micro Copy -->
+      <div class="cta-content-right">
+        <div class="button-group">
+          <a href="/contact" class="btn-primary">
+            Book a Demo <span class="arrow">→</span>
+          </a>
+          <a href="/contact" class="btn-secondary">
+            Talk to an Expert
+          </a>
+        </div>
+
+        <div class="micro-notes">
+          <span>{microNotes[0]}</span>
+          <span class="dot">•</span>
+          <span>{microNotes[1]}</span>
+        </div>
       </div>
     </div>
-
-    <!-- Right Group: Buttons + Micro Copy -->
-    <div class="cta-content-right">
-      <div class="button-group">
-        <a href="/contact" class="btn-primary">
-          Book a Demo <span class="arrow">→</span>
-        </a>
-        <a href="/contact" class="btn-secondary">
-          Talk to an Expert
-        </a>
-      </div>
-
-      <div class="micro-notes">
-        <span>{microNotes[0]}</span>
-        <span class="dot">•</span>
-        <span>{microNotes[1]}</span>
-      </div>
-    </div>
-
   </div>
 </section>
 
 <style>
   .cta-banner-wrapper {
     width: 100%;
-    max-width: var(--container-wide);
-    margin: 0 auto;
-    padding: clamp(1rem, 2vw, 1.5rem) var(--space-gutter);
+    padding: clamp(3rem, 6vh, 5rem) 0 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
 
-  /* Main Container Card with Dark Blue Gradient */
+  /* Full-bleed dark band attached to the footer */
   .cta-banner {
     background: linear-gradient(135deg, #07091e 0%, #0d1238 50%, #171d54 100%);
-    border-radius: 20px;
-    padding: 2.5rem 3rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: clamp(2.5rem, 6vw, 4rem) 0;
+  }
+
+  .cta-banner-inner {
+    max-width: var(--container-content);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    box-shadow: 0 10px 30px rgba(7, 9, 30, 0.35);
   }
 
   @media (min-width: 64rem) {
-    .cta-banner {
+    .cta-banner-inner {
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
@@ -143,7 +146,7 @@ const microNotes = [
 
   @media (min-width: 64rem) {
     .cta-content-right {
-      align-items: flex-start;
+      align-items: flex-end;
     }
   }
 

@@ -211,13 +211,18 @@ const faqs = [
   }
 
   /* ---------- final cta ---------- */
-  .ifinal { padding: clamp(2rem, 4vh, 3rem) 0 clamp(4rem, 8vh, 6rem); }
+  .ifinal { padding: clamp(3rem, 6vh, 5rem) 0 0; }
+  .ifinal .sec {
+    max-width: none;
+    padding-inline: 0;
+    padding-block: 0;
+  }
   .ifinal-card {
     position: relative;
     isolation: isolate;
     overflow: hidden;
     text-align: center;
-    border-radius: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
     background:
       radial-gradient(60% 80% at 50% 0%, rgba(123, 98, 254, 0.35), transparent 70%),
       linear-gradient(150deg, #1e1560 0%, #2c1b8d 45%, #533afd 130%);
@@ -233,7 +238,8 @@ const faqs = [
     background-size: 22px 22px;
     mask-image: radial-gradient(70% 60% at 50% 0%, #000, transparent);
   }
-  .ifinal-title {
+.ifinal-title {
+    color: #fff;
     font-size: clamp(1.9rem, 4vw, 3rem);
     line-height: 1.1;
     letter-spacing: -0.03em;
