@@ -11,6 +11,7 @@ const erps = [
   { name: "Tally", logo: "tally" },
   { name: "SAP", logo: "sap" },
   { name: "Zoho Books", logo: "zoho" },
+  { name: "Microsoft Dynamics", logo: "dynamics" },
   { name: "Busy", logo: "busy" },
 ];
 ---
@@ -70,6 +71,9 @@ const erps = [
             )}
             {item.logo === 'zoho' && (
               <span class="brand-text zoho"><span class="zh-box">Z</span> Zoho Books</span>
+            )}
+            {item.logo === 'dynamics' && (
+              <span class="brand-text dynamics">Microsoft Dynamics</span>
             )}
             {item.logo === 'busy' && (
               <span class="brand-text busy">busy</span>
@@ -276,6 +280,13 @@ const erps = [
     color: #1d4ed8;
     font-weight: 800;
     font-size: 1.1rem;
+  }
+
+  .brand-text.dynamics {
+    color: #0b53bf;
+    font-weight: 800;
+    font-size: 0.95rem;
+    white-space: nowrap;
   }
 
   .more-badge {

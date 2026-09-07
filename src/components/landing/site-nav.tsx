@@ -31,6 +31,7 @@ import {
   LifeBuoy,
   Scale,
   Server,
+  CreditCard,
   X,
   type LucideIcon,
   TrendingUp,
@@ -39,6 +40,7 @@ import {
 import { AnimatePresence, motion, MotionConfig, type Variants } from "framer-motion"
 import { LogoMark } from "./icons"
 import { BOOK_DEMO_URL, LOGIN_URL, NAV_ITEMS, type NavGroup, type NavItem, type NavLink } from "@/data/navigation"
+import { INTEGRATION_CATEGORIES, integrationsByCategory, type IntegrationCategoryId } from "@/data/integrations"
 import { Button } from "./ui/button"
 
 const OPEN_DELAY = 100
@@ -282,7 +284,8 @@ function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants 
           </div>
           <a
             href={item.featured.href}
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold 
+            !text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
           >
             <span>Explore Platform</span>
             <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
@@ -357,6 +360,180 @@ const PANEL_WIDTHS: Record<string, string> = {
   products: "w-[720px]",
   solutions: "w-[660px]",
   resources: "w-[780px]",
+  integrations: "w-[880px]",
+}
+
+// --- Integration brand monograms (kept small & typographic like the ecosystem page) ---
+
+const BRAND_STYLE: Record<string, { text: string; color: string; bold?: boolean; italic?: boolean; serif?: boolean; bg?: string; fs?: string }> = {
+  amazon: { text: "amazon", color: "#1b1b1b" },
+  flipkart: { text: "Flipkart", color: "#2874f0", italic: true, fs: "0.74rem" },
+  shopify: { text: "shopify", color: "#1b1b1b", bold: true },
+  meesho: { text: "meesho", color: "#f43f5e", bold: true },
+  myntra: { text: "Myntra", color: "#ed174d", bold: true },
+  ajio: { text: "Ajio", color: "#000", bold: true },
+  jiomart: { text: "JioMart", color: "#0f3cc9", bold: true },
+  nykaa: { text: "Nykaa", color: "#ec147c", bold: true },
+  razorpay: { text: "Razorpay", color: "#2279f2", bold: true, fs: "0.7rem" },
+  payu: { text: "payU", color: "#f15a2a", bold: true },
+  cashfree: { text: "cashfree", color: "#28327a", fs: "0.68rem" },
+  phonepe: { text: "phonePe", color: "#5f259f", bold: true, fs: "0.72rem" },
+  paytm: { text: "Paytm", color: "#00b9f5", bold: true },
+  mps: { text: "§", color: "#533afd", bold: true, fs: "1.15rem" },
+  shiprocket: { text: "Shiprocket", color: "#14b26a", bold: true, fs: "0.66rem" },
+  delhivery: { text: "Delhivery", color: "#00a86b", bold: true, fs: "0.64rem" },
+  ekart: { text: "Ekart", color: "#f59f00", bold: true, bg: "#111", fs: "0.68rem" },
+  bluedart: { text: "Blue Dart", color: "#0072ce", bold: true, fs: "0.6rem" },
+  xpressbees: { text: "Xpressbees", color: "#db1f3c", bold: true, fs: "0.6rem" },
+  tally: { text: "Tally", color: "#000", serif: true, fs: "1.05rem" },
+  sap: { text: "SAP", color: "#fff", bold: true, bg: "#008fd3", fs: "0.82rem" },
+  zoho: { text: "Zoho Books", color: "#27272a", bold: true, fs: "0.6rem" },
+  dynamics: { text: "Microsoft Dynamics", color: "#0b53bf", bold: true, fs: "0.5rem" },
+}
+
+function BrandLogo({ mark, name, bare = false, className = "" }: { mark: string; name: string; bare?: boolean; className?: string }) {
+  const s = BRAND_STYLE[mark] ?? { text: name, color: "#1b1b1b", bold: true }
+  const wordmark = (
+    <span
+      style={{
+        color: s.bg ? "#fff" : s.color,
+        fontStyle: s.italic ? "italic" : undefined,
+        fontFamily: s.serif ? "Georgia, serif" : undefined,
+        fontWeight: s.bold || s.bg ? 700 : 600,
+        fontSize: s.fs ?? "0.72rem",
+        lineHeight: 1,
+        letterSpacing: s.text.length > 7 ? "-0.01em" : undefined,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {s.text}
+    </span>
+  )
+  if (bare) return <span className={`grid size-full shrink-0 select-none place-items-center ${className}`} style={s.bg ? { background: s.bg } : undefined} aria-hidden="true">{wordmark}</span>
+  return (
+    <span
+      className={`grid shrink-0 select-none place-items-center rounded-lg ${s.bg ? "" : "border border-border/70 bg-white shadow-sm"} ${className}`}
+      style={s.bg ? { background: s.bg } : undefined}
+      aria-hidden="true"
+    >
+      {wordmark}
+    </span>
+  )
+}
+
+function IntegrationsPanel({ variants }: { variants?: Variants }) {
+  const [active, setActive] = useState<IntegrationCategoryId>("marketplaces")
+  const cat = INTEGRATION_CATEGORIES.find((c) => c.id === active) ?? INTEGRATION_CATEGORIES[0]
+  const items = integrationsByCategory(active)
+
+  const CATEGORY_ICON: Record<IntegrationCategoryId, LucideIcon> = {
+    marketplaces: Store,
+    payments: CreditCard,
+    shipping: Truck,
+    erp: Building2,
+  }
+
+return (
+    <div className="w-full">
+      <div className="grid grid-cols-[0.78fr_1.22fr] gap-5 p-6">
+        {/* LEFT — category navigation */}
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center justify-between px-2.5 pb-2">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Catalog</h3>
+            <a
+              href="/integrations"
+              className="text-[11px] font-semibold text-primary hover:underline focus:outline-none focus:underline"
+            >
+              View all
+            </a>
+          </div>
+          {INTEGRATION_CATEGORIES.map((c) => {
+            const Icon = CATEGORY_ICON[c.id]
+            const count = integrationsByCategory(c.id).length
+            const selected = active === c.id
+            return (
+              <button
+                key={c.id}
+                type="button"
+                onMouseEnter={() => setActive(c.id)}
+                onFocus={() => setActive(c.id)}
+                onClick={() => setActive(c.id)}
+                aria-pressed={selected}
+                className={`flex items-center justify-between rounded-xl px-3 py-2.5 text-left transition-colors focus:outline-none focus:ring-2 focus:ring-primary/40 ${
+                  selected ? "bg-primary/10 ring-1 ring-primary/25" : "hover:bg-muted/70"
+                }`}
+              >
+                <span className="flex items-center gap-3">
+                  <span
+                    className={`grid size-9 shrink-0 place-items-center rounded-lg transition-colors ${
+                      selected ? "bg-primary text-primary-foreground" : "bg-muted/70 text-muted-foreground"
+                    }`}
+                  >
+                    <Icon size={16} />
+                  </span>
+                  <span className={`text-sm font-medium ${selected ? "text-primary" : "text-foreground"}`}>{c.label}</span>
+                </span>
+                <span className={`text-xs tabular-nums ${selected ? "font-semibold text-primary" : "text-muted-foreground"}`}>
+                  {count}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+
+        {/* RIGHT — brands for the active category */}
+        <div className="flex flex-col rounded-2xl border border-border/50 bg-muted/25 p-4">
+          <div className="mb-3 flex items-start justify-between gap-3 px-1.5">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary">{cat.label}</p>
+              <h4 className="mt-1 text-[13px] font-medium leading-snug text-foreground">{cat.description}</h4>
+            </div>
+            <a
+              href={`/integrations#ecosystem`}
+              className="mt-1 shrink-0 rounded-full border border-border/60 bg-background px-3 py-1.5 text-[11px] font-semibold text-foreground transition-colors hover:border-primary/40 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+            >
+              View all {cat.label}
+            </a>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {items.map((b) => (
+              <motion.a
+                key={b.slug}
+                variants={variants}
+                href={`/integrations/${b.slug}`}
+                className="group flex min-w-0 items-center gap-3 rounded-xl border border-transparent px-2.5 py-2.5 transition-colors hover:border-border/60 hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40"
+              >
+                <BrandLogo mark={b.mark} name={b.name} className="h-11 w-auto px-2.5" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary">
+                    {b.name}
+                  </span>
+                </span>
+                <ArrowRight
+                  size={12}
+                  className="-translate-x-1 shrink-0 text-muted-foreground opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100"
+                />
+              </motion.a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* footer bar */}
+      <div className="flex items-center justify-between gap-3 border-t border-border/50 px-8 py-4">
+        <p className="hidden text-xs leading-relaxed text-muted-foreground sm:block">
+          Connect marketplaces, payments, shipping and ERP into one financial layer.
+        </p>
+        <a
+          href="/integrations"
+          className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold !text-white shadow-md shadow-primary/25 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        >
+          View all integrations
+          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </div>
+  )
 }
 
 type NavPanelProps = {
@@ -399,6 +576,7 @@ function NavPanel({ item, open, pinned, registerPanel, onKeyDown, onFocusOut, on
             {item.id === "products" && <ProductsPanel item={item} variants={itemVariants} />}
             {item.id === "solutions" && <SolutionsPanel item={item} variants={itemVariants} />}
             {item.id === "resources" && <ResourcesPanel item={item} variants={itemVariants} />}
+            {item.id === "integrations" && <IntegrationsPanel variants={itemVariants} />}
           </div>
         </motion.div>
       )}

@@ -1,0 +1,175 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import CtaBand from "@/components/pages/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { categoryById, integrationBySlug, integrationsByCategory, type IntegrationCategoryId } from "@/data/integrations"
+import "@/styles/resources.css"
+
+const slug = Astro.params.slug ?? ""
+const item = integrationBySlug(slug)
+if (!item) {
+  return new Response("Not found", { status: 404 })
+}
+const category = categoryById(item.category)!
+
+const FLOW: Record<IntegrationCategoryId, { t: string; d: string }[]> = {
+  marketplaces: [
+    { t: "Orders & invoices", d: "Every order, its lines and its invoice become structured, financial data." },
+    { t: "Fees & commissions", d: "Referral fees, commissions and fixed charges mapped to the correct cost heads." },
+    { t: "GST & TCS / TDS", d: "Taxes split out at source so returns and compliance stay clean." },
+    { t: "Returns & refunds", d: "Returns and refunds traced back to the original order." },
+    { t: "Settlements & payouts", d: "Expected, settled and received amounts reconciled to a single position." },
+    { t: "Inventory & stock", d: "Sales consumption and stock movement ready for inventory accounting." },
+  ],
+  payments: [
+    { t: "Expected settlements", d: "What each settlement should deliver, calculated per order." },
+    { t: "Gateway payouts", d: "Payments received through the gateway, captured as they arrive." },
+    { t: "Bank credits", d: "Actual credits reconciled against expected settlement amounts." },
+    { t: "Differences & exceptions", d: "Shortfalls and excesses surfaced instead of hiding in a balance." },
+    { t: "Fees & charges", d: "Gateway fees classified to the right accounting head." },
+    { t: "Reconciliation position", d: "A clear expected → received → difference view per settlement." },
+  ],
+  shipping: [
+    { t: "Shipping charges", d: "Fulfilment and logistics charges captured per shipment." },
+    { t: "Forward fulfilment", d: "Costs of delivered orders tied to the orders that generated them." },
+    { t: "Returns & RTO", d: "Reverse fulfilment costs connected to returned and RTO orders." },
+    { t: "Cost per order", d: "Shipping cost visibility at order level, not rolled into totals." },
+    { t: "Profitability impact", d: "Logistics costs reflected in product and channel profitability." },
+    { t: "Accounting ready", d: "Shipping costs structured for ERP accounting." },
+  ],
+  erp: [
+    { t: "Order-wise vouchers", d: "Each ecommerce transaction becomes a detailed, postable voucher." },
+    { t: "GST-wise heads", d: "Output tax, input tax, TCS and TDS separated per head." },
+    { t: "Warehouse-wise stock", d: "Inventory accounting kept accurate across warehouses." },
+    { t: "Marketplace charges", d: "Fees and charges recorded in the right ledgers." },
+    { t: "Returns & refunds", d: "Returns and refunds posted as correct accounting events." },
+    { t: "ERP-ready posting", d: "Structured entries your finance team can post or review." },
+  ],
+}
+
+const flow = FLOW[item.category]
+const related = integrationsByCategory(item.category).filter((x) => x.slug !== item.slug)
+const title = `${item.name} Integration — DeepEcom`
+const description = `${item.name} connects to DeepEcom: ${item.description} The ${category.label} integration turns ${category.description.toLowerCase()}`
+---
+
+<PageLayout title={title} description={description} ogKey="integrations">
+  <header class="rs-hero">
+    <div class="rs-container">
+      <nav class="rs-crumb" aria-label="Breadcrumb">
+        <a href="/integrations">Integrations</a>
+        <span>/</span>
+        <a href={`/integrations#ecosystem`}>{category.label}</a>
+        <span>/</span>
+        <strong>{item.name}</strong>
+      </nav>
+
+      <span class="rs-hero-eyebrow" style="margin-top:1.25rem">{category.label}</span>
+      <h1 class="rs-hero-title">{item.name}</h1>
+      <p class="rs-hero-lead" style="max-width:40rem">{item.description}</p>
+
+      <div class="rs-chips" style="margin-top:1.25rem">
+        {item.capabilities.map((c) => <span class="rs-card-chip">{c}</span>)}
+      </div>
+
+      <div class="rs-hero-actions" style="margin-top:1.75rem">
+        <a href="/contact" class={buttonVariants({ size: "lg" })}>
+          Book a Demo
+          <ArrowRight size={16} />
+        </a>
+        <a href="/platform" class={buttonVariants({ variant: "white", size: "lg" })}>
+          Explore Platform
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <section class="rs-section-tight">
+    <div class="rs-container">
+      <div class="rs-head">
+        <p class="rs-head-eyebrow">What connects</p>
+        <h2 class="rs-head-title">The {item.name} data DeepEcom turns into finance.</h2>
+      </div>
+      <div class="rs-dim" style="grid-template-columns:repeat(3, minmax(0, 1fr))">
+        {flow.map((f) => (
+          <div class="rs-dim-card">
+            <strong>{f.t}</strong>
+            <span>{f.d}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <hr class="rs-rule" />
+
+  <section class="rs-section-tight">
+    <div class="rs-container">
+      <div class="rs-head">
+        <p class="rs-head-eyebrow">Related</p>
+        <h2 class="rs-head-title">More {category.label}.</h2>
+      </div>
+      <div class="rs-topic-list">
+        {related.map((r) => (
+          <a class="rs-topic-link" href={`/integrations/${r.slug}`}>
+            <strong>{r.name}</strong>
+            <span>{category.label}</span>
+            <ArrowUpRight size={14} />
+          </a>
+        ))}
+      </div>
+      <p class="rs-erp-note">
+        All integrations connect through the same layer: {category.label} data → <strong>DeepEcom</strong> →
+        reconciliation, profitability and ERP-ready accounting.
+      </p>
+    </div>
+  </section>
+
+  <CtaBand
+    dark
+    title={`See ${item.name} data on your own business.`}
+    lead={`Book a demo — connect ${item.name}, watch the data flow into profitability, reconciliation and ERP-ready accounting.`}
+  />
+</PageLayout>
+
+<style>
+  .rs-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--ink-500);
+  }
+  .rs-crumb a {
+    color: var(--ink-500);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .rs-crumb a:hover {
+    color: var(--brand-600);
+  }
+  .rs-crumb strong {
+    color: var(--ink-900);
+    font-weight: var(--font-weight-medium);
+  }
+  .rs-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .rs-erp-note {
+    margin-top: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--ink-500);
+  }
+  .rs-erp-note strong {
+    color: var(--brand-600);
+  }
+  @media (max-width: 48rem) {
+    .rs-dim {
+      grid-template-columns: minmax(0, 1fr) !important;
+    }
+  }
+</style>

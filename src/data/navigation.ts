@@ -80,8 +80,50 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "integrations",
     label: "Integrations",
-    type: "link",
-    href: "/integrations",
+    type: "menu",
+    groups: [
+      {
+        title: "Marketplaces",
+        links: [
+          { label: "Amazon", href: "/integrations/amazon" },
+          { label: "Flipkart", href: "/integrations/flipkart" },
+          { label: "Shopify", href: "/integrations/shopify" },
+          { label: "Meesho", href: "/integrations/meesho" },
+          { label: "Myntra", href: "/integrations/myntra" },
+          { label: "Ajio", href: "/integrations/ajio" },
+          { label: "JioMart", href: "/integrations/jiomart" },
+          { label: "Nykaa", href: "/integrations/nykaa" },
+        ],
+      },
+      {
+        title: "Payments",
+        links: [
+          { label: "Razorpay", href: "/integrations/razorpay" },
+          { label: "PayU", href: "/integrations/payu" },
+          { label: "Cashfree", href: "/integrations/cashfree" },
+          { label: "PhonePe", href: "/integrations/phonepe" },
+          { label: "Paytm", href: "/integrations/paytm" },
+        ],
+      },
+      {
+        title: "Shipping Partners",
+        links: [
+          { label: "Shiprocket", href: "/integrations/shiprocket" },
+          { label: "Delhivery", href: "/integrations/delhivery" },
+          { label: "Ekart", href: "/integrations/ekart" },
+          { label: "Blue Dart", href: "/integrations/blue-dart" },
+          { label: "Xpressbees", href: "/integrations/xpressbees" },
+        ],
+      },
+      {
+        title: "ERP",
+        links: [
+          { label: "Tally", href: "/integrations/tally" },
+          { label: "SAP", href: "/integrations/sap" },
+          { label: "Zoho Books", href: "/integrations/zoho-books" },
+        ],
+      },
+    ],
   },
   {
     id: "customers",
