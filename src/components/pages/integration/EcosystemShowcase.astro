@@ -185,7 +185,6 @@ const erps = [
       {gateways.map((p, i) => (
         <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark eco-mark-logo ${p.mark}`}>
-            {p.mark === "mps" && <CreditCard size={20} />}
             {logoAsset(p.mark) && (
               <img
                 src={logoAsset(p.mark)!.src}
@@ -465,14 +464,14 @@ const erps = [
   }
   :global(.eco-mark-logo-img) {
     width: auto;
-    height: 26px;
-    max-width: 74px;
+    height: 30px;
+    max-width: 88px;
     object-fit: contain;
   }
   :global(.eco-mark-erp-img) {
     width: auto;
-    height: 30px;
-    max-width: 44px;
+    height: 32px;
+    max-width: 46px;
     object-fit: contain;
   }
   :global(.mw-amazon) { font-family: Arial, sans-serif; font-weight: 600; font-size: 0.8rem; }

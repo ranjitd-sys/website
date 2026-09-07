@@ -452,7 +452,7 @@ function BrandLogo({ mark, name, bare = false, className = "" }: { mark: string;
       src={asset.src}
       alt=""
       aria-hidden="true"
-      className="block h-6 w-auto object-contain"
+      className="block h-7 w-auto object-contain"
       loading="lazy"
       decoding="async"
     />
