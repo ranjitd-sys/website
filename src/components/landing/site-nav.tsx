@@ -77,6 +77,13 @@ const CARD_ICONS: Record<string, LucideIcon> = {
   "help center": LifeBuoy,
   reconciliation: Scale,
   erp: Server,
+  platform: LayoutDashboard,
+  "erp connector": ServerCog,
+  "by business": Briefcase,
+  "by role": UserCheck,
+  "erp integrations": Server,
+  learn: BookOpen,
+  topics: ScrollText,
 }
 
 function iconFor(key?: string): LucideIcon {
@@ -260,96 +267,139 @@ function PanelListLink({ link, variants = itemVariants }: { link: NavLink; varia
   )
 }
 
+function GroupCard({ group, variants }: { group: NavGroup; variants?: Variants }) {
+  const Icon = iconFor(group.icon ?? group.title)
+  return (
+    <div className="flex flex-col rounded-2xl border border-border/40 bg-muted/30 p-4">
+      <div className="flex items-center gap-3 border-b border-border/50 px-3 pb-3">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
+          <Icon size={17} />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-bold tracking-tight text-foreground">{group.title}</h3>
+          <p className="mt-0.5 text-xs leading-snug text-muted-foreground">{group.description}</p>
+        </div>
+      </div>
+      <div className="mt-1 flex flex-col gap-1 pt-2">
+        {group.links.map((l) => (
+          <PanelListLink key={l.href} link={l} variants={variants} />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
   return (
-    <div className="grid grid-cols-2 gap-4 p-5">
-      {item.groups?.map((g) => (
-        <div key={g.title} className="flex flex-col rounded-2xl border border-border/40 bg-muted/30 p-4">
-          <div className="px-3 py-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{g.title}</h3>
-          </div>
-          <div className="mt-1 flex flex-col gap-1">
-            {g.links.map((l) => (
-              <PanelListLink key={l.href} link={l} variants={variants} />
-            ))}
-          </div>
-        </div>
-      ))}
-      {item.featured && (
-        <motion.div variants={variants} className="col-span-2 flex items-center justify-between rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-4">
-          <div>
-            <span className="mb-1 inline-block rounded-full bg-primary/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary ring-1 ring-primary/30">
-              {item.featured.label}
-            </span>
-            <p className="text-sm font-semibold text-foreground">{item.featured.description}</p>
-          </div>
+    <div className="grid grid-cols-[1fr_0.32fr] gap-4 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        {item.groups?.map((g) => (
+          <GroupCard key={g.title} group={g} variants={variants} />
+        ))}
+      </div>
+
+      <motion.div
+        variants={variants}
+        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-[#101228] via-[#161a3e] to-[#241b78] p-5"
+      >
+        <div className="relative z-10">
+          <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 ring-1 ring-white/15">
+            DeepEcom Platform
+          </span>
+          <h4 className="mt-3 text-base font-semibold leading-snug text-white">
+            See your own marketplace data flowing through DeepEcom.
+          </h4>
+          <p className="mt-1.5 text-xs leading-relaxed text-white/70">
+            Connect one marketplace and watch orders, settlements and profitability land in structured reports.
+          </p>
           <a
-            href={item.featured.href}
-            className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-4 py-2 text-xs font-semibold 
-            !text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+            href={BOOK_DEMO_URL}
+            className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition-transform hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-white/40"
           >
-            <span>Explore Platform</span>
+            Book a demo
             <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
           </a>
-        </motion.div>
-      )}
+        </div>
+        <div className="relative z-10 mt-5 border-t border-white/10 pt-4">
+          <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">ERP integrations</p>
+          <a
+            href="/integrations"
+            className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-indigo-200 focus:outline-none focus:underline"
+          >
+            Tally · SAP · Zoho Books
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </motion.div>
     </div>
   )
 }
 
 function SolutionsPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
   return (
-    <div className="grid grid-cols-2 gap-4 p-5">
-      {item.groups?.map((g) => (
-        <div key={g.title} className="flex flex-col rounded-2xl border border-border/40 bg-muted/30 p-4">
-          <div className="px-3 py-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{g.title}</h3>
-          </div>
-          <div className="mt-1 flex flex-col gap-1">
-            {g.links.map((l) => (
-              <PanelListLink key={l.href} link={l} variants={variants} />
-            ))}
+    <div className="flex flex-col gap-4 p-5">
+      <div className="grid grid-cols-2 gap-4">
+        {item.groups?.map((g) => (
+          <GroupCard key={g.title} group={g} variants={variants} />
+        ))}
+      </div>
+      <motion.div
+        variants={variants}
+        className="flex items-center justify-between gap-4 rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent px-5 py-4"
+      >
+        <div className="flex items-center gap-3">
+          <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/15 text-primary ring-1 ring-primary/25">
+            <HelpCircle size={16} />
+          </span>
+          <div>
+            <p className="text-sm font-semibold text-foreground">Not sure where to start?</p>
+            <p className="text-xs text-muted-foreground">Tell us how you sell and we'll show the right setup.</p>
           </div>
         </div>
-      ))}
+        <a
+          href="/book-a-demo"
+          className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        >
+          Talk to an expert
+          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+        </a>
+      </motion.div>
     </div>
   )
 }
 
 function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
   return (
-    <div className="grid grid-cols-[1.3fr_1fr] gap-4 p-5">
-      <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-[1fr_0.52fr] gap-4 p-5">
+      <div className="grid grid-cols-2 gap-4">
         {item.groups?.map((g) => (
-          <div key={g.title} className="flex flex-col">
-            <h3 className="mb-2.5 px-3 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{g.title}</h3>
-            <div className="flex flex-col gap-1">
-              {g.links.map((l) => (
-                <PanelListLink key={l.href} link={l} variants={variants} />
-              ))}
-            </div>
-          </div>
+          <GroupCard key={g.title} group={g} variants={variants} />
         ))}
       </div>
 
       <motion.div
         variants={variants}
-        className="group relative flex flex-col justify-end overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-b from-muted/50 to-muted p-5 shadow-inner"
+        className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-muted/70 to-muted p-5 ring-1 ring-border/40"
       >
         <div className="relative z-10">
-          <div className="mb-3.5 flex size-10 items-center justify-center rounded-xl bg-background shadow-md ring-1 ring-border/80">
-            <ArrowRight size={18} className="text-primary" />
+          <div className="mb-3.5 flex size-11 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/25">
+            <BookOpen size={18} className="text-white" />
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Masterclass</span>
-          <h4 className="mt-1 text-sm font-semibold text-foreground">High-Velocity Operations</h4>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Start here</span>
+          <h4 className="mt-1.5 text-sm font-semibold text-foreground">
+            From order to accounting event.
+          </h4>
           <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-            Learn blueprints used by modern tech-forward brands to optimize supply chains.
+            An order becomes a sale, fees, GST, TCS/TDS, returns, inventory and settlement. See how DeepEcom turns all of it into one financial picture.
           </p>
+        </div>
+        <div className="relative z-10 mt-4">
           <a
-            href="/resources/webinars"
-            className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary focus:outline-none focus:underline"
+            href="/resources/ecommerce-accounting"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary focus:outline-none focus:underline"
           >
-            Watch Session <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+            Read the ecommerce accounting guide
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
           </a>
         </div>
       </motion.div>
@@ -358,9 +408,9 @@ function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants
 }
 
 const PANEL_WIDTHS: Record<string, string> = {
-  products: "w-[720px]",
-  solutions: "w-[660px]",
-  resources: "w-[780px]",
+  products: "w-[860px]",
+  solutions: "w-[820px]",
+  resources: "w-[840px]",
   integrations: "w-[880px]",
   "case-studies": "w-[720px]",
 }

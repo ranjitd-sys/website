@@ -8,6 +8,7 @@ export interface NavLink {
 export interface NavGroup {
   title: string
   description?: string
+  icon?: string
   links: NavLink[]
 }
 
@@ -29,22 +30,24 @@ export const NAV_ITEMS: NavItem[] = [
       {
         title: "DeepEcom Platform",
         description: "Understand your ecommerce business",
+        icon: "platform",
         links: [
-          { label: "Overview", href: "/platform" },
-          { label: "Profitability", href: "/platform/profitability" },
-          { label: "Payment Reconciliation", href: "/platform/payment-reconciliation" },
-          { label: "Dashboard", href: "/platform/dashboard" },
-          { label: "Reports", href: "/platform/reports" },
+          { label: "Overview", href: "/platform", description: "The connected view across your marketplaces" },
+          { label: "Profitability", href: "/platform/profitability", description: "Actual margins per order, channel and SKU" },
+          { label: "Payment Reconciliation", href: "/platform/payment-reconciliation", description: "Match settlements and payouts at order level" },
+          { label: "Dashboard", href: "/platform/dashboard", description: "Marketplace performance at a glance" },
+          { label: "Reports", href: "/platform/reports", description: "Structured exports for your business" },
         ],
       },
       {
         title: "ERP Connector",
         description: "Make your ERP ecommerce-ready",
+        icon: "erp connector",
         links: [
-          { label: "Overview", href: "/erp-connector" },
-          { label: "Accounting", href: "/erp-connector/accounting" },
-          { label: "GST", href: "/erp-connector/gst" },
-          { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory" },
+          { label: "Overview", href: "/erp-connector", description: "Detailed ecommerce accounting inside your ERP" },
+          { label: "Accounting", href: "/erp-connector/accounting", description: "Order-wise, GST-wise, warehouse-wise entries" },
+          { label: "GST", href: "/erp-connector/gst", description: "GST-ready vouchers posted automatically" },
+          { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory", description: "Stock moves accounted across warehouses" },
         ],
       },
     ],
@@ -61,18 +64,22 @@ export const NAV_ITEMS: NavItem[] = [
     groups: [
       {
         title: "By Business",
+        description: "Built around how your business sells online",
+        icon: "by business",
         links: [
-          { label: "Amazon Sellers", href: "/solutions/amazon-sellers" },
-          { label: "D2C Brands", href: "/solutions/d2c-brands" },
-          { label: "Enterprise", href: "/solutions/enterprise" },
+          { label: "Amazon Sellers", href: "/solutions/amazon-sellers", description: "Profitability, reconciliation and accounting for marketplaces" },
+          { label: "D2C Brands", href: "/solutions/d2c-brands", description: "Website and marketplace finance in one view" },
+          { label: "Enterprise", href: "/solutions/enterprise", description: "High-volume ecommerce accounting at scale" },
         ],
       },
       {
         title: "By Role",
+        description: "Purpose-built for the people running the books",
+        icon: "by role",
         links: [
-          { label: "CFOs", href: "/solutions/cfos" },
-          { label: "Accountants", href: "/solutions/accountants" },
-          { label: "Business Owners", href: "/solutions/business-owners" },
+          { label: "CFOs", href: "/solutions/cfos", description: "Financial visibility, reconciliation and control" },
+          { label: "Accountants", href: "/solutions/accountants", description: "Automated ecommerce accounting and ERP posting" },
+          { label: "Business Owners", href: "/solutions/business-owners", description: "Know what you sold, received and actually made" },
         ],
       },
     ],
@@ -148,20 +155,24 @@ export const NAV_ITEMS: NavItem[] = [
     groups: [
       {
         title: "Learn",
+        description: "Build your ecommerce finance toolkit",
+        icon: "learn",
         links: [
-          { label: "Blog", href: "/resources/blog" },
-          { label: "Guides", href: "/resources/guides" },
-          { label: "FAQs", href: "/resources/faqs" },
-          { label: "Help Center", href: "/resources/help-center" },
+          { label: "Blog", href: "/resources/blog", description: "Stories, updates and deep dives" },
+          { label: "Guides", href: "/resources/guides", description: "Step-by-step playbooks" },
+          { label: "FAQs", href: "/resources/faqs", description: "Answers to common questions" },
+          { label: "Help Center", href: "/resources/help-center", description: "Docs and self-serve support" },
         ],
       },
       {
         title: "Topics",
+        description: "Ecommerce finance, made clear",
+        icon: "topics",
         links: [
-          { label: "Ecommerce Accounting", href: "/resources/ecommerce-accounting" },
-          { label: "Reconciliation", href: "/resources/reconciliation" },
-          { label: "GST", href: "/resources/gst" },
-          { label: "ERP", href: "/resources/erp" },
+          { label: "Ecommerce Accounting", href: "/resources/ecommerce-accounting", description: "How online orders become finance" },
+          { label: "Reconciliation", href: "/resources/reconciliation", description: "Expected versus received, at order level" },
+          { label: "GST", href: "/resources/gst", description: "GST, TCS and TDS for ecommerce" },
+          { label: "ERP", href: "/resources/erp", description: "Making your ERP ecommerce-ready" },
         ],
       },
     ],
