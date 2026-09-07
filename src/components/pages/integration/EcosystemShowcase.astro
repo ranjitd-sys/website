@@ -1,6 +1,9 @@
 ---
 import { Store, ShoppingBag, CreditCard, Building2 } from "lucide-react"
 import { logoAsset } from "@/data/logoAssets"
+import { INTEGRATIONS } from "@/data/integrations"
+
+const SLUG_BY_MARK = new Map(INTEGRATIONS.map((i) => [i.mark, i.slug]))
 
 const categories = [
   { n: "01", name: "SELLING CHANNELS", desc: "Websites and D2C stores that create orders outside the marketplaces.", icon: Store },
@@ -146,7 +149,7 @@ const erps = [
     </div>
     <div class="eco-cards">
       {marketplaces.map((m, i) => (
-        <div class="eco-card reveal" data-delay={i * 60}>
+        <a class="eco-card reveal" data-delay={i * 60} href={`/integrations/${SLUG_BY_MARK.get(m.mark)}`}>
           <div class={`eco-mark ${m.tone}`}>
             {logoAsset(m.mark) ? (
               <img src={logoAsset(m.mark)!.src} alt="" aria-hidden="true" class="eco-mark-img" loading="lazy" decoding="async" />
@@ -164,13 +167,13 @@ const erps = [
             )}
           </div>
           <div class="eco-card-body">
-            <div class="eco-card-name">{m.name}</div>
+            <div class="eco-card-name">{m.name}<span class="eco-card-arrow">→</span></div>
             <p class="eco-card-desc">{m.desc}</p>
             <div class="eco-card-cap">
               {m.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
 
@@ -183,7 +186,7 @@ const erps = [
     </div>
     <div class="eco-cards">
       {gateways.map((p, i) => (
-        <div class="eco-card reveal" data-delay={i * 60}>
+        <a class="eco-card eco-card-link reveal" data-delay={i * 60} href={`/integrations/${SLUG_BY_MARK.get(p.mark)}`}>
           <div class={`eco-mark eco-mark-logo ${p.mark}`}>
             {logoAsset(p.mark) && (
               <img
@@ -197,13 +200,13 @@ const erps = [
             )}
           </div>
           <div class="eco-card-body">
-            <div class="eco-card-name">{p.name}</div>
+            <div class="eco-card-name">{p.name}<span class="eco-card-arrow">→</span></div>
             <p class="eco-card-desc">{p.desc}</p>
             <div class="eco-card-cap">
               {p.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-        </div>
+        </a>
       ))}
       <div class="eco-pay-note reveal">
         <span class="eco-pay-flow">Payments → Expected → Received → Difference</span>
@@ -223,7 +226,7 @@ const erps = [
     </div>
     <div class="eco-cards eco-cards-ship">
       {shipping.map((s, i) => (
-        <div class="eco-card reveal" data-delay={i * 60}>
+        <a class="eco-card eco-card-link reveal" data-delay={i * 60} href={`/integrations/${SLUG_BY_MARK.get(s.mark)}`}>
           <div class={`eco-mark eco-mark-logo ${s.mark}`}>
             {logoAsset(s.mark) && (
               <img
@@ -237,13 +240,13 @@ const erps = [
             )}
           </div>
           <div class="eco-card-body">
-            <div class="eco-card-name">{s.name}</div>
+            <div class="eco-card-name">{s.name}<span class="eco-card-arrow">→</span></div>
             <p class="eco-card-desc">{s.desc}</p>
             <div class="eco-card-cap">
               {s.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
 
@@ -256,7 +259,7 @@ const erps = [
     </div>
     <div class="eco-cards eco-cards-erp">
       {erps.map((e, i) => (
-        <div class="eco-card reveal" data-delay={i * 60}>
+        <a class="eco-card eco-card-link reveal" data-delay={i * 60} href={`/integrations/${e.tone === "zoho" ? "zoho-books" : e.tone}`}>
           <div class={`eco-mark eco-mark-erp ${e.tone}`}>
             {(() => {
               const asset = logoAsset(e.tone === "zoho" ? "zoho-books" : e.tone)
@@ -266,13 +269,13 @@ const erps = [
             })()}
           </div>
           <div class="eco-card-body">
-            <div class="eco-card-name">{e.name}</div>
+            <div class="eco-card-name">{e.name}<span class="eco-card-arrow">→</span></div>
             <p class="eco-card-desc">{e.desc}</p>
             <div class="eco-card-cap">
               {e.cap.split(" · ").map((t) => <span class="eco-tag">{t}</span>)}
             </div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
 
@@ -401,6 +404,14 @@ const erps = [
       box-shadow 0.25s ease,
       border-color 0.25s ease;
   }
+  :global(a.eco-card) {
+    text-decoration: none;
+    color: inherit;
+  }
+  :global(a.eco-card:focus-visible) {
+    outline: 2px solid var(--brand-600);
+    outline-offset: 2px;
+  }
   :global(.eco-card::before) {
     content: "";
     position: absolute;
@@ -459,7 +470,7 @@ const erps = [
   :global(.eco-mark-logo-img) {
     width: auto;
     height: 30px;
-    max-width: 88px;
+    max-width: 100%;
     object-fit: contain;
   }
   :global(.eco-mark-erp-img) {
@@ -503,6 +514,20 @@ const erps = [
     font-weight: 700;
     letter-spacing: -0.012em;
     color: var(--ink-950);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  :global(.eco-card-arrow) {
+    font-size: 0.95rem;
+    color: var(--brand-600);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  :global(.eco-card:hover .eco-card-arrow) {
+    opacity: 1;
+    transform: translateX(0);
   }
   :global(.eco-card-desc) {
     margin-top: 0.35rem;
