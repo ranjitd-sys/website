@@ -1,15 +1,21 @@
 ---
+import { logoAsset } from "@/data/logoAssets"
+
 const row = [
-  { label: "Amazon", icon: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM5 10l2 2 5-6" },
-  { label: "Flipkart", icon: "M3 5h14v14H3zM7 9h6M7 13h4" },
-  { label: "Shopify", icon: "M12 2 3 6v12l9 4 9-4V6zM7 9h2l1-2h3l1 2h3" },
-  { label: "Meesho", icon: "M12 3 5 8v8l7 5 7-5V8z" },
-  { label: "Myntra", icon: "M5 3l2 18h10L19 3M8 7h8" },
-  { label: "Nykaa", icon: "M12 3 5 8v8l7 5 7-5V8zM12 3v20" },
-  { label: "JioMart", icon: "M3 5h18v14H3zM3 9h18M9 9v10" },
-  { label: "Tally", icon: "M3 4h18v16H3zM7 8h10M7 12h10M7 16h6" },
-  { label: "SAP", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
-  { label: "Zoho", icon: "M3 6h18M3 12h18M3 18h12" },
+  { slug: "amazon", label: "Amazon", icon: "M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM5 10l2 2 5-6" },
+  { slug: "flipkart", label: "Flipkart", icon: "M3 5h14v14H3zM7 9h6M7 13h4" },
+  { slug: "shopify", label: "Shopify", icon: "M12 2 3 6v12l9 4 9-4V6zM7 9h2l1-2h3l1 2h3" },
+  { slug: "meesho", label: "Meesho", icon: "M12 3 5 8v8l7 5 7-5V8z" },
+  { slug: "myntra", label: "Myntra", icon: "M5 3l2 18h10L19 3M8 7h8" },
+  { slug: "nykaa", label: "Nykaa", icon: "M12 3 5 8v8l7 5 7-5V8zM12 3v20" },
+  { slug: "jiomart", label: "JioMart", icon: "M3 5h18v14H3zM3 9h18M9 9v10" },
+  { slug: "tally", label: "Tally", icon: "M3 4h18v16H3zM7 8h10M7 12h10M7 16h6" },
+  { slug: "sap", label: "SAP", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
+  { slug: "zoho-books", label: "Zoho Books", icon: "M3 6h18M3 12h18M3 18h12" },
+  { slug: "razorpay", label: "Razorpay", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
+  { slug: "paytm", label: "Paytm", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
+  { slug: "shiprocket", label: "Shiprocket", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
+  { slug: "delhivery", label: "Delhivery", icon: "M4 5h16v14H4zM8 8h8M8 12h8M8 16h8" },
 ]
 ---
 
@@ -67,6 +73,11 @@ const row = [
     height: 1rem;
     stroke: var(--ink-400);
   }
+  .marquee-item .marquee-logo {
+    height: 1.4rem;
+    width: auto;
+    object-fit: contain;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .marquee-row { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
@@ -80,13 +91,21 @@ const row = [
       <div class="marquee-row">
         {row.map((r) => (
           <span class="marquee-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            {logoAsset(r.slug) ? (
+              <img src={logoAsset(r.slug)!.src} alt="" aria-hidden="true" class="marquee-logo" loading="lazy" decoding="async" />
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            )}
             {r.label}
           </span>
         ))}
         {row.map((r) => (
           <span class="marquee-item" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            {logoAsset(r.slug) ? (
+              <img src={logoAsset(r.slug)!.src} alt="" aria-hidden="true" class="marquee-logo" loading="lazy" decoding="async" />
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d={r.icon} /></svg>
+            )}
             {r.label}
           </span>
         ))}

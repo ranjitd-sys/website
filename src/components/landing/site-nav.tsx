@@ -41,6 +41,7 @@ import { AnimatePresence, motion, MotionConfig, type Variants } from "framer-mot
 import { LogoMark } from "./icons"
 import { BOOK_DEMO_URL, LOGIN_URL, NAV_ITEMS, type NavGroup, type NavItem, type NavLink } from "@/data/navigation"
 import { INTEGRATION_CATEGORIES, integrationsByCategory, type IntegrationCategoryId } from "@/data/integrations"
+import { logoAsset } from "@/data/logoAssets"
 import { customers } from "@/data/customers"
 import { Button } from "./ui/button"
 
@@ -445,7 +446,17 @@ const BRAND_STYLE: Record<string, { text: string; color: string; bold?: boolean;
 
 function BrandLogo({ mark, name, bare = false, className = "" }: { mark: string; name: string; bare?: boolean; className?: string }) {
   const s = BRAND_STYLE[mark] ?? { text: name, color: "#1b1b1b", bold: true }
-  const wordmark = (
+  const asset = mark ? logoAsset(mark) : undefined
+  const wordmark = asset ? (
+    <img
+      src={asset.src}
+      alt=""
+      aria-hidden="true"
+      className="block h-6 w-auto object-contain"
+      loading="lazy"
+      decoding="async"
+    />
+  ) : (
     <span
       style={{
         color: s.bg ? "#fff" : s.color,
@@ -461,11 +472,11 @@ function BrandLogo({ mark, name, bare = false, className = "" }: { mark: string;
       {s.text}
     </span>
   )
-  if (bare) return <span className={`grid size-full shrink-0 select-none place-items-center ${className}`} style={s.bg ? { background: s.bg } : undefined} aria-hidden="true">{wordmark}</span>
+  if (bare) return <span className={`grid size-full shrink-0 select-none place-items-center ${className}`} style={s.bg && !asset ? { background: s.bg } : undefined} aria-hidden="true">{wordmark}</span>
   return (
     <span
-      className={`grid shrink-0 select-none place-items-center rounded-lg ${s.bg ? "" : "border border-border/70 bg-white shadow-sm"} ${className}`}
-      style={s.bg ? { background: s.bg } : undefined}
+      className={`grid shrink-0 select-none place-items-center rounded-lg ${s.bg && !asset ? "" : "border border-border/70 bg-white shadow-sm"} ${className}`}
+      style={s.bg && !asset ? { background: s.bg } : undefined}
       aria-hidden="true"
     >
       {wordmark}

@@ -1,10 +1,12 @@
 ---
+import { logoAsset } from "@/data/logoAssets"
+
 const marketplaces = [
-  { name: "Amazon", logo: "amazon" },
-  { name: "Flipkart", logo: "flipkart" },
-  { name: "Shopify", logo: "shopify" },
-  { name: "Meesho", logo: "meesho" },
-  { name: "Myntra", logo: "myntra" },
+  { name: "Amazon", slug: "amazon" },
+  { name: "Flipkart", slug: "flipkart" },
+  { name: "Shopify", slug: "shopify" },
+  { name: "Meesho", slug: "meesho" },
+  { name: "Myntra", slug: "myntra" },
 ];
 
 const erps = [
@@ -14,6 +16,8 @@ const erps = [
   { name: "Microsoft Dynamics", logo: "dynamics" },
   { name: "Busy", logo: "busy" },
 ];
+
+const erpSlug = (l: string) => (l === "zoho" ? "zoho-books" : l);
 ---
 
 <section class="integrations-strip-wrapper" aria-label="Supported Integrations">
@@ -26,20 +30,10 @@ const erps = [
       <div class="logo-row">
         {marketplaces.map((item) => (
           <div class="logo-item">
-            {item.logo === 'amazon' && (
-              <span class="brand-text amazon">amazon</span>
-            )}
-            {item.logo === 'flipkart' && (
-              <span class="brand-text flipkart">Flipkart <span class="fk-box">f</span></span>
-            )}
-            {item.logo === 'shopify' && (
-              <span class="brand-text shopify"><span class="sp-icon">🛍️</span> shopify</span>
-            )}
-            {item.logo === 'meesho' && (
-              <span class="brand-text meesho">meesho</span>
-            )}
-            {item.logo === 'myntra' && (
-              <span class="brand-text myntra"><span class="m-icon">M</span> Myntra</span>
+            {logoAsset(item.slug) ? (
+              <img src={logoAsset(item.slug)!.src} alt={item.name} class="int-logo" loading="lazy" decoding="async" />
+            ) : (
+              <span class="brand-text">{item.name}</span>
             )}
           </div>
         ))}
@@ -58,28 +52,25 @@ const erps = [
       <span class="kicker">ERPs & ACCOUNTING</span>
       
       <div class="logo-row">
-        {erps.map((item) => (
-          <div class="logo-item">
-            {item.logo === 'tally' && (
-              <div class="tally-box">
-                <span class="tally-title">Tally</span>
-                <span class="tally-sub">POWER OF SIMPLICITY</span>
-              </div>
-            )}
-            {item.logo === 'sap' && (
-              <span class="sap-badge">SAP</span>
-            )}
-            {item.logo === 'zoho' && (
-              <span class="brand-text zoho"><span class="zh-box">Z</span> Zoho Books</span>
-            )}
-            {item.logo === 'dynamics' && (
-              <span class="brand-text dynamics">Microsoft Dynamics</span>
-            )}
-            {item.logo === 'busy' && (
-              <span class="brand-text busy">busy</span>
-            )}
-          </div>
-        ))}
+        {erps.map((item) => {
+          const asset = logoAsset(erpSlug(item.logo))
+          return (
+            <div class="logo-item">
+              {asset ? (
+                <img src={asset.src} alt={item.name} class="int-logo" loading="lazy" decoding="async" />
+              ) : (
+                <>
+                  {item.logo === "dynamics" && (
+                    <span class="brand-text dynamics">Microsoft Dynamics</span>
+                  )}
+                  {item.logo === "busy" && (
+                    <span class="brand-text busy">busy</span>
+                  )}
+                </>
+              )}
+            </div>
+          )
+        })}
 
         <div class="logo-item more-badge">
           <span>+ More</span>
@@ -164,7 +155,14 @@ const erps = [
     justify-content: center;
     padding: 0 0.85rem;
     border-right: 1px solid #f1f5f9;
-    height: 36px;
+    height: 40px;
+  }
+
+  .logo-item .int-logo {
+    height: 28px;
+    width: auto;
+    max-width: 110px;
+    object-fit: contain;
   }
 
   .logo-item:last-child {
@@ -225,55 +223,6 @@ const erps = [
   .m-icon {
     color: #ff3f6c;
     font-weight: 900;
-  }
-
-  .tally-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    line-height: 1;
-  }
-
-  .tally-title {
-    font-family: Georgia, serif;
-    font-weight: bold;
-    font-size: 1.15rem;
-    color: #000000;
-    font-style: italic;
-  }
-
-  .tally-sub {
-    font-size: 0.4rem;
-    font-weight: 700;
-    color: #10b981;
-    letter-spacing: 0.05em;
-    margin-top: 2px;
-  }
-
-  .sap-badge {
-    background: #008fd3;
-    color: #ffffff;
-    font-weight: 900;
-    font-size: 0.85rem;
-    padding: 2px 8px;
-    border-radius: 3px;
-    letter-spacing: 0.05em;
-  }
-
-  .brand-text.zoho {
-    color: #000000;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-  }
-
-  .zh-box {
-    border: 1.5px solid #22c55e;
-    color: #22c55e;
-    font-size: 0.65rem;
-    padding: 0 3px;
-    border-radius: 3px;
   }
 
   .brand-text.busy {

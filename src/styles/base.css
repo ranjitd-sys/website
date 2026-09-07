@@ -42,12 +42,14 @@ body {
   overflow-x: hidden;
 }
 
-img,
-svg,
-video,
-canvas {
-  display: block;
-  max-width: 100%;
+@layer base {
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+    max-width: 100%;
+  }
 }
 
 @layer base {

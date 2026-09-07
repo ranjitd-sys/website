@@ -1,5 +1,6 @@
 ---
 import { Store, ShoppingBag, CreditCard, Building2 } from "lucide-react"
+import { logoAsset } from "@/data/logoAssets"
 
 const categories = [
   { n: "01", name: "SELLING CHANNELS", desc: "Websites and D2C stores that create orders outside the marketplaces.", icon: Store },
@@ -147,14 +148,20 @@ const erps = [
       {marketplaces.map((m, i) => (
         <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark ${m.tone}`}>
-            {m.mark === "amazon" && <span class="mw-amazon">amazon</span>}
-            {m.mark === "flipkart" && <span class="mw-flipkart">Flipkart <b class="mw-fk">f</b></span>}
-            {m.mark === "shopify" && <span class="mw-shopify">shopify</span>}
-            {m.mark === "meesho" && <span class="mw-meesho">meesho</span>}
-            {m.mark === "myntra" && <span class="mw-myntra">Myntra</span>}
-            {m.mark === "ajio" && <span class="mw-ajio">AJIO</span>}
-            {m.mark === "jiomart" && <span class="mw-jiomart">JioMart</span>}
-            {m.mark === "nykaa" && <span class="mw-nykaa">Nykaa</span>}
+            {logoAsset(m.mark) ? (
+              <img src={logoAsset(m.mark)!.src} alt="" aria-hidden="true" class="eco-mark-img" loading="lazy" decoding="async" />
+            ) : (
+              <>
+                {m.mark === "amazon" && <span class="mw-amazon">amazon</span>}
+                {m.mark === "flipkart" && <span class="mw-flipkart">Flipkart <b class="mw-fk">f</b></span>}
+                {m.mark === "shopify" && <span class="mw-shopify">shopify</span>}
+                {m.mark === "meesho" && <span class="mw-meesho">meesho</span>}
+                {m.mark === "myntra" && <span class="mw-myntra">Myntra</span>}
+                {m.mark === "ajio" && <span class="mw-ajio">AJIO</span>}
+                {m.mark === "jiomart" && <span class="mw-jiomart">JioMart</span>}
+                {m.mark === "nykaa" && <span class="mw-nykaa">Nykaa</span>}
+              </>
+            )}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{m.name}</div>
@@ -178,39 +185,17 @@ const erps = [
       {gateways.map((p, i) => (
         <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark eco-mark-logo ${p.mark}`}>
-            {p.mark === "razorpay" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <path d="M10 2 4 24h7l2.5-9h4V24h10V2H19l-5 9h-2.6L13 2z" fill="#0A2540" />
-                <rect x="56" y="7" width="6" height="13" rx="1.2" transform="skewX(-18)" fill="#2279F2" />
-              </svg>
-            )}
-            {p.mark === "payu" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#0A2540">pay</text>
-                <text x="28" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#F15A2A">U</text>
-              </svg>
-            )}
-            {p.mark === "cashfree" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <circle cx="8" cy="13" r="5" fill="#F2F4F8" />
-                <path d="M8 18v3" stroke="#28327A" stroke-width="3" stroke-linecap="round" />
-                <path d="M8 4a8 8 0 0 1 8 8c0 2.4-1 3.5-2.5 4.2" stroke="#52B788" stroke-width="2.4" fill="none" stroke-linecap="round" />
-                <text x="16" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#28327A">cashfree</text>
-              </svg>
-            )}
-            {p.mark === "phonepe" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#111">phone</text>
-                <text x="47" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="15" fill="#5F259F">Pe</text>
-              </svg>
-            )}
-            {p.mark === "paytm" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <rect x="0" y="4" width="46" height="18" rx="9" fill="#00B9F5" />
-                <text x="23" y="18" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="12" fill="#fff">Paytm</text>
-              </svg>
-            )}
             {p.mark === "mps" && <CreditCard size={20} />}
+            {logoAsset(p.mark) && (
+              <img
+                src={logoAsset(p.mark)!.src}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                class="eco-mark-logo-img"
+              />
+            )}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{p.name}</div>
@@ -241,39 +226,21 @@ const erps = [
       {shipping.map((s, i) => (
         <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark eco-mark-logo ${s.mark}`}>
-            {s.mark === "shiprocket" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <path d="M4 19c1-3 4-6 9-9 4-2.4 8-3.6 11-4-3 4.6-6 9.4-6.6 13-.5 2.8-1.8 4.5-4.6 3.6-1.6-.5-2.4-1.6-2-3.6h2.6c.2-1 .8-1.8 1.6-2.4-2 1-4.4 2.4-6.4 4.4L4 19z" fill="#14B26A" />
-                <text x="24" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="13" fill="#101828">Shiprocket</text>
-              </svg>
-            )}
-            {s.mark === "delhivery" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <circle cx="7" cy="8" r="2.6" fill="#00A86B" />
-                <circle cx="7" cy="18" r="2.6" fill="#00A86B" />
-                <text x="14" y="19" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="14" fill="#111">e</text>
-                <text x="24" y="19" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#111">lhivery</text>
-              </svg>
-            )}
             {s.mark === "ekart" && (
               <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
                 <path d="M4 8h46v10H4z" fill="#111" />
                 <text x="27" y="16" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-weight="800" font-size="11" fill="#FF9F00">Ekart</text>
               </svg>
             )}
-            {s.mark === "bluedart" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <path d="M2 6h10a8 8 0 0 1 8 8h-4a4 4 0 0 0-4-4H8l8 10h-6l-6-9a3 3 0 0 1-2-3z" fill="#0072CE" />
-                <text x="34" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#0072CE">Blue</text>
-                <text x="66" y="19" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#111">Dart</text>
-              </svg>
-            )}
-            {s.mark === "xpressbees" && (
-              <svg viewBox="0 0 84 26" class="mw-svg" aria-hidden="true">
-                <text x="0" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#DB1F3C">Xpress</text>
-                <text x="52" y="19" font-family="Inter, Arial, sans-serif" font-weight="700" font-size="14" fill="#101117">bees</text>
-                <circle cx="77" cy="10" r="2.4" fill="#F5B50A" />
-              </svg>
+            {logoAsset(s.mark) && (
+              <img
+                src={logoAsset(s.mark)!.src}
+                alt=""
+                aria-hidden="true"
+                loading="lazy"
+                decoding="async"
+                class="eco-mark-logo-img"
+              />
             )}
           </div>
           <div class="eco-card-body">
@@ -298,9 +265,12 @@ const erps = [
       {erps.map((e, i) => (
         <div class="eco-card reveal" data-delay={i * 60}>
           <div class={`eco-mark eco-mark-erp ${e.tone}`}>
-            {e.tone === "tally" && <span class="erp-tally">Tally</span>}
-            {e.tone === "sap" && <span class="erp-sap">SAP</span>}
-            {e.tone === "zoho" && <span class="erp-zoho">Zoho Books</span>}
+            {(() => {
+              const asset = logoAsset(e.tone === "zoho" ? "zoho-books" : e.tone)
+              return asset ? (
+                <img src={asset.src} alt="" aria-hidden="true" loading="lazy" decoding="async" class="eco-mark-erp-img" />
+              ) : null
+            })()}
           </div>
           <div class="eco-card-body">
             <div class="eco-card-name">{e.name}</div>
@@ -487,6 +457,24 @@ const erps = [
   }
   :global(.eco-mark.amazon), :global(.eco-mark.flipkart), :global(.eco-mark.shopify), :global(.eco-mark.meesho) { background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%); }
 
+  :global(.eco-mark-img) {
+    width: auto;
+    height: 32px;
+    max-width: 40px;
+    object-fit: contain;
+  }
+  :global(.eco-mark-logo-img) {
+    width: auto;
+    height: 26px;
+    max-width: 74px;
+    object-fit: contain;
+  }
+  :global(.eco-mark-erp-img) {
+    width: auto;
+    height: 30px;
+    max-width: 44px;
+    object-fit: contain;
+  }
   :global(.mw-amazon) { font-family: Arial, sans-serif; font-weight: 600; font-size: 0.8rem; }
   :global(.mw-flipkart) { color: #2874f0; font-style: italic; font-size: 0.74rem; }
   :global(.mw-fk) { background: #ff9f00; color: #fff; font-size: 0.6rem; padding: 1px 4px; border-radius: 2px; font-style: normal; }
