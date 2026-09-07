@@ -4,8 +4,6 @@ import {
   Boxes,
   Calculator,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Command,
   FileBarChart2,
   FileSpreadsheet,
@@ -541,32 +539,11 @@ return (
 }
 
 function CaseStudiesPanel({ variants }: { variants?: Variants }) {
-  const total = customers.length
-  const [idx, setIdx] = useState(0)
-  const [hovered, setHovered] = useState(false)
-  const reduceMotion = useRef(false)
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)")
-    reduceMotion.current = mq.matches
-    const onChange = (e: MediaQueryListEvent) => {
-      reduceMotion.current = e.matches
-    }
-    mq.addEventListener("change", onChange)
-    return () => mq.removeEventListener("change", onChange)
-  }, [])
-
-  useEffect(() => {
-    if (hovered || reduceMotion.current) return
-    const t = setInterval(() => setIdx((i) => (i + 1) % total), 4200)
-    return () => clearInterval(t)
-  }, [hovered, total])
-
-  const c = customers[idx]
+  const slides = [...customers, ...customers]
 
   return (
     <div className="w-full">
-      <div className="p-6">
+      <div className="px-6 pt-6">
         <div className="mb-4 flex items-end justify-between gap-4">
           <div>
             <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Inside the books</h3>
@@ -581,28 +558,20 @@ function CaseStudiesPanel({ variants }: { variants?: Variants }) {
             View all case studies
           </a>
         </div>
+      </div>
 
-        <div
-          className="relative overflow-hidden"
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-          onFocusCapture={() => setHovered(true)}
-          onBlurCapture={() => setHovered(false)}
-        >
-          <AnimatePresence mode="wait" initial={false}>
+      <div className="de-marquee-viewport overflow-hidden">
+        <div className="de-marquee-track">
+          {slides.map((c, i) => (
             <motion.a
-              key={idx}
+              key={`${c.slug}-${i}`}
               variants={variants}
               href={`/case-studies/${c.slug}`}
-              initial={{ opacity: 0, x: 28 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -28 }}
-              transition={{ duration: 0.32, ease: "easeOut" }}
-              className="group flex min-h-[188px] flex-col rounded-2xl border border-border/50 bg-muted/25 p-5 transition-colors hover:border-border/70 hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40"
+              className="group mr-4 flex w-[360px] shrink-0 flex-col rounded-2xl border border-border/50 bg-muted/25 p-5 transition-colors hover:border-border/70 hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40"
             >
-              <div className="flex items-center justify-between gap-3">
-                <span className="flex items-center gap-2.5">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold tracking-tight text-primary">
+              <div className="flex items-center justify-between gap-2">
+                <span className="flex min-w-0 items-center gap-2.5">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold tracking-tight text-primary">
                     {c.logoText
                       .split(/\s+/)
                       .map((w) => w[0])
@@ -610,69 +579,71 @@ function CaseStudiesPanel({ variants }: { variants?: Variants }) {
                       .slice(0, 2)
                       .toUpperCase()}
                   </span>
-                  <span className="text-sm font-bold tracking-tight text-foreground">{c.logoText}</span>
+                  <span className="truncate text-[15px] font-bold tracking-tight text-foreground">{c.logoText}</span>
                 </span>
                 <span className="shrink-0 rounded-full bg-background px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground ring-1 ring-border/50">
                   {c.industry}
                 </span>
               </div>
-              <h4 className="mt-3 text-[15px] font-semibold leading-snug tracking-tight text-foreground">{c.headline}</h4>
+              <h4 className="mt-3 line-clamp-2 text-[16px] font-semibold leading-snug tracking-tight text-foreground">
+                {c.headline}
+              </h4>
               <p className="mt-1.5 line-clamp-2 text-[13px] leading-snug text-muted-foreground">{c.problem}</p>
               <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-primary">
                 Read case study
                 <ArrowRight size={12} className="-translate-x-1 opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100" />
               </span>
             </motion.a>
-          </AnimatePresence>
-        </div>
-
-        {/* Controls */}
-        <div className="mt-4 flex items-center justify-between">
-          <div className="flex items-center gap-1.5" role="tablist" aria-label="Case study navigation">
-            {customers.map((item, i) => (
-              <button
-                key={item.slug}
-                type="button"
-                role="tab"
-                aria-selected={i === idx}
-                aria-label={`Show ${item.logoText} case study`}
-                onClick={() => setIdx(i)}
-                onMouseEnter={() => setHovered(true)}
-                onFocus={() => setIdx(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/40 ${
-                  i === idx ? "w-6 bg-primary" : "w-1.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
-              />
-            ))}
-          </div>
-          <div className="flex items-center gap-1.5">
-            {[({ direction: -1, icon: ChevronLeft }), ({ direction: 1, icon: ChevronRight })].map(({ direction, icon: Icon }) => (
-              <button
-                key={direction}
-                type="button"
-                aria-label={direction < 0 ? "Previous case study" : "Next case study"}
-                onMouseEnter={() => setHovered(true)}
-                onClick={() => setIdx((prev) => (prev + direction + total) % total)}
-                className="grid size-8 place-items-center rounded-full border border-border/60 bg-background text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
-              >
-                <Icon size={14} />
-              </button>
-            ))}
-          </div>
+          ))}
         </div>
       </div>
-      <div className="flex items-center justify-between gap-3 border-t border-border/50 px-8 py-4">
+
+      <div className="flex items-center justify-between gap-3 px-8 pt-3">
+        <p className="text-[11px] text-muted-foreground">Hover a card to pause the carousel.</p>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3 border-t border-border/50 px-8 py-4">
         <p className="hidden text-xs leading-relaxed text-muted-foreground sm:block">
           Customer stories that show marketplace data, reconciliation and ERP accounting connected.
         </p>
         <a
           href="/customers"
-          className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+          className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold !text-white shadow-md shadow-primary/25 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           Read all case studies
           <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
         </a>
       </div>
+
+      <style>{`
+.de-marquee-viewport {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.de-marquee-track {
+  display: flex;
+  width: max-content;
+  padding: 2px 0 6px;
+  animation: de-marquee 38s linear infinite;
+  will-change: transform;
+}
+.de-marquee-viewport:hover .de-marquee-track,
+.de-marquee-track:focus-within {
+  animation-play-state: paused;
+}
+@keyframes de-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .de-marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .de-marquee-track > a { margin-bottom: 0.75rem; }
+}
+`}</style>
     </div>
   )
 }
