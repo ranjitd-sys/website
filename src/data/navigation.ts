@@ -126,10 +126,20 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    id: "customers",
-    label: "Customers",
-    type: "link",
-    href: "/customers",
+    id: "case-studies",
+    label: "Case Studies",
+    type: "menu",
+    groups: [
+      {
+        title: "Case Studies",
+        links: [
+          { label: "GlobalBees", href: "/case-studies/globalbees" },
+          { label: "Sampatti", href: "/case-studies/sampatti" },
+          { label: "Shree Maa Group", href: "/case-studies/shree-maa-group" },
+          { label: "PEE SAFE", href: "/case-studies/pee-safe" },
+        ],
+      },
+    ],
   },
   {
     id: "resources",
