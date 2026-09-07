@@ -1,0 +1,102 @@
+---
+import { customers } from "@/data/customers"
+import { ArrowUpRight } from "lucide-react"
+---
+
+<section class="sg-section" id="stories">
+  <div class="sec">
+    <div class="sg-head reveal">
+      <span class="eyebrow">CUSTOMER STORIES</span>
+      <h2 class="sg-title">Different businesses. Similar financial complexity.</h2>
+      <p class="sg-lead">Every story explains what was broken, what DeepEcom changed and what the outcome was.</p>
+    </div>
+
+    <div class="sg-grid">
+      {customers.map((c, i) => (
+        <a href={`/case-studies/${c.slug}`} class={`sg-card reveal ${c.featured ? "sg-card-featured" : ""}`} data-delay={i * 60}>
+          <div class="sg-card-top">
+            <span class="sg-industry">{c.industry}</span>
+            {c.featured && <span class="sg-featured-tag">Featured</span>}
+          </div>
+          <h3 class="sg-card-title">{c.headline}</h3>
+          <p class="sg-card-problem">{c.problem}</p>
+          <div class="sg-card-tags">
+            {c.products.slice(0, 3).map((p) => (
+              <span class="sg-tag">{p}</span>
+            ))}
+          </div>
+          <div class="sg-card-foot">
+            <span class="sg-read">Read Case Study</span>
+            <span class="sg-arrow"><ArrowUpRight size={15} /></span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sg-section { padding: clamp(3rem, 6vh, 5rem) 0; }
+  .sg-head { max-width: 46rem; }
+  .sg-title { margin-top: 0.9rem; font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+  .sg-lead { margin-top: 0.9rem; font-size: 1.02rem; line-height: 1.7; color: var(--ink-500); max-width: 40rem; }
+
+  .sg-grid {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  @media (min-width: 40rem) { .sg-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 64rem) { .sg-grid { grid-template-columns: repeat(3, 1fr); } }
+  .sg-card-featured { grid-row: span 1; }
+
+  .sg-card {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 1.5rem 1.6rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 12px 28px -16px rgba(11, 17, 32, 0.12);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    overflow: hidden;
+    position: relative;
+  }
+  .sg-card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.05), transparent 62%);
+  }
+  .sg-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand-200);
+    box-shadow: 0 22px 44px -18px rgba(83, 58, 253, 0.22), 0 14px 30px -12px rgba(11, 17, 32, 0.12);
+  }
+
+  .sg-card-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .sg-industry { font-size: 0.7rem; font-weight: 600; color: var(--brand-600); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 999px; padding: 0.25rem 0.6rem; }
+  .sg-featured-tag { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; color: var(--warning-600); background: var(--warning-50); border: 1px solid var(--warning-100); border-radius: 999px; padding: 0.25rem 0.6rem; }
+
+  .sg-card-title { position: relative; margin-top: 0.9rem; font-size: 1.12rem; line-height: 1.32; font-weight: 700; color: var(--ink-900); letter-spacing: -0.015em; }
+  .sg-card-problem { position: relative; margin-top: 0.5rem; font-size: 0.87rem; line-height: 1.6; color: var(--ink-500); flex: 1; }
+  .sg-card-tags { position: relative; margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .sg-tag {
+    font-size: 0.66rem; font-weight: 600; color: var(--ink-600);
+    background: var(--ink-50); border: 1px solid var(--ink-100);
+    border-radius: 999px; padding: 0.24rem 0.55rem;
+  }
+  .sg-card-foot { position: relative; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--ink-100); display: flex; align-items: center; justify-content: space-between; }
+  .sg-read { font-size: 0.82rem; font-weight: 600; color: var(--brand-600); }
+  .sg-arrow {
+    width: 26px; height: 26px;
+    display: grid; place-items: center;
+    border-radius: 8px;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    transition: transform 0.2s ease;
+  }
+  .sg-card:hover .sg-arrow { transform: translate(2px, -2px); }
+</style>

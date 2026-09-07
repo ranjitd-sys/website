@@ -1,0 +1,53 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import ArticleShell from "@/components/resources/ArticleShell.astro"
+import { POSTS } from "@/data/resources/articles"
+import { renderMarkdown } from "@/data/resources/render"
+import { eraDate } from "@/data/resources/index"
+import "@/styles/resources.css"
+
+const slug = Astro.params.slug ?? ""
+
+const post = POSTS.find((p) => p.id === slug)
+
+if (!post) {
+  return new Response("Not found", { status: 404 })
+}
+
+const { html, headings } = await renderMarkdown(post.body)
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.title,
+  description: post.description,
+  datePublished: post.date,
+  dateModified: post.date,
+  articleSection: post.category,
+  publisher: {
+    "@type": "Organization",
+    name: "DeepEcom",
+  },
+}
+---
+
+<PageLayout
+  title={`${post.title} | DeepEcom Blog`}
+  description={post.description}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <main class="rs-section-tight" style="padding-top:1.25rem">
+    <div class="rs-container">
+      <ArticleShell
+        trail={[{ label: "Resources", href: "/resources" }, { label: "Blog", href: "/resources/blog" }, { label: post.title }]}
+        eyebrow={post.category}
+        title={post.title}
+        description={post.description}
+        meta={`${eraDate(post.date)} · ${post.readingTime}`}
+        bodyHtml={html}
+        toc={headings}
+        related={post.related}
+      />
+    </div>
+  </main>
+</PageLayout>

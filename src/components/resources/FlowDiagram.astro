@@ -1,0 +1,131 @@
+---
+export interface FlowStage {
+  label: string
+  title: string
+  sub: string
+  highlight?: boolean
+}
+
+interface Props {
+  stages: FlowStage[]
+  caption?: string
+}
+
+const { stages = [], caption } = Astro.props
+const width = 1180
+const height = 320
+const nodeW = 200
+const nodeH = 116
+const gapStep = 245
+const firstCx = 70 + nodeW / 2
+const lastCx = firstCx + (stages.length - 1) * gapStep
+const canvasW = Math.max(width, lastCx + nodeW / 2 + 60)
+const cx = (i: number) => firstCx + i * gapStep
+const cy = 184
+const nodeY = cy - nodeH / 2
+
+function connector(i: number): string {
+  const fromX = cx(i) + nodeW / 2
+  const fromY = cy
+  const toX = cx(i + 1) - nodeW / 2
+  const toY = cy
+  const midX = (fromX + toX) / 2
+  const lift = 18
+  return `M ${fromX} ${fromY} C ${midX} ${fromY - lift}, ${midX} ${toY - lift}, ${toX} ${toY}`
+}
+---
+
+<figure class="rs-flow" style="overflow:hidden">
+  <svg
+    class="rs-flow-svg"
+    viewBox={`0 0 ${canvasW} ${height}`}
+    role="img"
+    aria-label={caption ?? `${stages.map((s) => s.label).join(" → ")} — ${stages.length} stages`}
+  >
+    <defs>
+      <linearGradient id="flowNodeGlow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffffff" />
+        <stop offset="100%" stop-color="#f8fafc" />
+      </linearGradient>
+      <linearGradient id="flowHighlight" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f0edff" />
+        <stop offset="100%" stop-color="#e1dcff" />
+      </linearGradient>
+    </defs>
+
+    {stages.slice(0, -1).map((_, i) => (
+      <g>
+        <path d={connector(i)} fill="none" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="3 5" />
+        <circle
+          class="rs-flow-particle"
+          r="3.5"
+          fill="#533afd"
+          opacity="0.95"
+          style={{ offsetPath: `path('${connector(i)}')` }}
+        />
+        <circle
+          class="rs-flow-particle alt"
+          r="2.5"
+          fill="#a08cff"
+          opacity="0.8"
+          style={{ offsetPath: `path('${connector(i)}')` }}
+        />
+      </g>
+    ))}
+
+    {stages.map((s, i) => (
+      <g class="rs-flow-node">
+        <text
+          class="rs-flow-stage-label"
+          x={cx(i)}
+          y={110}
+          text-anchor="middle"
+          fill="#94a3b8"
+        >
+          {s.label}
+        </text>
+        <rect
+          x={cx(i) - nodeW / 2}
+          y={nodeY}
+          width={nodeW}
+          height={nodeH}
+          rx="18"
+          fill={s.highlight ? "url(#flowHighlight)" : "url(#flowNodeGlow)"}
+          stroke={s.highlight ? "#533afd" : "#e2e8f0"}
+          stroke-width={s.highlight ? "1.5" : "1"}
+        />
+        <circle cx={cx(i)} cy={nodeY + 30} r="11" fill={s.highlight ? "#533afd" : "#f1f5f9"} stroke={s.highlight ? "#533afd" : "#e2e8f0"} stroke-width="1" />
+        <text
+          class="rs-flow-node-sub"
+          x={cx(i)}
+          y={nodeY + 30 + 4}
+          text-anchor="middle"
+          fill={s.highlight ? "#ffffff" : "#64748b"}
+          font-size="11"
+          font-weight="700"
+        >
+          {String(i + 1).padStart(2, "0")}
+        </text>
+        <text
+          class="rs-flow-node-title"
+          x={cx(i)}
+          y={nodeY + 62}
+          text-anchor="middle"
+          font-size="15"
+        >
+          {s.title}
+        </text>
+        <text
+          class="rs-flow-node-sub"
+          x={cx(i)}
+          y={nodeY + 84}
+          text-anchor="middle"
+          font-size="12.5"
+          fill="#64748b"
+        >
+          {s.sub}
+        </text>
+      </g>
+    ))}
+  </svg>
+</figure>

@@ -1,0 +1,118 @@
+---
+import { customers } from "@/data/customers"
+import { Store, Globe, Building2, ArrowRight } from "lucide-react"
+
+const types = [
+  { icon: Store, name: "Amazon Sellers", filter: "amazon-seller", desc: "Marketplace settlements, fees and accounting." },
+  { icon: Globe, name: "D2C Brands", filter: "d2c-brand", desc: "Website + marketplace data, reconciliation and profitability." },
+  { icon: Building2, name: "Enterprise", filter: "enterprise", desc: "High-volume, multi-entity, multi-warehouse accounting." },
+]
+---
+
+<section class="bt-section">
+  <div class="sec">
+    <div class="bt-layout">
+      <div class="bt-head reveal">
+        <span class="eyebrow">WHO IT'S FOR</span>
+        <h2 class="bt-title">Built for the way your business sells.</h2>
+        <p class="bt-lead">Different structures, same outcome — one connected financial picture across every channel you sell on.</p>
+      </div>
+
+      <div class="bt-cards">
+        {types.map((t, i) => {
+          const Icon = t.icon
+          const custs = customers.filter((c) => c.businessType === t.filter)
+          return (
+            <div class="bt-card reveal" data-delay={i * 80}>
+              <span class="bt-icon"><Icon size={18} /></span>
+              <h3 class="bt-name">{t.name}</h3>
+              <p class="bt-desc">{t.desc}</p>
+              {custs.length > 0 && (
+                <div class="bt-custs">
+                  {custs.map((c) => (
+                    <span class="bt-cust">{c.name}</span>
+                  ))}
+                </div>
+              )}
+              <a href="#stories" class="bt-link">
+                See stories <ArrowRight size={13} />
+              </a>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bt-section { padding: clamp(3rem, 6vh, 5rem) 0; background: var(--ink-50); }
+  .bt-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+  }
+  @media (min-width: 64rem) {
+    .bt-layout { grid-template-columns: 0.85fr 1.4fr; align-items: center; }
+  }
+  .bt-title { margin-top: 0.9rem; font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+  .bt-lead { margin-top: 0.9rem; font-size: 1.02rem; line-height: 1.7; color: var(--ink-500); max-width: 30rem; }
+
+  .bt-cards { display: flex; flex-direction: column; gap: 0.9rem; }
+  @media (min-width: 56rem) { .bt-cards { flex-direction: row; } }
+  .bt-card {
+    flex: 1;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 1.4rem 1.5rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 12px 28px -16px rgba(11, 17, 32, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .bt-card::before {
+    content: "";
+    position: absolute;
+    inset: 0; pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.05), transparent 62%);
+  }
+  .bt-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-200);
+    box-shadow: 0 20px 40px -18px rgba(83, 58, 253, 0.2), 0 12px 28px -16px rgba(11, 17, 32, 0.12);
+  }
+  .bt-icon {
+    position: relative;
+    width: 36px; height: 36px;
+    display: grid; place-items: center;
+    border-radius: 11px;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+  }
+  .bt-name { position: relative; margin-top: 0.9rem; font-size: 1.06rem; font-weight: 700; color: var(--ink-900); letter-spacing: -0.01em; }
+  .bt-desc { position: relative; margin-top: 0.35rem; font-size: 0.85rem; line-height: 1.6; color: var(--ink-500); flex: 1; }
+  .bt-custs { position: relative; margin-top: 0.9rem; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .bt-cust {
+    font-size: 0.68rem; font-weight: 600; color: var(--ink-600);
+    background: var(--ink-50); border: 1px solid var(--ink-100);
+    border-radius: 999px; padding: 0.22rem 0.55rem;
+  }
+  .bt-link {
+    position: relative;
+    margin-top: 1.1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink-100);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--brand-600);
+    text-decoration: none;
+  }
+  .bt-link:hover { gap: 0.55rem; }
+</style>

@@ -1,0 +1,51 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import ArticleShell from "@/components/resources/ArticleShell.astro"
+import { GUIDES } from "@/data/resources/guides"
+import { renderMarkdown } from "@/data/resources/render"
+import "@/styles/resources.css"
+
+const slug = Astro.params.slug ?? ""
+
+const guide = GUIDES.find((g) => g.id === slug)
+
+if (!guide) {
+  return new Response("Not found", { status: 404 })
+}
+
+const { html, headings } = await renderMarkdown(guide.body)
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: guide.title,
+  description: guide.description,
+  about: `DeepEcom guide: ${guide.topic}`,
+  articleSection: guide.topic,
+  publisher: {
+    "@type": "Organization",
+    name: "DeepEcom",
+  },
+}
+---
+
+<PageLayout
+  title={`${guide.title} | DeepEcom Guides`}
+  description={guide.description}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  <main class="rs-section-tight" style="padding-top:1.25rem">
+    <div class="rs-container">
+      <ArticleShell
+        trail={[{ label: "Resources", href: "/resources" }, { label: "Guides", href: "/resources/guides" }, { label: guide.title }]}
+        eyebrow={guide.topic}
+        title={guide.title}
+        description={guide.description}
+        meta={`${guide.level} guide · ${guide.readingTime} · ${guide.chapters.length} chapters`}
+        bodyHtml={html}
+        toc={headings}
+        related={guide.related}
+      />
+    </div>
+  </main>
+</PageLayout>

@@ -1,82 +1,124 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
+import ResourceSearch from "@/components/resources/ResourceSearch.astro"
+import ResourceGrid from "@/components/resources/ResourceGrid.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import { RESOURCE_CATALOG, buildSearchIndex } from "@/data/resources/index"
+import { FILTERS } from "@/data/resources/types"
+import "@/styles/resources.css"
 
-const resources = [
-  {
-    title: "Blog",
-    description: "Notes on ecommerce finance, marketplace reconciliation and accounting.",
-    icon: "book",
-    href: "/resources/blog",
-  },
-  {
-    title: "Guides",
-    description: "Step-by-step guides for setting up and using DeepEcom.",
-    icon: "file",
-    href: "/resources/guides",
-  },
-  {
-    title: "FAQs",
-    description: "Straight answers to the questions sellers ask most.",
-    icon: "help",
-    href: "/resources/faqs",
-  },
-  {
-    title: "Help Center",
-    description: "Find answers, or talk to a real person.",
-    icon: "search",
-    href: "/resources/help-center",
-  },
-  {
-    title: "Ecommerce Accounting",
-    description: "How marketplace transactions become structured accounting entries.",
-    icon: "calculator",
-    href: "/resources/ecommerce-accounting",
-  },
-  {
-    title: "Reconciliation",
-    description: "Expected vs actual — marketplace settlement reconciliation.",
-    icon: "wallet",
-    href: "/resources/reconciliation",
-  },
-  {
-    title: "GST",
-    description: "GST-wise accounting, TCS/TDS and ecommerce compliance.",
-    icon: "shield",
-    href: "/resources/gst",
-  },
-  {
-    title: "ERP",
-    description: "Tally, SAP and Zoho — making your ERP ecommerce-ready.",
-    icon: "building",
-    href: "/resources/erp",
-  },
-]
+const searchIndex = buildSearchIndex()
+const featured = RESOURCE_CATALOG.find((r) => r.id === "why-ecommerce-accounting-is-different")
 ---
 
 <PageLayout
-  title="Resources — Learn how DeepEcom works | DeepEcom"
-  description="Resources on ecommerce accounting, marketplace reconciliation, GST and ERP integration — plus FAQs, guides and help from the DeepEcom team."
+  title="Resources — Ecommerce accounting, reconciliation, GST and ERP | DeepEcom"
+  description="Guides, articles, FAQs and help on ecommerce accounting, marketplace payment reconciliation, GST and TCS/TDS, inventory and ERP integration with DeepEcom."
 >
-  <PageHero
-    eyebrow="RESOURCES"
-    title="Learn how ecommerce finance works."
-    lead="From marketplace settlement reconciliation to GST and ERP posting, the resources hub covers the topics that matter for ecommerce accounting — with guides, FAQs and direct help."
-  />
 
-  <FeatureGrid
-    eyebrow="EXPLORE"
-    title="Everything worth knowing, in one place."
-    lead="Choose a topic to get started."
-    features={resources}
-    columns={4}
-    center
-  />
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources" }]} />
+      <h1 class="rs-hero-title">
+        Ecommerce finance, explained.
+        <br />
+        From order to ERP.
+      </h1>
+      <p class="rs-hero-lead">
+        Practical, plain-language knowledge about how marketplace data becomes accounting:
+        orders, charges, GST, TCS/TDS, settlements, refunds, inventory — and the ERP entries
+        that come out the other side.
+      </p>
+      <div class="rs-hero-actions">
+        <ResourceSearch items={searchIndex} />
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head" style="display:flex;gap:1rem;align-items:flex-end;justify-content:space-between">
+          <div>
+            <p class="rs-head-eyebrow">Browse everything</p>
+            <h2 class="rs-head-title">The knowledge hub</h2>
+          </div>
+          <p class="rs-head-lead" style="margin:0;color:var(--ink-500)">
+            Searchable, filterable — every resource in one grid.
+          </p>
+        </div>
+        <ResourceGrid
+          items={RESOURCE_CATALOG}
+          chips={FILTERS}
+          featuredId={featured?.id}
+        />
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head" style="display:flex;gap:1rem;align-items:flex-end;justify-content:space-between">
+          <div>
+            <p class="rs-head-eyebrow">Start here</p>
+            <h2 class="rs-head-title">Where to begin</h2>
+          </div>
+        </div>
+        <div class="rs-split">
+          <div class="rs-flow" style="padding:1.5rem">
+            <p style="font-size:1.05rem;font-weight:600;color:var(--ink-950);margin:0 0 0.35rem">The DeepEcom flow</p>
+            <p style="font-size:0.9rem;color:var(--ink-600);margin:0 0 1rem;max-width:30rem">
+              Every resource on this site fits into one pipeline. Pick any stage to read deeper.
+            </p>
+            <div class="rs-topic-list" style="grid-template-columns:1fr">
+              <a class="rs-topic-link" href="/resources/ecommerce-accounting">
+                <strong>Connect — understand your orders</strong>
+                <span>Ecommerce Accounting</span>
+              </a>
+              <a class="rs-topic-link" href="/resources/reconciliation">
+                <strong>Reconcile — match every rupee</strong>
+                <span>Payment Reconciliation</span>
+              </a>
+              <a class="rs-topic-link" href="/resources/gst">
+                <strong>Tax correctly — GST, TCS and TDS</strong>
+                <span>GST for Ecommerce</span>
+              </a>
+              <a class="rs-topic-link" href="/resources/erp">
+                <strong>Account — post into your ERP</strong>
+                <span>ERP Integration</span>
+              </a>
+            </div>
+          </div>
+          <div>
+            <p class="rs-head-lead" style="margin-top:0">
+              The resources hub is structured like the product: marketplace data first,
+              order-level detail behind every number, and ERP-ready accounting at the end.
+              No jargon, no hype — just how the numbers actually move.
+            </p>
+            <ul style="margin:1.25rem 0 0;padding-left:1.15rem;display:grid;gap:0.5rem;color:var(--ink-600);font-size:0.9rem;line-height:1.6">
+              <li>
+                <strong style="color:var(--ink-900)">Blog</strong> — focused posts on order-wise accounting, TCS/TDS, marketplace charges and ERP posting.
+              </li>
+              <li>
+                <strong style="color:var(--ink-900)">Guides</strong> — end-to-end walkthroughs you can work through with your own data.
+              </li>
+              <li>
+                <strong style="color:var(--ink-900)">FAQs &amp; Help Center</strong> — straight answers and documentation for setup, connections and posting.
+              </li>
+            </ul>
+            <div class="rs-hero-actions" style="margin-top:1.5rem">
+              <a class="btn btn-primary" href="/resources/faqs">See common questions</a>
+              <a class="btn btn-secondary" href="/resources/help-center">Open the Help Center</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Questions the resources don't cover?"
-    lead="Talk to us directly and we'll show you how DeepEcom fits your business."
+    dark
+    title="The resources are the long answer."
+    lead="For the short one, talk to us directly — we will show you how DeepEcom connects your marketplaces, reconciles payments and posts accounting into your ERP."
   />
 </PageLayout>

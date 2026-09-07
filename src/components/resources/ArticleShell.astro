@@ -1,0 +1,68 @@
+---
+import CtaBand from "@/components/pages/CtaBand.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import Toc from "@/components/resources/Toc.astro"
+import type { RelatedLink } from "@/data/resources/types"
+
+interface Heading {
+  depth: number
+  slug: string
+  text: string
+}
+
+interface Props {
+  trail: { label: string; href?: string }[]
+  eyebrow: string
+  title: string
+  description: string
+  meta: string
+  bodyHtml: string
+  toc: Heading[]
+  related: RelatedLink[]
+}
+
+const { trail, eyebrow, title, description, meta, bodyHtml, toc, related } = Astro.props
+---
+
+<Breadcrumbs crumbs={trail} />
+
+<header class="rs-article-header">
+  <span class="rs-card-chip">{eyebrow}</span>
+  <h1 class="rs-hero-title rs-hero-title" style="margin-top:0.85rem">{title}</h1>
+  <p class="rs-hero-lead" style="max-width:40rem">{description}</p>
+  <div class="rs-article-meta">
+    <span>{meta}</span>
+  </div>
+</header>
+
+<div class="rs-article">
+  <div>
+    <div class="rs-prose" id="article-body" set:html={bodyHtml} />
+  </div>
+  <aside>
+    <Toc headings={toc} />
+  </aside>
+</div>
+
+{related.length > 0 && (
+  <section class="rs-section-tight" style="padding-top:2.5rem">
+    <div class="rs-head" style="margin-bottom:1rem">
+      <p class="rs-head-eyebrow">Keep reading</p>
+      <h2 class="rs-head-title">Related resources</h2>
+    </div>
+    <div class="rs-topic-list">
+      {related.map((r) => (
+        <a class="rs-topic-link" href={r.href}>
+          <strong>{r.label}</strong>
+          <span style="text-transform:capitalize">{r.kind}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+)}
+
+<CtaBand
+  dark
+  title="See this flow running on your own data."
+  lead="Book a demo — connect your marketplaces and watch orders become reconciled, GST-wise, ERP-ready accounting."
+/>

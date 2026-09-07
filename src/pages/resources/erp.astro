@@ -1,74 +1,193 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import FlowDiagram, { type FlowStage } from "@/components/resources/FlowDiagram.astro"
+import HubTable from "@/components/resources/HubTable.astro"
+import ResourceCard from "@/components/resources/ResourceCard.astro"
+import { resourcesForTopic } from "@/data/resources/index"
+import "@/styles/resources.css"
+import { ArrowUpRight } from "lucide-react"
+
+const related = resourcesForTopic("erp")
+
+const flow: FlowStage[] = [
+  { label: "Inputs", title: "Marketplaces", sub: "Orders, settlements, returns", highlight: true },
+  { label: "Layer", title: "DeepEcom", sub: "Understand · reconcile · account", highlight: true },
+  { label: "Entries", title: "Order-wise entries", sub: "Complete and traceable" },
+  { label: "Mapping", title: "GST & warehouse", sub: "Heads, rates, masters" },
+  { label: "Output", title: "ERP posting", sub: "Tally · SAP · Zoho" },
+]
 
 const topics = [
-  {
-    title: "Tally connectivity",
-    description: "Detailed ecommerce vouchers synced cleanly into Tally.",
-    icon: "calculator",
-  },
-  {
-    title: "SAP connectivity",
-    description: "Structured, audit-ready entries for enterprise SAP environments.",
-    icon: "building",
-  },
-  {
-    title: "Zoho connectivity",
-    description: "Ecommerce accounting posted into Zoho the way your team expects.",
-    icon: "bank",
-  },
-  {
-    title: "ERP posting",
-    description: "Prepared entries posted directly into your ERP, ready for finance.",
-    icon: "table",
-  },
-  {
-    title: "Order-wise entries",
-    description: "Each transaction accounted individually, not as a summary batch.",
-    icon: "receipt",
-  },
-  {
-    title: "Inventory accounting",
-    description: "Stock movements and transfers accounted alongside the ledger.",
-    icon: "boxes",
-  },
+  { id: "why", title: "Why ERP posting fails with raw data", desc: "Two vocabularies, one ledger." },
+  { id: "needs", title: "What the ERP needs", desc: "Order-wise, GST-wise, traceable entries." },
+  { id: "shapes", title: "Posting shapes per ERP", desc: "Tally, SAP and Zoho specifics." },
+  { id: "daily", title: "Daily, not month-end", desc: "The ERP stays current continuously." },
 ]
 ---
 
 <PageLayout
-  title="ERP — Make your ERP ecommerce-ready | DeepEcom"
-  description="ERP integration for ecommerce: detailed accounting posted into Tally, SAP and Zoho, with order-wise entries, GST and inventory accounting."
+  title="ERP Integration — Make your ERP ecommerce-ready | DeepEcom"
+  description="How DeepEcom posts order-wise, GST-wise, warehouse-wise accounting into Tally, SAP and Zoho — making your ERP ecommerce-ready without replacing it."
 >
-  <PageHero
-    eyebrow="ERP"
-    title="Make your ERP ecommerce-ready."
-    lead="Your ERP is built for accounting, not for marketplaces. DeepEcom converts complex ecommerce transactions into detailed accounting entries inside the ERP you already run — Tally, SAP or Zoho."
-  />
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources", href: "/resources" }, { label: "ERP" }]} />
+      <h1 class="rs-hero-title">Your ERP, made ecommerce-ready.</h1>
+      <p class="rs-hero-lead">
+        An ERP is a system of record, not a marketplace feed reader. The accounting layer
+        in between is what turns raw ecommerce data into entries Tally, SAP and Zoho can
+        actually process.
+      </p>
+      <div class="rs-hero-actions">
+        <a class="btn btn-primary" href="/resources/guides/erp-integration">Read the ERP guide</a>
+        <a class="btn btn-secondary" href="/erp-connector">Explore ERP Connector</a>
+      </div>
+    </div>
+  </header>
 
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="THE SCOPE"
-      title="More than an integration."
-      lead="A generic data sync isn't accounting. The ERP Connector carries each transaction through sale, GST, charges, receivable, payment, return and inventory — into your ERP as structured entries."
-      center
-    />
-  </section>
+  <main>
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The translation</p>
+          <h2 class="rs-head-title">Two languages, one system of record</h2>
+        </div>
+        <div class="rs-topic-list">
+          {topics.map((t) => (
+            <a class="rs-topic-link" href={`#${t.id}`}>
+              <strong>{t.title}</strong>
+              <span>{t.desc}</span>
+              <ArrowUpRight width={15} height={15} />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
 
-  <FeatureGrid
-    eyebrow="TOPICS"
-    title="Detailed accounting, posted where you work."
-    lead="Your ERP stays your system of record — now ecommerce-ready."
-    features={topics}
-    columns={3}
-    center
-  />
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="why">
+      <div class="rs-container">
+        <div class="rs-split">
+          <div>
+            <p class="rs-head-eyebrow">Why it fails</p>
+            <h2 class="rs-head-title">The ERP expects invoices, the marketplace sends feeds</h2>
+            <p class="rs-head-lead">
+              Pumping marketplace vocabulary unchanged into an ERP produces books nobody
+              can reconcile. The mismatch shows up in every dimension.
+            </p>
+          </div>
+          <div>
+            <HubTable
+              head={["The ERP expects", "Marketplaces provide"]}
+              rows={[
+                ["A clean sales invoice", "An order feed, with a settlement later"],
+                ["Net revenue", "Gross sales minus charges to decompose"],
+                ["Cash on receipt", "Payouts pooled across many orders"],
+                ["One tax line", "GST per charge, TCS and TDS on top"],
+                ["Leading inventory", "Warehouse stock movements"],
+                ["Gradual reconciliation", "A monthly settlement mystery"],
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The pipeline</p>
+          <h2 class="rs-head-title">What sits between marketplaces and the ERP</h2>
+        </div>
+        <FlowDiagram stages={flow} caption="From marketplaces through the accounting layer into your ERP" />
+      </div>
+    </section>
+
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="needs">
+      <div class="rs-container">
+        <div class="rs-split">
+          <div>
+            <p class="rs-head-eyebrow">The contract</p>
+            <h2 class="rs-head-title">What the ERP needs before anything is posted</h2>
+            <p class="rs-head-lead">
+              DeepEcom delivers the same accounting to every ERP, mapped into each one's
+              own structure. The contract is strict:
+            </p>
+          </div>
+          <div>
+            <ul style="margin:0;padding-left:1.15rem;display:flex;flex-direction:column;gap:0.55rem;color:var(--ink-700);font-size:0.9rem;line-height:1.6">
+              <li><strong style="color:var(--ink-900)">Order-wise</strong> — each order as its own set of entries.</li>
+              <li><strong style="color:var(--ink-900)">GST-wise</strong> — tax per head and rate, not totals.</li>
+              <li><strong style="color:var(--ink-900)">Warehouse-wise</strong> — movement and COGS at the location level.</li>
+              <li><strong style="color:var(--ink-900)">Traceable</strong> — every entry points at the marketplace order.</li>
+              <li><strong style="color:var(--ink-900)">Reconciled</strong> — receivable, settlement and bank agree.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section-tight" id="shapes">
+      <div class="rs-container">
+        <div class="rs-head" style="margin-bottom:1rem">
+          <p class="rs-head-eyebrow">Posting shapes</p>
+          <h2 class="rs-head-title">The same accounting, in each ERP's language</h2>
+        </div>
+        <div class="rs-table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ERP</th>
+                <th scope="col">Posting shape</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Tally</strong></td>
+                <td>GST-ready ledgers and entry vouchers per order, with tax heads and warehouse mappings.</td>
+              </tr>
+              <tr>
+                <td><strong>SAP</strong></td>
+                <td>Mapping into your chart of accounts, tax structures and warehouse masters.</td>
+              </tr>
+              <tr>
+                <td><strong>Zoho Books</strong></td>
+                <td>Postings to ledgers, tax profiles and warehouses in order-wise detail.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="rs-callout" style="margin-top:1.25rem;max-width:52rem" id="daily">
+          <strong>The result is a current ERP.</strong> Every order accounted, every
+          settlement reconciled, every stock movement posted — continuously. Month-end
+          becomes a review of completed work, not a reconstruction of the month.
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head" style="margin-bottom:1rem">
+          <p class="rs-head-eyebrow">Go deeper</p>
+          <h2 class="rs-head-title">Related resources</h2>
+        </div>
+        <div class="rs-grid cols-3">
+          {related.map((r) => (
+            <ResourceCard item={r} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Your ERP, ready for ecommerce."
-    lead="See how detailed ecommerce accounting lands in Tally, SAP or Zoho."
+    dark
+    title="Make your ERP ecommerce-ready."
+    lead="Book a demo and see order-wise, GST-wise accounting posted into Tally, SAP or Zoho."
   />
 </PageLayout>

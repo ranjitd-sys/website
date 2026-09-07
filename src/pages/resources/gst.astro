@@ -1,74 +1,174 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import FlowDiagram, { type FlowStage } from "@/components/resources/FlowDiagram.astro"
+import HubTable from "@/components/resources/HubTable.astro"
+import ResourceCard from "@/components/resources/ResourceCard.astro"
+import { resourcesForTopic } from "@/data/resources/index"
+import "@/styles/resources.css"
+import { ArrowUpRight } from "lucide-react"
+
+const related = resourcesForTopic("gst")
+
+const flow: FlowStage[] = [
+  { label: "On marketplaces", title: "Order events", sub: "Sale, charges and returns", highlight: true },
+  { label: "Taxable", title: "Taxable values", sub: "Value and rate per component" },
+  { label: "Per head", title: "GST per head", sub: "Output, input, refunds", highlight: true },
+  { label: "TCS & TDS", title: "TCS and TDS", sub: "Collected and withheld tax" },
+  { label: "Into ERP", title: "GST-wise accounting", sub: "Tally · SAP · Zoho" },
+]
 
 const topics = [
-  {
-    title: "GST-wise accounting",
-    description: "GST captured, classified and reported the way compliance requires.",
-    icon: "calculator",
-  },
-  {
-    title: "Ecommerce GST",
-    description: "How marketplace sales, deductions and settlements interact with GST.",
-    icon: "receipt",
-  },
-  {
-    title: "TCS and TDS",
-    description: "Ecommerce tax collection and deduction, accounted correctly.",
-    icon: "shield",
-  },
-  {
-    title: "Multi-state GST",
-    description: "Multiple GST numbers and state-wise reporting for multi-state operations.",
-    icon: "globe",
-  },
-  {
-    title: "GST-ready reports",
-    description: "Structured reports your finance team can use directly.",
-    icon: "file",
-  },
-  {
-    title: "Marketplace GST deductions",
-    description: "GST components within marketplace charges, isolated from the rest.",
-    icon: "layers",
-  },
+  { id: "sale", title: "GST on the sale", desc: "Output GST on the goods at the right rate, per order." },
+  { id: "charges", title: "GST on marketplace charges", desc: "Tax on commission and fees, claimable as input credit." },
+  { id: "tcs", title: "TCS on ecommerce sales", desc: "Collected by the marketplace, reconciled to its filings." },
+  { id: "tds", title: "TDS on payments", desc: "Withheld at payout, a tax-receivable backed by certificate." },
+  { id: "refunds", title: "Refunds and return data", desc: "GST reversed on every returned component." },
+  { id: "returns", title: "Return data, not filing", desc: "Books kept GST-ready so returns extract cleanly." },
 ]
 ---
 
 <PageLayout
-  title="GST — Ecommerce GST, explained | DeepEcom"
-  description="Ecommerce GST for sellers: GST-wise accounting, TCS/TDS, multi-state GST numbers and GST-ready reports across marketplaces."
+  title="GST for Ecommerce — Tax from order to ERP | DeepEcom"
+  description="How GST, TCS and TDS flow through marketplace selling: taxable values, rates, GST on charges, ecommerce TCS and clauses, refunds, and GST-wise accounting posted into your ERP."
 >
-  <PageHero
-    eyebrow="GST"
-    title="Ecommerce GST, without the spreadsheet gymnastics."
-    lead="Marketplaces, GST and settlements interact in ways that rarely line up on their own. GST-wise accounting keeps the tax side of ecommerce clean and reportable."
-  />
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources", href: "/resources" }, { label: "GST" }]} />
+      <h1 class="rs-hero-title">GST, from order to ERP.</h1>
+      <p class="rs-hero-lead">
+        Marketplace selling attracts GST on more than the goods — charges carry tax, TCS
+        is collected on sales, TDS is withheld at payout, and refunds reverse all of it.
+        This hub maps each piece to the accounting it needs.
+      </p>
+      <div class="rs-hero-actions">
+        <a class="btn btn-primary" href="/resources/guides/gst-for-ecommerce">Read the GST guide</a>
+        <a class="btn btn-secondary" href="/erp-connector/gst">See GST-wise accounting</a>
+      </div>
+    </div>
+  </header>
 
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="THE SCOPE"
-      title="What ecommerce GST involves."
-      lead="Every sale, charge and settlement carries GST components. The accounting layer has to classify them correctly and make them reportable — across states, GST numbers and marketplaces."
-      center
-    />
-  </section>
+  <main>
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The map</p>
+          <h2 class="rs-head-title">Where GST appears in marketplace selling</h2>
+        </div>
+        <div class="rs-topic-list">
+          {topics.map((t) => (
+            <a class="rs-topic-link" href={`#${t.id}`}>
+              <strong>{t.title}</strong>
+              <span>{t.desc}</span>
+              <ArrowUpRight width={15} height={15} />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
 
-  <FeatureGrid
-    eyebrow="TOPICS"
-    title="GST, handled at the transaction level."
-    lead="Tax detail your compliance team can rely on."
-    features={topics}
-    columns={3}
-    center
-  />
+    <hr class="rs-rule" />
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The flow</p>
+          <h2 class="rs-head-title">How one order's GST moves</h2>
+          <p class="rs-head-lead">
+            Every stage keeps the link to the order, so returns data and marketplace
+            statements agree.
+          </p>
+        </div>
+        <FlowDiagram
+          stages={flow}
+          caption="From order events to GST-wise accounting posted in your ERP"
+        />
+      </div>
+    </section>
+
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="sale">
+      <div class="rs-container">
+        <div class="rs-split">
+          <div>
+            <p class="rs-head-eyebrow">On the sale</p>
+            <h2 class="rs-head-title">Not one tax line — many</h2>
+            <p class="rs-head-lead">
+              A single order can carry output GST on the goods, GST on marketplace
+              charges, and situations where the recipient accounts for tax. Flattening
+              these into a total makes returns and input credit impossible to verify.
+            </p>
+          </div>
+          <div>
+            <HubTable
+              head={["Component", "What carries GST"]}
+              rows={[
+                ["Sale of goods", "Output GST on taxable value per rate"],
+                ["Commission and fees", "GST on the charge, claimable as input credit"],
+                ["Reverse-charge situations", "Recipient accounts for the tax"],
+                ["Returns", "Reversal of the original GST on components"],
+                ["TCS on sales", "Tax collected by the marketplace"],
+                ["TDS at payout", "Tax withheld by the marketplace"],
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head" style="margin-bottom:1rem">
+          <p class="rs-head-eyebrow">Tax positions</p>
+          <h2 class="rs-head-title">TCS and TDS are money that never reaches you</h2>
+        </div>
+        <div class="rs-dim">
+          <div class="rs-dim-card" id="tcs">
+            <strong>TCS on ecommerce sales</strong>
+            <span>
+              The marketplace collects tax at source on eligible sales, remits it, and
+              reports against your PAN. In your books it is a tax-collected position that
+              must reconcile to the marketplace's filing.
+            </span>
+          </div>
+          <div class="rs-dim-card" id="tds">
+            <strong>TDS on marketplace payments</strong>
+            <span>
+              At payout the marketplace may withhold tax as a payer. The withheld amount
+              is a tax-receivable backed by a certificate — lower cash today, an asset
+              in your records, never a cost.
+            </span>
+          </div>
+        </div>
+        <div class="rs-callout" style="margin-top:1.25rem;max-width:52rem">
+          <strong>Return data, not filing.</strong> DeepEcom keeps accounting GST-ready —
+          per head, per rate, per order — so your CA can extract return data from your
+          books and reconcile against marketplace statements. It does not file returns
+          on your behalf.
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head" style="margin-bottom:1rem">
+          <p class="rs-head-eyebrow">Go deeper</p>
+          <h2 class="rs-head-title">Related resources</h2>
+        </div>
+        <div class="rs-grid cols-3">
+          {related.map((r) => (
+            <ResourceCard item={r} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Keep GST on the right side of your books."
-    lead="Talk to us about GST-wise accounting for your business."
+    dark
+    title="Make your GST data easy to reconcile."
+    lead="Book a demo and see TCS, TDS and per-head GST become accounting, not a chase."
   />
 </PageLayout>

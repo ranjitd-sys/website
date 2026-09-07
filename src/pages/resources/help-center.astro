@@ -1,64 +1,98 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
-import { buttonVariants } from "@/components/landing/ui/button"
-import { ArrowRight } from "lucide-react"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import ResourceSearch from "@/components/resources/ResourceSearch.astro"
+import { HELP_GROUPS, HELP_HERO } from "@/data/resources/help"
+import { buildSearchIndex } from "@/data/resources/index"
+import "@/styles/resources.css"
+import { ArrowUpRight } from "lucide-react"
 
-const paths = [
-  {
-    title: "Browse the FAQs",
-    description: "Straight answers on integrations, GST numbers, historical data, SKU mapping and more.",
-    href: "/resources/faqs",
-    cta: "Read the FAQs",
-  },
-  {
-    title: "Talk to us directly",
-    description: "Tell us about your store and we'll show you exactly how DeepEcom fits your workflow.",
-    href: "/contact",
-    cta: "Book a Demo",
-  },
-]
+const searchIndex = buildSearchIndex()
 ---
 
 <PageLayout
-  title="Help Center — Get help with DeepEcom | DeepEcom"
-  description="Get help with DeepEcom. Browse the FAQs, or book a guided demo and talk to the team directly."
+  title="Help Center — Documentation for DeepEcom Platform and ERP Connector | DeepEcom"
+  description="Help Center documentation: connect marketplaces, understand dashboards and profitability, reconcile payments, and post order-wise, GST-wise, warehouse-wise accounting into Tally, SAP and Zoho."
 >
-  <PageHero
-    eyebrow="HELP CENTER"
-    title="How can we help?"
-    lead="Start with the FAQs for quick answers. If you need more, talk to a real person — we respond within one business day."
-  />
-
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="GET STARTED"
-      title="Two ways to get help."
-      lead="Fast answers on your own, or a guided conversation with the team."
-      center
-    />
-    <div class="mx-auto mt-14 grid max-w-5xl gap-4 md:grid-cols-2">
-      {
-        paths.map((p) => (
-          <article class="flex flex-col justify-between gap-6 rounded-2xl border border-ink-200 bg-white p-7 shadow-card">
-            <div>
-              <h3 class="text-lg font-semibold text-ink-900">{p.title}</h3>
-              <p class="mt-2 text-sm leading-relaxed text-muted-foreground">{p.description}</p>
-            </div>
-            <a href={p.href} class={buttonVariants({ variant: "outline" })}>
-              {p.cta}
-              <ArrowRight size={16} />
-            </a>
-          </article>
-        ))
-      }
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources", href: "/resources" }, { label: "Help Center" }]} />
+      <h1 class="rs-hero-title">Help Center</h1>
+      <p class="rs-hero-lead">
+        Documentation for getting started, the Platform, the ERP Connector, integrations
+        and billing — written for the person actually using it.
+      </p>
+      <div class="rs-hero-actions">
+        <ResourceSearch items={searchIndex} placeholder="Search documentation, e.g. “Tally” or “reconcile”…" />
+      </div>
     </div>
-  </section>
+  </header>
+
+  <main>
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <p class="rs-head-eyebrow">Start here</p>
+        <div class="rs-quick">
+          {HELP_HERO.map((h) => (
+            <a href={h.href}>
+              <span>{h.title}</span>
+              <span>{h.description}</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-doc-layout">
+          <nav class="rs-doc-sidebar" aria-label="Documentation">
+            {HELP_GROUPS.map((g) => (
+              <div class="rs-doc-sidebar-group">
+                <span class="rs-doc-sidebar-group-title">{g.label}</span>
+                {g.items.map((item) => (
+                  <a href={item.href}>{item.title}</a>
+                ))}
+              </div>
+            ))}
+          </nav>
+
+          <div class="rs-doc-content">
+            {HELP_GROUPS.map((g) => (
+              <div style="margin-bottom:2.5rem" id={g.id}>
+                <div class="rs-head" style="margin-bottom:1rem">
+                  <p class="rs-head-eyebrow">{g.label}</p>
+                  <h2 class="rs-head-title" style="font-size:1.4rem">{g.description}</h2>
+                </div>
+                <div class="rs-doc-grid">
+                  {g.items.map((item) => (
+                    <a class="rs-topic-link" href={item.href} style="align-items:flex-start;padding:1.1rem 1.2rem;flex-direction:column;gap:0.5rem">
+                      <strong style="font-size:1rem">{item.title}</strong>
+                      <span>{item.description}</span>
+                      <ArrowUpRight width={16} height={16} />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+
+            <hr class="rs-rule" style="margin-block:1.5rem" />
+
+            <div class="rs-callout">
+              <strong>Can't find an answer?</strong> Check the <a href="/resources/faqs">FAQs</a>,
+              or <a href="/contact">contact the DeepEcom team</a> directly — we answer
+              integration, reconciliation and posting questions daily.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Still stuck?"
-    lead="Real humans, no ticket black holes."
+    dark
+    title="Help is one conversation away."
+    lead="Book a demo, or ask a question about your marketplaces, ERP and data."
   />
 </PageLayout>

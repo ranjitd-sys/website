@@ -423,6 +423,9 @@ const erpBoxes = [
     // no dasharray, no keyframes, no reduced-motion branch needed since
     // nothing here ever animates. Resize + ResizeObserver are coalesced
     // into a single rAF-scheduled render so a resize can't trigger two
+
+import { undefined } from "astro:schema";
+
     // rebuild passes back to back.
     function initArchFlow(root: HTMLElement) {
       if (root.dataset.flowInit === "1") return;
@@ -430,7 +433,7 @@ const erpBoxes = [
 
       const uid = root.dataset.uid ?? "arch1";
       const svg = root.querySelector<SVGSVGElement>(`#arch-connector-svg-${uid}`);
-      const core = root.querySelector<HTMLElement>(`#core-box-${uid}`);
+      const core = root.querySelector<HTMLElement>(`#core-box-${uid}`) 
       if (!svg || !core) return;
 
       function relRect(el: Element, containerRect: DOMRect) {
@@ -469,8 +472,8 @@ const erpBoxes = [
         svg.setAttribute("viewBox", `0 0 ${containerRect.width} ${containerRect.height}`);
         svg.innerHTML = "";
 
-        if (!isDesktop()) return;
-
+        if (!isDesktop() || !core) return;
+        
         const coreRect = relRect(core, containerRect);
         const sources = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));
         const outputs = Array.from(root.querySelectorAll<HTMLElement>('[data-card="output"]'));

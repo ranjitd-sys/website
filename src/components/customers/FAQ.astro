@@ -1,0 +1,49 @@
+---
+import { customerFaqs } from "@/data/customers"
+---
+
+<section class="faq-section">
+  <div class="sec-narrow">
+    <div class="faq-header reveal">
+      <span class="eyebrow eyebrow-center">FAQ</span>
+      <h2 class="faq-title">Customer questions, answered.</h2>
+    </div>
+    <div class="faq-list">
+      {customerFaqs.map((f, i) => (
+        <details class="faq-item reveal" data-delay={i * 40} open={i === 0}>
+          <summary class="faq-q">{f.q}</summary>
+          <p class="faq-a">{f.a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section { padding: clamp(3rem, 6vh, 5rem) 0; background: var(--ink-50); }
+  .faq-header { text-align: center; }
+  .faq-title { margin-top: 0.9rem; font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+  .faq-list { margin-top: 2rem; max-width: 46rem; margin-inline: auto; display: flex; flex-direction: column; gap: 0.6rem; }
+  .faq-item {
+    border: 1px solid var(--ink-200); border-radius: 14px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .faq-item[open] { border-color: var(--brand-200); box-shadow: 0 8px 24px -12px rgba(83,58,253,0.18); }
+  .faq-q {
+    list-style: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem; font-weight: 600; color: var(--ink-950);
+  }
+  .faq-q::-webkit-details-marker { display: none; }
+  .faq-q::after {
+    content: ""; flex: none; width: 8px; height: 8px;
+    border-right: 2px solid var(--ink-400); border-bottom: 2px solid var(--ink-400);
+    transform: rotate(45deg); margin-top: -3px;
+    transition: transform 0.2s ease, margin-top 0.2s ease;
+  }
+  .faq-item[open] .faq-q::after { transform: rotate(-135deg); margin-top: 3px; }
+  .faq-q:hover { color: var(--brand-600); }
+  .faq-a { padding: 0 1.25rem 1rem; margin: 0; font-size: 0.9rem; line-height: 1.65; color: var(--ink-500); max-width: 42rem; }
+</style>

@@ -1,0 +1,43 @@
+---
+import { buttonVariants } from "@/components/landing/ui/button"
+---
+
+<section class="fc-section">
+  <div class="sec">
+    <div class="fc-card">
+      <h2 class="fc-title">Your ecommerce business has its own complexity. DeepEcom helps you make sense of it.</h2>
+      <p class="fc-lead">See how DeepEcom can connect your ecommerce data, payments, profitability and accounting.</p>
+      <div class="fc-ctas">
+        <a href="/contact" class={buttonVariants({ size: "lg" })}>
+          Book a Demo
+        </a>
+        <a href="#stories" class="fc-ghost">
+          View Case Studies
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fc-section { padding: clamp(3rem, 6vh, 5rem) 0 clamp(4rem, 8vh, 6rem); }
+  .fc-card {
+    position: relative; isolation: isolate; overflow: hidden; text-align: center;
+    border-radius: 1.5rem;
+    background:
+      radial-gradient(60% 80% at 50% 0%, rgba(123, 98, 254, 0.35), transparent 70%),
+      linear-gradient(150deg, #1e1560 0%, #2c1b8d 45%, #533afd 130%);
+    padding: clamp(3rem, 7vw, 5rem) var(--space-gutter);
+    color: #fff;
+  }
+  .fc-card::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .fc-title { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -0.03em; font-weight: 800; max-width: 42rem; margin: 0 auto; }
+  .fc-lead { margin-top: 1rem; font-size: clamp(0.95rem, 1.2vw, 1.1rem); line-height: 1.65; color: rgba(255,255,255,0.8); max-width: 34rem; margin-inline: auto; }
+  .fc-ctas { margin-top: 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .fc-ghost { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 0.7rem 1.5rem; text-decoration: none; transition: background 0.2s ease, border-color 0.2s ease; }
+  .fc-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.4); }
+</style>

@@ -1,74 +1,208 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
-import FeatureGrid from "@/components/pages/FeatureGrid.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
-import SectionHeading from "@/components/landing/section-heading.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import FlowDiagram, { type FlowStage } from "@/components/resources/FlowDiagram.astro"
+import HubTable from "@/components/resources/HubTable.astro"
+import ResourceCard from "@/components/resources/ResourceCard.astro"
+import { resourcesForTopic } from "@/data/resources/index"
+import "@/styles/resources.css"
+import { ArrowUpRight } from "lucide-react"
+
+const related = resourcesForTopic("accounting")
+
+const flow: FlowStage[] = [
+  { label: "On marketplaces", title: "Marketplace order", sub: "Sale, fees and tax at once", highlight: true },
+  { label: "Raw data", title: "Order events", sub: "What the marketplace reports" },
+  { label: "In DeepEcom", title: "Accounting events", sub: "Order-wise · GST-wise · warehouse-wise", highlight: true },
+  { label: "As entries", title: "Accounting entries", sub: "Ledgers, tax heads, movements" },
+  { label: "In your ERP", title: "ERP posting", sub: "Tally · SAP · Zoho" },
+]
 
 const topics = [
-  {
-    title: "Order-level accounting",
-    description: "Each order is accounted individually, with the revenue, charges and fees that belong to it.",
-    icon: "receipt",
-  },
-  {
-    title: "Marketplace charges",
-    description: "Commissions, shipping, storage fees and deductions captured as distinct accounting entries.",
-    icon: "wallet",
-  },
-  {
-    title: "Returns and refunds",
-    description: "Returns and refunds accounted accurately, keeping receivables and ledgers aligned.",
-    icon: "refresh",
-  },
-  {
-    title: "GST-wise accounting",
-    description: "GST captured and reported at the level your finance team and compliance need.",
-    icon: "calculator",
-  },
-  {
-    title: "TCS and TDS",
-    description: "Ecommerce tax deductions handled and accounted correctly.",
-    icon: "shield",
-  },
-  {
-    title: "ERP posting",
-    description: "Complete accounting entries posted into Tally, SAP or Zoho.",
-    icon: "bank",
-  },
+  { id: "order-wise", title: "Order-wise accounting", desc: "Every order as its own set of entries, traceable to the order ID." },
+  { id: "marketplace-charges", title: "Marketplace charges", desc: "Commission, fees, logistics and deductions, categorised per order." },
+  { id: "gst-wise", title: "GST-wise accounting", desc: "Output and input GST per head and rate, ready for return data." },
+  { id: "tcs-tds", title: "TCS and TDS", desc: "Tax collected on sales and tax deducted on payouts, tracked per marketplace." },
+  { id: "returns-refunds", title: "Returns and refunds", desc: "Revenue, charge and tax reversals linked to the original order." },
+  { id: "settlements-payouts", title: "Settlements and payouts", desc: "Receivables matched to settlements and to bank deposits." },
+  { id: "warehouse-wise", title: "Warehouse-wise", desc: "COGS at the shipping warehouse; stock transfers as movements." },
 ]
 ---
 
 <PageLayout
-  title="Ecommerce Accounting — The guide | DeepEcom"
-  description="How marketplace transactions become detailed ecommerce accounting: order-level entries, marketplace charges, returns, GST, TCS/TDS and ERP posting."
+  title="Ecommerce Accounting — From one order to ERP-ready entries | DeepEcom"
+  description="How ecommerce accounting works: order-wise, GST-wise and warehouse-wise entry from marketplace order events, with charges, TCS, TDS, returns, settlements and inventory explained."
 >
-  <PageHero
-    eyebrow="ECOMMERCE ACCOUNTING"
-    title="How ecommerce transactions become accounting."
-    lead="Ecommerce accounting is the work of turning marketplace activity — orders, fees, refunds, GST, TCS — into structured, audit-ready accounting entries inside your ERP."
-  />
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources", href: "/resources" }, { label: "Ecommerce Accounting" }]} />
+      <h1 class="rs-hero-title">Ecommerce accounting, in full.</h1>
+      <p class="rs-hero-lead">
+        An order is not a sale. This hub walks through every event an order creates —
+        charges, taxes, refunds, settlements, inventory — and how each one becomes
+        accounting you can post into an ERP and actually reconcile.
+      </p>
+      <div class="rs-hero-actions">
+        <a class="btn btn-primary" href="/resources/guides/ecommerce-accounting">Read the foundation guide</a>
+        <a class="btn btn-secondary" href="/platform">Explore the Platform</a>
+      </div>
+    </div>
+  </header>
 
-  <section class="mx-auto max-w-6xl px-6 py-20">
-    <SectionHeading
-      eyebrow="THE SCOPE"
-      title="What ecommerce accounting really involves."
-      lead="Marketplaces don't hand you clean ledgers. The accounting layer has to carry each transaction through sale, charges, GST, receivable, payment, return and inventory."
-      center
-    />
-  </section>
+  <main>
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The event map</p>
+          <h2 class="rs-head-title">One order, many accounting events</h2>
+          <p class="rs-head-lead">
+            Every component below is its own economic fact. Each has to be captured,
+            categorised and posted — without ever losing the link back to the order.
+          </p>
+        </div>
+        <div class="rs-topic-list">
+          {topics.map((t) => (
+            <a class="rs-topic-link" href={`#${t.id}`}>
+              <strong>{t.title}</strong>
+              <span>{t.desc}</span>
+              <ArrowUpRight width={15} height={15} />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
 
-  <FeatureGrid
-    eyebrow="TOPICS"
-    title="Where DeepEcom does the work."
-    lead="The same detail your finance team would want, automated."
-    features={topics}
-    columns={3}
-    center
-  />
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="flow">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">The pipeline</p>
+          <h2 class="rs-head-title">From marketplace order to ERP posting</h2>
+          <p class="rs-head-lead">
+            Five stages. Marketplace events in, clean ERP-ready entries out.
+          </p>
+        </div>
+        <FlowDiagram stages={flow} caption="From marketplace order events to ERP posting" />
+      </div>
+    </section>
+
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="order-wise">
+      <div class="rs-container">
+        <div class="rs-split">
+          <div>
+            <p class="rs-head-eyebrow">Order-wise</p>
+            <h2 class="rs-head-title">Each order keeps its own books</h2>
+            <p class="rs-head-lead">
+              Order-wise accounting means the entries for an order — revenue, charges,
+              GST, settlement receivable, COGS — all trace to the marketplace order ID.
+              Nothing bridges through a monthly total.
+            </p>
+          </div>
+          <div>
+            <HubTable
+              head={["Event", "Accounting effect"]}
+              rows={[
+                ["Order and sale", "Revenue at selling price"],
+                ["Commission, fees, logistics", "Selling or operating expense"],
+                ["GST on sale and charges", "Output / input tax per head"],
+                ["TCS / TDS", "Tax collected / tax deducted positions"],
+                ["Refund and return", "Reversal of revenue, charges and tax"],
+                ["Settlement", "Receivable movement against orders"],
+                ["Payout", "Bank matched to settlement receivable"],
+                ["Inventory out / transfer", "COGS and warehouse-wise stock moves"],
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="rs-rule" />
+
+    <section class="rs-section" id="marketplace-charges">
+      <div class="rs-container">
+        <div class="rs-split">
+          <div>
+            <p class="rs-head-eyebrow">Charges</p>
+            <h2 class="rs-head-title">The platform's cost, line by line</h2>
+            <p class="rs-head-lead">
+              A marketplace remittance is a net number. DeepEcom decomposes it back into
+              the charges that produced it and attaches each one to the order that
+              generated it — so platform cost becomes part of profitability, not a
+              month-end surprise.
+            </p>
+          </div>
+          <div>
+            <HubTable
+              head={["Charge", "What it is"]}
+              rows={[
+                ["Commission / referral fee", "Percentage or flat fee per order"],
+                ["Collection / payment handling", "Fee for collecting and remitting"],
+                ["Shipping and logistics", "Fulfilment cost on the order"],
+                ["Advertising", "Order-attributable ad spend"],
+                ["Returns-related", "Reversals and return logistics"],
+                ["Adjustments", "Corrections and clawbacks"],
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-head">
+          <p class="rs-head-eyebrow">GST-wise &amp; warehouse-wise</p>
+          <h2 class="rs-head-title">Accounting structured the way GST and inventory actually work</h2>
+        </div>
+        <div class="rs-dim">
+          <div class="rs-dim-card">
+            <strong>GST-wise</strong>
+            <span>
+              Tax captured per order and per charge — output GST by rate, input GST on
+              charges, TCS and TDS positions — so return data can be reconstructed and
+              matched to marketplace filings.
+            </span>
+          </div>
+          <div class="rs-dim-card">
+            <strong>Warehouse-wise</strong>
+            <span>
+              COGS realised at the shipping warehouse, stock transfers posted as movements
+              between locations, and the ERP's warehouse masters kept in step with
+              physical stock.
+            </span>
+          </div>
+        </div>
+        <div class="rs-callout" style="margin-top:1.25rem;max-width:52rem">
+          <strong>What DeepEcom does not do:</strong> it never replaces your ERP. It makes
+          the ERP ecommerce-ready — connected, reconciled, and posted in the ERP's own
+          ledger, tax and warehouse structure.
+        </div>
+      </div>
+    </section>
+
+    <section class="rs-section-tight">
+      <div class="rs-container">
+        <div class="rs-head" style="margin-bottom:1rem">
+          <p class="rs-head-eyebrow">Go deeper</p>
+          <h2 class="rs-head-title">Related resources</h2>
+        </div>
+        <div class="rs-grid cols-3">
+          {related.map((r) => (
+            <ResourceCard item={r} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Your books, down to the order."
-    lead="See how ecommerce transactions become complete accounting entries."
+    dark
+    title="See order-wise accounting on your own orders."
+    lead="Book a demo — connect a marketplace and watch each order become structure, reconciled, GST-wise accounting."
   />
 </PageLayout>

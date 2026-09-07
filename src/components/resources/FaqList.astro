@@ -1,0 +1,63 @@
+---
+import type { FaqGroup } from "@/data/resources/faqs"
+import { Plus } from "lucide-react"
+
+interface Props {
+  groups: FaqGroup[]
+}
+
+const { groups } = Astro.props
+---
+
+<div class="rs-faq" data-rs-faq>
+  {groups.map((group) => (
+    <section class="rs-faq-group" data-faq-group={group.id} aria-labelledby={`faq-${group.id}`}>
+      <h2 class="rs-faq-group-title" id={`faq-${group.id}`}>
+        {group.label}
+      </h2>
+      {group.faqs.map((faq, i) => (
+        <details class="rs-faq-item" name={`rsfaq-${group.id}`}>
+          <summary class="rs-faq-question">
+            {faq.question}
+            <span class="rs-faq-icon" aria-hidden="true">
+              <Plus
+                width={12}
+                height={12}
+                absoluteStrokeWidth
+              />
+            </span>
+          </summary>
+          <div class="rs-faq-answer" data-faq-answer>{faq.answer}</div>
+        </details>
+      ))}
+    </section>
+  ))}
+</div>
+
+<!-- FAQ structured data is injected separately by the page -->
+
+<style is:global>
+  .rs-faq-question {
+    list-style: none;
+  }
+  .rs-faq-question::-webkit-details-marker {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector("[data-rs-faq]")
+  if (root) {
+    const accordions = root.querySelectorAll("details.rs-faq-item")
+    accordions.forEach((details, index) => {
+      details.addEventListener("toggle", () => {
+        if (!details.open) return
+        accordions.forEach((other) => {
+          if (other !== details && other.name === details.name) {
+            other.open = false
+          }
+        })
+      })
+    })
+  }
+</script>

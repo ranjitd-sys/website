@@ -1,0 +1,252 @@
+---
+import { Store, Wallet, TrendingUp, BookOpen, Warehouse } from "lucide-react"
+
+interface StruggleItem {
+  icon: typeof Store
+  title: string
+  desc: string
+  tone: keyof typeof toneMap
+}
+
+const toneMap = {
+  red: { text: "#ef4444", bg: "#fef2f2", border: "#fee2e2" },
+  amber: { text: "#d97706", bg: "#fffbeb", border: "#fef3c7" },
+  violet: { text: "var(--brand-600, #7c3aed)", bg: "var(--brand-50, #f5f3ff)", border: "var(--brand-100, #ede9fe)" },
+  blue: { text: "#2563eb", bg: "#eff6ff", border: "#dbeafe" },
+  cyan: { text: "#0891b2", bg: "#ecfeff", border: "#cffafe" },
+}
+
+const struggles: StruggleItem[] = [
+  { icon: Store, title: "Marketplace Data", desc: "Multiple sources, different report formats, separate settlement cycles.", tone: "red" },
+  { icon: Wallet, title: "Payment Reconciliation", desc: "Expected payments vs actual settlements, manual matching.", tone: "amber" },
+  { icon: TrendingUp, title: "Profitability", desc: "Hard to know actual profit after fees, returns and charges.", tone: "violet" },
+  { icon: BookOpen, title: "Accounting", desc: "Manual ERP posting, GST complexity, order-level detail gaps.", tone: "blue" },
+  { icon: Warehouse, title: "Inventory", desc: "Stock transfers, multi-warehouse accounting, inventory valuation.", tone: "cyan" },
+]
+---
+
+<section class="struggle-section">
+  <div class="struggle-inner">
+    <header class="struggle-header reveal">
+      <span class="eyebrow">THE PROBLEM</span>
+      <h2 class="struggle-title" id="struggle-title">Before DeepEcom, the numbers were spread everywhere.</h2>
+      <p class="struggle-lead">Every ecommerce business starts with the same pattern: fragmented data that is hard to reconcile and hard to account for.</p>
+    </header>
+
+    <div class="struggle-layout reveal" data-delay="100">
+      <ol class="struggle-list">
+        {struggles.map((s, i) => {
+          const Icon = s.icon
+          const style = toneMap[s.tone]
+          const formattedIndex = String(i + 1).padStart(2, "0")
+
+          return (
+            <li 
+              class="sg-item" 
+              data-delay={i * 60}
+              style={`--icon-color: ${style.text}; --icon-bg: ${style.bg}; --icon-border: ${style.border};`}
+            >
+              <span class="sg-icon" aria-hidden="true">
+                <Icon size={18} />
+              </span>
+              <div class="sg-body">
+                <h3 class="sg-item-title">{s.title}</h3>
+                <p class="sg-item-desc">{s.desc}</p>
+              </div>
+              <span class="sg-index" aria-label={`Step ${i + 1}`}>{formattedIndex}</span>
+            </li>
+          )
+        })}
+      </ol>
+
+      <aside class="struggle-note">
+        <span class="sn-icon" aria-hidden="true">✕</span>
+        <div>
+          <h3 class="sn-title">Same pattern, different scale.</h3>
+          <p class="sn-desc">
+            Whether it's a single marketplace or a multi-brand group, the financial
+            picture fragments the same way. The fix isn't another export — it's a
+            layer that joins the data for you.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .struggle-section { 
+    padding: clamp(3rem, 6vh, 5rem) 0; 
+    background: var(--ink-50, #f8fafc); 
+  }
+
+  .struggle-inner { 
+    max-width: 76rem; 
+    margin: 0 auto; 
+    padding: 0 var(--space-gutter, 1.5rem); 
+  }
+
+  .struggle-header { 
+    max-width: 42rem; 
+  }
+
+  .struggle-title { 
+    margin-top: 0.9rem; 
+    font-size: clamp(1.75rem, 3vw, 2.4rem); 
+    line-height: 1.12; 
+    letter-spacing: -0.03em; 
+    font-weight: 800; 
+    color: var(--ink-950, #020617); 
+  }
+
+  .struggle-lead { 
+    margin-top: 0.9rem; 
+    font-size: 1.05rem; 
+    line-height: 1.65; 
+    color: var(--ink-500, #64748b); 
+    max-width: 40rem; 
+  }
+
+  .struggle-layout {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 64rem) { 
+    .struggle-layout { 
+      grid-template-columns: 1.6fr 1fr; 
+      align-items: start;
+    } 
+
+    .struggle-note {
+      position: sticky;
+      top: 2rem;
+    }
+  }
+
+  .struggle-list {
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 22px 44px -18px rgba(11, 17, 32, 0.1);
+  }
+
+  .sg-item {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    padding: 0.9rem;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .sg-item:hover { 
+    transform: translateX(4px); 
+    background: var(--ink-50, #f8fafc); 
+    border-color: var(--ink-200, #e2e8f0); 
+  }
+
+  .sg-icon {
+    flex: none;
+    width: 38px; 
+    height: 38px;
+    display: grid; 
+    place-items: center;
+    border-radius: 12px;
+    color: var(--icon-color);
+    background: var(--icon-bg);
+    border: 1px solid var(--icon-border);
+  }
+
+  .sg-body { 
+    flex: 1; 
+    min-width: 0; 
+  }
+
+  .sg-item-title { 
+    font-size: 0.98rem; 
+    font-weight: 700; 
+    color: var(--ink-900, #0f172a); 
+    margin: 0;
+  }
+
+  .sg-item-desc { 
+    margin-top: 0.25rem; 
+    font-size: 0.85rem; 
+    line-height: 1.6; 
+    color: var(--ink-500, #64748b); 
+  }
+
+  .sg-index { 
+    font-size: 0.7rem; 
+    font-weight: 800; 
+    color: var(--ink-300, #cbd5e1); 
+    letter-spacing: 0.06em; 
+  }
+
+  .struggle-note {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200, #e2e8f0);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 
+      0 1px 2px rgba(11, 17, 32, 0.04), 
+      0 22px 44px -18px rgba(11, 17, 32, 0.1);
+    position: relative;
+    overflow: hidden;
+    align-items: flex-start;
+  }
+
+  .struggle-note::before {
+    content: ""; 
+    position: absolute; 
+    inset: 0; 
+    pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.05), transparent 62%);
+  }
+
+  .sn-icon {
+    position: relative;
+    width: 30px; 
+    height: 30px;
+    display: grid; 
+    place-items: center;
+    border-radius: 10px;
+    background: #fef2f2; 
+    border: 1px solid #fee2e2;
+    color: #ef4444; 
+    font-weight: 700; 
+    font-size: 0.8rem;
+  }
+
+  .sn-title { 
+    position: relative; 
+    font-size: 1rem; 
+    font-weight: 700; 
+    color: var(--ink-900, #0f172a); 
+    margin: 0;
+  }
+
+  .sn-desc { 
+    position: relative; 
+    margin-top: 0.35rem; 
+    font-size: 0.85rem; 
+    line-height: 1.65; 
+    color: var(--ink-500, #64748b); 
+  }
+</style>

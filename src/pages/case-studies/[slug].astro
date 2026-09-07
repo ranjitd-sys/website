@@ -1,0 +1,346 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import { customers } from "@/data/customers"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, ArrowLeft } from "lucide-react"
+
+const { slug } = Astro.params
+const customer = customers.find((c) => c.slug === slug)
+
+if (!customer) {
+  return Astro.redirect("/customers")
+}
+
+const related = customers.filter((c) => c.slug !== slug).slice(0, 2)
+---
+
+<PageLayout
+  title={`${customer.name} — DeepEcom Case Study`}
+  description={`How ${customer.name} uses DeepEcom to solve ${customer.industry.toLowerCase()} ecommerce financial complexity.`}
+>
+  <!-- 01 CUSTOMER HERO -->
+  <section class="csh-hero">
+    <div class="sec">
+      <a href="/customers" class="csh-back"><ArrowLeft size={14} /> All Customers</a>
+      <div class="csh-inner">
+        <div class="csh-copy">
+          <span class="csh-industry">{customer.industry}</span>
+          <h1 class="csh-title">{customer.headline}</h1>
+          <p class="csh-problem">{customer.problem}</p>
+        </div>
+        <div class="csh-logo-card">
+          <span class="csh-logo">{customer.logoText}</span>
+          <span class="csh-type">{customer.businessType}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 CUSTOMER QUOTE -->
+  {customer.quote && customer.quoteAuthor !== "CONTENT NEEDED" && (
+    <section class="csq-section">
+      <div class="sec">
+        <blockquote class="csq-card">
+          <div class="csq-mark">"</div>
+          <p class="csq-text">{customer.quote}</p>
+          <cite class="csq-meta">
+            <span class="csq-author">{customer.quoteAuthor}</span>
+            <span class="csq-role">{customer.quoteRole}</span>
+          </cite>
+        </blockquote>
+      </div>
+    </section>
+  )}
+
+  <!-- 03 ABOUT THE BUSINESS -->
+  <section class="cs-about">
+    <div class="sec">
+      <div class="cs-grid">
+        <div class="cs-about-left">
+          <span class="eyebrow">ABOUT THE BUSINESS</span>
+          <h2 class="cs-section-title">{customer.name}</h2>
+          <div class="cs-meta-grid">
+            <div class="cs-meta-item">
+              <span class="cs-meta-label">Industry</span>
+              <span class="cs-meta-value">{customer.industry}</span>
+            </div>
+            <div class="cs-meta-item">
+              <span class="cs-meta-label">Business Type</span>
+              <span class="cs-meta-value">{customer.businessType}</span>
+            </div>
+            <div class="cs-meta-item">
+              <span class="cs-meta-label">Products Used</span>
+              <div class="cs-meta-tags">
+                {customer.products.map((p) => (
+                  <span class="cs-tag">{p}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 THE CHALLENGE -->
+  <section class="cs-challenge">
+    <div class="sec">
+      <div class="cs-challenge-inner">
+        <span class="eyebrow">THE CHALLENGE</span>
+        <h2 class="cs-section-title">Before DeepEcom</h2>
+        <p class="cs-challenge-text">{customer.problem}</p>
+        <div class="cs-before-list">
+          {customer.before.map((item) => (
+            <div class="cs-before-item">
+              <span class="cs-x">✕</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 WHAT DEEPECOM IMPLEMENTED -->
+  <section class="cs-impl">
+    <div class="sec">
+      <div class="cs-impl-inner">
+        <span class="eyebrow">DEEPECOM IMPLEMENTATION</span>
+        <h2 class="cs-section-title">What DeepEcom implemented</h2>
+        <div class="cs-impl-grid">
+          {customer.implementation.map((impl) => (
+            <div class="cs-impl-card">
+              <span class="cs-impl-label">{impl.label}</span>
+              <span class="cs-impl-detail">{impl.detail}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 HOW THEY USE DEEPECOM -->
+  <section class="cs-usage">
+    <div class="sec">
+      <div class="cs-usage-inner">
+        <span class="eyebrow">HOW THEY USE DEEPECOM</span>
+        <h2 class="cs-section-title">The transformation</h2>
+        <div class="cs-flow">
+          <div class="cs-flow-col">
+            <span class="cs-flow-label">BEFORE</span>
+            {customer.before.map((item) => (
+              <div class="cs-flow-item cs-flow-before">{item}</div>
+            ))}
+          </div>
+          <div class="cs-flow-arrow">→</div>
+          <div class="cs-flow-col cs-flow-deepecom">
+            <span class="cs-flow-label">DEEPECOM</span>
+            {customer.implementation.map((impl) => (
+              <div class="cs-flow-item cs-flow-engine">{impl.label}</div>
+            ))}
+          </div>
+          <div class="cs-flow-arrow">→</div>
+          <div class="cs-flow-col cs-flow-after-col">
+            <span class="cs-flow-label">AFTER</span>
+            {customer.after.map((item) => (
+              <div class="cs-flow-item cs-flow-after">{item}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 RESULTS -->
+  <section class="cs-results">
+    <div class="sec">
+      <div class="cs-results-inner">
+        <span class="eyebrow">RESULTS</span>
+        <h2 class="cs-section-title">What changed</h2>
+        <p class="cs-results-text">{customer.outcome}</p>
+        <div class="cs-after-list">
+          {customer.after.map((item) => (
+            <div class="cs-after-item">
+              <span class="cs-check">✓</span>
+              <span>{item}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 CUSTOMER QUOTE (END) -->
+  {customer.quote && customer.quoteAuthor !== "CONTENT NEEDED" && (
+    <section class="csq-section">
+      <div class="sec">
+        <blockquote class="csq-card csq-end">
+          <div class="csq-mark">"</div>
+          <p class="csq-text">{customer.quote}</p>
+          <cite class="csq-meta">
+            <span class="csq-author">{customer.quoteAuthor}</span>
+            <span class="csq-role">{customer.quoteRole}</span>
+          </cite>
+        </blockquote>
+      </div>
+    </section>
+  )}
+
+  <!-- 09 RELATED CASE STUDIES -->
+  <section class="cs-related">
+    <div class="sec">
+      <span class="eyebrow">RELATED CASE STUDIES</span>
+      <h2 class="cs-section-title">More customer stories</h2>
+      <div class="cs-related-grid">
+        {related.map((r) => (
+          <a href={`/case-studies/${r.slug}`} class="cs-related-card">
+            <span class="cs-related-logo">{r.logoText}</span>
+            <h3 class="cs-related-title">{r.headline}</h3>
+            <span class="cs-related-read">Read Case Study →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 FINAL CTA -->
+  <section class="cs-final">
+    <div class="sec">
+      <div class="cs-final-card">
+        <h2 class="cs-final-title">See how DeepEcom can work for your business.</h2>
+        <div class="cs-final-ctas">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo <ArrowRight size={16} />
+          </a>
+          <a href="/customers" class="cs-final-ghost">All Case Studies</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style is:global>
+  main .sec, main .sec-narrow { padding-block: clamp(1.75rem, 3.4vh, 3rem); }
+
+  /* Hero */
+  .csh-hero { padding: clamp(5rem, 10vh, 7rem) 0 clamp(2rem, 4vh, 3rem); }
+  .csh-back { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; font-weight: 600; color: var(--brand-600); text-decoration: none; margin-bottom: 1.5rem; }
+  .csh-back:hover { text-decoration: underline; }
+  .csh-inner { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: start; }
+  @media (min-width: 64rem) { .csh-inner { grid-template-columns: 1.2fr 0.8fr; } }
+  .csh-industry { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brand-600); }
+  .csh-title { margin-top: 0.75rem; font-size: clamp(1.8rem, 3.5vw, 2.6rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+  .csh-problem { margin-top: 1rem; font-size: 1rem; line-height: 1.65; color: var(--ink-500); max-width: 38rem; }
+  .csh-logo-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200); border-radius: 14px;
+    padding: 2rem; text-align: center;
+    box-shadow: 0 1px 2px rgba(11,17,32,0.04), 0 10px 30px -14px rgba(11,17,32,0.1);
+  }
+  .csh-logo { display: block; font-size: 1.5rem; font-weight: 800; color: var(--ink-900); }
+  .csh-type { display: block; margin-top: 0.5rem; font-size: 0.75rem; font-weight: 600; color: var(--brand-600); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 999px; padding: 0.2rem 0.6rem; display: inline-block; }
+
+  /* Quote */
+  .csq-section { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
+  .csq-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200); border-radius: 16px;
+    padding: clamp(2rem, 4vw, 3rem);
+    box-shadow: 0 1px 2px rgba(11,17,32,0.04), 0 10px 30px -14px rgba(11,17,32,0.1);
+    border-left: 4px solid var(--brand-500);
+    position: relative; overflow: hidden;
+  }
+  .csq-card::before { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(130% 70% at 50% -30%, rgba(83,58,253,0.04), transparent 62%); }
+  .csq-mark { position: relative; font-size: 4rem; line-height: 1; font-weight: 800; color: var(--brand-200); }
+  .csq-text { position: relative; margin-top: 0.5rem; font-size: 1.2rem; line-height: 1.65; color: var(--ink-700); font-style: italic; }
+  .csq-meta { position: relative; display: flex; flex-direction: column; gap: 0.15rem; margin-top: 1rem; font-style: normal; }
+  .csq-author { font-size: 0.9rem; font-weight: 700; color: var(--ink-900); }
+  .csq-role { font-size: 0.82rem; color: var(--ink-500); }
+  .csq-end { border-left-color: var(--brand-500); }
+
+  /* About */
+  .cs-about { padding: clamp(1.5rem, 3vh, 2.5rem) 0; }
+  .cs-section-title { margin-top: 0.75rem; font-size: clamp(1.3rem, 2vw, 1.7rem); line-height: 1.15; letter-spacing: -0.025em; font-weight: 800; color: var(--ink-950); }
+  .cs-meta-grid { margin-top: 1.25rem; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 40rem) { .cs-meta-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cs-meta-item { display: flex; flex-direction: column; gap: 0.25rem; }
+  .cs-meta-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-400); }
+  .cs-meta-value { font-size: 0.9rem; font-weight: 600; color: var(--ink-900); }
+  .cs-meta-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .cs-tag { font-size: 0.72rem; font-weight: 600; color: var(--brand-700); background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 999px; padding: 0.2rem 0.55rem; }
+
+  /* Challenge */
+  .cs-challenge { padding: clamp(2rem, 4vh, 3rem) 0; background: var(--ink-50); }
+  .cs-challenge-inner { max-width: 48rem; }
+  .cs-challenge-text { margin-top: 0.75rem; font-size: 1rem; line-height: 1.65; color: var(--ink-600); }
+  .cs-before-list { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .cs-before-item { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9rem; color: var(--ink-600); }
+  .cs-x { flex: none; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: #fef2f2; color: #ef4444; font-size: 0.65rem; font-weight: 700; }
+
+  /* Implementation */
+  .cs-impl { padding: clamp(2rem, 4vh, 3rem) 0; }
+  .cs-impl-inner { max-width: 48rem; }
+  .cs-impl-grid { margin-top: 1.25rem; display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  @media (min-width: 40rem) { .cs-impl-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cs-impl-card {
+    background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 12px;
+    padding: 1.25rem; display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .cs-impl-label { font-size: 0.75rem; font-weight: 700; color: var(--brand-700); }
+  .cs-impl-detail { font-size: 0.85rem; color: var(--ink-600); line-height: 1.55; }
+
+  /* Usage / Transformation */
+  .cs-usage { padding: clamp(2rem, 4vh, 3rem) 0; background: var(--ink-50); }
+  .cs-usage-inner { max-width: 64rem; }
+  .cs-flow { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem; align-items: start; }
+  @media (min-width: 64rem) { .cs-flow { grid-template-columns: 1fr auto 1fr auto 1fr; } }
+  .cs-flow-col { display: flex; flex-direction: column; gap: 0.4rem; }
+  .cs-flow-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-400); margin-bottom: 0.5rem; }
+  .cs-flow-item { font-size: 0.82rem; font-weight: 500; padding: 0.5rem 0.75rem; border-radius: 8px; }
+  .cs-flow-before { background: #fff; border: 1px solid var(--ink-200); color: var(--ink-600); }
+  .cs-flow-engine { background: var(--brand-500); color: #fff; font-weight: 600; }
+  .cs-flow-after { background: #f0fdf4; border: 1px solid #dcfce7; color: #166534; }
+  .cs-flow-deepecom { background: var(--brand-50); border: 1px solid var(--brand-100); border-radius: 12px; padding: 1rem; }
+  .cs-flow-arrow { display: none; font-size: 1.5rem; color: var(--brand-500); text-align: center; padding: 0.5rem; }
+  @media (min-width: 64rem) { .cs-flow-arrow { display: block; padding: 2rem 0.5rem; } }
+
+  /* Results */
+  .cs-results { padding: clamp(2rem, 4vh, 3rem) 0; }
+  .cs-results-inner { max-width: 48rem; }
+  .cs-results-text { margin-top: 0.75rem; font-size: 1.05rem; line-height: 1.65; color: var(--ink-600); }
+  .cs-after-list { margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+  .cs-after-item { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.9rem; color: var(--ink-600); }
+  .cs-check { flex: none; width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; background: #f0fdf4; color: #22c55e; font-size: 0.65rem; font-weight: 700; }
+
+  /* Related */
+  .cs-related { padding: clamp(2rem, 4vh, 3rem) 0; background: var(--ink-50); }
+  .cs-related-grid { margin-top: 1.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 40rem) { .cs-related-grid { grid-template-columns: repeat(2, 1fr); } }
+  .cs-related-card {
+    display: flex; flex-direction: column;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200); border-radius: 14px; padding: 1.5rem;
+    box-shadow: 0 1px 2px rgba(11,17,32,0.04), 0 10px 30px -14px rgba(11,17,32,0.1);
+    text-decoration: none; color: inherit;
+    transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .cs-related-card:hover { transform: translateY(-3px); border-color: var(--brand-200); box-shadow: 0 22px 44px -18px rgba(83,58,253,0.22); }
+  .cs-related-logo { font-size: 0.9rem; font-weight: 800; color: var(--ink-900); }
+  .cs-related-title { margin-top: 0.75rem; font-size: 1rem; line-height: 1.35; font-weight: 700; color: var(--ink-900); flex: 1; }
+  .cs-related-read { margin-top: 1rem; font-size: 0.82rem; font-weight: 600; color: var(--brand-600); }
+
+  /* Final CTA */
+  .cs-final { padding: clamp(3rem, 6vh, 5rem) 0 clamp(4rem, 8vh, 6rem); }
+  .cs-final-card {
+    text-align: center; border-radius: 1.5rem;
+    background: radial-gradient(60% 80% at 50% 0%, rgba(123,98,254,0.35), transparent 70%),
+      linear-gradient(150deg, #1e1560 0%, #2c1b8d 45%, #533afd 130%);
+    padding: clamp(3rem, 7vw, 5rem) var(--space-gutter); color: #fff;
+    position: relative; overflow: hidden;
+  }
+  .cs-final-card::before { content: ""; position: absolute; inset: 0; z-index: 0; background-image: radial-gradient(rgba(255,255,255,0.12) 1px, transparent 1px); background-size: 22px 22px; }
+  .cs-final-title { position: relative; font-size: clamp(1.5rem, 3vw, 2.2rem); line-height: 1.15; letter-spacing: -0.03em; font-weight: 800; max-width: 38rem; margin: 0 auto; }
+  .cs-final-ctas { position: relative; margin-top: 2rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .cs-final-ghost { display: inline-flex; align-items: center; font-size: 0.95rem; font-weight: 600; color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; padding: 0.7rem 1.5rem; text-decoration: none; }
+  .cs-final-ghost:hover { background: rgba(255,255,255,0.1); }
+</style>

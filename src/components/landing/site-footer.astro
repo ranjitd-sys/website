@@ -21,6 +21,18 @@ const columns = [
     ],
   },
   {
+    title: "Integrations",
+    links: [
+      ["/integrations", "Amazon"],
+      ["/integrations", "Flipkart"],
+      ["/integrations", "Shopify"],
+      ["/integrations", "Meesho"],
+      ["/integrations", "Tally"],
+      ["/integrations", "SAP"],
+      ["/integrations", "Zoho Books"],
+    ],
+  },
+  {
     title: "Resources",
     links: [
       ["/resources/blog", "Blog"],
@@ -30,11 +42,14 @@ const columns = [
       ["/resources/gst", "GST"],
       ["/resources/erp", "ERP"],
       ["/resources/faqs", "FAQs"],
+      ["/resources/help-center", "Help Center"],
     ],
   },
   {
     title: "Company",
     links: [
+      ["/customers", "Customers"],
+      ["/pricing", "Pricing"],
       ["/about", "About"],
       ["/careers", "Careers"],
       ["/contact", "Contact"],
@@ -70,7 +85,7 @@ const columns = [
   }
   @media (min-width: 48rem) {
     .footer-grid {
-      grid-template-columns: 1.6fr repeat(5, 1fr);
+      grid-template-columns: 1.7fr repeat(6, 1fr);
       gap: 2rem;
     }
   }
@@ -136,6 +151,20 @@ const columns = [
     display: flex;
     gap: 0.5rem;
   }
+  .footer-bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.9rem;
+  }
+  .footer-bottom-links a {
+    color: var(--muted-foreground);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .footer-bottom-links a:hover {
+    color: var(--ink-950);
+  }
   .footer-social a {
     display: grid;
     place-items: center;
@@ -185,14 +214,13 @@ const columns = [
 
     <div class="footer-bottom">
       <span>© 2026 DeepEcom Technologies Pvt Ltd. All rights reserved.</span>
-      <div class="footer-social">
-        <a href="https://www.linkedin.com/company/deepecom/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.31h4.52V23H.24V8.31zM8.34 8.31h4.33v2h.06c.6-1.14 2.08-2.34 4.28-2.34 4.58 0 5.42 3.01 5.42 6.92V23h-4.51v-7.13c0-1.7-.03-3.89-2.37-3.89-2.37 0-2.73 1.85-2.73 3.76V23H8.34V8.31z"></path></svg>
-        </a>
-        <a href="/contact" aria-label="Contact">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg>
-        </a>
-      </div>
+      <nav class="footer-bottom-links" aria-label="Accounts and legal">
+        <a href="/login">Login</a>
+        <a href="/contact">Book a Demo</a>
+        <span aria-hidden="true">·</span>
+        <a href="/privacy">Privacy</a>
+        <a href="/terms">Terms</a>
+      </nav>
     </div>
   </div>
 </footer>

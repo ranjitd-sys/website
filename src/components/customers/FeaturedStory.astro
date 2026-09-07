@@ -1,0 +1,262 @@
+---
+import { customers } from "@/data/customers"
+import { ArrowRight, CheckCircle2, XCircle, Boxes, Wallet, LayoutDashboard, BookOpenCheck } from "lucide-react"
+
+const featured = customers.find((c) => c.featured)
+const productIcons = {
+  Platform: LayoutDashboard,
+  "ERP Connector": BookOpenCheck,
+}
+const productTags = (label: string) =>
+  label === "Platform"
+    ? [
+        { icon: LayoutDashboard, text: "Profitability" },
+        { icon: Wallet, text: "Reconciliation" },
+        { icon: Boxes, text: "Dashboard" },
+      ]
+    : [
+        { icon: BookOpenCheck, text: "Order-wise Accounting" },
+        { icon: LayoutDashboard, text: "GST" },
+        { icon: Boxes, text: "Warehouse · Stock Transfers" },
+      ]
+---
+
+{featured && (
+  <section class="fs-section">
+    <div class="sec">
+      <div class="fs-head reveal">
+        <span class="eyebrow">FEATURED STORY</span>
+        <div class="fs-head-row">
+          <h2 class="fs-title">{featured.headline}</h2>
+          <span class="fs-brand-pill">{featured.logoText}</span>
+        </div>
+        <p class="fs-industry">{featured.industry} · {featured.businessType}</p>
+      </div>
+
+      <div class="fs-layout reveal" data-delay="100">
+        <!-- LEFT: narrative -->
+        <div class="fs-narrative">
+          <div class="fs-step fs-step-before">
+            <div class="fs-step-play">
+              <span class="fs-x-icon"><XCircle size={16} /></span>
+              <span class="fs-step-label">THE PROBLEM</span>
+            </div>
+            <p class="fs-problem">{featured.problem}</p>
+            <ul class="fs-list">
+              {featured.before.map((item) => (
+                <li class="fs-list-item"><span class="fs-x">✕</span>{item}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div class="fs-step-divider" aria-hidden="true">
+            <span class="fs-chev">↓</span>
+          </div>
+
+          <div class="fs-step fs-step-deepecom">
+            <div class="fs-step-play">
+              <span class="fs-brand-badge">{featured.logoText.charAt(0)}</span>
+              <span class="fs-step-label">DEEPECOM</span>
+            </div>
+            <div class="fs-products">
+              {featured.implementation.map((impl) => (
+                <div class="fs-product-block">
+                  <span class="fs-pgroup-label">{impl.label}</span>
+                  <span class="fs-pgroup-detail">{impl.detail}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="fs-step-divider" aria-hidden="true">
+            <span class="fs-chev">↓</span>
+          </div>
+
+          <div class="fs-step fs-step-after">
+            <div class="fs-step-play">
+              <span class="fs-check-icon"><CheckCircle2 size={16} /></span>
+              <span class="fs-step-label">THE OUTCOME</span>
+            </div>
+            <ul class="fs-list fs-list-after">
+              {featured.after.map((item) => (
+                <li class="fs-list-item fs-list-item-after"><span class="fs-check">✓</span>{item}</li>
+              ))}
+            </ul>
+            <p class="fs-outcome">{featured.outcome}</p>
+          </div>
+        </div>
+
+        <!-- RIGHT: summary + quote -->
+        <aside class="fs-side">
+          <div class="fs-summary-card">
+            <div class="fs-summary-head">
+              <span class="fs-summary-brand">{featured.logoText}</span>
+              <a href={`/case-studies/${featured.slug}`} class="fs-summary-link">
+                Read full story <ArrowRight size={14} />
+              </a>
+            </div>
+
+            {featured.quote && (
+              <blockquote class="fs-quote">
+                <p>"{featured.quote}"</p>
+                <cite>{featured.quoteAuthor !== "CONTENT NEEDED" ? featured.quoteAuthor : ""} · {featured.quoteRole !== "CONTENT NEEDED — GlobalBees finance team member" ? featured.quoteRole : "GlobalBees Finance Team"}</cite>
+              </blockquote>
+            )}
+
+            <div class="fs-product-tags">
+              {featured.implementation.map((impl) => (
+                <div class="fs-ptag-group">
+                  <span class="fs-ptag-label">{impl.label}</span>
+                  <div class="fs-ptag-row">
+                    {productTags(impl.label).map((t) => {
+                      const Icon = t.icon
+                      return (
+                        <span class="fs-ptag"><Icon size={12} />{t.text}</span>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <a href={`/case-studies/${featured.slug}`} class="fs-card-cta">
+              Explore the GlobalBees case study <ArrowRight size={15} />
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .fs-section { padding: clamp(3rem, 6vh, 5rem) 0; }
+  .fs-head { max-width: 48rem; }
+  .fs-head-row { margin-top: 0.75rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .fs-title { font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+  .fs-brand-pill {
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+    color: var(--brand-600); background: var(--brand-50);
+    border: 1px solid var(--brand-100); border-radius: 999px;
+    padding: 0.32rem 0.85rem;
+  }
+  .fs-industry { margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--ink-500); }
+
+  .fs-layout {
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 64rem) { .fs-layout { grid-template-columns: 1.35fr 1fr; align-items: start; } }
+
+  /* ---- narrative ---- */
+  .fs-narrative {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 22px 44px -18px rgba(11, 17, 32, 0.1);
+  }
+  .fs-step { padding: 0.5rem 0.25rem; }
+  .fs-step-play { display: flex; align-items: center; gap: 0.55rem; }
+  .fs-step-label { font-size: 0.68rem; font-weight: 800; letter-spacing: 0.12em; color: var(--ink-400); }
+  .fs-x-icon, .fs-check-icon, .fs-brand-badge {
+    width: 28px; height: 28px;
+    display: grid; place-items: center;
+    border-radius: 9px;
+    flex: none;
+  }
+  .fs-x-icon { background: #fef2f2; border: 1px solid #fee2e2; color: #ef4444; }
+  .fs-check-icon { background: #f0fdf4; border: 1px solid #dcfce7; color: #22c55e; }
+  .fs-brand-badge {
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-300));
+    color: #fff; font-weight: 800; font-size: 0.75rem;
+  }
+  .fs-step-divider { display: flex; justify-content: center; padding: 0.4rem 0; }
+  .fs-chev {
+    width: 22px; height: 22px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: #fff; border: 1px solid var(--ink-200);
+    color: var(--brand-500); font-size: 0.7rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.05);
+  }
+
+  .fs-problem { margin-top: 0.7rem; font-size: 0.92rem; line-height: 1.65; color: var(--ink-600); }
+  .fs-list { list-style: none; padding: 0; margin: 0.7rem 0 0; display: flex; flex-direction: column; gap: 0.45rem; }
+  .fs-list-item { display: flex; align-items: flex-start; gap: 0.5rem; font-size: 0.85rem; line-height: 1.5; color: var(--ink-600); }
+  .fs-x { flex: none; width: 16px; height: 16px; display: grid; place-items: center; border-radius: 50%; background: #fef2f2; color: #ef4444; font-size: 0.55rem; font-weight: 700; margin-top: 1px; }
+  .fs-check { flex: none; width: 16px; height: 16px; display: grid; place-items: center; border-radius: 50%; background: #f0fdf4; color: #22c55e; font-size: 0.55rem; font-weight: 700; margin-top: 1px; }
+
+  .fs-step-deepecom {
+    background: var(--brand-50); border: 1px solid var(--brand-100);
+    border-radius: 12px; padding: 1rem 1.1rem;
+  }
+  .fs-products { margin-top: 0.7rem; display: flex; flex-direction: column; gap: 0.55rem; }
+  .fs-product-block { display: flex; flex-direction: column; gap: 0.1rem; }
+  .fs-pgroup-label { font-size: 0.72rem; font-weight: 800; color: var(--brand-700); letter-spacing: 0.04em; }
+  .fs-pgroup-detail { font-size: 0.8rem; color: var(--ink-600); line-height: 1.5; }
+
+  .fs-step-after {
+    background: #f0fdf4; border: 1px solid #dcfce7;
+    border-radius: 12px; padding: 1rem 1.1rem;
+  }
+  .fs-list-item-after { color: var(--ink-700); }
+  .fs-outcome { margin-top: 0.75rem; font-size: 0.9rem; line-height: 1.65; color: var(--ink-600); font-weight: 500; }
+
+  /* ---- side summary ---- */
+  .fs-side { display: flex; flex-direction: column; gap: 1rem; position: sticky; top: 6rem; }
+  .fs-summary-card {
+    border: 1px solid var(--ink-200);
+    border-radius: 18px;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    padding: 1.5rem 1.6rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 22px 44px -18px rgba(83, 58, 253, 0.16), 0 14px 30px -12px rgba(11, 17, 32, 0.1);
+    position: relative; overflow: hidden;
+  }
+  .fs-summary-card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.06), transparent 60%);
+  }
+  .fs-summary-head { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+  .fs-summary-brand { font-size: 1.15rem; font-weight: 800; color: var(--ink-900); }
+  .fs-summary-link {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.78rem; font-weight: 600; color: var(--brand-600); text-decoration: none;
+  }
+  .fs-summary-link:hover { text-decoration: underline; }
+
+  .fs-quote { position: relative; margin: 1.25rem 0 0; padding: 1.1rem 1.2rem; background: var(--ink-50); border-radius: 12px; border-left: 3px solid var(--brand-500); }
+  .fs-quote p { font-size: 0.92rem; line-height: 1.65; color: var(--ink-700); font-style: italic; margin: 0; }
+  .fs-quote cite { display: block; margin-top: 0.55rem; font-size: 0.78rem; font-style: normal; color: var(--ink-500); }
+
+  .fs-product-tags { position: relative; margin-top: 1.25rem; display: flex; flex-direction: column; gap: 0.7rem; }
+  .fs-ptag-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .fs-ptag-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; color: var(--ink-400); }
+  .fs-ptag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .fs-ptag {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-size: 0.72rem; font-weight: 600; color: var(--ink-700);
+    background: #fff; border: 1px solid var(--ink-200); border-radius: 999px;
+    padding: 0.3rem 0.65rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 1px 1px rgba(11, 17, 32, 0.03);
+  }
+  .fs-ptag svg { color: var(--brand-600); }
+
+  .fs-card-cta {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding: 0.85rem 1rem;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #533afd 0%, #462ce0 100%);
+    color: #fff; font-size: 0.85rem; font-weight: 700;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .fs-card-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 24px -10px rgba(83, 58, 253, 0.5); }
+</style>

@@ -556,6 +556,7 @@ const uid = Math.random().toString(36).slice(2, 9);
       Array.from(svg.children).forEach((child) => {
         if (child !== defs) svg.removeChild(child);
       });
+      if(!core)return
 
       const coreRect = relRect(core, containerRect);
       const sourceCards = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));

@@ -1,26 +1,71 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/PageHero.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
-import FaqAccordion from "@/components/landing/faq-accordion"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import FaqList from "@/components/resources/FaqList.astro"
+import ResourceSearch from "@/components/resources/ResourceSearch.astro"
+import { FAQ_GROUPS } from "@/data/resources/faqs"
+import { buildSearchIndex } from "@/data/resources/index"
+import "@/styles/resources.css"
+
+const searchIndex = buildSearchIndex()
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ_GROUPS.flatMap((g) =>
+    g.faqs.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  ),
+}
 ---
 
 <PageLayout
-  title="FAQs — Frequently asked questions | DeepEcom"
-  description="Frequently asked questions about DeepEcom — marketplace integrations, GST numbers, historical data, SKU mapping, pricing and multi-warehouse accounting."
+  title="FAQs — Straight answers on DeepEcom Platform and ERP Connector | DeepEcom"
+  description="Frequently asked questions about DeepEcom: marketplace integrations, order-wise and GST-wise accounting, TCS/TDS, payment reconciliation, inventory, ERP posting and pricing."
 >
-  <PageHero
-    eyebrow="FAQS"
-    title="Frequently asked questions."
-    lead="Straight answers on integrations, GST, reconciliation, historical data, SKU mapping and how pricing works."
-  />
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
-  <section class="mx-auto max-w-3xl px-6 pb-20">
-    <FaqAccordion client:visible />
-  </section>
+  <header class="rs-hero">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Resources", href: "/resources" }, { label: "FAQs" }]} />
+      <h1 class="rs-hero-title">Frequently asked.</h1>
+      <p class="rs-hero-lead">
+        Searchable answers on the Platform, ERP Connector, reconciliation, GST, TCS/TDS,
+        inventory and ERP integrations. Missing yours? Ask us directly.
+      </p>
+      <div class="rs-hero-actions">
+        <ResourceSearch items={searchIndex} placeholder="Search questions, e.g. “GST” or “Tally”…" />
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="rs-section">
+      <div class="rs-container">
+        <div class="rs-nav" role="navigation" aria-label="FAQ topics">
+          {FAQ_GROUPS.map((g) => (
+            <a class="rs-chip" href={`#faq-${g.id}`}>
+              {g.label}
+            </a>
+          ))}
+        </div>
+
+        <div class="rs-faq" style="margin-top:2rem">
+          {FAQ_GROUPS.map((g) => (
+            <FaqList groups={[g]} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
 
   <CtaBand
-    title="Question not answered here?"
-    lead="Talk to a real person — we respond within one business day."
+    dark
+    title="Still got questions?"
+    lead="Ask us directly — we'll answer about your marketplaces, your ERP and your data."
   />
 </PageLayout>

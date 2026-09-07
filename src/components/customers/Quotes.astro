@@ -1,0 +1,113 @@
+---
+import { customers } from "@/data/customers"
+import { Quote } from "lucide-react"
+
+const verifiedQuotes = customers.filter((c) => c.quote && c.quoteAuthor !== "CONTENT NEEDED")
+const hasQuotes = verifiedQuotes.length > 0
+---
+
+<section class="quotes-section">
+  <div class="sec">
+    <div class="quotes-inner">
+      <div class="quotes-head reveal">
+        <span class="eyebrow eyebrow-center">CUSTOMER VOICES</span>
+        <h2 class="quotes-title">Don't take our word for it.</h2>
+      </div>
+
+      {hasQuotes ? (
+        <div class="quotes-grid">
+          {verifiedQuotes.map((c, i) => (
+            <blockquote class="quote-card reveal" data-delay={i * 80}>
+              <span class="quote-icon"><Quote size={18} /></span>
+              <p class="quote-text">"{c.quote}"</p>
+              <cite class="quote-meta">
+                <span class="quote-author">{c.quoteAuthor}</span>
+                <span class="quote-role">{c.quoteRole}</span>
+              </cite>
+              <span class="quote-brand">{c.logoText}</span>
+            </blockquote>
+          ))}
+        </div>
+      ) : (
+        <div class="quotes-placeholder reveal">
+          <span class="quote-icon"><Quote size={18} /></span>
+          <p class="quotes-placeholder-text">
+            Verified customer quotes will appear here as they're approved.
+          </p>
+          <span class="quotes-placeholder-tag">CONTENT NEEDED</span>
+        </div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .quotes-section { padding: clamp(3rem, 6vh, 5rem) 0; }
+  .quotes-inner { max-width: 60rem; margin: 0 auto; padding: 0 var(--space-gutter); }
+  .quotes-head { text-align: center; }
+  .quotes-title { margin-top: 0.9rem; font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
+
+  .quotes-grid { margin-top: 2.5rem; display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 40rem) { .quotes-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .quote-card {
+    position: relative;
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200);
+    border-radius: 16px;
+    padding: 1.75rem 1.9rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 12px 28px -16px rgba(11, 17, 32, 0.12);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .quote-card::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.05), transparent 60%);
+  }
+  .quote-icon {
+    position: relative;
+    width: 30px; height: 30px;
+    display: grid; place-items: center;
+    border-radius: 9px;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+  }
+  .quote-text { position: relative; margin-top: 1rem; font-size: 1.05rem; line-height: 1.65; color: var(--ink-700); font-style: italic; }
+  .quote-meta { position: relative; display: flex; flex-direction: column; gap: 0.15rem; margin-top: 1.1rem; font-style: normal; }
+  .quote-author { font-size: 0.86rem; font-weight: 700; color: var(--ink-900); }
+  .quote-role { font-size: 0.78rem; color: var(--ink-500); }
+  .quote-brand {
+    position: relative;
+    margin-top: 1.1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--ink-100);
+    font-size: 0.78rem; font-weight: 800;
+    color: var(--ink-300);
+    letter-spacing: 0.02em;
+  }
+
+  .quotes-placeholder {
+    margin-top: 2.5rem;
+    max-width: 30rem;
+    margin-inline: auto;
+    text-align: center;
+    border: 1px dashed var(--ink-300);
+    border-radius: 16px;
+    background: var(--ink-50);
+    padding: 2.5rem 2rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.9rem;
+  }
+  .quotes-placeholder .quote-icon { margin-inline: auto; }
+  .quotes-placeholder-text { font-size: 0.95rem; line-height: 1.65; color: var(--ink-500); margin: 0; max-width: 22rem; }
+  .quotes-placeholder-tag {
+    font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em;
+    color: var(--ink-400);
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+  }
+</style>

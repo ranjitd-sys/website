@@ -1,0 +1,42 @@
+---
+import type { CatalogItem } from "@/data/resources/types"
+
+interface Props {
+  item: CatalogItem
+  featured?: boolean
+}
+
+const { item, featured = false } = Astro.props
+---
+
+<a
+  href={item.href}
+  class:list={["rs-card", featured && "rs-featured"]}
+  data-filter={item.filter}
+  data-kind={item.kind}
+  data-category={item.category}
+>
+  <span class="rs-card-head">
+    <span class="rs-card-chip">{item.category}</span>
+    <svg
+      class="rs-card-arrow"
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M7 17 17 7"></path>
+      <path d="M7 7h10v10"></path>
+    </svg>
+  </span>
+  <h3 class="rs-card-title">{item.title}</h3>
+  <p class="rs-card-desc">{item.description}</p>
+  {item.highlight && <p class="rs-highlight">{item.highlight}</p>}
+  <span class="rs-card-meta">{item.meta}</span>
+</a>

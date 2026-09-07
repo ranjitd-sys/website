@@ -11,6 +11,7 @@ export const buttonVariants = cva(
         
         primary: "bg-brand-500 !text-white hover:bg-brand-600",
         outline: "border border-ink-200 bg-white text-ink-900 hover:border-ink-300 hover:bg-ink-50",
+        outlineLight: "border border-white/25 bg-transparent !text-white hover:border-white/45 hover:bg-white/10",
         secondary: "bg-ink-100 text-ink-900 hover:bg-ink-200",
         ghost: "text-ink-900 hover:bg-ink-100",
         white: "bg-white text-ink-900 shadow-sm ring-1 ring-ink-200/60 hover:bg-ink-50",

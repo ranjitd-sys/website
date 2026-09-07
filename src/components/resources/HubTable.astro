@@ -1,0 +1,29 @@
+---
+interface Props {
+  head: string[]
+  rows: string[][]
+}
+
+const { head, rows } = Astro.props
+---
+
+<div class="rs-table-wrap">
+  <table>
+    <thead>
+      <tr>
+        {head.map((h) => (
+          <th scope="col">{h}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          {row.map((cell) => (
+            <td>{cell}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

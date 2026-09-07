@@ -1,0 +1,29 @@
+---
+interface Heading {
+  depth: number
+  slug: string
+  text: string
+}
+
+interface Props {
+  headings: Heading[]
+  label?: string
+}
+
+const { headings, label = "On this page" } = Astro.props
+---
+
+{
+  headings.length > 0 && (
+    <nav class="rs-toc" aria-label="On this page">
+      <span class="rs-toc-title">{label}</span>
+      <ul>
+        {headings.map((h) => (
+          <li>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}

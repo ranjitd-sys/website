@@ -1,0 +1,219 @@
+---
+import type { SearchItem } from "@/data/resources/index"
+
+interface Props {
+  items: SearchItem[]
+  placeholder?: string
+}
+
+const { items, placeholder = "Search resources, FAQs and help…" } = Astro.props
+---
+
+<div class="rs-search" data-rs-search>
+  <svg
+    class="rs-search-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <circle cx="11" cy="11" r="7"></circle>
+    <path d="m21 21-4.3-4.3"></path>
+  </svg>
+  <input
+    type="search"
+    role="combobox"
+    aria-expanded="false"
+    aria-controls="rs-search-results"
+    aria-label="Search DeepEcom resources"
+    placeholder={placeholder}
+  />
+  <div class="rs-search-panel" id="rs-search-results" hidden></div>
+</div>
+
+<style is:global>
+  .rs-search-panel {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    max-height: 24rem;
+    overflow-y: auto;
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-xl);
+    background: #fff;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .rs-search-panel a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ink-100);
+    text-decoration: none;
+    color: var(--ink-700);
+  }
+
+  .rs-search-panel a:last-child {
+    border-bottom: 0;
+  }
+
+  .rs-search-panel a:hover,
+  .rs-search-panel a[data-active="true"] {
+    background: var(--brand-50);
+  }
+
+  .rs-search-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .rs-search-row strong {
+    color: var(--ink-950);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.35;
+  }
+
+  .rs-search-row span {
+    flex: none;
+    font-size: 0.68rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--brand-600);
+  }
+
+  .rs-search-panel em {
+    color: var(--ink-500);
+    font-size: 0.78rem;
+    line-height: 1.5;
+    font-style: normal;
+  }
+
+  .rs-search-note {
+    padding: 1rem;
+    color: var(--ink-400);
+    font-size: 0.82rem;
+    text-align: center;
+  }
+</style>
+
+<script define:vars={{ searchItems: items }}>
+  const root = document.querySelector("[data-rs-search]")
+  if (root) {
+    const input = root.querySelector("input")
+    const panel = root.querySelector(".rs-search-panel")
+    let open = false
+    let active = 0
+
+    function esc(s) {
+      const div = document.createElement("div")
+      div.textContent = s
+      return div.innerHTML
+    }
+
+    function openPanel() {
+      open = true
+      panel.hidden = false
+      input.setAttribute("aria-expanded", "true")
+    }
+
+    function closePanel() {
+      open = false
+      panel.hidden = true
+      active = 0
+      input.setAttribute("aria-expanded", "false")
+    }
+
+    function render(q) {
+      const needle = q.trim().toLowerCase()
+      const hits = needle
+        ? searchItems.filter(
+            (it) =>
+              it.title.toLowerCase().includes(needle) ||
+              it.category.toLowerCase().includes(needle) ||
+              it.type.toLowerCase().includes(needle) ||
+              it.description.toLowerCase().includes(needle),
+          ).slice(0, 8)
+        : searchItems.slice(0, 7)
+
+      if (!hits.length) {
+        panel.innerHTML = `<div class="rs-search-note">No results for “${esc(q)}”. Try “GST”, “Tally” or “reconciliation”.</div>`
+        return
+      }
+      panel.innerHTML = hits
+        .map(
+          (it, i) =>
+            `<a href="${esc(it.href)}" data-i="${i}">
+               <span class="rs-search-row"><strong>${esc(it.title)}</strong><span>${esc(it.type)}</span></span>
+               <em>${esc(it.description)}</em>
+             </a>`,
+        )
+        .join("") +
+        `<div class="rs-search-note">${hits.length} result${hits.length === 1 ? "" : "s"}${
+          needle ? ` for “${esc(q)}”` : ""
+        }</div>`
+
+      const links = panel.querySelectorAll("a")
+      links.forEach((l) => l.removeAttribute("data-active"))
+      if (links[active]) links[active].setAttribute("data-active", "true")
+    }
+
+    function move(d) {
+      const links = panel.querySelectorAll("a")
+      if (!links.length) return
+      active = Math.max(0, Math.min(links.length - 1, active + d))
+      links.forEach((l) => l.removeAttribute("data-active"))
+      links[active].setAttribute("data-active", "true")
+      links[active].scrollIntoView({ block: "nearest" })
+    }
+
+    input.addEventListener("input", () => {
+      if (!open) openPanel()
+      render(input.value)
+    })
+
+    input.addEventListener("focus", () => {
+      openPanel()
+      render(input.value)
+    })
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closePanel()
+      if (e.key === "ArrowDown") {
+        e.preventDefault()
+        move(1)
+      }
+      if (e.key === "ArrowUp") {
+        e.preventDefault()
+        move(-1)
+      }
+      if (e.key === "Enter") {
+        const links = panel.querySelectorAll("a")
+        if (links[active]) links[active].click()
+        else if (links.length) links[0].click()
+      }
+    })
+
+    panel.addEventListener("click", (e) => {
+      const el = e.target
+      const link = el instanceof Element ? el.closest("a") : null
+      if (link) closePanel()
+    })
+
+    document.addEventListener("click", (e) => {
+      if (!root.contains(e.target)) closePanel()
+    })
+  }
+</script>

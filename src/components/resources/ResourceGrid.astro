@@ -1,0 +1,97 @@
+---
+import ResourceCard from "@/components/resources/ResourceCard.astro"
+import type { CatalogItem } from "@/data/resources/types"
+
+export interface GridChip {
+  id: string
+  label: string
+  href?: string
+  /** Attribute name to match, e.g. "data-category". Defaults to data-filter. */
+  field?: string
+}
+
+interface Props {
+  items: CatalogItem[]
+  chips: GridChip[]
+  featuredId?: string
+  columns?: 2 | 3 | 4
+}
+
+const { items, chips, featuredId, columns = 3 } = Astro.props
+const rootId = `rs-filter-${Math.random().toString(36).slice(2, 8)}`
+
+interface ChipData {
+  id: string
+  field: string
+}
+
+const chipData: ChipData[] = chips.map((c) => ({ id: c.id, field: c.field ?? "data-filter" }))
+---
+
+<div class="rs-filter-root" id={rootId} data-state="all">
+  <div class="rs-nav" role="group" aria-label="Filter resources">
+    {chips.map((c, i) =>
+      c.href ? (
+        <a class="rs-chip" href={c.href}>
+          {c.label}
+        </a>
+      ) : (
+        <button
+          type="button"
+          class="rs-chip"
+          aria-pressed={c.id === "all"}
+          data-chip={i}
+        >
+          {c.label}
+        </button>
+      ),
+    )}
+  </div>
+
+  <div class:list={["rs-grid", columns === 2 && "cols-2", columns === 4 && "cols-4"]} style={{ marginTop: "1.5rem" }}>
+    {items.map((item) => (
+      <ResourceCard item={item} featured={item.id === featuredId} />
+    ))}
+  </div>
+
+  <div class="rs-empty">
+    No results for this filter yet. Try “All” to browse everything.
+  </div>
+</div>
+
+<script define:vars={{ chipData, rootId }}>
+  const root = document.getElementById(rootId)
+  if (root) {
+    const cards = Array.from(root.querySelectorAll(".rs-card"))
+    const buttons = Array.from(root.querySelectorAll("[data-chip]"))
+    const empty = root.querySelector(".rs-empty")
+
+    function apply(chipId) {
+      let visible = 0
+      for (const card of cards) {
+        if (chipId === "all") {
+          card.hidden = false
+          visible++
+          continue
+        }
+        const chip = chipData.find((c) => c.id === chipId)
+        const attr = chip?.field ?? "data-filter"
+        if (card.getAttribute(attr) === chipId) {
+          card.hidden = false
+          visible++
+        } else {
+          card.hidden = true
+        }
+      }
+      root.dataset.state = visible ? chipId : "empty"
+      buttons.forEach((b) => {
+        const idx = Number(b.dataset.chip)
+        b.setAttribute("aria-pressed", String(chipData[idx]?.id === chipId))
+      })
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () => apply(String(chipData[Number(btn.dataset.chip)]?.id ?? "all")))
+    })
+  }
+</script>

@@ -1,0 +1,324 @@
+---
+import { ArrowRight } from "lucide-react"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { customers } from "@/data/customers"
+
+const featured = customers.find((c) => c.featured)
+const others = customers.filter((c) => !c.featured).slice(0, 3)
+---
+
+<section class="cust-hero">
+  <div class="cust-hero-ambient" aria-hidden="true"></div>
+  <div class="sec">
+    <div class="ch-inner">
+      <div class="ch-copy reveal">
+        <span class="ch-eyebrow">
+          <span class="ch-eyebrow-dot"></span>
+          CUSTOMER STORIES
+        </span>
+        <h1 class="ch-title">
+          Real businesses.
+          <span class="ch-title-accent">Real financial clarity.</span>
+        </h1>
+        <p class="ch-lead">
+          See how ecommerce businesses use DeepEcom to bring marketplace data, profitability,
+          payment reconciliation and detailed accounting into one connected workflow.
+        </p>
+        <div class="ch-ctas">
+          <a href="/contact" class={buttonVariants({ size: "lg" })}>
+            Book a Demo <ArrowRight size={16} />
+          </a>
+          <a href="#stories" class="ch-link">
+            Explore Case Studies
+            <ArrowRight size={15} />
+          </a>
+        </div>
+        <div class="ch-proof">
+          <div class="ch-avatars" aria-hidden="true">
+            {others.map((c) => (
+              <span class="ch-avatar">{c.logoText.charAt(0)}</span>
+            ))}
+          </div>
+          <div class="ch-proof-copy">
+            <strong>TRUSTED BY GROWING BUSINESSES</strong>
+            <span>Across marketplaces, D2C and enterprise sellers</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ch-visual reveal" data-delay="120">
+        <div class="ch-vstack">
+          <div class="ch-feature-card">
+            <div class="ch-qmark">"</div>
+            <p class="ch-qtext">
+              {featured?.quote || "CONTENT NEEDED — Featured customer quote."}
+            </p>
+            <div class="ch-qmeta">
+              <span class="ch-qname">{featured?.quoteAuthor || "CONTENT NEEDED"}</span>
+              <span class="ch-qrole">{featured?.quoteRole || "Verified attribution required"}</span>
+            </div>
+            <div class="ch-qfoot">
+              <span class="ch-qbrand">{featured?.logoText || "Featured Customer"}</span>
+              <span class="ch-qtag">Featured Story</span>
+            </div>
+          </div>
+
+          <div class="ch-mini-grid">
+            <div class="ch-mini-card">
+              <span class="ch-mini-label">MARKETPLACES</span>
+              <span class="ch-mini-value">Amazon · Flipkart · Shopify</span>
+              <span class="ch-mini-hint">Connected</span>
+            </div>
+            <div class="ch-mini-card">
+              <span class="ch-mini-label">RECONCILIATION</span>
+              <span class="ch-mini-value">Expected vs received</span>
+              <span class="ch-mini-hint">Order level</span>
+            </div>
+            <div class="ch-mini-card">
+              <span class="ch-mini-label">ACCOUNTING</span>
+              <span class="ch-mini-value">Order-wise · GST-wise</span>
+              <span class="ch-mini-hint">Posted to ERP</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cust-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    padding: clamp(5.5rem, 11vh, 8rem) 0 clamp(3rem, 6vh, 5rem);
+  }
+  .cust-hero-ambient {
+    position: absolute;
+    inset: -10% -5% auto;
+    z-index: -2;
+    height: 46rem;
+    background:
+      radial-gradient(52rem 28rem at 76% -8%, rgba(83, 58, 253, 0.13), transparent 62%),
+      radial-gradient(40rem 22rem at 8% -4%, rgba(160, 140, 255, 0.1), transparent 58%),
+      radial-gradient(90rem 40rem at 50% 130%, rgba(83, 58, 253, 0.05), transparent 60%);
+    pointer-events: none;
+  }
+
+  .ch-inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 4rem);
+    align-items: center;
+  }
+  @media (min-width: 64rem) {
+    .ch-inner { grid-template-columns: 1.05fr 1fr; }
+  }
+
+  .ch-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.35rem 0.85rem;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--ink-200);
+    border-radius: var(--radius-full);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-600);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04);
+  }
+  .ch-eyebrow-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--brand-500);
+    box-shadow: 0 0 0 3px rgba(83, 58, 253, 0.15);
+  }
+
+  .ch-title {
+    margin-top: 1.1rem;
+    font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+    font-weight: 800;
+    color: var(--ink-950);
+    text-wrap: balance;
+  }
+  .ch-title-accent {
+    display: block;
+    background: linear-gradient(100deg, var(--brand-600) 0%, var(--brand-400) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .ch-lead {
+    margin-top: 1.1rem;
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
+    line-height: 1.7;
+    color: var(--ink-500);
+    max-width: 36rem;
+  }
+  .ch-ctas {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    align-items: center;
+  }
+  .ch-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--brand-600);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+  .ch-link:hover { gap: 0.6rem; }
+
+  .ch-proof {
+    margin-top: 2.25rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--ink-100);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ch-avatars { display: flex; }
+  /* Replace your existing .ch-avatar rule with this block */
+
+  .ch-avatar {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-full);
+  border: 2px solid #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  margin-left: -8px;
+  box-shadow: 0 2px 4px rgba(11, 17, 32, 0.05);
+}
+.ch-avatar:first-child { 
+  margin-left: 0; 
+}
+
+/* Soft Lavender/Purple */
+.ch-avatar:nth-child(1) {
+  background: #f0eefd;
+  color: #533afd;
+  border-color: #ffffff;
+}
+
+/* Soft Honey/Yellow */
+.ch-avatar:nth-child(2) {
+  background: #fef3c7;
+  color: #d97706;
+  border-color: #ffffff;
+}
+
+/* Soft Sky/Blue */
+.ch-avatar:nth-child(3) {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #ffffff;
+} 
+  .ch-avatar:first-child { margin-left: 0; }
+  .ch-proof-copy { display: flex; flex-direction: column; gap: 0.1rem; }
+  .ch-proof-copy strong { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; color: var(--ink-800); }
+  .ch-proof-copy span { font-size: 0.78rem; color: var(--ink-500); }
+
+  /* ---- right visual ---- */
+  .ch-visual { position: relative; }
+  .ch-vstack { display: flex; flex-direction: column; gap: 1rem; }
+
+  .ch-feature-card {
+    background: linear-gradient(180deg, #ffffff 0%, #fcfcff 100%);
+    border: 1px solid var(--ink-200);
+    border-radius: 18px;
+    padding: 1.75rem 2rem;
+    box-shadow:
+      0 1px 2px rgba(11, 17, 32, 0.04),
+      0 22px 44px -18px rgba(83, 58, 253, 0.22),
+      0 14px 30px -12px rgba(11, 17, 32, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .ch-feature-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 70% at 50% -30%, rgba(83, 58, 253, 0.06), transparent 62%);
+  }
+  .ch-feature-card::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 1.5rem; right: 1.5rem;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9) 20%, rgba(255, 255, 255, 0.9) 80%, transparent);
+  }
+  .ch-qmark {
+    position: relative;
+    font-size: 3.5rem; line-height: 0.6;
+    font-weight: 800; color: var(--brand-200);
+  }
+  .ch-qtext {
+    position: relative;
+    margin-top: 0.6rem;
+    font-size: 1.12rem; line-height: 1.65;
+    color: var(--ink-700); font-style: italic;
+  }
+  .ch-qmeta {
+    position: relative;
+    margin-top: 1.1rem;
+    display: flex; flex-direction: column; gap: 0.2rem;
+  }
+  .ch-qname { font-size: 0.85rem; font-weight: 700; color: var(--ink-900); }
+  .ch-qrole { font-size: 0.78rem; color: var(--ink-500); }
+  .ch-qfoot {
+    position: relative;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ink-100);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  .ch-qbrand { font-size: 0.95rem; font-weight: 800; color: var(--ink-900); }
+  .ch-qtag {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: var(--radius-full);
+    padding: 0.25rem 0.7rem;
+  }
+
+  .ch-mini-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; }
+  @media (min-width: 40rem) { .ch-mini-grid { grid-template-columns: repeat(3, 1fr); } }
+  .ch-mini-card {
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    padding: 0.95rem 1.1rem;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 8px 22px -12px rgba(11, 17, 32, 0.1);
+    display: flex; flex-direction: column; gap: 0.35rem;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  }
+  .ch-mini-card:hover { transform: translateY(-3px); border-color: var(--brand-200); }
+  .ch-mini-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em; color: var(--ink-400); }
+  .ch-mini-value { font-size: 0.8rem; font-weight: 700; color: var(--ink-800); line-height: 1.4; }
+  .ch-mini-hint {
+    font-size: 0.66rem; font-weight: 700; color: var(--success-600);
+    background: var(--success-50);
+    border: 1px solid var(--success-100);
+    border-radius: var(--radius-full);
+    padding: 0.12rem 0.5rem;
+    width: fit-content;
+  }
+</style>
