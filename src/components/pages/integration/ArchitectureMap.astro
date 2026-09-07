@@ -47,16 +47,7 @@ const erpBoxes = [
   </div>
 
   <div class="arch-map reveal" id="arch-map" data-uid="arch1">
-    <svg class="arch-connector-canvas" id="arch-connector-svg-arch1" aria-hidden="true">
-      <defs>
-        <marker id="arch-arrow-in-arch1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5" />
-        </marker>
-        <marker id="arch-arrow-out-arch1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f46e5" />
-        </marker>
-      </defs>
-    </svg>
+    <svg class="arch-connector-canvas" id="arch-connector-svg-arch1" aria-hidden="true"></svg>
 
     <!-- INPUTS -->
     <div class="arch-col">
@@ -189,22 +180,26 @@ const erpBoxes = [
       display: none;
     }
 
-    :global(.arch-line) {
+    /* Conduits are filled shapes, not stroked lines — static, no dasharray, no animation */
+    :global(.arch-conduit) {
+      stroke: none;
+    }
+
+    :global(.arch-conduit.arch-conduit-in) {
+      fill: #4f46e5;
+      opacity: 0.14;
+    }
+
+    :global(.arch-conduit.arch-conduit-out) {
+      fill: #4f46e5;
+      opacity: 0.14;
+    }
+
+    /* Thin center line drawn on top of the conduit fill to keep an edge */
+    :global(.arch-conduit-edge) {
       fill: none;
-      stroke: #c7c9d9;
-      stroke-width: 1.5px;
-      stroke-linecap: round;
-    }
-
-    :global(.arch-line.active) {
-      stroke: #4f46e5;
-      stroke-dasharray: 4 6;
-      animation: archFlowAnim 16s linear infinite;
-    }
-
-    @keyframes archFlowAnim {
-      from { stroke-dashoffset: 200; }
-      to { stroke-dashoffset: 0; }
+      stroke: #c7c9e0;
+      stroke-width: 1px;
     }
 
     :global(.arch-col),
@@ -301,8 +296,8 @@ const erpBoxes = [
       padding: 1.4rem;
       border-radius: 10px;
       background: #ffffff;
-      border: 1px solid #e5e7eb;
-      border-left: 3px solid #4f46e5;
+      border: 1px solid #698ede;
+      /* border-left: 3px solid #4f46e5; */
     }
 
     .arch-core-header {
@@ -420,17 +415,15 @@ const erpBoxes = [
         padding-bottom: 0.3rem;
       }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      :global(.arch-line.active) { animation: none; }
-    }
   </style>
 
   <script>
-    // Draws connector lines by measuring real card/core positions at
-    // runtime — never hand-typed coordinates. Resize + ResizeObserver are
-    // coalesced into a single rAF-scheduled render so a resize can't
-    // trigger two rebuild passes back to back.
+    // Draws tapered "conduit" connectors by measuring real card/core
+    // positions at runtime — never hand-typed coordinates. Fully static:
+    // no dasharray, no keyframes, no reduced-motion branch needed since
+    // nothing here ever animates. Resize + ResizeObserver are coalesced
+    // into a single rAF-scheduled render so a resize can't trigger two
+    // rebuild passes back to back.
     function initArchFlow(root: HTMLElement) {
       if (root.dataset.flowInit === "1") return;
       root.dataset.flowInit = "1";
@@ -439,11 +432,6 @@ const erpBoxes = [
       const svg = root.querySelector<SVGSVGElement>(`#arch-connector-svg-${uid}`);
       const core = root.querySelector<HTMLElement>(`#core-box-${uid}`);
       if (!svg || !core) return;
-
-      const defs = svg.querySelector("defs");
-      if (!defs) return;
-
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       function relRect(el: Element, containerRect: DOMRect) {
         const r = el.getBoundingClientRect();
@@ -454,7 +442,19 @@ const erpBoxes = [
         };
       }
 
-      function curve(x1: number, y1: number, x2: number, y2: number) {
+      // Tapered conduit: narrow at the card end, wider at the core end,
+      // so the shape itself (not motion) implies "gathering into" or
+      // "spreading out from" the core.
+      function conduitPath(x1: number, y1: number, x2: number, y2: number, w1: number, w2: number) {
+        const midX = (x1 + x2) / 2;
+        return `M ${x1} ${y1 - w1 / 2}
+                C ${midX} ${y1 - w1 / 2}, ${midX} ${y2 - w2 / 2}, ${x2} ${y2 - w2 / 2}
+                L ${x2} ${y2 + w2 / 2}
+                C ${midX} ${y2 + w2 / 2}, ${midX} ${y1 + w1 / 2}, ${x1} ${y1 + w1 / 2}
+                Z`;
+      }
+
+      function centerlinePath(x1: number, y1: number, x2: number, y2: number) {
         const midX = (x1 + x2) / 2;
         return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
       }
@@ -464,13 +464,10 @@ const erpBoxes = [
       }
 
       function render() {
-        if (!svg || !defs) return;
+        if (!svg) return;
         const containerRect = root.getBoundingClientRect();
         svg.setAttribute("viewBox", `0 0 ${containerRect.width} ${containerRect.height}`);
-
-        Array.from(svg.children).forEach((child) => {
-          if (child !== defs) svg.removeChild(child);
-        });
+        svg.innerHTML = "";
 
         if (!isDesktop()) return;
 
@@ -478,24 +475,32 @@ const erpBoxes = [
         const sources = Array.from(root.querySelectorAll<HTMLElement>('[data-card="source"]'));
         const outputs = Array.from(root.querySelectorAll<HTMLElement>('[data-card="output"]'));
 
+        const NS = "http://www.w3.org/2000/svg";
+
         sources.forEach((el) => {
           const r = relRect(el, containerRect);
-          const d = curve(r.right, r.cy, coreRect.left - 6, coreRect.cy);
-          const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          p.setAttribute("class", reduceMotion ? "arch-line" : "arch-line active");
-          p.setAttribute("d", d);
-          p.setAttribute("marker-end", `url(#arch-arrow-in-${uid})`);
-          svg.appendChild(p);
+          const fill = document.createElementNS(NS, "path");
+          fill.setAttribute("class", "arch-conduit arch-conduit-in");
+          fill.setAttribute("d", conduitPath(r.right, r.cy, coreRect.left - 4, coreRect.cy, 2, 10));
+          svg.appendChild(fill);
+
+          const edge = document.createElementNS(NS, "path");
+          edge.setAttribute("class", "arch-conduit-edge");
+          edge.setAttribute("d", centerlinePath(r.right, r.cy, coreRect.left - 4, coreRect.cy));
+          svg.appendChild(edge);
         });
 
         outputs.forEach((el) => {
           const r = relRect(el, containerRect);
-          const d = curve(coreRect.right + 6, coreRect.cy, r.left, r.cy);
-          const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          p.setAttribute("class", reduceMotion ? "arch-line" : "arch-line active");
-          p.setAttribute("d", d);
-          p.setAttribute("marker-end", `url(#arch-arrow-out-${uid})`);
-          svg.appendChild(p);
+          const fill = document.createElementNS(NS, "path");
+          fill.setAttribute("class", "arch-conduit arch-conduit-out");
+          fill.setAttribute("d", conduitPath(coreRect.right + 4, coreRect.cy, r.left, r.cy, 10, 2));
+          svg.appendChild(fill);
+
+          const edge = document.createElementNS(NS, "path");
+          edge.setAttribute("class", "arch-conduit-edge");
+          edge.setAttribute("d", centerlinePath(coreRect.right + 4, coreRect.cy, r.left, r.cy));
+          svg.appendChild(edge);
         });
       }
 
