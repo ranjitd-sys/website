@@ -5,7 +5,7 @@
 // Connector paths are measured from real DOM rects at runtime (and on
 // resize), never hand-typed constants — see script below.
 
-const sources = [
+const defaultSources = [
   { name: "Amazon", category: "Market", icon: "box" },
   { name: "Flipkart", category: "Market", icon: "shopping-bag" },
   { name: "Shopify", category: "Store", icon: "store" },
@@ -16,7 +16,7 @@ const sources = [
   { name: "Tally / ERP", category: "Finance", icon: "bar-chart" },
 ];
 
-const outputs = [
+const defaultOutputs = [
   { label: "Sales Sync", sub: "Real-time stream" },
   { label: "Payment Recon", sub: "100% matched" },
   { label: "Profitability", sub: "SKU-level margins" },
@@ -24,6 +24,8 @@ const outputs = [
   { label: "Fin Reports", sub: "Audit-ready" },
   { label: "Auto Ledger", sub: "ERP synced" },
 ];
+
+const { sources = defaultSources, outputs = defaultOutputs } = Astro.props;
 
 // Unique per-instance suffix so <defs> ids never collide when this
 // component is rendered more than once on a page.
@@ -68,7 +70,10 @@ const uid = Math.random().toString(36).slice(2, 9);
           sources.map((s, i) => (
             <div class="h-card" data-card="source" style={`--d: ${i * 0.03}s`}>
               <div class="icon-wrap">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                {s.logo ? (
+                  <img src={s.logo} alt="" aria-hidden="true" class="src-logo" loading="lazy" decoding="async" />
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   {s.icon === "box" && (
                     <>
                       <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
@@ -123,6 +128,7 @@ const uid = Math.random().toString(36).slice(2, 9);
                     </>
                   )}
                 </svg>
+                )}
               </div>
               <div class="c-info">
                 <span class="c-title">{s.name}</span>
@@ -242,8 +248,8 @@ const uid = Math.random().toString(36).slice(2, 9);
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: 1fr 170px 1fr;
-    gap: 3.25rem;
+    grid-template-columns: minmax(0, 1fr) clamp(128px, 15vw, 170px) minmax(0, 1fr);
+    gap: clamp(1.5rem, 3.5vw, 3.25rem);
     align-items: center;
   }
 
@@ -251,6 +257,7 @@ const uid = Math.random().toString(36).slice(2, 9);
     display: flex;
     flex-direction: column;
     gap: 0.55rem;
+    min-width: 0;
   }
 
   .col-lbl {
@@ -287,6 +294,7 @@ const uid = Math.random().toString(36).slice(2, 9);
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
+    min-width: 0;
   }
 
   .h-card {
@@ -298,6 +306,8 @@ const uid = Math.random().toString(36).slice(2, 9);
     display: flex;
     align-items: center;
     gap: 0.65rem;
+    min-width: 0;
+    overflow: hidden;
     transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
     animation: hCardFade 0.4s ease-out var(--d) backwards;
   }
@@ -337,11 +347,18 @@ const uid = Math.random().toString(36).slice(2, 9);
     height: 15px;
   }
 
+  .icon-wrap .src-logo {
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+  }
+
   .c-info {
     display: flex;
     flex-direction: column;
     min-width: 0;
     gap: 0.05rem;
+    flex: 1;
   }
 
   .c-title {
@@ -360,6 +377,9 @@ const uid = Math.random().toString(36).slice(2, 9);
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .emerald {

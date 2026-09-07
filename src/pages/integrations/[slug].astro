@@ -1,10 +1,34 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
 import CtaBand from "@/components/pages/CtaBand.astro"
+import PipelineVisual from "@/components/pages/integration/PipelineVisual.astro"
+import OutcomeBlocks from "@/components/pages/integration/OutcomeBlocks.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
-import { ArrowRight, ArrowUpRight } from "lucide-react"
+import { logoAsset } from "@/data/logoAssets"
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Receipt,
+  Percent,
+  Landmark,
+  RotateCcw,
+  Wallet,
+  Box,
+  Calculator,
+  Banknote,
+  AlertTriangle,
+  Scale,
+  Truck,
+  PackageCheck,
+  TrendingUp,
+  BookOpen,
+  FileText,
+  Warehouse,
+  Database,
+  Plug,
+  Zap,
+} from "lucide-react"
 import { categoryById, integrationBySlug, integrationsByCategory, type IntegrationCategoryId } from "@/data/integrations"
-import "@/styles/resources.css"
 
 const slug = Astro.params.slug ?? ""
 const item = integrationBySlug(slug)
@@ -13,51 +37,100 @@ if (!item) {
 }
 const category = categoryById(item.category)!
 
-const FLOW: Record<IntegrationCategoryId, { t: string; d: string }[]> = {
+type LucideIcon = typeof Receipt
+interface FlowItem { t: string; d: string; Icon: LucideIcon; out: string }
+
+const FLOW: Record<IntegrationCategoryId, FlowItem[]> = {
   marketplaces: [
-    { t: "Orders & invoices", d: "Every order, its lines and its invoice become structured, financial data." },
-    { t: "Fees & commissions", d: "Referral fees, commissions and fixed charges mapped to the correct cost heads." },
-    { t: "GST & TCS / TDS", d: "Taxes split out at source so returns and compliance stay clean." },
-    { t: "Returns & refunds", d: "Returns and refunds traced back to the original order." },
-    { t: "Settlements & payouts", d: "Expected, settled and received amounts reconciled to a single position." },
-    { t: "Inventory & stock", d: "Sales consumption and stock movement ready for inventory accounting." },
+    { t: "Orders & invoices", d: "Every order, its lines and its invoice become structured, financial data.", Icon: Receipt, out: "Order-wise accounting" },
+    { t: "Fees & commissions", d: "Referral fees, commissions and fixed charges mapped to the correct cost heads.", Icon: Percent, out: "Correct cost heads" },
+    { t: "GST & TCS / TDS", d: "Taxes split out at source so returns and compliance stay clean.", Icon: Landmark, out: "Clean tax returns" },
+    { t: "Returns & refunds", d: "Returns and refunds traced back to the original order.", Icon: RotateCcw, out: "Accurate refunds" },
+    { t: "Settlements & payouts", d: "Expected, settled and received amounts reconciled to a single position.", Icon: Wallet, out: "One reconciled position" },
+    { t: "Inventory & stock", d: "Sales consumption and stock movement ready for inventory accounting.", Icon: Box, out: "Inventory accounting" },
   ],
   payments: [
-    { t: "Expected settlements", d: "What each settlement should deliver, calculated per order." },
-    { t: "Gateway payouts", d: "Payments received through the gateway, captured as they arrive." },
-    { t: "Bank credits", d: "Actual credits reconciled against expected settlement amounts." },
-    { t: "Differences & exceptions", d: "Shortfalls and excesses surfaced instead of hiding in a balance." },
-    { t: "Fees & charges", d: "Gateway fees classified to the right accounting head." },
-    { t: "Reconciliation position", d: "A clear expected → received → difference view per settlement." },
+    { t: "Expected settlements", d: "What each settlement should deliver, calculated per order.", Icon: Calculator, out: "Expected → received" },
+    { t: "Gateway payouts", d: "Payments received through the gateway, captured as they arrive.", Icon: Banknote, out: "Captured payouts" },
+    { t: "Bank credits", d: "Actual credits reconciled against expected settlement amounts.", Icon: Landmark, out: "Clean bank position" },
+    { t: "Differences & exceptions", d: "Shortfalls and excesses surfaced instead of hiding in a balance.", Icon: AlertTriangle, out: "Surfaced differences" },
+    { t: "Fees & charges", d: "Gateway fees classified to the right accounting head.", Icon: Percent, out: "Right fee heads" },
+    { t: "Reconciliation position", d: "A clear expected → received → difference view per settlement.", Icon: Scale, out: "Balanced to the paisa" },
   ],
   shipping: [
-    { t: "Shipping charges", d: "Fulfilment and logistics charges captured per shipment." },
-    { t: "Forward fulfilment", d: "Costs of delivered orders tied to the orders that generated them." },
-    { t: "Returns & RTO", d: "Reverse fulfilment costs connected to returned and RTO orders." },
-    { t: "Cost per order", d: "Shipping cost visibility at order level, not rolled into totals." },
-    { t: "Profitability impact", d: "Logistics costs reflected in product and channel profitability." },
-    { t: "Accounting ready", d: "Shipping costs structured for ERP accounting." },
+    { t: "Shipping charges", d: "Fulfilment and logistics charges captured per shipment.", Icon: Truck, out: "Per-shipment cost" },
+    { t: "Forward fulfilment", d: "Costs of delivered orders tied to the orders that generated them.", Icon: PackageCheck, out: "Order-attributed cost" },
+    { t: "Returns & RTO", d: "Reverse fulfilment costs connected to returned and RTO orders.", Icon: RotateCcw, out: "Return cost visibility" },
+    { t: "Cost per order", d: "Shipping cost visibility at order level, not rolled into totals.", Icon: Receipt, out: "Order-level cost" },
+    { t: "Profitability impact", d: "Logistics costs reflected in product and channel profitability.", Icon: TrendingUp, out: "True margins" },
+    { t: "Accounting ready", d: "Shipping costs structured for ERP accounting.", Icon: BookOpen, out: "ERP-ready" },
   ],
   erp: [
-    { t: "Order-wise vouchers", d: "Each ecommerce transaction becomes a detailed, postable voucher." },
-    { t: "GST-wise heads", d: "Output tax, input tax, TCS and TDS separated per head." },
-    { t: "Warehouse-wise stock", d: "Inventory accounting kept accurate across warehouses." },
-    { t: "Marketplace charges", d: "Fees and charges recorded in the right ledgers." },
-    { t: "Returns & refunds", d: "Returns and refunds posted as correct accounting events." },
-    { t: "ERP-ready posting", d: "Structured entries your finance team can post or review." },
+    { t: "Order-wise vouchers", d: "Each ecommerce transaction becomes a detailed, postable voucher.", Icon: FileText, out: "Postable vouchers" },
+    { t: "GST-wise heads", d: "Output tax, input tax, TCS and TDS separated per head.", Icon: Landmark, out: "GST-ready books" },
+    { t: "Warehouse-wise stock", d: "Inventory accounting kept accurate across warehouses.", Icon: Warehouse, out: "Multi-warehouse accuracy" },
+    { t: "Marketplace charges", d: "Fees and charges recorded in the right ledgers.", Icon: Percent, out: "Right ledgers" },
+    { t: "Returns & refunds", d: "Returns and refunds posted as correct accounting events.", Icon: RotateCcw, out: "Correct events" },
+    { t: "ERP-ready posting", d: "Structured entries your finance team can post or review.", Icon: Database, out: "Post or review" },
   ],
 }
 
 const flow = FLOW[item.category]
+
+const SOURCE_SETS: Record<IntegrationCategoryId, { name: string; category: string; icon: string; logo?: string }[]> = {
+  marketplaces: [
+    { name: "Payments", category: "Gateway", icon: "credit-card" },
+    { name: "Settlements", category: "Banking", icon: "landmark" },
+    { name: "Returns & refunds", category: "Logistics", icon: "refresh-cw" },
+    { name: "Inventory", category: "WMS", icon: "clipboard" },
+  ],
+  payments: [
+    { name: "Orders", category: "Market", icon: "box" },
+    { name: "Settlements", category: "Banking", icon: "landmark" },
+    { name: "Bank credits", category: "Banking", icon: "landmark" },
+    { name: "Fees & charges", category: "Gateway", icon: "clipboard" },
+  ],
+  shipping: [
+    { name: "Orders", category: "Market", icon: "box" },
+    { name: "Returns & RTO", category: "Logistics", icon: "refresh-cw" },
+    { name: "Shipping costs", category: "Costing", icon: "bar-chart" },
+  ],
+  erp: [
+    { name: "Accounting", category: "Ledger", icon: "clipboard" },
+    { name: "GST", category: "Tax", icon: "landmark" },
+    { name: "Inventory", category: "WMS", icon: "clipboard" },
+    { name: "Stock transfers", category: "Warehouse", icon: "box" },
+  ],
+}
+
+const brandSource = {
+  name: item.name,
+  category: category.label,
+  icon:
+    item.category === "payments" ? "credit-card" :
+    item.category === "shipping" ? "box" :
+    item.category === "erp" ? "bar-chart" : "shopping-bag",
+  logo: logoAsset(item.mark)?.src,
+}
+const sources = [brandSource, ...SOURCE_SETS[item.category]]
+
+const outputs = [
+  { label: "Sales Sync", sub: "Real-time stream" },
+  { label: "Reconciliation", sub: "Expected vs received" },
+  { label: "Profitability", sub: "True margins" },
+  { label: "Auto Ledger", sub: "ERP synced" },
+]
+
 const related = integrationsByCategory(item.category).filter((x) => x.slug !== item.slug)
 const title = `${item.name} Integration — DeepEcom`
 const description = `${item.name} connects to DeepEcom: ${item.description} The ${category.label} integration turns ${category.description.toLowerCase()}`
+const brandImg = logoAsset(item.mark)
 ---
 
 <PageLayout title={title} description={description} ogKey="integrations">
-  <header class="rs-hero">
-    <div class="rs-container">
-      <nav class="rs-crumb" aria-label="Breadcrumb">
+  <section class="d-hero" aria-label={`${item.name} integration`}>
+    <div class="sec">
+      <nav class="d-crumb" aria-label="Breadcrumb">
         <a href="/integrations">Integrations</a>
         <span>/</span>
         <a href={`/integrations#ecosystem`}>{category.label}</a>
@@ -65,64 +138,118 @@ const description = `${item.name} connects to DeepEcom: ${item.description} The 
         <strong>{item.name}</strong>
       </nav>
 
-      <span class="rs-hero-eyebrow" style="margin-top:1.25rem">{category.label}</span>
-      <h1 class="rs-hero-title">{item.name}</h1>
-      <p class="rs-hero-lead" style="max-width:40rem">{item.description}</p>
+      <div class="d-hero-grid">
+        <div class="d-hero-copy reveal">
+          <span class="d-eyebrow">
+            <Plug size={13} />
+            {category.label} Integration
+          </span>
+          <h1 class="d-hero-title">{item.name}</h1>
+          <p class="d-hero-lead">{item.description}</p>
 
-      <div class="rs-chips" style="margin-top:1.25rem">
-        {item.capabilities.map((c) => <span class="rs-card-chip">{c}</span>)}
-      </div>
-
-      <div class="rs-hero-actions" style="margin-top:1.75rem">
-        <a href="/contact" class={buttonVariants({ size: "lg" })}>
-          Book a Demo
-          <ArrowRight size={16} />
-        </a>
-        <a href="/platform" class={buttonVariants({ variant: "white", size: "lg" })}>
-          Explore Platform
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <section class="rs-section-tight">
-    <div class="rs-container">
-      <div class="rs-head">
-        <p class="rs-head-eyebrow">What connects</p>
-        <h2 class="rs-head-title">The {item.name} data DeepEcom turns into finance.</h2>
-      </div>
-      <div class="rs-dim" style="grid-template-columns:repeat(3, minmax(0, 1fr))">
-        {flow.map((f) => (
-          <div class="rs-dim-card">
-            <strong>{f.t}</strong>
-            <span>{f.d}</span>
+          <div class="d-chips">
+            {item.capabilities.map((c) => <span class="d-chip">{c}</span>)}
           </div>
-        ))}
+
+          <div class="d-ctas">
+            <a href="/contact" class={buttonVariants({ size: "lg" })}>
+              Book a Demo
+              <ArrowRight size={16} />
+            </a>
+            <a href="/platform" class={buttonVariants({ variant: "white", size: "lg" })}>
+              Explore Platform
+            </a>
+          </div>
+        </div>
+
+        <div class="d-hero-figure reveal" data-delay="80">
+          <div class="d-figure-tag">
+            <span class="d-figure-tag-dot"></span>
+            {item.name} data flowing through DeepEcom
+          </div>
+          <PipelineVisual sources={sources} outputs={outputs} />
+        </div>
       </div>
     </div>
   </section>
 
-  <hr class="rs-rule" />
-
-  <section class="rs-section-tight">
-    <div class="rs-container">
-      <div class="rs-head">
-        <p class="rs-head-eyebrow">Related</p>
-        <h2 class="rs-head-title">More {category.label}.</h2>
+  <section class="d-section" id="data">
+    <div class="sec">
+      <div class="d-head">
+        <span class="eyebrow">WHAT CONNECTS</span>
+        <h2 class="h2-md d-title">The {item.name} data DeepEcom turns into finance.</h2>
+        <p class="lead d-lead">
+          One {category.label.toLowerCase()} source creates many financial events. DeepEcom captures each one,
+          structures it and routes it to the right place — from a single live sync.
+        </p>
       </div>
-      <div class="rs-topic-list">
-        {related.map((r) => (
-          <a class="rs-topic-link" href={`/integrations/${r.slug}`}>
-            <strong>{r.name}</strong>
-            <span>{category.label}</span>
-            <ArrowUpRight size={14} />
-          </a>
+
+      <div class="d-flow-grid">
+        {flow.map((f, i) => (
+          <div class="d-flow-card reveal" data-delay={i * 50}>
+            <span class="d-flow-num">{String(i + 1).padStart(2, "0")}</span>
+            <div class="d-flow-icon">
+              <f.Icon size={18} />
+            </div>
+            <h3 class="d-flow-title">{f.t}</h3>
+            <p class="d-flow-desc">{f.d}</p>
+            <div class="d-flow-out">
+              <Zap size={11} />
+              <span>{f.out}</span>
+            </div>
+          </div>
         ))}
       </div>
-      <p class="rs-erp-note">
-        All integrations connect through the same layer: {category.label} data → <strong>DeepEcom</strong> →
-        reconciliation, profitability and ERP-ready accounting.
-      </p>
+    </div>
+
+    <div class="d-erp-strip">
+      <div class="sec d-erp-strip-inner">
+        <span class="d-erp-strip-line"></span>
+        <p>
+          {item.name} data → <strong>DeepEcom</strong> → reconciliation, profitability and ERP-ready accounting.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <OutcomeBlocks />
+
+  <hr class="d-rule" />
+
+  <section class="d-section">
+    <div class="sec">
+      <div class="d-head">
+        <span class="eyebrow">RELATED INTEGRATIONS</span>
+        <h2 class="h2-md d-title">More {category.label}.</h2>
+        <p class="lead d-lead">
+          Every {category.description.toLowerCase()} connects through the same layer — one financial picture
+          across your business.
+        </p>
+      </div>
+
+      <div class="d-related">
+        {related.map((r) => {
+          const ra = logoAsset(r.mark)
+          return (
+            <a class="d-rel-card reveal" href={`/integrations/${r.slug}`}>
+              <span class="d-rel-logo">
+                {ra && <img src={ra.src} alt="" aria-hidden="true" loading="lazy" decoding="async" class="d-rel-img" />}
+              </span>
+              <span class="d-rel-body">
+                <strong>{r.name}</strong>
+                <span>{category.label}</span>
+              </span>
+              <ArrowUpRight size={15} class="d-rel-arrow" />
+            </a>
+          )
+        })}
+      </div>
+
+      <div class="d-hub-cta">
+        <a href="/integrations#ecosystem" class={buttonVariants({ variant: "white", size: "lg" })}>
+          View all integrations
+        </a>
+      </div>
     </div>
   </section>
 
@@ -134,7 +261,23 @@ const description = `${item.name} connects to DeepEcom: ${item.description} The 
 </PageLayout>
 
 <style>
-  .rs-crumb {
+  .d-hero {
+    padding: clamp(4.5rem, 7vh, 6rem) 0 clamp(3rem, 5vh, 4.5rem);
+    position: relative;
+    overflow: hidden;
+  }
+  .d-hero::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto;
+    z-index: -1;
+    height: 42rem;
+    background:
+      radial-gradient(46rem 24rem at 82% -8%, rgba(83, 58, 253, 0.1), transparent 62%),
+      radial-gradient(38rem 20rem at 8% -10%, rgba(127, 125, 252, 0.08), transparent 58%);
+  }
+
+  .d-crumb {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -142,34 +285,308 @@ const description = `${item.name} connects to DeepEcom: ${item.description} The 
     font-size: 0.82rem;
     color: var(--ink-500);
   }
-  .rs-crumb a {
+  .d-crumb a {
     color: var(--ink-500);
     text-decoration: none;
     transition: color var(--transition-fast);
   }
-  .rs-crumb a:hover {
+  .d-crumb a:hover { color: var(--brand-600); }
+  .d-crumb strong { color: var(--ink-900); font-weight: var(--font-weight-medium); }
+
+  .d-hero-grid {
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.4fr);
+    gap: 2rem;
+    align-items: center;
+  }
+  @media (max-width: 76rem) {
+    .d-hero-grid { grid-template-columns: minmax(0, 1fr); }
+    .d-hero-figure { max-width: 44rem; margin-inline: auto; }
+  }
+
+  .d-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--brand-600);
   }
-  .rs-crumb strong {
-    color: var(--ink-900);
-    font-weight: var(--font-weight-medium);
+
+  .d-hero-title {
+    margin-top: 0.8rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    color: var(--ink-950);
   }
-  .rs-chips {
+  @media (min-width: 76rem) {
+    .d-hero-title { padding-right: 1.5rem; }
+  }
+
+  .d-hero-lead {
+    margin-top: 0.9rem;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--ink-500);
+    max-width: 32rem;
+  }
+
+  .d-chips {
+    margin-top: 1.25rem;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
   }
-  .rs-erp-note {
-    margin-top: 1.25rem;
-    font-size: 0.9rem;
+  .d-chip {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-600);
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04);
+    border-radius: 999px;
+    padding: 0.42rem 0.9rem;
+  }
+
+  .d-ctas {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .d-hero-figure {
+    position: relative;
+  }
+  .d-figure-tag {
+    position: absolute;
+    top: -0.7rem;
+    left: 1.5rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--ink-500);
+    background: #fff;
+    border: 1px solid var(--ink-200);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04);
+    border-radius: 999px;
+    padding: 0.35rem 0.85rem 0.35rem 0.7rem;
   }
-  .rs-erp-note strong {
+  .d-figure-tag-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-600);
+    box-shadow: 0 0 0 3px rgba(83, 58, 253, 0.15);
+  }
+
+  .d-section { padding: clamp(2rem, 4vh, 3rem) 0; }
+
+  .d-head { max-width: 46rem; }
+  .d-title { margin-top: 0.7rem; }
+  .d-lead { margin-top: 0.7rem; }
+
+  .d-flow-grid {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media (max-width: 64rem) {
+    .d-flow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 42rem) {
+    .d-flow-grid { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .d-flow-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #fff 0%, #fcfcff 100%);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 10px 30px -18px rgba(11, 17, 32, 0.14);
+    padding: 1.1rem 1.25rem 1.15rem;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .d-flow-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(120% 60% at 50% -30%, rgba(83, 58, 253, 0.07), transparent 60%);
+    opacity: 0.6;
+    transition: opacity 0.25s ease;
+  }
+  .d-flow-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--brand-200);
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04), 0 24px 44px -22px rgba(83, 58, 253, 0.3);
+  }
+  .d-flow-card:hover::before { opacity: 1; }
+
+  .d-flow-num {
+    position: absolute;
+    top: 0.95rem;
+    right: 1.1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-300);
+  }
+  .d-flow-icon {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
     color: var(--brand-600);
+    background: var(--brand-50);
+    border: 1px solid var(--brand-100);
+    border-radius: 11px;
   }
-  @media (max-width: 48rem) {
-    .rs-dim {
-      grid-template-columns: minmax(0, 1fr) !important;
-    }
+  .d-flow-title {
+    margin-top: 0.85rem;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--ink-950);
+  }
+  .d-flow-desc {
+    margin-top: 0.4rem;
+    font-size: 0.855rem;
+    line-height: 1.58;
+    color: var(--ink-500);
+    flex: 1;
+  }
+  .d-flow-out {
+    margin-top: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--brand-600);
+    background: var(--brand-50);
+    border-radius: 999px;
+    padding: 0.28rem 0.7rem;
+  }
+
+  .d-erp-strip {
+    margin-top: clamp(2rem, 4vh, 3rem);
+    border-block: 1px solid var(--ink-200);
+    background: linear-gradient(180deg, #fff, var(--brand-50));
+  }
+  .d-erp-strip-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding-block: 1.1rem;
+    font-size: 0.86rem;
+    color: var(--ink-600);
+  }
+  .d-erp-strip-inner strong { color: var(--brand-600); }
+  .d-erp-strip-line {
+    width: 2.25rem;
+    height: 2px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--brand-600), #fff);
+  }
+
+  .d-rule {
+    border: none;
+    border-top: 1px solid var(--ink-200);
+    margin: 0;
+  }
+
+  .d-related {
+    margin-top: 1.75rem;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media (max-width: 60rem) {
+    .d-related { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 36rem) {
+    .d-related { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .d-rel-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04);
+    padding: 0.9rem 1rem;
+    text-decoration: none;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .d-rel-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-200);
+    box-shadow: 0 18px 34px -20px rgba(83, 58, 253, 0.28);
+  }
+  .d-rel-logo {
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--ink-200);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fff, #f8fafc);
+  }
+  .d-rel-img {
+    width: auto;
+    height: 24px;
+    max-width: 34px;
+    object-fit: contain;
+  }
+  .d-rel-body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .d-rel-body strong {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--ink-950);
+  }
+  .d-rel-body span {
+    font-size: 0.72rem;
+    color: var(--ink-400);
+    margin-top: 0.1rem;
+  }
+  .d-rel-arrow {
+    margin-left: auto;
+    color: var(--ink-300);
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+  .d-rel-card:hover .d-rel-arrow {
+    color: var(--brand-600);
+    transform: translate(2px, -2px);
+  }
+
+  .d-hub-cta {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
   }
 </style>

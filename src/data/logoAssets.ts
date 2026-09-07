@@ -26,6 +26,7 @@ export const LOGO_ASSETS: Record<string, LogoAsset> = {
   "blue-dart": { src: "/logos/bluedart.png", ratio: 1.05 },
   bluedart: { src: "/logos/bluedart.png", ratio: 1.05 },
   xpressbees: { src: "/logos/xpress%20bee.png", ratio: 1.16 },
+  ekart: { src: "/logos/ekart.png", ratio: 3.2 },
   // erp
   tally: { src: "/logos/tally.jpeg", ratio: 1 },
   sap: { src: "/logos/sap.webp", ratio: 2.02 },
