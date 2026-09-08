@@ -112,10 +112,10 @@ export function FaqAccordion({ faqs, className }: { faqs: FAQ[]; className?: str
         <AccordionItem key={i} value={`pricing-faq-${i}`}>
           <AccordionTrigger>{faq.question}</AccordionTrigger>
           <AccordionPanel className="text-sm/relaxed text-muted-foreground">
-            <div className="max-w-2xl">{faq.answer}</div>
+            <div className="max-w-2xl">{faq.answer}</div> 
           </AccordionPanel>
         </AccordionItem>
       ))}
     </Accordion>
   );
-}
+} 
