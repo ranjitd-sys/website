@@ -292,9 +292,14 @@ body {
 /* Editorial row: copy column + product UI column */
 .showcase-row {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(1.5rem, 3vw, 2.25rem);
   align-items: center;
+}
+/* Keep grid children constrained so wide UI (e.g. scrollable tables)
+   never stretches the track and clips at the viewport */
+.showcase-row > * {
+  min-width: 0;
 }
 @media (min-width: 64rem) {
   .showcase-row {
@@ -550,5 +555,39 @@ body {
   .micro-ping::after {
     transition: none;
     transform: none;
+  }
+}
+
+/* =============================================================
+   Mobile polish — shared across landing page components
+   ============================================================= */
+
+/* Reveal animations should never cause horizontal scroll on devices */
+@media (max-width: 48rem) {
+  .js .reveal {
+    transform: translateY(8px);
+  }
+}
+
+/* Comfortable reading width + rhythm on small phones */
+@media (max-width: 30rem) {
+  .h2 {
+    font-size: clamp(26px, 7.5vw, 32px);
+    line-height: 1.12;
+  }
+  .lead {
+    font-size: 15.5px;
+    line-height: 1.6;
+  }
+  .sec,
+  .sec-narrow {
+    padding-block: 2rem;
+  }
+}
+
+/* Table bands: allow horizontal scroll instead of squashing tables */
+@media (max-width: 48rem) {
+  .de-table-wrap {
+    -webkit-overflow-scrolling: touch;
   }
 }

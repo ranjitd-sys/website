@@ -7,27 +7,20 @@ const microNotes = [
 
 <section class="cta-banner-wrapper" id="get-started">
   <div class="cta-banner">
-    <div class="cta-banner-inner">
-      <!-- Left Group: Logo + Typography -->
-      <div class="cta-content-left">
-        <!-- Circular Logo Avatar -->
-        <div class="logo-avatar">
-          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" class="brand-icon">
-            <path d="M16 4L6 9.5V22.5L16 28L26 22.5V9.5L16 4Z" stroke="#533afd" stroke-width="2.5" stroke-linejoin="round"/>
-            <path d="M10 12L16 15.5L22 12" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10 16.5L16 20L22 16.5" stroke="#533afd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+    <!-- Soft violet atmosphere -->
+    <div class="cta-glow" aria-hidden="true"></div>
+    <div class="cta-grid" aria-hidden="true"></div>
 
-        <!-- Text Container -->
-        <div class="text-group">
-          <h2 class="banner-title">
-            Bring your ecommerce business<br />and your books together.
-          </h2>
-          <p class="banner-lead">
-            Connect your marketplaces. Understand your business.<br />Automate your accounting.
-          </p>
-        </div>
+    <div class="cta-banner-inner">
+      <!-- Left Group: Typography -->
+      <div class="cta-content-left">
+        <span class="cta-eyebrow">GET STARTED</span>
+        <h2 class="banner-title">
+          Bring your ecommerce business<br /> and your books together.
+        </h2>
+        <p class="banner-lead">
+          Connect your marketplaces. Understand your business. Automate your accounting.
+        </p>
       </div>
 
       <!-- Right Group: Buttons + Micro Copy -->
@@ -54,21 +47,50 @@ const microNotes = [
 <style>
   .cta-banner-wrapper {
     width: 100%;
-    padding: clamp(3rem, 6vh, 5rem) 0 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: var(--container-wide);
+    margin-inline: auto;
+    padding-inline: var(--space-gutter);
+    padding-block: clamp(0.75rem, 1.5vw, 1.25rem);
   }
 
-  /* Full-bleed dark band attached to the footer */
+  /* Dark rich DeepEcom blue-violet card */
   .cta-banner {
-    background: linear-gradient(135deg, #07091e 0%, #0d1238 50%, #171d54 100%);
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-    padding: clamp(2.5rem, 6vw, 4rem) 0;
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(135deg, #150f38 0%, #191040 45%, #241458 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: clamp(2rem, 4.5vw, 3.5rem);
+    overflow: hidden;
+  }
+
+  /* Violet atmosphere glows */
+  .cta-glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(62rem 30rem at 88% -18%, rgba(83, 58, 253, 0.45) 0%, rgba(83, 58, 253, 0) 55%),
+      radial-gradient(50rem 26rem at -15% 115%, rgba(124, 95, 255, 0.22) 0%, rgba(124, 95, 255, 0) 55%);
+    pointer-events: none;
+  }
+
+  /* Faint fintech grid texture */
+  .cta-grid {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.5;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 3.5rem 3.5rem;
+    -webkit-mask-image: radial-gradient(80% 90% at 70% 20%, #000 0%, transparent 75%);
+    mask-image: radial-gradient(80% 90% at 70% 20%, #000 0%, transparent 75%);
+    pointer-events: none;
   }
 
   .cta-banner-inner {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    padding-inline: var(--space-gutter);
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -85,54 +107,34 @@ const microNotes = [
   /* Left Section Layout */
   .cta-content-left {
     display: flex;
-    align-items: center;
-    gap: 1.75rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    max-width: 38rem;
   }
 
-  /* Circular White Logo Avatar */
-  .logo-avatar {
-    width: 4.25rem;
-    height: 4.25rem;
-    border-radius: 50%;
-    background: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
-  }
-
-  .brand-icon {
-    width: 2.25rem;
-    height: 2.25rem;
+  .cta-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #b9a9ff;
   }
 
   /* Text Styles */
-  .text-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
   .banner-title {
     color: #ffffff;
-    font-size: 1.625rem;
+    font-size: clamp(1.625rem, 4vw, 2.375rem);
     font-weight: 700;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
+    line-height: 1.14;
+    letter-spacing: -0.025em;
     margin: 0;
   }
 
-  @media (min-width: 48rem) {
-    .banner-title {
-      font-size: 1.875rem;
-    }
-  }
-
   .banner-lead {
-    color: #94a3b8;
-    font-size: 0.875rem;
-    line-height: 1.45;
+    color: #b6bdd3;
+    font-size: 0.9375rem;
+    line-height: 1.5;
     margin: 0;
   }
 
@@ -147,6 +149,7 @@ const microNotes = [
   @media (min-width: 64rem) {
     .cta-content-right {
       align-items: flex-end;
+      flex-shrink: 0;
     }
   }
 
@@ -160,22 +163,26 @@ const microNotes = [
 
   /* Solid Blue Primary Button */
   .btn-primary {
-    background: #533afd;
-    color: #ffffff;
+    background: #ffffff;
+    color: #150f38;
     font-size: 0.875rem;
     font-weight: 600;
-    padding: 0.75rem 1.35rem;
+    padding: 0.8rem 1.4rem;
     border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.85);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    transition: background 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 1px 2px rgba(9, 17, 32, 0.16), 0 10px 24px -12px rgba(0, 0, 0, 0.45);
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
   }
 
   .btn-primary:hover {
-    background: #462ce0;
+    background: #f0eefd;
+    color: #241458;
     transform: translateY(-1px);
+    box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.5);
   }
 
   .btn-primary .arrow {
@@ -187,18 +194,18 @@ const microNotes = [
   .btn-secondary {
     background: transparent;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     font-size: 0.875rem;
     font-weight: 500;
-    padding: 0.75rem 1.35rem;
+    padding: 0.8rem 1.4rem;
     border-radius: 8px;
     text-decoration: none;
     transition: border-color 0.2s ease, background 0.2s ease;
   }
 
   .btn-secondary:hover {
-    border-color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.55);
+    background: rgba(255, 255, 255, 0.06);
   }
 
   /* Micro Copy Footer Notes */
@@ -207,10 +214,21 @@ const microNotes = [
     align-items: center;
     gap: 0.4rem;
     font-size: 0.725rem;
-    color: #64748b;
+    color: #8b93ad;
   }
 
   .micro-notes .dot {
     font-size: 0.6rem;
+  }
+
+  @media (max-width: 30rem) {
+    .button-group {
+      width: 100%;
+    }
+    .button-group .btn-primary,
+    .button-group .btn-secondary {
+      flex: 1;
+      justify-content: center;
+    }
   }
 </style>

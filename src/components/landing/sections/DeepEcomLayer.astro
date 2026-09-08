@@ -46,7 +46,7 @@ const businessOutputs = [
       <div class="info-column reveal">
         <span class="eyebrow">THE DEEPECOM DIFFERENCE</span>
         <h2 class="title">We turn all of it into one financial picture.</h2>
-        <p class="lead">
+        <p class="lead">  
           DeepEcom captures, categorizes and reconciles every ecommerce event — so you get accurate insights and complete accounting, every time.
         </p>
       </div>
@@ -73,6 +73,7 @@ const businessOutputs = [
               </li>
             ))}
           </ul>
+          <div class="raw-more">And more marketplace events…</div>
         </div>
 
         <!-- ARROW 1 -->
@@ -252,6 +253,19 @@ const businessOutputs = [
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
   }
 
+  @media (max-width: 51.95rem) {
+    .card {
+      min-height: auto;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .difference-card {
+      padding: 1.5rem 1.25rem;
+      gap: 2rem;
+    }
+  }
+
   .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 15px 30px -5px rgba(15, 23, 42, 0.08);
@@ -299,6 +313,14 @@ const businessOutputs = [
     display: flex;
     flex-direction: column;
     gap: 0.7rem;
+  }
+
+  .raw-more {
+    display: none;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0 1.15rem 1rem;
   }
 
   .data-item {
@@ -454,5 +476,187 @@ const businessOutputs = [
   .audit-badge svg {
     width: 15px;
     height: 15px;
+  }
+
+  /* ----- Mobile: fit the whole flow within one viewport ----- */
+  @media (max-width: 40rem) {
+    .difference-section {
+      padding: 0.5rem 0;
+    }
+    .difference-card {
+      padding: 1rem 0.9rem;
+      gap: 0.9rem;
+    }
+    .info-column {
+      max-width: 24rem;
+    }
+    .eyebrow {
+      font-size: 0.65rem;
+    }
+    .title {
+      font-size: 1.3rem;
+      line-height: 1.2;
+      margin-top: 0.35rem;
+    }
+    .lead {
+      display: none;
+    }
+    /* Density the pipeline: tighter cards, fewer visible items */
+    .pipeline-column {
+      gap: 0.3rem;
+    }
+    .card {
+      border-radius: 14px;
+    }
+    .card-header {
+      padding: 0.6rem 0.6rem 0.25rem;
+      font-size: 0.58rem;
+    }
+    .data-list {
+      padding: 0.25rem 0.75rem 0.4rem;
+      gap: 0.25rem;
+    }
+    .data-item {
+      gap: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .icon-wrap svg {
+      width: 15px;
+      height: 15px;
+    }
+    /* Show only the first 4 raw events on mobile, plus a "…" cue */
+    .data-item:nth-child(n + 5) {
+      display: none;
+    }
+    .card .raw-more {
+      display: block;
+      padding: 0.2rem 0.75rem 0.5rem;
+    }
+    .engine-banner {
+      padding: 0.5rem 0.75rem;
+    }
+    .engine-logo {
+      font-size: 0.82rem;
+    }
+    .brand-mark {
+      width: 16px;
+      height: 16px;
+    }
+    .engine-body {
+      padding: 0.65rem;
+      gap: 0.55rem;
+    }
+    .feature-badge {
+      width: 23px;
+      height: 23px;
+    }
+    .feature-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+    .feature-item {
+      gap: 0.6rem;
+    }
+    .feature-title {
+      font-size: 0.7625rem;
+    }
+    .feature-desc {
+      font-size: 0.675rem;
+      line-height: 1.35;
+      margin-top: 0.1rem;
+    }
+    .output-list {
+      padding: 0.3rem 0.65rem;
+      gap: 0.27rem;
+    }
+    .output-item {
+      padding: 0.33rem 0.5rem;
+      gap: 0.45rem;
+      font-size: 0.72rem;
+      border-radius: 8px;
+    }
+    .output-item .icon-wrap {
+      width: 15px;
+      height: 15px;
+    }
+    .output-item .icon-wrap svg {
+      width: 13px;
+      height: 13px;
+    }
+    .audit-badge {
+      margin: 0.3rem 0.65rem 0.55rem;
+      padding: 0.4rem;
+      font-size: 0.625rem;
+      border-radius: 8px;
+    }
+    .pipeline-connector {
+      width: 16px;
+      height: 16px;
+      margin: 0;
+    }
+    .pipeline-connector svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  /* Very small phones: tighten further so the flow still fits on screen */
+  @media (max-width: 26rem) {
+    .difference-section {
+      padding: 0.25rem 0;
+    }
+    .difference-card {
+      gap: 0.5rem;
+      padding: 0.75rem 0.7rem;
+    }
+    .eyebrow {
+      font-size: 0.6rem;
+    }
+    .title {
+      font-size: 1.15rem;
+      margin-top: 0.25rem;
+    }
+    .pipeline-column {
+      gap: 0.22rem;
+    }
+    .feature-desc {
+      display: none;
+    }
+    .feature-item {
+      align-items: center;
+    }
+    .data-item {
+      font-size: 0.6875rem;
+    }
+    .output-item {
+      font-size: 0.65rem;
+    }
+    .engine-body {
+      gap: 0.35rem;
+      padding: 0.5rem;
+    }
+    .output-list {
+      gap: 0.2rem;
+    }
+    .audit-badge {
+      font-size: 0.575rem;
+      margin: 0.25rem 0.5rem 0.45rem;
+      padding: 0.33rem;
+    }
+    .audit-badge svg {
+      width: 12px;
+      height: 12px;
+    }
+    .card-header {
+      padding: 0.5rem 0.5rem 0.2rem;
+    }
+    .pipeline-connector {
+      width: 12px;
+      height: 12px;
+    }
+    .pipeline-connector svg {
+      width: 10px;
+      height: 10px;
+    }
   }
 </style>

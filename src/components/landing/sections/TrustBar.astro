@@ -36,6 +36,21 @@ const stats = [
     padding: 2.25rem 2rem;
     border-right: 1px solid var(--ink-100);
   }
+  @media (max-width: 48rem) {
+    .trust-cell {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "value label"
+        "value note";
+      column-gap: 1.25rem;
+      align-items: center;
+      padding: 1.4rem 0.25rem;
+    }
+    .trust-value { grid-area: value; }
+    .trust-label { grid-area: label; margin-top: 0; align-self: end; }
+    .trust-note { grid-area: note; margin-top: 0.15rem; align-self: start; }
+  }
   .trust-cell:last-child {
     border-right: 0;
   }

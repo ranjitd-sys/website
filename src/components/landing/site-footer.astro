@@ -79,14 +79,20 @@ const columns = [
   }
   .footer-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem 1.5rem;
     padding-block: clamp(3.5rem, 8vh, 5rem) 2.5rem;
+  }
+  .footer-grid .footer-brand {
+    grid-column: 1 / -1;
   }
   @media (min-width: 48rem) {
     .footer-grid {
       grid-template-columns: 1.7fr repeat(6, 1fr);
       gap: 2rem;
+    }
+    .footer-grid .footer-brand {
+      grid-column: auto;
     }
   }
   .footer-brand {

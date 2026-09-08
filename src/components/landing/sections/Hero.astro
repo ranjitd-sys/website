@@ -28,9 +28,12 @@ import DashboardPreview from "./DashboardPreview.astro"
 
   .hero-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 2.5rem;
     align-items: center;
+  }
+  .hero-grid > * {
+    min-width: 0;
   }
 
   @media (min-width: 64rem) {
@@ -196,14 +199,15 @@ import DashboardPreview from "./DashboardPreview.astro"
   /* ---------- Mobile & tablet tightening ---------- */
   @media (max-width: 48rem) {
     .hero-section {
-      padding-top: 4.25rem;
+      min-height: 0;
+      padding-top: 4.5rem;
       padding-bottom: 2.5rem;
     }
     .hero-grid {
-      gap: 2.25rem;
+      gap: 2rem;
     }
     .hero-title {
-      font-size: clamp(2.05rem, 8vw, 2.55rem);
+      font-size: clamp(2rem, 8.6vw, 2.5rem);
       line-height: 1.08;
     }
     .hero-lead {
@@ -215,6 +219,18 @@ import DashboardPreview from "./DashboardPreview.astro"
     }
     .hero-note {
       margin-top: 1.5rem;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .hero-section {
+      padding-bottom: 2rem;
+    }
+    .btn-primary-de,
+    .btn-secondary-de {
+      width: 100%;
+      justify-content: center;
+      padding-block: 0.8rem;
     }
   }
 

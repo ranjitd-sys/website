@@ -89,7 +89,7 @@ const prev =
 ---
 
 <div class:list={["dash-stage", !Astro.props.compact && "mt-14 border-y border-border py-14 md:mt-20 md:py-20"]}>
-  <div class="mx-auto max-w-6xl px-6">
+  <div class="dash-stage-inner mx-auto max-w-6xl px-6">
     <div
       class:list={["overflow-hidden rounded-2xl border border-border bg-card text-left shadow-card", Astro.props.compact ? "" : "reveal"]}
       role="img"
@@ -152,12 +152,12 @@ const prev =
       </div>
 
       <!-- body -->
-      <div class="flex flex-col gap-4 p-4 md:p-6">
+      <div class="flex flex-col gap-4 p-4 sm:p-5 md:p-6">
         <!-- KPIs -->
-        <div class="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+        <div class="dp-kpis grid grid-cols-2 gap-3.5 lg:grid-cols-4">
           {
             kpis.map((k) => (
-              <div class="rounded-xl border border-border bg-white p-4 transition hover:border-zinc-300 hover:shadow-sm">
+              <div class="dp-kpi rounded-xl border border-border bg-white p-3.5 transition hover:border-zinc-300 hover:shadow-sm sm:p-4">
                 <div class="text-[12.5px] font-medium text-muted-foreground">
                   {k.label}
                 </div>
@@ -380,3 +380,20 @@ const prev =
     </div>
   </div>
 </div>
+
+<style>
+  /* Tighten KPI cards on narrow phones so two columns never feel crushed */
+  @media (max-width: 25rem) {
+    .dp-kpis {
+      grid-template-columns: 1fr;
+    }
+    .dp-kpi {
+      padding: 1rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    .dash-stage-inner {
+      padding-inline: 0.75rem;
+    }
+  }
+</style>

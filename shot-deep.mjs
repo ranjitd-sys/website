@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 390, height: 844 } });
+await p.goto('http://localhost:4321/', { waitUntil: 'domcontentloaded' });
+await p.waitForTimeout(1500);
+const sec = await p.$('.difference-section');
+await sec.scrollIntoViewIfNeeded();
+await p.waitForTimeout(600);
+await sec.screenshot({ path: '/tmp/opencode/deeplayer-mobile.png' });
+await b.close();
+console.log('saved');

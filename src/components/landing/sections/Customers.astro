@@ -1,4 +1,6 @@
 ---
+import { customers } from "@/data/customers"
+
 const clientLogos = [
   { name: "GlobalBees", logo: "globalbees" },
   { name: "Shiprocket", logo: "shiprocket" },
@@ -17,11 +19,57 @@ const caseStudy = {
   href: "/case-studies/globalbees",
   image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800",
 };
+
+const teaserStories = customers.map((c) => ({
+  slug: c.slug,
+  logoText: c.logoText,
+  industry: c.industry,
+  headline: c.headline
+    .replace(/^how\s+/i, "")
+    .replace(/^how\s/i, "")
+    .replace(/\.$/, ""),
+  problem: c.problem,
+  featured: c.featured,
+}));
 ---
 
 <section class="customers-strip-wrapper" id="customers" aria-label="Customer Success & Case Studies">
   <div class="customers-card">
     
+    <!-- Mobile-only auto-rotating case study teaser -->
+    <div class="cs-teaser" aria-label="Featured customer case studies">
+      <span class="cs-teaser-eyebrow">CUSTOMERS</span>
+      <h3 class="cs-teaser-title">Real ecommerce businesses,<br />running on a clean financial picture.</h3>
+
+      <div class="cs-teaser-stage">
+        {teaserStories.map((story, i) => (
+          <a
+            href={`/case-studies/${story.slug}`}
+            class={`cs-slide${story.featured ? " is-featured" : ""}${i === 0 ? " is-active" : ""}`}
+            aria-hidden={i === 0 ? "false" : "true"}
+          >
+            <span class="cs-slide-tag">{story.industry}</span>
+            <span class="cs-slide-logo">{story.logoText}</span>
+            <p class="cs-slide-headline">{story.headline}.</p>
+            <span class="cs-slide-cta">Read their story <span class="arrow">→</span></span>
+          </a>
+        ))}
+      </div>
+
+      <div class="cs-teaser-dots" role="tablist" aria-label="Case study selector">
+        {teaserStories.map((story, i) => (
+          <button
+            type="button"
+            class={`cs-dot${i === 0 ? " is-active" : ""}`}
+            role="tab"
+            aria-label={`Show ${story.logoText} case study`}
+            aria-selected={i === 0 ? "true" : "false"}
+            data-index={i}
+          ></button>
+        ))}
+      </div>
+    </div>
+
     <div class="logos-group reveal">
       <span class="kicker">TRUSTED BY GROWING BUSINESSES</span>
       
@@ -92,6 +140,69 @@ const caseStudy = {
 
   </div>
 </section>
+
+<script>
+  (function () {
+    const stage = document.querySelector(".cs-teaser");
+    if (!stage) return;
+    const slides = Array.from(stage.querySelectorAll(".cs-slide"));
+    const dots = Array.from(stage.querySelectorAll(".cs-dot"));
+    if (!slides.length) return;
+
+    let current = 0;
+    let timer = null;
+    const INTERVAL = 5000;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function show(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        const active = i === current;
+        s.classList.toggle("is-active", active);
+        s.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+      dots.forEach((d, i) => {
+        d.classList.toggle("is-active", i === current);
+        d.setAttribute("aria-selected", i === current ? "true" : "false");
+      });
+    }
+
+    function start() {
+      if (reduceMotion || timer) return;
+      timer = window.setInterval(() => show(current + 1), INTERVAL);
+    }
+    function stop() {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener("click", () => {
+        stop();
+        show(i);
+        start();
+      });
+    });
+
+    stage.addEventListener("mouseenter", stop);
+    stage.addEventListener("mouseleave", start);
+    stage.addEventListener("touchstart", stop, { passive: true });
+
+    // Only auto-rotate after the slide is visible on screen
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) start();
+          else stop();
+        });
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(stage);
+  })();
+</script>
 
 <style>
   .customers-strip-wrapper {
@@ -313,5 +424,133 @@ const caseStudy = {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* ----- Mobile-only auto-rotating case study teaser ----- */
+  .cs-teaser {
+    display: none;
+  }
+  @media (max-width: 47.99rem) {
+    /* Swap the static featured card for the rotating teaser */
+    .cs-teaser {
+      display: block;
+      order: -1;
+      border-bottom: 1px solid var(--ink-100);
+      padding: 1.25rem 0 1rem;
+    }
+    .customers-card .case-study-card {
+      display: none;
+    }
+    .cs-teaser-eyebrow {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #533afd;
+    }
+    .cs-teaser-title {
+      margin: 0.4rem 0 1rem;
+      font-size: 1.2rem;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      font-weight: 800;
+      color: var(--ink-950);
+    }
+    .cs-teaser-stage {
+      position: relative;
+    }
+    .cs-slide {
+      display: none;
+      flex-direction: column;
+      gap: 0.55rem;
+      padding: 1.1rem 1.15rem;
+      border: 1px solid var(--ink-200, #e2e8f0);
+      border-radius: 16px;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(83, 58, 253, 0) 0 2px,
+        rgba(83, 58, 253, 0.03) 2px 34px
+      );
+      background-color: #ffffff;
+      box-shadow: 0 1px 2px rgba(9, 17, 32, 0.04), 0 8px 22px -12px rgba(11, 17, 32, 0.12);
+      text-decoration: none;
+      color: inherit;
+    }
+    .cs-slide.is-active {
+      display: flex;
+      animation: cs-slide-in 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cs-slide.is-featured {
+      border-color: var(--brand-200);
+      background-image: repeating-linear-gradient(
+          0deg,
+          rgba(83, 58, 253, 0) 0 2px,
+          rgba(83, 58, 253, 0.04) 2px 34px
+        ),
+        linear-gradient(160deg, #ffe9f0 0%, #ffffff 55%);
+    }
+    .cs-slide-tag {
+      align-self: flex-start;
+      font-size: 0.625rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brand-700);
+      background: var(--brand-50);
+      border: 1px solid var(--brand-100);
+      border-radius: 999px;
+      padding: 0.25rem 0.6rem;
+    }
+    .cs-slide-logo {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--ink-950);
+    }
+    .cs-slide-headline {
+      margin: 0;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      font-weight: 600;
+      color: var(--ink-700);
+    }
+    .cs-slide-cta {
+      margin-top: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #533afd;
+    }
+    .cs-slide-cta .arrow {
+      font-size: 0.9rem;
+    }
+    .cs-teaser-dots {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 0.85rem;
+    }
+    .cs-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: none;
+      padding: 0;
+      background: #d7d9e4;
+      cursor: pointer;
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+    .cs-dot.is-active {
+      width: 22px;
+      background: #533afd;
+    }
+  }
+  @keyframes cs-slide-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cs-slide.is-active {
+      animation: none;
+    }
   }
 </style>

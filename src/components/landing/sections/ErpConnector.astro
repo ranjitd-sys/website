@@ -91,6 +91,12 @@ const accountingEntries = [
     -webkit-font-smoothing: antialiased;
   }
 
+  @media (max-width: 30rem) {
+    .erp-card {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+
   /* Left Copy */
   .showcase-copy {
     display: flex;
@@ -178,6 +184,14 @@ const accountingEntries = [
   .table-container {
     padding: 0 clamp(1.25rem, 2.5vw, 1.75rem);
     margin-top: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .table-header,
+  .table-row {
+    min-width: 34rem;
   }
 
   .table-header {
