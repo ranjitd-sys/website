@@ -1,0 +1,37 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, ArrowLeft } from "lucide-react"
+---
+
+<PageLayout
+  title="Page not found — DeepEcom"
+  description="The page you're looking for could not be found. Explore DeepEcom Platform, ERP Connector or browse our ecommerce accounting resources."
+  ogKey="landing"
+>
+
+  <section class="py-24 sm:py-32">
+    <div class="mx-auto max-w-2xl px-6 text-center">
+      <div class="mx-auto mb-6 grid h-20 w-20 place-items-center rounded-2xl bg-brand-50 text-4xl font-extrabold text-brand-600">
+        404
+      </div>
+      <span class="eyebrow">PAGE NOT FOUND</span>
+      <h1 class="mt-4 text-4xl font-bold tracking-tight text-ink-950 sm:text-5xl">
+        This page isn't in your books.
+      </h1>
+      <p class="mx-auto mt-4 max-w-md text-lg leading-relaxed text-ink-500">
+        The page you're looking for may have moved or never existed. Let's get you back to clean numbers.
+      </p>
+      <div class="mt-10 flex flex-wrap items-center justify-center gap-3">
+        <a href="/" class={buttonVariants({ size: "lg" })}>
+          <ArrowLeft size={16} />
+          Back to home
+        </a>
+        <a href="/platform" class={buttonVariants({ variant: "outline", size: "lg" })}>
+          Explore Platform
+          <ArrowRight size={16} />
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>

@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Disallow: /login
+Disallow: /api/
+Disallow: /og/
+
+Sitemap: https://deepecom.com/sitemap-index.xml

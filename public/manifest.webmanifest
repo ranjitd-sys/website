@@ -1,0 +1,21 @@
+{
+  "name": "DeepEcom",
+  "short_name": "DeepEcom",
+  "description": "The accounting layer for ecommerce. Connect marketplaces, understand profitability, reconcile payments and account every transaction in your ERP.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#150f38",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

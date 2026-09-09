@@ -71,6 +71,26 @@ const faqs = [
 <PageLayout
   title="Ecommerce Integrations — DeepEcom"
   description="DeepEcom connects your marketplaces, shipping partners, payment gateways and ERP into one financial layer. Amazon, Flipkart, Shopify, Myntra, Tally, SAP, Zoho and more."
+  ogKey="integrations"
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Integrations", item: "https://deepecom.com/integrations" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
 
   <!-- 01 HERO -->

@@ -38,6 +38,35 @@ const faqs = [
 <PageLayout
   title="ERP Connector — Make your ERP ecommerce-ready | DeepEcom"
   description="DeepEcom ERP Connector turns marketplace orders, GST, charges, returns, inventory and stock transfers into detailed accounting entries posted into Tally, SAP or Zoho."
+  ogKey="erp"
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "ERP Connector", item: "https://deepecom.com/erp-connector" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "DeepEcom ERP Connector",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: "DeepEcom ERP Connector turns marketplace orders, GST, charges, returns, inventory and stock transfers into detailed accounting entries posted into Tally, SAP or Zoho.",
+      publisher: { "@type": "Organization", name: "DeepEcom Technologies Pvt Ltd" },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- 01 — HERO -->
   <ErpConnectorHero />

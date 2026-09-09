@@ -51,6 +51,36 @@ const faqs = [
 <PageLayout
   title="Platform — Understand Your Ecommerce Business | DeepEcom"
   description="DeepEcom Platform connects your marketplaces and turns fragmented ecommerce data into one clear view of sales, profitability, payments and performance."
+  ogKey="platform"
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Platform", item: "https://deepecom.com/platform" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "DeepEcom Platform",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: "DeepEcom Platform connects your marketplaces and turns fragmented ecommerce data into one clear view of sales, profitability, payments and performance.",
+      offers: { "@type": "Offer", price: "1000", priceCurrency: "INR" },
+      publisher: { "@type": "Organization", name: "DeepEcom Technologies Pvt Ltd" },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- 01 — HERO -->
   <PlatformHero />

@@ -9,12 +9,15 @@ interface Props {
   description?: string
   /** page key used for og image path (optional) */
   ogKey?: string
+  /** additional JSON-LD objects to inject into <head> */
+  structuredData?: Array<Record<string, unknown>>
 }
 
 const {
   title = "DeepEcom — Ecommerce Finance Control Center",
   description = "DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting.",
   ogKey = "landing",
+  structuredData = [],
 } = Astro.props
 
 const site = Astro.site ?? new URL("http://localhost:4321")
@@ -33,15 +36,28 @@ const isHome = pathname === "/"
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:site_name" content="DeepEcom" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@deepecom" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#150f38" />
+    <meta name="robots" content="index, follow" />
+    {
+      structuredData.map((data) => (
+        <script type="application/ld+json" set:html={JSON.stringify(data)} />
+      ))
+    }
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

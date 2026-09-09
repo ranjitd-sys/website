@@ -84,7 +84,7 @@ Our build rules are explicit:
 
 - *Astro-first; static HTML; optimized images; minimal JS.*
 - *Do not introduce React unnecessarily.*
-- *Do not introduce heavy frontend libraries unless necessary.*
+- *Do not introduce heavy frontend libraries unless necessary.*# Protects the pod from running out of memory
 - *Product UI dominance; editorial layout; premium financial-infrastructure feel.*
 
 `@deepecom/ui` is **inherently React-heavy**: every used component ships `react-dom` hydration and its dependency tree (`recharts`, `visx`, `lexical`, `cmdk`, `shiki`, `d3-*`, `@base-ui/react`, `motion`). It's the *opposite* of the static-first approach the site is optimized for.

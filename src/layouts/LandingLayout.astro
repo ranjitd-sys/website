@@ -24,10 +24,18 @@ const ogImage = new URL("/og/landing.png", site)
 const jsonLd = [
   {
     "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "DeepEcom",
+    url: site.toString(),
+    description,
+  },
+  {
+    "@context": "https://schema.org",
     "@type": "Organization",
     name: "DeepEcom",
     url: site.toString(),
-    logo: new URL("/favicon.ico", site).toString(),
+    logo: new URL("/logo.svg", site).toString(),
+    sameAs: [],
     address: {
       "@type": "PostalAddress",
       streetAddress: "Koregaon Park",
@@ -63,16 +71,25 @@ const jsonLd = [
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta property="og:type" content="website" />
+    <meta name="google-site-verification" content="YDGRcmcz2FwyQ0wr6418MmI3IZH_A-ah6BQRNrrfv9g"/>
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:site_name" content="DeepEcom" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@deepecom" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#150f38" />
+    <meta name="robots" content="index, follow" />
     <script is:inline>
       document.documentElement.classList.add("js")
     </script>
