@@ -10,7 +10,7 @@ import vercel from "@astrojs/vercel"
 const GoogleFontProvider = fontProviders.google()
 
 export default defineConfig({
-  site: "https://deepecom-gules.vercel.app/",
+  site: "https://deepecom-app.vercel.app/",
    output: "server",
   adapter: vercel(),
   fonts: [

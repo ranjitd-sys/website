@@ -5,4 +5,4 @@ Disallow: /login
 Disallow: /api/
 Disallow: /og/
 
-Sitemap: https://deepecom.com/sitemap-index.xml
+Sitemap: https://deepecom-app.vercel.app/sitemap-index.xml
