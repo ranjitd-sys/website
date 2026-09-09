@@ -1,0 +1,743 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import PageHero from "@/components/pages/shared/PageHero.astro"
+import CtaBand from "@/components/pages/shared/CtaBand.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, LogOut } from "lucide-react"
+import { parseSignedSession } from "@/lib/session"
+import { getRepoTree } from "@/lib/github"
+
+const user = parseSignedSession(Astro.cookies.get("user_session")?.value)
+
+const isPhase1Done = user?.phase1Completed ?? false
+const analysisStatus = user?.analysisStatus || "idle"
+const isRepoLinked = Boolean(user?.selectedRepo)
+
+let repoFiles: string[] = []
+
+if (analysisStatus === "done" && user?.selectedRepo && user?.token) {
+  const [owner, repo] = user.selectedRepo.split("/")
+  try {
+    const tree = await getRepoTree(owner, repo, user.token)
+    repoFiles = tree
+      .filter(
+        (item) =>
+          item.type === "blob" &&
+          (item.size ?? 0) < 100_000 &&
+          /\.(ts|tsx|js|jsx|json|md|prisma)$/.test(item.path) &&
+          !item.path.includes("node_modules"),
+      )
+      .map((item) => item.path)
+  } catch (err) {
+    console.error("Failed to load repo files:", err)
+  }
+}
+
+const values = [
+  "Understand ecommerce finance. Not just code. We work where money and software meet.",
+  "Ship real infrastructure. The accounting layer touches marketplaces, payments and ERPs every day.",
+  "Own the detail. Accuracy in accounting is craftsmanship — we treat it that way.",
+  "Build for scale. Thousands of orders become clean financial data; we make it feel simple.",
+]
+
+const modules = [
+  { num: "01", title: "Algebraic Data Types", desc: "Options, Eithers and structural composition.", time: "~1.5 hrs" },
+  { num: "02", title: "Error Management", desc: "Controlled failure, retries and recovery.", time: "~1 hr" },
+  { num: "03", title: "Effectful Concurrency", desc: "Fibers, scheduling and parallel workflows.", time: "~1.5 hrs" },
+]
+---
+
+<PageLayout
+  title="Careers & Institute | DeepEcom"
+  description="Master the stack, analyze your code and join the team building the accounting layer for ecommerce."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Careers", item: "https://deepecom.com/careers" },
+      ],
+    },
+  ]}
+>
+  <PageHero
+    eyebrow="CAREERS & INSTITUTE"
+    title="Master the stack. Analyze your code."
+    lead="We bypass traditional resume screening. Complete our functional curriculum and submit your codebase for automated analysis — then talk to the team directly."
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="#roles" class={buttonVariants({ size: "lg" })}>
+        View Open Roles
+        <ArrowRight size={16} />
+      </a>
+      <a href="mailto:careers@deepecom.com" class={buttonVariants({ variant: "outline", size: "lg" })}>
+        Get in Touch
+      </a>
+    </div>
+  </PageHero>
+
+  <!-- ACCOUNT -->
+  {user && (
+    <section>
+      <div class="sec">
+        <div class="flex flex-col gap-4 rounded-2xl border border-ink-200 bg-white p-4 shadow-card reveal sm:flex-row sm:items-center sm:justify-between sm:p-5">
+          <div class="flex items-center gap-3.5">
+            <img
+              src={user.avatar}
+              alt={`${user.name ?? user.login} GitHub avatar`}
+              width={40}
+              height={40}
+              class="h-10 w-10 rounded-full border border-ink-200"
+            />
+            <div>
+              <p class="text-sm font-semibold leading-tight text-ink-900">{user.name ?? user.login}</p>
+              <p class="text-xs text-ink-400">@{user.login} · GitHub connected</p>
+            </div>
+          </div>
+          <a href="/api/auth/logout" class={buttonVariants({ variant: "outline", size: "sm" })}>
+            <LogOut size={14} />
+            Logout
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- VALUES -->
+  <section>
+    <div class="sec">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {values.map((v) => (
+          <div class="flex flex-col gap-2 rounded-xl border border-ink-200 bg-white p-5 shadow-card transition hover:border-ink-300 hover:shadow-md">
+            <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-50 text-brand-600">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 2 7l10 5 10-5-10-5zM2 12l10 5 10-5M2 17l10 5 10-5" /></svg>
+            </span>
+            <p class="text-sm leading-relaxed text-ink-600">{v}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS + PROGRESS TRACKER -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">YOUR PATH</span>
+        <h2 class="h2-md mt-4">Three steps to a direct conversation.</h2>
+        <p class="lead mt-5">No gatekeeping. Show your work, and the team will see it on merit.</p>
+      </div>
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-3">
+        <div class={`flex flex-col gap-2 rounded-xl border p-5 transition-colors ${user ? "border-brand-200 bg-brand-50/40" : "border-ink-200 bg-white"}`}>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink-400">Step 01</span>
+          <span class={`flex items-center gap-2 text-sm font-semibold ${user ? "text-brand-700" : "text-ink-800"}`}>
+            {user ? "GitHub Connected" : "Connect Account"}
+          </span>
+          <p class="text-xs leading-relaxed text-ink-500">Authenticate once to unlock the curriculum and evaluation.</p>
+        </div>
+
+        <div class={`flex flex-col gap-2 rounded-xl border p-5 transition-colors ${isPhase1Done ? "border-brand-200 bg-brand-50/40" : user ? "border-ink-300 bg-white" : "border-ink-200 bg-white opacity-60"}`}>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink-400">Step 02</span>
+          <span class={`flex items-center gap-2 text-sm font-semibold ${isPhase1Done ? "text-brand-700" : user ? "text-ink-800" : "text-ink-400"}`}>
+            {isPhase1Done ? "Track Finished" : "Complete Track"}
+          </span>
+          <p class="text-xs leading-relaxed text-ink-500">Finish the Effect-TS fundamentals module to unlock submission.</p>
+        </div>
+
+        <div class={`flex flex-col gap-2 rounded-xl border p-5 transition-colors ${analysisStatus === "done" ? "border-brand-200 bg-brand-50/40" : isPhase1Done ? "border-ink-300 bg-white" : "border-ink-200 bg-white opacity-60"}`}>
+          <span class="font-mono text-[10px] uppercase tracking-widest text-ink-400">Step 03</span>
+          <span class={`flex items-center gap-2 text-sm font-semibold ${analysisStatus === "done" ? "text-brand-700" : isPhase1Done ? "text-ink-800" : "text-ink-400"}`}>
+            {analysisStatus === "done" ? "Code Analyzed" : "Submit Repo"}
+          </span>
+          <p class="text-xs leading-relaxed text-ink-500">Link your repository for automated static analysis and a score.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 1: CURRICULUM -->
+  <section id="the-curriculum">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">THE CURRICULUM</span>
+        <h2 class="h2-md mt-4">Prove the fundamentals. Then show your code.</h2>
+        <p class="lead mt-5">One required track — Effect-TS — built for the way we actually work. Finish it to unlock repository submission.</p>
+      </div>
+
+      <div class="relative mt-10 overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card reveal">
+        <div class="h-0.5 w-full bg-gradient-to-r from-brand-500 to-brand-300"></div>
+
+        <div class="flex items-center justify-between border-b border-ink-200 bg-gradient-to-b from-ink-50 to-white px-6 py-4">
+          <div class="flex items-center gap-3">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-brand-50 text-brand-600">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>
+            </span>
+            <span class="font-mono text-[11px] uppercase tracking-widest text-ink-500">Phase 01 / Required Curriculum</span>
+          </div>
+          <span class={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${user ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-400"}`}>
+            {user ? "Unlocked" : "Locked"}
+          </span>
+        </div>
+
+        <div class="relative">
+          <div class={`transition-all duration-700 ${!user ? "pointer-events-none select-none opacity-30 blur-[6px]" : ""}`}>
+            <div class="grid gap-8 p-6 sm:p-8 lg:grid-cols-[1.1fr_1fr] lg:gap-10">
+              <!-- LEFT — intro + CTA -->
+              <div class="flex flex-col">
+                <div class="flex flex-wrap items-center gap-3">
+                  <span class="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+                  </span>
+                  <div>
+                    <h3 class="text-lg font-semibold tracking-tight text-ink-900">Effect-TS Fundamentals</h3>
+                    <p class="text-xs text-ink-400">Functional programming for real systems</p>
+                  </div>
+                  {isPhase1Done && (
+                    <span class="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-700">Passed</span>
+                  )}
+                </div>
+
+                <p class="mt-5 text-sm leading-relaxed text-ink-500">
+                  Master algebraic data types, error management and concurrency models in Effect-TS. Completing this module unlocks repository submission and the evaluation pipeline.
+                </p>
+
+                <div class="mt-5 flex flex-wrap gap-2">
+                  <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                    <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+                    3 Modules
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                    <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14" /></svg>
+                    ~4 Hours
+                  </span>
+                  <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                    <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+                    Effect-TS · Node
+                  </span>
+                </div>
+
+                <div class="mt-auto pt-8">
+                  <a
+                    href="/careers/effect-ts"
+                    class={`inline-flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-semibold shadow-sm transition-all sm:w-auto ${isPhase1Done ? "border border-ink-200 bg-white text-ink-800 hover:bg-ink-50" : "bg-brand-500 !text-white hover:bg-brand-600"}`}
+                  >
+                    {isPhase1Done ? "Review Track" : "Start Track"}
+                    <ArrowRight size={16} className="text-inherit opacity-70" />
+                  </a>
+                </div>
+              </div>
+
+              <!-- RIGHT — curriculum outline -->
+              <div class="flex flex-col rounded-xl border border-ink-200 bg-ink-50/50 p-5">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-semibold uppercase tracking-widest text-ink-700">Curriculum Outline</span>
+                  <span class="font-mono text-[10px] uppercase tracking-widest text-ink-400">3 modules</span>
+                </div>
+
+                <ol class="mt-4 flex flex-col gap-3">
+                  {modules.map((m) => (
+                    <li class={`flex items-start gap-3 rounded-lg border bg-white p-3.5 transition-colors ${isPhase1Done ? "border-brand-200" : "border-ink-200"}`}>
+                      <span class={`mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${isPhase1Done ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-500"}`}>
+                        {isPhase1Done ? (
+                          <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg>
+                        ) : (
+                          m.num
+                        )}
+                      </span>
+                      <span class="min-w-0">
+                        <span class="flex items-baseline justify-between gap-2">
+                          <span class="block text-sm font-semibold text-ink-800">{m.title}</span>
+                          <span class="shrink-0 font-mono text-[10px] text-ink-400">{m.time}</span>
+                        </span>
+                        <span class="mt-0.5 block text-xs leading-relaxed text-ink-400">{m.desc}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+
+                <div class="mt-auto flex items-center gap-3 rounded-lg border border-ink-200 bg-white px-3.5 py-3 pt-3">
+                  {isPhase1Done ? (
+                    <svg class="h-4 w-4 flex-none text-success-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
+                  ) : (
+                    <svg class="h-4 w-4 flex-none text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><line x1="3" y1="6" x2="21" y2="6" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
+                  )}
+                  <span class="text-xs leading-relaxed text-ink-500">
+                    {isPhase1Done ? "Track complete — repository submission unlocked." : "Completing all three modules unlocks Phase 02."}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {!user && (
+            <div class="absolute inset-0 z-10 flex flex-col items-center justify-center bg-white/50 p-6 text-center backdrop-blur-sm">
+              <div class="mb-4 grid h-12 w-12 place-items-center rounded-xl border border-ink-200 bg-white text-brand-500 shadow-sm">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </div>
+              <h4 class="mb-2 text-sm font-semibold text-ink-900">Curriculum module locked</h4>
+              <p class="mx-auto mb-6 max-w-sm text-sm text-ink-500">Connect your GitHub account to unlock Effect-TS Fundamentals and start the assessment.</p>
+              <a
+                href="/api/auth/github"
+                class={buttonVariants({ size: "lg" })}
+              >
+                Authenticate via GitHub
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PHASE 2: REPO SUBMISSION -->
+  <section id="the-evaluation" class="section-band">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">THE EVALUATION</span>
+        <h2 class="h2-md mt-4">Show your architecture. Get scored on merit.</h2>
+        <p class="lead mt-5">Link a repository and run the automated analysis pipeline — architecture, AST patterns and Effect-TS compliance — instead of a resume screen.</p>
+      </div>
+
+      <div class="relative mt-10 overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card reveal">
+        <div class="h-0.5 w-full bg-gradient-to-r from-brand-300 to-brand-500"></div>
+        <div class="flex items-center justify-between border-b border-ink-200 bg-gradient-to-b from-ink-50 to-white px-6 py-4">
+          <div class="flex items-center gap-3">
+            <span class="grid h-8 w-8 place-items-center rounded-lg bg-brand-50 text-brand-600">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z" /></svg>
+            </span>
+            <span class="font-mono text-[11px] uppercase tracking-widest text-ink-500">Phase 02 / Repository Analysis</span>
+          </div>
+          <span class={`rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${isPhase1Done ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-400"}`}>
+            {isPhase1Done ? "Unlocked" : "Locked"}
+          </span>
+        </div>
+
+        <div class="p-6 sm:p-8">
+          {!isPhase1Done ? (
+            <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-ink-200 bg-ink-50/40 px-6 py-14 text-center">
+              <span class="mb-5 grid h-12 w-12 place-items-center rounded-xl border border-ink-200 bg-white text-brand-500 shadow-sm">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </span>
+              <h4 class="mb-1 text-sm font-semibold text-ink-900">Repository submission locked</h4>
+              <p class="mx-auto max-w-sm text-sm text-ink-500 mb-4">
+                Complete <strong class="font-semibold text-ink-700">Phase 01: Effect-TS Fundamentals</strong> above to unlock the capability evaluation engine.
+              </p>
+              <a
+                href="#the-curriculum"
+                class="inline-flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-5 py-2.5 text-sm font-semibold text-ink-800 shadow-sm transition-colors hover:bg-ink-50"
+              >
+                Go to Phase 01
+                <ArrowRight size={16} className="text-ink-400" />
+              </a>
+            </div>
+          ) : (
+            <div class="space-y-6">
+              <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <div>
+                  <h4 class="mb-1 text-lg font-semibold tracking-tight text-ink-900">Static codebase assessment</h4>
+                  <p class="text-sm text-ink-500">Select a GitHub repository that demonstrates your implementation patterns and architecture.</p>
+                </div>
+                <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-ink-200 bg-white px-3 py-1 text-xs font-medium text-ink-500">
+                  <svg class="h-3.5 w-3.5 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>
+                  Source: GitHub
+                </span>
+              </div>
+
+              <div class="grid gap-2 sm:grid-cols-3">
+                <div class={`flex items-center gap-2.5 rounded-lg border px-3.5 py-3 ${isRepoLinked && analysisStatus === "done" ? "border-brand-200 bg-brand-50/40 text-brand-700" : isRepoLinked ? "border-ink-200 bg-white" : "border-ink-200 bg-white opacity-60"}`}>
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${isRepoLinked ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-400"}`}>
+                    {isRepoLinked ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "01"}
+                  </span>
+                  <span class="text-xs font-semibold text-ink-700">Link repository</span>
+                </div>
+                <div class={`flex items-center gap-2.5 rounded-lg border px-3.5 py-3 ${analysisStatus === "done" ? "border-brand-200 bg-brand-50/40 text-brand-700" : analysisStatus === "running" ? "border-ink-300 bg-white" : "border-ink-200 bg-white opacity-60"}`}>
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${analysisStatus === "done" ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-400"}`}>
+                    {analysisStatus === "done" ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "02"}
+                  </span>
+                  <span class="text-xs font-semibold text-ink-700">Automated analysis</span>
+                </div>
+                <div class={`flex items-center gap-2.5 rounded-lg border px-3.5 py-3 ${analysisStatus === "done" ? "border-brand-200 bg-brand-50/40 text-brand-700" : "border-ink-200 bg-white opacity-60"}`}>
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${analysisStatus === "done" ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-400"}`}>
+                    {analysisStatus === "done" ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "03"}
+                  </span>
+                  <span class="text-xs font-semibold text-ink-700">Score &amp; inspect</span>
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-ink-200 bg-ink-50/40 p-4 sm:p-5">
+                <label class="mb-3 block text-xs font-semibold uppercase tracking-wider text-ink-500">Target Repository</label>
+
+                {!isRepoLinked ? (
+                  <div class="flex flex-col gap-3 sm:flex-row">
+                    <select
+                      id="repo-select"
+                      class="flex-1 cursor-pointer appearance-none rounded-lg border border-ink-300 bg-white px-4 py-2.5 text-sm text-ink-800 outline-none transition-all focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                    >
+                      <option value="">Fetching your repositories...</option>
+                    </select>
+                    <button
+                      id="save-repo-btn"
+                      class="shrink-0 rounded-lg bg-brand-500 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-600"
+                    >
+                      Link Repository
+                    </button>
+                  </div>
+                ) : (
+                  <div class="flex flex-col justify-between gap-4 rounded-lg border border-ink-200 bg-white px-4 py-3 sm:flex-row sm:items-center">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                      <svg class="h-5 w-5 shrink-0 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
+                      <span class="truncate font-mono text-sm tracking-wide text-ink-700">{user?.selectedRepo}</span>
+                    </div>
+                    <button
+                      id="change-repo-btn"
+                      class="shrink-0 rounded-md border border-ink-200 bg-white px-3 py-1.5 text-xs font-medium text-ink-500 transition-colors hover:bg-ink-50 hover:text-ink-800"
+                    >
+                      Change Repo
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {isRepoLinked && (
+                <div class="space-y-4 pt-2">
+                  {analysisStatus === "idle" && (
+                    <div class="flex flex-col justify-between gap-4 rounded-xl border border-ink-200 bg-white p-4 sm:flex-row sm:items-center sm:p-5">
+                      <div class="flex items-center gap-3 text-sm text-ink-700">
+                        <span class="relative flex h-3 w-3">
+                          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-brand-500 opacity-20"></span>
+                          <span class="relative inline-flex h-3 w-3 rounded-full border border-brand-500 bg-brand-500/50"></span>
+                        </span>
+                        Ready for automated inspection.
+                      </div>
+                      <button
+                        id="run-analysis-btn"
+                        class="shrink-0 rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-brand-600"
+                      >
+                        Run Analysis Pipeline
+                      </button>
+                    </div>
+                  )}
+
+                  {analysisStatus === "running" && (
+                    <div class="flex items-center gap-4 rounded-xl border border-ink-200 bg-ink-50/50 p-5 text-sm font-medium text-ink-700">
+                      <svg class="h-5 w-5 animate-spin text-brand-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                      <span>Evaluating architecture, AST patterns and Effect-TS compliance...</span>
+                    </div>
+                  )}
+
+                  {analysisStatus === "done" && (
+                    <div class="space-y-4">
+                      <div class="flex flex-col justify-between gap-4 rounded-xl border border-brand-200 bg-brand-50/40 p-5 sm:flex-row sm:items-center">
+                        <div class="space-y-1">
+                          <span class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-700">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            Analysis Complete
+                          </span>
+                          <div class="text-3xl font-bold text-ink-900">
+                            94<span class="text-lg text-brand-500/60">/100</span>
+                          </div>
+                        </div>
+                        <a
+                          href="/careers/analysis-report"
+                          class={buttonVariants({ variant: "outline", size: "lg" })}
+                        >
+                          Inspect Report
+                          <ArrowRight size={16} />
+                        </a>
+                      </div>
+
+                      <div class="overflow-hidden rounded-xl border border-ink-200 bg-white shadow-sm">
+                        <div class="flex items-center justify-between border-b border-ink-200 bg-gradient-to-b from-ink-50 to-white px-4 py-2.5">
+                          <span class="flex items-center gap-2 text-xs font-semibold text-ink-700">
+                            <svg class="h-4 w-4 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                            Scanned Files
+                          </span>
+                          <span class="rounded bg-ink-100 px-2 py-0.5 font-mono text-[10px] text-ink-500">{repoFiles.length} files</span>
+                        </div>
+                        <ul class="custom-scrollbar max-h-64 divide-y divide-ink-100 overflow-y-auto font-mono text-xs">
+                          {repoFiles.length > 0 ? (
+                            repoFiles.map((filePath) => (
+                              <li class="flex items-center gap-3 px-4 py-2.5 text-ink-500 transition-colors hover:bg-ink-50 hover:text-ink-800">
+                                <svg class="h-3.5 w-3.5 shrink-0 text-ink-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+                                <span class="truncate">{filePath}</span>
+                              </li>
+                            ))
+                          ) : (
+                            <li class="px-4 py-4 text-center text-ink-400">No matching source files found.</li>
+                          )}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  <div id="analysis-output" class="custom-scrollbar mt-4 hidden overflow-hidden rounded-xl border border-ink-200 bg-white shadow-sm">
+                    <div class="flex items-center justify-between border-b border-ink-200 bg-gradient-to-b from-ink-50 to-white px-4 py-2.5">
+                      <span class="flex items-center gap-2 text-xs font-semibold text-ink-700">
+                        <svg class="h-4 w-4 text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        Scanning Files...
+                      </span>
+                      <span id="file-count-badge" class="rounded bg-ink-100 px-2 py-0.5 font-mono text-[10px] text-ink-500">0 files</span>
+                    </div>
+                    <ul id="file-list" class="custom-scrollbar max-h-64 divide-y divide-ink-100 overflow-y-auto font-mono text-xs"></ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPEN ROLES -->
+  <section id="roles">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">OPEN POSITIONS</span>
+        <h2 class="h2-md mt-4">Come build the accounting layer.</h2>
+        <p class="lead mt-5">Every role starts with the same path: prove the work, get a direct conversation.</p>
+      </div>
+
+      <div class="mt-10 grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <!-- Featured role -->
+        <div class="relative overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card transition-all hover:border-ink-300 hover:shadow-md reveal">
+          <div class="h-0.5 w-full bg-gradient-to-r from-brand-500 to-brand-300"></div>
+          <div class="flex items-center justify-between border-b border-ink-200 bg-gradient-to-b from-ink-50 to-white px-6 py-3.5">
+            <div class="flex items-center gap-3">
+              <span class="grid h-8 w-8 place-items-center rounded-lg bg-brand-50 text-brand-600">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
+              </span>
+              <span class="font-mono text-[11px] uppercase tracking-widest text-ink-500">Engineering</span>
+            </div>
+            <span class="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-brand-700">Hiring</span>
+          </div>
+
+          <div class="p-6 sm:p-8">
+            <h3 class="text-xl font-semibold tracking-tight text-ink-900">Systems Backend Engineer</h3>
+            <p class="mt-2 text-sm text-ink-500">Effect-TS, Distributed Systems, Cloud Native Infrastructure.</p>
+
+            <div class="mt-5 flex flex-wrap gap-2">
+              <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>
+                Full-time
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                Remote
+              </span>
+              <span class="inline-flex items-center gap-1.5 rounded-md border border-ink-200 bg-white px-2.5 py-1 text-xs font-medium text-ink-500">
+                <svg class="h-3.5 w-3.5 text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+                Direct hiring
+              </span>
+            </div>
+
+            <div class="mt-6 rounded-xl border border-ink-200 bg-ink-50/40 p-5">
+              <span class="text-xs font-semibold uppercase tracking-widest text-ink-700">What the role touches</span>
+              <ul class="mt-3 flex flex-col gap-2.5">
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-md bg-brand-50 text-brand-600">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" /></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed text-ink-600">Effect-TS across the core pipeline — deterministic, typed infrastructure.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-md bg-brand-50 text-brand-600">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><line x1="9" y1="1" x2="9" y2="4" /><line x1="15" y1="1" x2="15" y2="4" /><line x1="9" y1="20" x2="9" y2="23" /><line x1="15" y1="20" x2="15" y2="23" /><line x1="20" y1="9" x2="23" y2="9" /><line x1="20" y1="14" x2="23" y2="14" /><line x1="1" y1="9" x2="4" y2="9" /><line x1="1" y1="14" x2="4" y2="14" /></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed text-ink-600">Distributed systems moving orders, settlements and accounting at scale.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-md bg-brand-50 text-brand-600">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" /><line x1="4" y1="22" x2="4" y2="15" /></svg>
+                  </span>
+                  <span class="text-sm leading-relaxed text-ink-600">Cloud-native services behind the marketplace → ERP pipeline.</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mt-6 border-t border-ink-100 pt-5">
+              {analysisStatus === "done" ? (
+                <a href="mailto:careers@deepecom.com?subject=Backend%20Engineer%20Application" class="micro-arrow-parent inline-flex items-center gap-2 rounded-lg bg-brand-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-600">
+                  Submit Application with Evaluation Report
+                  <ArrowRight size={16} className="micro-arrow" />
+                </a>
+              ) : (
+                <span class="flex items-center gap-2 text-sm text-ink-500">
+                  <svg class="h-4 w-4 flex-none text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                  Complete the curriculum and repository analysis to unlock the application.
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <!-- Side: application status + email -->
+        <div class="flex flex-col gap-6">
+          <div class="rounded-2xl border border-ink-200 bg-white p-6 shadow-card reveal">
+            <span class="text-xs font-semibold uppercase tracking-widest text-ink-700">Your application status</span>
+            <ul class="mt-4 flex flex-col gap-3">
+              <li class="flex items-center justify-between gap-3 rounded-lg border border-ink-200 bg-ink-50/40 px-3.5 py-3">
+                <span class="flex items-center gap-2.5 text-sm font-medium text-ink-700">
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${user ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-white text-ink-400"}`}>
+                    {user ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "01"}
+                  </span>
+                  GitHub connected
+                </span>
+                <span class={`flex items-center gap-1.5 text-xs font-semibold ${user ? "text-brand-700" : "text-ink-400"}`}>
+                  <span class={`h-1.5 w-1.5 rounded-full ${user ? "bg-brand-500" : "bg-ink-300"}`}></span>
+                  {user ? "Done" : "Pending"}
+                </span>
+              </li>
+              <li class="flex items-center justify-between gap-3 rounded-lg border border-ink-200 bg-ink-50/40 px-3.5 py-3">
+                <span class="flex items-center gap-2.5 text-sm font-medium text-ink-700">
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${isPhase1Done ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-white text-ink-400"}`}>
+                    {isPhase1Done ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "02"}
+                  </span>
+                  Curriculum complete
+                </span>
+                <span class={`flex items-center gap-1.5 text-xs font-semibold ${isPhase1Done ? "text-brand-700" : "text-ink-400"}`}>
+                  <span class={`h-1.5 w-1.5 rounded-full ${isPhase1Done ? "bg-brand-500" : "bg-ink-300"}`}></span>
+                  {isPhase1Done ? "Done" : "Pending"}
+                </span>
+              </li>
+              <li class="flex items-center justify-between gap-3 rounded-lg border border-ink-200 bg-ink-50/40 px-3.5 py-3">
+                <span class="flex items-center gap-2.5 text-sm font-medium text-ink-700">
+                  <span class={`grid h-6 w-6 flex-none place-items-center rounded-md border font-mono text-[10px] font-bold ${analysisStatus === "done" ? "border-brand-200 bg-brand-50 text-brand-700" : "border-ink-200 bg-white text-ink-400"}`}>
+                    {analysisStatus === "done" ? <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12" /></svg> : "03"}
+                  </span>
+                  Repository analysis
+                </span>
+                <span class={`flex items-center gap-1.5 text-xs font-semibold ${analysisStatus === "done" ? "text-brand-700" : "text-ink-400"}`}>
+                  <span class={`h-1.5 w-1.5 rounded-full ${analysisStatus === "done" ? "bg-brand-500" : "bg-ink-300"}`}></span>
+                  {analysisStatus === "done" ? "Scored" : "Pending"}
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex flex-1 flex-col justify-between rounded-2xl border border-ink-200 bg-white p-6 shadow-card reveal">
+            <div>
+              <h4 class="text-sm font-semibold tracking-tight text-ink-900">Don't see your role?</h4>
+              <p class="mt-1.5 text-sm leading-relaxed text-ink-500">We're always open to sharp people. Email us and tell us what you do best.</p>
+            </div>
+            <a href="mailto:careers@deepecom.com" class="micro-arrow-parent mt-6 inline-flex items-center gap-2 text-sm font-semibold text-brand-600 transition-colors hover:text-brand-700">
+              careers@deepecom.com
+              <ArrowRight size={16} className="micro-arrow text-ink-400" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CtaBand
+    dark
+    title="Bring your books and your future together."
+    lead="Tell us what you do best — we'd love to hear from you."
+    cta="Get in Touch"
+    ctaHref="mailto:careers@deepecom.com"
+    secondary="View Open Roles"
+    secondaryHref="#roles"
+  />
+</PageLayout>
+
+<style is:global>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--ink-200);
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ink-300);
+  }
+</style>
+
+<script>
+  const selectEl = document.getElementById("repo-select") as HTMLSelectElement | null;
+  const saveBtn = document.getElementById("save-repo-btn");
+  const changeBtn = document.getElementById("change-repo-btn");
+  const analysisBtn = document.getElementById("run-analysis-btn");
+
+  if (selectEl) {
+    fetch("/api/auth/github/repos")
+      .then((res) => res.json())
+      .then((repos) => {
+        selectEl.innerHTML = '<option value="">-- Select GitHub Repository --</option>';
+        repos.forEach((r: { fullName: string; private: boolean }) => {
+          const opt = document.createElement("option");
+          opt.value = r.fullName;
+          opt.textContent = `${r.fullName} ${r.private ? "[Private]" : ""}`;
+          selectEl.appendChild(opt);
+        });
+      })
+      .catch(() => {
+        selectEl.innerHTML = '<option value="">Failed to fetch repositories</option>';
+      });
+  }
+
+  saveBtn?.addEventListener("click", async () => {
+    const repoFullName = selectEl?.value;
+    if (!repoFullName) return alert("Please select a repository from the list.");
+    const res = await fetch("/api/auth/github/select-repo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repoFullName }),
+    });
+    if (res.ok) window.location.reload();
+  });
+
+  changeBtn?.addEventListener("click", async () => {
+    const res = await fetch("/api/auth/github/select-repo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ repoFullName: "" }),
+    });
+    if (res.ok) window.location.reload();
+  });
+
+  analysisBtn?.addEventListener("click", async () => {
+    analysisBtn.setAttribute("disabled", "true");
+    analysisBtn.innerHTML = `
+      <svg class="-ml-1 mr-2 inline-block h-4 w-4 animate-spin text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+      Analyzing Codebase...
+    `;
+
+    try {
+      const res = await fetch("/api/careers/analyze-repo", { method: "POST" });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const outputContainer = document.getElementById("analysis-output");
+        const fileCountBadge = document.getElementById("file-count-badge");
+        const fileList = document.getElementById("file-list");
+        if (outputContainer && fileList && fileCountBadge && data.files) {
+          fileCountBadge.textContent = `${data.fileCount} files`;
+          fileList.innerHTML = "";
+          data.files.forEach((file: { path: string }) => {
+            const li = document.createElement("li");
+            li.className = "flex items-center gap-3 px-4 py-2.5 text-ink-500 hover:bg-ink-50 hover:text-ink-800 transition-colors";
+            li.innerHTML = `<svg class="h-3.5 w-3.5 text-ink-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg> <span class="truncate">${file.path}</span>`;
+            fileList.appendChild(li);
+          });
+          outputContainer.classList.remove("hidden");
+        }
+        analysisBtn.innerHTML = "Analysis Complete";
+        setTimeout(() => window.location.reload(), 2500);
+      } else {
+        alert(data.error || "Failed to execute repository analysis.");
+        analysisBtn.removeAttribute("disabled");
+        analysisBtn.innerText = "Run Analysis Pipeline";
+      }
+    } catch (err) {
+      alert("Error executing repository analysis pipeline.");
+      analysisBtn.removeAttribute("disabled");
+      analysisBtn.innerText = "Run Analysis Pipeline";
+    }
+  });
+</script>

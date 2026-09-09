@@ -1,0 +1,309 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowLeft, LogOut } from "lucide-react"
+import { parseSignedSession, safeLookup } from "@/lib/session"
+import { lessons } from "@/data/lessons"
+
+const user = parseSignedSession(Astro.cookies.get("user_session")?.value)
+
+if (!user) {
+  return Astro.redirect("/careers")
+}
+
+const { slug } = Astro.params
+
+const lesson = safeLookup(lessons, slug)
+if (!lesson) {
+  return Astro.redirect("/careers")
+}
+---
+
+<PageLayout
+  title={`${lesson.title} | DeepEcom Institute`}
+  description={lesson.description}
+>
+  <section class="section-band">
+    <div class="sec">
+      <!-- Lesson header -->
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between reveal">
+        <a
+          href="/careers#the-curriculum"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-ink-500 transition-colors hover:text-ink-900"
+        >
+          <ArrowLeft size={16} />
+          Back to Curriculum
+        </a>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-3.5 py-1.5 pl-1.5 text-xs font-semibold text-ink-800 shadow-sm">
+            <img
+              src={user.avatar}
+              alt={`${user.name ?? user.login} GitHub avatar`}
+              width={22}
+              height={22}
+              class="h-[22px] w-[22px] rounded-full border border-ink-100"
+            />
+            <span class="max-w-[10rem] truncate">{user.name ?? user.login}</span>
+          </span>
+          <a href="/api/auth/logout" class={buttonVariants({ variant: "outline", size: "sm" })}>
+            <LogOut size={14} />
+            Logout
+          </a>
+        </div>
+      </div>
+
+      <!-- Lesson title -->
+      <div class="mt-10 max-w-3xl reveal">
+        <span class="eyebrow">THE CURRICULUM</span>
+        <h2 class="h2-md mt-4">{lesson.title}</h2>
+        <p class="lead mt-5">{lesson.description}</p>
+      </div>
+
+      <!-- Lesson sections -->
+      <div class="mt-12 flex flex-col gap-8">
+        {lesson.sections.map((section) => (
+          <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card reveal">
+            <div class="h-0.5 w-full bg-gradient-to-r from-brand-500 to-brand-300"></div>
+            <div class="p-6 sm:p-8">
+              <h3 class="text-base font-semibold uppercase tracking-widest text-brand-700">{section.title}</h3>
+              <div class="mt-3 whitespace-pre-line text-[15px] leading-[1.85] text-ink-600">{section.text}</div>
+
+              {section.code && (
+                <div class="mt-6 overflow-hidden rounded-xl border border-ink-200 bg-ink-950 shadow-sm">
+                  <div class="flex items-center gap-3 border-b border-white/10 bg-white/5 px-5 py-3">
+                    <div class="flex gap-2">
+                      <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                      <span class="h-2.5 w-2.5 rounded-full bg-white/20"></span>
+                    </div>
+                    <span class="ml-2 font-mono text-xs font-semibold text-ink-300">index.ts</span>
+                  </div>
+                  <pre class="custom-scrollbar max-h-[32rem] overflow-auto p-6 font-mono text-[13.5px] leading-[1.7] text-ink-200"><code>{section.code}</code></pre>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Knowledge check / quiz -->
+      {lesson.quiz && lesson.quiz.length > 0 && (
+        <div class="mt-16">
+          <div class="max-w-3xl reveal">
+            <span class="eyebrow">KNOWLEDGE CHECK</span>
+            <h3 class="h2-md mt-4">Assessment</h3>
+            <p class="mt-3 inline-flex rounded-lg border border-brand-200 bg-brand-50/50 px-4 py-2 font-mono text-xs text-brand-700">
+              // Score 70% or higher to pass this assessment.
+            </p>
+          </div>
+
+          <div id="quiz-container" class="mt-10 flex flex-col gap-8">
+            {lesson.quiz.map((q, qIndex) => (
+              <div
+                class="quiz-question overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card reveal"
+                data-question-index={qIndex}
+                data-correct-index={q.correctOptionIndex}
+              >
+                <div class="h-0.5 w-full bg-gradient-to-r from-brand-500 to-brand-300"></div>
+                <div class="p-6 sm:p-8">
+                  <h4 class="text-lg font-semibold leading-relaxed tracking-tight text-ink-900">
+                    <span class="mr-2 font-mono text-sm text-brand-600">{qIndex + 1}.</span>
+                    {q.question}
+                  </h4>
+
+                  {q.code && (
+                    <div class="mt-5 overflow-hidden rounded-lg border border-ink-200 bg-ink-950 p-5">
+                      <pre class="custom-scrollbar max-h-64 overflow-auto font-mono text-[13px] leading-relaxed text-ink-200"><code>{q.code}</code></pre>
+                    </div>
+                  )}
+
+                  <div class="mt-6 flex flex-col gap-2.5">
+                    {q.options.map((opt, optIndex) => (
+                      <label class="radio-label group flex cursor-pointer items-start gap-4 rounded-lg border border-ink-200 bg-ink-50/40 p-4 transition-all hover:border-brand-300 hover:bg-brand-50/40">
+                        <span class="mt-0.5">
+                          <input
+                            type="radio"
+                            name={`question-${qIndex}`}
+                            value={optIndex}
+                            class="h-4 w-4 cursor-pointer accent-brand-500"
+                          />
+                        </span>
+                        <span class="select-none text-sm leading-relaxed text-ink-600 group-hover:text-ink-900">{opt}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <!-- Error summary -->
+          <div id="quiz-error" class="mt-8 hidden items-center gap-3 rounded-xl border border-ink-200 bg-ink-50/50 px-6 py-5 text-sm text-ink-600">
+            <svg class="h-5 w-5 flex-none text-ink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.94 5h13.86a2 2 0 001.87-2.7L13.9 4.15a2 2 0 00-3.8 0L4.11 16.2a2 2 0 001.87 2.7z" /></svg>
+            <span id="quiz-error-text" class="font-medium">Review your answers and try again.</span>
+          </div>
+
+          <!-- Success summary -->
+          <div id="quiz-success" class="mt-8 hidden items-center gap-4 rounded-xl border border-brand-200 bg-brand-50/50 px-6 py-5">
+            <svg class="h-8 w-8 flex-none text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <div>
+              <p class="text-sm font-bold uppercase tracking-wider text-brand-700">Assessment passed</p>
+              <p id="quiz-success-text" class="mt-0.5 font-mono text-xs text-ink-500"></p>
+            </div>
+          </div>
+
+          <!-- Action area -->
+          <div class="mt-12 flex flex-col items-center justify-between gap-6 rounded-2xl border border-ink-200 bg-white p-6 shadow-card sm:flex-row reveal sm:p-8">
+            <div class="text-center sm:text-left">
+              <span class="text-xs font-semibold uppercase tracking-widest text-ink-400">Lesson Progress</span>
+              <p id="lesson-status" class="mt-1 text-sm font-bold uppercase tracking-widest text-ink-700">Pending Completion</p>
+            </div>
+            <button
+              id="complete-lesson-btn"
+              class={buttonVariants({ size: "lg" })}
+            >
+              {lesson.quiz && lesson.quiz.length > 0 ? "Submit & Complete" : "Mark as Complete"}
+              <span class="text-white/70">→</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</PageLayout>
+
+<style is:global>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+</style>
+
+<script define:vars={{ slug }}>
+  const completeBtn = document.getElementById("complete-lesson-btn")
+  const statusEl = document.getElementById("lesson-status")
+  const errorEl = document.getElementById("quiz-error")
+  const errorTextEl = document.getElementById("quiz-error-text")
+  const successEl = document.getElementById("quiz-success")
+  const successTextEl = document.getElementById("quiz-success-text")
+  const questions = document.querySelectorAll(".quiz-question")
+  let nextStepHref = "/careers"
+
+  function lockQuiz() {
+    document.querySelectorAll("input[type='radio']").forEach((input) => {
+      input.disabled = true
+    })
+    document.querySelectorAll(".radio-label").forEach((label) => {
+      label.classList.add("opacity-50", "cursor-not-allowed")
+      label.classList.remove("hover:border-brand-300", "hover:bg-brand-50/40", "cursor-pointer")
+    })
+  }
+
+  function renderResult(scorePercentage, passed) {
+    if (!completeBtn || !statusEl) return
+
+    if (passed) {
+      errorEl?.classList.add("hidden")
+      errorEl?.classList.remove("flex")
+      if (successEl && successTextEl) {
+        successEl.classList.remove("hidden")
+        successEl.classList.add("flex")
+        successTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Requirement met (70%+). Phase 02 is now unlocked.`
+      }
+      statusEl.textContent = "Assessment Completed (Passed) ✓"
+      statusEl.classList.replace("text-ink-700", "text-brand-700")
+      nextStepHref = "/careers#the-evaluation"
+      completeBtn.textContent = "Continue to Repository Submission →"
+    } else {
+      successEl?.classList.add("hidden")
+      successEl?.classList.remove("flex")
+      if (errorEl && errorTextEl) {
+        errorEl.classList.remove("hidden")
+        errorEl.classList.add("flex")
+        errorTextEl.textContent = `Score: ${Math.round(scorePercentage)}%. Attempt recorded (Did not meet 70% threshold).`
+      }
+      statusEl.textContent = "Assessment Completed (Failed) ✗"
+      statusEl.classList.replace("text-ink-700", "text-ink-400")
+      nextStepHref = "/careers#the-curriculum"
+      completeBtn.textContent = "Return to Curriculum"
+      completeBtn.classList.add("border", "border-ink-200", "bg-white", "!text-ink-800", "hover:bg-ink-50")
+    }
+
+    localStorage.setItem(`lesson:${slug}:attempted`, "true")
+    localStorage.setItem(`lesson:${slug}:score`, scorePercentage.toString())
+    localStorage.setItem(`lesson:${slug}:passed`, passed ? "true" : "false")
+
+    lockQuiz()
+  }
+
+  const hasAttempted = localStorage.getItem(`lesson:${slug}:attempted`) === "true"
+  if (hasAttempted) {
+    const savedScore = parseFloat(localStorage.getItem(`lesson:${slug}:score`) ?? "0")
+    const savedPassed = localStorage.getItem(`lesson:${slug}:passed`) === "true"
+    renderResult(savedScore, savedPassed)
+  }
+
+  completeBtn?.addEventListener("click", async () => {
+    if (localStorage.getItem(`lesson:${slug}:attempted`) === "true") {
+      window.location.href = nextStepHref
+      return
+    }
+
+    const answers = []
+
+    if (questions.length > 0) {
+      let unattemptedCount = 0
+      questions.forEach((q) => q.classList.remove("border-ink-400"))
+
+      questions.forEach((q) => {
+        const qIndex = q.getAttribute("data-question-index")
+        const selected = document.querySelector(`input[name="question-${qIndex}"]:checked`)
+        if (!selected) {
+          unattemptedCount++
+          q.classList.add("border-ink-400")
+          answers.push(-1)
+        } else {
+          answers.push(Number(selected.value))
+        }
+      })
+
+      if (unattemptedCount > 0) {
+        if (errorEl && errorTextEl) {
+          errorTextEl.textContent = `Please answer all questions before submitting. (${unattemptedCount} remaining)`
+          errorEl.classList.remove("hidden")
+          errorEl.classList.add("flex")
+          errorEl.scrollIntoView({ behavior: "smooth", block: "center" })
+        }
+        return
+      }
+    }
+
+    completeBtn.setAttribute("disabled", "true")
+
+    try {
+      const res = await fetch("/api/careers/submit-quiz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, answers }),
+      })
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`)
+      const data = await res.json()
+      renderResult(data.scorePercentage, data.passed)
+    } catch (err) {
+      console.error("Failed to submit quiz:", err)
+      completeBtn.removeAttribute("disabled")
+      if (errorEl && errorTextEl) {
+        errorTextEl.textContent = "Something went wrong submitting your answers. Please try again."
+        errorEl.classList.remove("hidden")
+        errorEl.classList.add("flex")
+      }
+    }
+  })
+</script>

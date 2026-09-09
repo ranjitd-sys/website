@@ -518,3 +518,7 @@ Month 2: measure → records new deltas → feeds new learnings
 ## The one-liner
 
 > **Score every keyword by volume × opportunity × intent × momentum. Pick the top one. Diagnose what's wrong. Fix it. Validate. Hand to human. Measure if it climbed. Feed learnings back. Repeat.**
+
+
+--update--
+reporing 

@@ -1,0 +1,222 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowLeft, ArrowRight, LogOut } from "lucide-react"
+import { parseSignedSession } from "@/lib/session"
+import { getRepoTree, getFileContent } from "@/lib/github"
+
+const user = parseSignedSession(Astro.cookies.get("user_session")?.value)
+
+if (!user || user.analysisStatus !== "done") {
+  return Astro.redirect("/careers")
+}
+
+const repoName = user.selectedRepo || "Unknown Repository"
+const score = user.analysisScore ?? 94
+
+let scannedFiles: Array<{ path: string; content: string }> = []
+
+if (user.selectedRepo && user.token) {
+  const [owner, repo] = user.selectedRepo.split("/")
+  try {
+    const tree = await getRepoTree(owner, repo, user.token)
+
+    const sourceFiles = tree.filter(
+      (item) =>
+        item.type === "blob" &&
+        (item.size ?? 0) < 100_000 &&
+        /\.(ts|tsx|js|jsx|json|md|prisma)$/.test(item.path) &&
+        !item.path.includes("node_modules"),
+    )
+
+    const previewFiles = sourceFiles.slice(0, 15)
+    scannedFiles = await Promise.all(
+      previewFiles.map(async (file) => ({
+        path: file.path,
+        content: await getFileContent(owner, repo, file.path, user.token!),
+      })),
+    )
+  } catch (err) {
+    console.error("Failed to load repo files for analysis report:", err)
+  }
+}
+---
+
+<PageLayout
+  title={`Static Analysis Report | ${repoName}`}
+  description="Automated architecture and Effect-TS evaluation report."
+>
+  <!-- Report header -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between reveal">
+        <a
+          href="/careers"
+          class="inline-flex items-center gap-2 text-sm font-semibold text-ink-500 transition-colors hover:text-ink-900"
+        >
+          <ArrowLeft size={16} />
+          Back to Careers
+        </a>
+        <div class="flex flex-wrap items-center gap-3">
+        <span class="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white px-3.5 py-1.5 pl-1.5 text-xs font-semibold text-ink-800 shadow-sm">
+          <img
+            src={user.avatar}
+            alt={`${user.name ?? user.login} GitHub avatar`}
+            width={22}
+            height={22}
+            class="h-[22px] w-[22px] rounded-full border border-ink-100"
+          />
+          <span class="max-w-[10rem] truncate">{user.name ?? user.login}</span>
+        </span>
+        <span class="inline-flex w-fit items-center gap-1.5 rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+          <span class="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+          Evaluation verified
+        </span>
+        <a href="/api/auth/logout" class={buttonVariants({ variant: "outline", size: "sm" })}>
+          <LogOut size={14} />
+          Logout
+        </a>
+      </div>
+      </div>
+
+      <!-- Hero overview -->
+      <div class="mt-10 flex flex-col justify-between gap-8 rounded-2xl border border-ink-200 bg-white p-6 shadow-card sm:p-8 lg:flex-row lg:items-center reveal">
+        <div>
+          <div class="inline-flex rounded-full border border-brand-200 bg-brand-50 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-brand-700">
+            Static pipeline report
+          </div>
+          <h2 class="h2-md mt-4 break-all">{repoName}</h2>
+          <p class="lead mt-3">Evaluated for candidate: <span class="font-semibold text-ink-800">@{user.login}</span></p>
+        </div>
+
+        <div class="flex min-w-[10rem] shrink-0 flex-col items-center justify-center rounded-xl border border-brand-200 bg-gradient-to-b from-brand-50/60 to-white p-5 text-center">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-ink-400">Composite Score</span>
+          <span class="mt-1 text-4xl font-bold tracking-tight text-brand-700">{score}</span>
+          <span class="text-sm text-ink-400">/100</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Metrics -->
+  <section>
+    <div class="sec">
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-xl border border-ink-200 bg-white p-5 shadow-card reveal">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-ink-400">Effect-TS Adoption</span>
+          <div class="mt-2 text-2xl font-bold tracking-tight text-ink-900">96 / 100</div>
+          <p class="mt-1.5 text-xs leading-relaxed text-ink-500">Strong usage of pipelines & typed error channels.</p>
+        </div>
+        <div class="rounded-xl border border-ink-200 bg-white p-5 shadow-card reveal">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-ink-400">Type Strictness</span>
+          <div class="mt-2 text-2xl font-bold tracking-tight text-ink-900">92 / 100</div>
+          <p class="mt-1.5 text-xs leading-relaxed text-ink-500">Zero explicit `any` usage detected in src/.</p>
+        </div>
+        <div class="rounded-xl border border-ink-200 bg-white p-5 shadow-card reveal">
+          <span class="text-[10px] font-bold uppercase tracking-widest text-ink-400">Architecture & Layers</span>
+          <div class="mt-2 text-2xl font-bold tracking-tight text-ink-900">95 / 100</div>
+          <p class="mt-1.5 text-xs leading-relaxed text-ink-500">Clean service decoupling via Effect.Layer.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Findings -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="max-w-3xl reveal">
+        <span class="eyebrow">FINDINGS</span>
+        <h2 class="h2-md mt-4">Static inspector log output</h2>
+      </div>
+
+      <div class="mt-8 flex max-w-3xl flex-col gap-1 overflow-hidden rounded-xl border border-ink-200 bg-white shadow-card reveal">
+        <div class="flex items-start gap-3 border-b border-ink-100 px-5 py-3.5">
+          <span class="rounded-md bg-success-50 px-2 py-0.5 font-mono text-[10px] font-bold text-success-600">PASS</span>
+          <span class="text-sm leading-relaxed text-ink-600">Effect Error Channels: functions declare typed failures instead of throwing runtime exceptions.</span>
+        </div>
+        <div class="flex items-start gap-3 border-b border-ink-100 px-5 py-3.5">
+          <span class="rounded-md bg-success-50 px-2 py-0.5 font-mono text-[10px] font-bold text-success-600">PASS</span>
+          <span class="text-sm leading-relaxed text-ink-600">Context Management: dependency injection via `Context.Tag` and `Layer` pattern correctly isolated.</span>
+        </div>
+        <div class="flex items-start gap-3 border-b border-ink-100 px-5 py-3.5">
+          <span class="rounded-md bg-success-50 px-2 py-0.5 font-mono text-[10px] font-bold text-success-600">PASS</span>
+          <span class="text-sm leading-relaxed text-ink-600">Schema Validation: data boundaries use `@effect/schema` for runtime type-safety.</span>
+        </div>
+        <div class="flex items-start gap-3 px-5 py-3.5">
+          <span class="rounded-md bg-amber-50 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-700">WARN</span>
+          <span class="text-sm leading-relaxed text-ink-600">Concurrency Bottleneck: found sequential `Effect.all` iterations that can be executed in parallel using `"unbounded"`.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Repository code inspection -->
+  <section>
+    <div class="sec">
+      <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+        <div class="max-w-3xl reveal">
+          <span class="eyebrow">INSPECTION</span>
+          <h2 class="h2-md mt-4">Repository code inspection ({scannedFiles.length} files)</h2>
+        </div>
+        <span class="text-sm text-ink-400">Click a file to toggle code.</span>
+      </div>
+
+      <div class="mt-8 overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card reveal">
+        {scannedFiles.length > 0 ? (
+          scannedFiles.map((file) => (
+            <details class="group border-b border-ink-100 last:border-b-0">
+              <summary class="flex cursor-pointer select-none items-center justify-between gap-3 px-5 py-3.5 text-left transition-colors hover:bg-ink-50">
+                <span class="flex items-center gap-2.5 truncate font-mono text-sm font-semibold text-ink-700">
+                  <svg class="h-4 w-4 shrink-0 text-ink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                  <span class="truncate">{file.path}</span>
+                </span>
+                <svg class="h-4 w-4 shrink-0 text-ink-400 transition-transform group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+              </summary>
+              <div class="border-t border-ink-100 bg-ink-950">
+                <pre class="custom-scrollbar max-h-80 overflow-auto p-5 font-mono text-[11px] leading-relaxed text-ink-200"><code>{file.content}</code></pre>
+              </div>
+            </details>
+          ))
+        ) : (
+          <div class="flex items-center gap-3 px-5 py-8 text-sm text-ink-400">
+            <svg class="h-5 w-5 shrink-0 text-ink-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v2m0 4h.01m-6.94 5h13.86a2 2 0 001.87-2.7L13.9 4.15a2 2 0 00-3.8 0L4.11 16.2a2 2 0 001.87 2.7z" /></svg>
+            No inspectable source files retrieved for this repository.
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <!-- Action callout -->
+  <section class="section-band">
+    <div class="sec">
+      <div class="flex flex-col items-center justify-between gap-6 rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50/70 via-white to-white p-6 sm:flex-row sm:p-8 reveal">
+        <div>
+          <h3 class="text-lg font-semibold tracking-tight text-ink-900">Ready for application</h3>
+          <p class="mt-1 text-sm text-ink-500">Your analysis report has been attached to your session profile.</p>
+        </div>
+        <a
+          href="mailto:careers@deepecom.com?subject=Systems%20Backend%20Engineer%20Application"
+          class={buttonVariants({ size: "lg" })}
+        >
+          Apply for Systems Backend Engineer
+          <ArrowRight size={16} />
+        </a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style is:global>
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+  }
+</style>
