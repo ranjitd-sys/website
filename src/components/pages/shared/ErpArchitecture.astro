@@ -25,7 +25,7 @@ const rightCurves = rightY.map((y) => `M 860 ${centerY} C 900 ${centerY}, 905 ${
     user-select: none;
   }
   .ea-col-label {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 11.5px;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -38,13 +38,13 @@ const rightCurves = rightY.map((y) => `M 860 ${centerY} C 900 ${centerY}, 905 ${
     filter: url(#ea-shadow);
   }
   .ea-node-text {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 15px;
     font-weight: 700;
     fill: var(--ink-900);
   }
   .ea-node-sub {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 12px;
     font-weight: 500;
     fill: var(--ink-500);
@@ -55,21 +55,21 @@ const rightCurves = rightY.map((y) => `M 860 ${centerY} C 900 ${centerY}, 905 ${
     filter: url(#ea-center-shadow);
   }
   .ea-center-title {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 22px;
     font-weight: 800;
     letter-spacing: 0.03em;
     fill: #ffffff;
   }
   .ea-center-sub {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.16em;
     fill: rgba(255, 255, 255, 0.85);
   }
   .ea-center-step {
-    font-family: Inter, sans-serif;
+    font-family: var(--font-sans);
     font-size: 12px;
     font-weight: 600;
     fill: rgba(255, 255, 255, 0.92);
@@ -111,19 +111,19 @@ const rightCurves = rightY.map((y) => `M 860 ${centerY} C 900 ${centerY}, 905 ${
             <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.06" />
           </filter>
           <filter id="ea-center-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="16" stdDeviation="28" flood-color="#533afd" flood-opacity="0.16" />
+            <feDropShadow dx="0" dy="16" stdDeviation="28" flood-color="#2165EC" flood-opacity="0.16" />
           </filter>
           <filter id="ea-glow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur stdDeviation="3" result="blur" />
             <feComposite in="SourceGraphic" in2="blur" operator="over" />
           </filter>
           <linearGradient id="ea-center-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#533afd" />
+            <stop offset="0%" stop-color="#2165EC" />
             <stop offset="100%" stop-color="#1e2bd6" />
           </linearGradient>
           <linearGradient id="ea-flow" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#c7d2fe" />
-            <stop offset="100%" stop-color="#8a98f7" />
+            <stop offset="0%" stop-color="#caddff" />
+            <stop offset="100%" stop-color="#5c94ff" />
           </linearGradient>
         </defs>
 
@@ -231,9 +231,9 @@ const { steps = defaultSteps } = Astro.props
     width: 2.5rem;
     height: 2.5rem;
     border-radius: 50%;
-    background: var(--brand-50, #eef2ff);
-    border: 2px solid var(--brand-500, #6366f1);
-    color: var(--brand-600, #4f46e5);
+    background: var(--brand-50, #f2f7ff);
+    border: 2px solid var(--brand-500, #3d7efc);
+    color: var(--brand-600, #2165ec);
     font-size: 0.875rem;
     font-weight: 700;
     flex-shrink: 0;

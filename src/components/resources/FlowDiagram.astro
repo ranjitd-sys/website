@@ -48,8 +48,8 @@ function connector(i: number): string {
         <stop offset="100%" stop-color="#f8fafc" />
       </linearGradient>
       <linearGradient id="flowHighlight" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f0edff" />
-        <stop offset="100%" stop-color="#e1dcff" />
+        <stop offset="0%" stop-color="#f2f7ff" />
+        <stop offset="100%" stop-color="#e3edff" />
       </linearGradient>
     </defs>
 
@@ -59,14 +59,14 @@ function connector(i: number): string {
         <circle
           class="rs-flow-particle"
           r="3.5"
-          fill="#533afd"
+          fill="#2165EC"
           opacity="0.95"
           style={{ offsetPath: `path('${connector(i)}')` }}
         />
         <circle
           class="rs-flow-particle alt"
           r="2.5"
-          fill="#a08cff"
+          fill="#a4c5ff"
           opacity="0.8"
           style={{ offsetPath: `path('${connector(i)}')` }}
         />
@@ -91,10 +91,10 @@ function connector(i: number): string {
           height={nodeH}
           rx="18"
           fill={s.highlight ? "url(#flowHighlight)" : "url(#flowNodeGlow)"}
-          stroke={s.highlight ? "#533afd" : "#e2e8f0"}
+          stroke={s.highlight ? "#2165EC" : "#e2e8f0"}
           stroke-width={s.highlight ? "1.5" : "1"}
         />
-        <circle cx={cx(i)} cy={nodeY + 30} r="11" fill={s.highlight ? "#533afd" : "#f1f5f9"} stroke={s.highlight ? "#533afd" : "#e2e8f0"} stroke-width="1" />
+        <circle cx={cx(i)} cy={nodeY + 30} r="11" fill={s.highlight ? "#2165EC" : "#f1f5f9"} stroke={s.highlight ? "#2165EC" : "#e2e8f0"} stroke-width="1" />
         <text
           class="rs-flow-node-sub"
           x={cx(i)}

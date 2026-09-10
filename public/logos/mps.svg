@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <!-- processing orbit: marketplace money cycles through settlement -->
   <circle cx="32" cy="32" r="23" stroke="#dbe2ff" stroke-width="2.5" stroke-dasharray="3 6" stroke-linecap="round"/>
-  <circle cx="32" cy="32" r="24.5" stroke="#818cf8" stroke-width="0.75" opacity="0.5"/>
+  <circle cx="32" cy="32" r="24.5" stroke="#5c94ff" stroke-width="0.75" opacity="0.5"/>
 
   <!-- shopping bag: the marketplace -->
-  <path d="M24.5 28 v16 a7.5 7.5 0 0 0 7.5 7.5 a7.5 7.5 0 0 0 7.5 -7.5 V28 Z" stroke="#533afd" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M27.5 28 v-4 a4.5 4.5 0 0 1 9 0 v4" stroke="#533afd" stroke-width="3" stroke-linecap="round"/>
+  <path d="M24.5 28 v16 a7.5 7.5 0 0 0 7.5 7.5 a7.5 7.5 0 0 0 7.5 -7.5 V28 Z" stroke="#2165ec" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M27.5 28 v-4 a4.5 4.5 0 0 1 9 0 v4" stroke="#2165ec" stroke-width="3" stroke-linecap="round"/>
 
   <!-- settlement check: money reconciled -->
   <path d="M29 41 l2.5 2.2 5.5 -5.6" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
 
   <!-- money in / out: settlements moving both ways -->
-  <path d="M21 57 h6" stroke="#818cf8" stroke-width="2.6" stroke-linecap="round"/>
-  <path d="M26 55.2 29.5 57 26 58.8" stroke="#818cf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M43 57 h-6" stroke="#818cf8" stroke-width="2.6" stroke-linecap="round"/>
-  <path d="M38 55.2 34.5 57 38 58.8" stroke="#818cf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M21 57 h6" stroke="#5c94ff" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M26 55.2 29.5 57 26 58.8" stroke="#5c94ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M43 57 h-6" stroke="#5c94ff" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M38 55.2 34.5 57 38 58.8" stroke="#5c94ff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

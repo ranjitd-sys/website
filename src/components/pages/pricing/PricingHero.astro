@@ -14,8 +14,8 @@ const inr = (n: number) => n.toLocaleString("en-IN")
     overflow: hidden;
     padding: clamp(6.5rem, 12vh, 8.5rem) 0 clamp(2.5rem, 5vh, 4rem);
     background:
-      radial-gradient(46rem 24rem at 76% -10%, rgba(83, 58, 253, 0.12), transparent 60%),
-      radial-gradient(34rem 18rem at 8% -6%, rgba(127, 125, 252, 0.09), transparent 55%),
+      radial-gradient(46rem 24rem at 76% -10%, rgba(33, 101, 236, 0.12), transparent 60%),
+      radial-gradient(34rem 18rem at 8% -6%, rgba(164, 197, 255, 0.09), transparent 55%),
       linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
   }
   .prh-inner {
@@ -71,7 +71,7 @@ const inr = (n: number) => n.toLocaleString("en-IN")
         <div class="mx-auto w-full max-w-[34rem] overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
           <div class="flex items-center justify-between gap-3 border-b border-ink-100 bg-gradient-to-r from-brand-50 to-white px-5 py-4">
             <div class="flex items-center gap-2.5">
-              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-500 text-white shadow-sm shadow-brand-500/30">
+              <span class="grid h-9 w-9 place-items-center rounded-lg bg-brand-600 text-white shadow-sm shadow-brand-600/30">
                 <Tag size={16} />
               </span>
               <div>
@@ -99,7 +99,7 @@ const inr = (n: number) => n.toLocaleString("en-IN")
             ))}
           </div>
 
-          <div class="flex items-center justify-between gap-3 bg-gradient-to-r from-[#0a0b22] via-[#111648] to-[#241b78] px-5 py-4">
+          <div class="flex items-center justify-between gap-3 bg-gradient-to-r from-ink-950 via-brand-900 to-brand-800 px-5 py-4">
             <div>
               <p class="text-sm font-bold text-white">Enterprise Seller</p>
               <p class="text-xs text-white/60">Above 8,000 orders/month</p>

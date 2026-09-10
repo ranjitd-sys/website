@@ -63,7 +63,7 @@ export default function ContactForm() {
         aria-live="polite"
       >
         <div className="flex items-start gap-4 sm:items-center">
-          <span className="grid size-13 shrink-0 place-items-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700">
+          <span className="grid size-13 shrink-0 place-items-center rounded-full border border-success-200 bg-success-50 text-success-700">
             <CircleCheck size={26} />
           </span>
           <div>
@@ -174,7 +174,7 @@ export default function ContactForm() {
             </>
           )}
         </Button>
-        <p className="-mt-2 text-center text-xs text-zinc-400 sm:col-span-2">We'll never share your details. No spam, ever.</p>
+        <p className="-mt-2 text-center text-xs text-ink-400 sm:col-span-2">We'll never share your details. No spam, ever.</p>
       </form>
     </>
   )

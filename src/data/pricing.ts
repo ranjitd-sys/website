@@ -169,7 +169,7 @@ export interface ComparisonRow {
 
 /** Reused by both the pricing cards and the comparison table (single source). */
 export const COMPARISON_ROWS: ComparisonRow[] = [
-  { label: "Order Volume", values: ["500", "1,000", "2,000", "4,000", "6,000", "8,000"] },
+  { label: "Order Volume", values: ["500", "1,000", "2,000", "6,000", "7,500", "9,000"] },
   { label: "Marketplaces", values: ["2", "4", "4", "4", "4", "4"] },
   { label: "GST Numbers", values: ["1", "2 or more", "2 or more", "2 or more", "2 or more", "2 or more"] },
   { label: "Tally Sync", values: [true, true, true, true, true, true] },

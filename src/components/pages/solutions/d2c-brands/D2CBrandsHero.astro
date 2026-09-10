@@ -30,8 +30,8 @@ const erps = ["Tally", "SAP", "Zoho"]
     padding: clamp(9rem, 9vh, 9rem) 0 clamp(2.5rem, 5vh, 3.5rem);
     
     background:
-      radial-gradient(46rem 24rem at 80% -10%, rgba(83, 58, 253, 0.12), transparent 60%),
-      radial-gradient(34rem 18rem at 4% -8%, rgba(167, 139, 250, 0.1), transparent 55%),
+      radial-gradient(46rem 24rem at 80% -10%, rgba(33, 101, 236, 0.12), transparent 60%),
+      radial-gradient(34rem 18rem at 4% -8%, rgba(92, 148, 255, 0.1), transparent 55%),
       linear-gradient(180deg, var(--ink-50, #f8fafc) 0%, #ffffff 100%);
   }
   .d2c-h-inner {
@@ -60,20 +60,20 @@ const erps = ["Tally", "SAP", "Zoho"]
     align-items: center;
     gap: 0.4rem;
     padding: 0.25rem 0.75rem;
-    background: var(--brand-50, #f5f3ff);
+    background: var(--brand-50, #f2f7ff);
     border: 1px solid var(--brand-100, #ddd6fe);
     border-radius: 9999px;
     font-size: 0.7rem;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--brand-600, #4f46e5);
+    color: var(--brand-600, #2165ec);
   }
   .d2c-h-eyebrow .dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--brand-500, #6366f1);
+    background: var(--brand-500, #3d7efc);
   }
   .d2c-h-title {
     margin-top: 0.75rem;
@@ -85,7 +85,7 @@ const erps = ["Tally", "SAP", "Zoho"]
     text-wrap: balance;
   }
   .d2c-h-title .accent {
-    color: var(--brand-500, #6366f1);
+    color: var(--brand-500, #3d7efc);
   }
   .d2c-h-lead {
     margin-top: 0.85rem;
@@ -109,7 +109,7 @@ const erps = ["Tally", "SAP", "Zoho"]
     color: var(--ink-400, #94a3b8);
   }
   .d2c-h-note svg {
-    color: var(--brand-500, #6366f1);
+    color: var(--brand-500, #3d7efc);
     flex: none;
   }
   .d2c-h-note b {
@@ -183,20 +183,20 @@ const erps = ["Tally", "SAP", "Zoho"]
           <defs>
             <!-- Core Engine Gradient -->
             <linearGradient id="d2cEngineGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#6366f1" />
-              <stop offset="100%" stop-color="#4338ca" />
+              <stop offset="0%" stop-color="#3d7efc" />
+              <stop offset="100%" stop-color="#1253d2" />
             </linearGradient>
 
             <!-- Connector Flow Line Gradient -->
             <linearGradient id="d2cLineGrad" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#818cf8" />
-              <stop offset="50%" stop-color="#6366f1" />
-              <stop offset="100%" stop-color="#a5b4fc" />
+              <stop offset="0%" stop-color="#5c94ff" />
+              <stop offset="50%" stop-color="#3d7efc" />
+              <stop offset="100%" stop-color="#a4c5ff" />
             </linearGradient>
 
             <!-- Soft Drop Shadow for Core Engine -->
             <filter id="d2cShadow" x="-10%" y="-10%" width="120%" height="130%">
-              <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#533afd" flood-opacity="0.22" />
+              <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#2165EC" flood-opacity="0.22" />
             </filter>
           </defs>
 
@@ -226,9 +226,9 @@ const erps = ["Tally", "SAP", "Zoho"]
           {sources.map((item, idx) => (
             <g transform={`translate(30, ${48 + idx * 58})`}>
               <rect width="200" height="48" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
-              <circle cx="18" cy="24" r="3.5" fill="#6366f1" />
+              <circle cx="18" cy="24" r="3.5" fill="#3d7efc" />
               <text x="32" y="28" font-size="12" font-weight="700" fill="#0f172a">{item.label}</text>
-              <text x="184" y="28" font-size="9" font-weight="800" fill="#6366f1" text-anchor="end" letter-spacing="0.5">{item.sub}</text>
+              <text x="184" y="28" font-size="9" font-weight="800" fill="#3d7efc" text-anchor="end" letter-spacing="0.5">{item.sub}</text>
             </g>
           ))}
 
@@ -253,11 +253,11 @@ const erps = ["Tally", "SAP", "Zoho"]
           <!-- Box 1: Unified View -->
           <g transform="translate(530, 85)">
             <rect width="195" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" />
-            <text x="16" y="28" font-size="10" font-weight="800" fill="#4f46e5" letter-spacing="0.8">UNIFIED VIEW</text>
+            <text x="16" y="28" font-size="10" font-weight="800" fill="#2165ec" letter-spacing="0.8">UNIFIED VIEW</text>
             
             {outputs.map((out, idx) => (
               <g transform={`translate(16, ${54 + idx * 32})`}>
-                <circle cx="4" cy="0" r="3" fill="#6366f1" />
+                <circle cx="4" cy="0" r="3" fill="#3d7efc" />
                 <text x="16" y="4" font-size="11" font-weight="700" fill="#1e293b">{out}</text>
               </g>
             ))}

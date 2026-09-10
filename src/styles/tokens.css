@@ -23,10 +23,12 @@
    1. Fonts & typography
    ============================================================= */
 :root {
-  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  /* Sans: Geist (body, UI, labels). Heading: IBM Plex Sans. Mono: system. */
+  --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-plex), "IBM Plex Sans", var(--font-sans);
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
-  /* Type scale — display → caption (Inter) */
+  /* Type scale — display → caption (Geist / IBM Plex Sans) */
   --text-display: clamp(2.5rem, 5.5vw, 4.5rem);
   --text-heading-1: clamp(2rem, 4vw, 3.25rem);
   --text-heading-2: clamp(1.5rem, 3vw, 2.5rem);
@@ -60,17 +62,17 @@
    2. Color palette
    ============================================================= */
 :root {
-/* Brand — DeepEcom blue-violet (primary: #533AFD) */
-  --brand-50: #f0edff;
-  --brand-100: #e1dcff;
-  --brand-200: #c3b8ff;
-  --brand-300: #a08cff;
-  --brand-400: #7b62fe;
-  --brand-500: #533afd;
-  --brand-600: #462ce0;
-  --brand-700: #3922b8;
-  --brand-800: #2c1b8d;
-  --brand-900: #1e1560;
+/* Brand — DeepEcom identity blue (primary: #2165EC, 600 step) */
+  --brand-50: #f2f7ff;
+  --brand-100: #e3edff;
+  --brand-200: #caddff;
+  --brand-300: #a4c5ff;
+  --brand-400: #5c94ff;
+  --brand-500: #3d7efc;
+  --brand-600: #2165ec;
+  --brand-700: #1253d2;
+  --brand-800: #0d42aa;
+  --brand-900: #0a317c;
 
   /* Neutrals — cool, ink-leaning grays (Stripe-inspired) */
   --ink-50: #f8fafc;
@@ -105,7 +107,7 @@
   --danger-600: #dc2626;
   --danger-700: #b91c1c;
   --info-50: var(--brand-50);
-  --info-500: var(--brand-500);
+  --info-500: #124fc6;
 }
 
 /* =============================================================
@@ -146,7 +148,7 @@
 
   --border: var(--ink-200);
   --input: var(--ink-300);
-  --ring: var(--brand-500);
+  --ring: var(--brand-600);
   --ring-offset: #ffffff;
 
   /* Stripe-style boundary / separator lines */
@@ -171,7 +173,7 @@
   --popover: var(--ink-900);
   --popover-foreground: var(--ink-100);
 
-  --primary: var(--brand-500);
+  --primary: var(--brand-600);
   --primary-foreground: #ffffff;
   --secondary: var(--ink-800);
   --secondary-foreground: var(--ink-100);
@@ -206,12 +208,12 @@
    ============================================================= */
 :root {
   --gradient-hero:
-    radial-gradient(42rem 20rem at 74% -8%, rgba(123, 98, 254, 0.16), transparent 60%),
-    radial-gradient(38rem 18rem at 18% -4%, rgba(160, 140, 255, 0.12), transparent 58%),
-    radial-gradient(80rem 40rem at 50% 130%, rgba(83, 58, 253, 0.08), transparent 60%);
+    radial-gradient(42rem 20rem at 74% -8%, rgba(92, 148, 255, 0.16), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(164, 197, 255, 0.12), transparent 58%),
+    radial-gradient(80rem 40rem at 50% 130%, rgba(61, 126, 252, 0.08), transparent 60%);
   --gradient-hero-dark:
-    radial-gradient(42rem 20rem at 74% -8%, rgba(160, 140, 255, 0.2), transparent 60%),
-    radial-gradient(38rem 18rem at 18% -4%, rgba(123, 98, 254, 0.16), transparent 58%);
+    radial-gradient(42rem 20rem at 74% -8%, rgba(164, 197, 255, 0.2), transparent 60%),
+    radial-gradient(38rem 18rem at 18% -4%, rgba(92, 148, 255, 0.16), transparent 58%);
   --gradient-section:
     linear-gradient(180deg, transparent 0%, var(--surface-muted) 46%, var(--background) 100%);
   --gradient-brand: linear-gradient(135deg, var(--brand-500) 0%, var(--brand-700) 100%);
@@ -351,6 +353,7 @@
 @theme inline {
   /* Fonts */
   --font-sans: var(--font-sans);
+  --font-heading: var(--font-heading);
   --font-mono: var(--font-mono);
 
   /* Brand */

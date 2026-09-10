@@ -42,8 +42,8 @@
   z-index: -2;
   height: 36rem;
   background:
-    radial-gradient(44rem 22rem at 78% -10%, rgba(83, 58, 253, 0.12), transparent 62%),
-    radial-gradient(32rem 17rem at 12% -6%, rgba(127, 125, 252, 0.09), transparent 58%);
+    radial-gradient(44rem 22rem at 78% -10%, rgba(33, 101, 236, 0.12), transparent 62%),
+    radial-gradient(32rem 17rem at 12% -6%, rgba(164, 197, 255, 0.09), transparent 58%);
   pointer-events: none;
 }
 
@@ -149,7 +149,7 @@
 .rs-search input:focus {
   outline: none;
   border-color: var(--brand-500);
-  box-shadow: 0 0 0 3px rgba(83, 58, 253, 0.14);
+  box-shadow: 0 0 0 3px rgba(33, 101, 236, 0.14);
 }
 
 .rs-search-icon {
@@ -330,7 +330,7 @@ a.rs-chip[data-filter] {
 .rs-featured {
   border-color: var(--brand-200);
   background:
-    radial-gradient(28rem 16rem at 100% 0%, rgba(83, 58, 253, 0.07), transparent 62%),
+    radial-gradient(28rem 16rem at 100% 0%, rgba(33, 101, 236, 0.07), transparent 62%),
     var(--surface);
 }
 
@@ -386,7 +386,7 @@ a.rs-chip[data-filter] {
   border: 1px solid var(--ink-200);
   border-radius: var(--radius-2xl);
   background:
-    radial-gradient(38rem 20rem at 50% -20%, rgba(83, 58, 253, 0.1), transparent 66%),
+    radial-gradient(38rem 20rem at 50% -20%, rgba(33, 101, 236, 0.1), transparent 66%),
     linear-gradient(180deg, #fff 0%, var(--ink-50) 100%);
   box-shadow: var(--shadow-card);
   overflow: hidden;
@@ -488,7 +488,7 @@ a.rs-chip[data-filter] {
   color: var(--brand-600);
   font-weight: var(--font-weight-medium);
   text-decoration: underline;
-  text-decoration-color: rgba(83, 58, 253, 0.35);
+  text-decoration-color: rgba(33, 101, 236, 0.35);
   text-underline-offset: 3px;
 }
 

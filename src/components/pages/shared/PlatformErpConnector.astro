@@ -47,19 +47,19 @@ const erpNodes = [
 
         <!-- Hub Engine Ambient Glow -->
         <filter id="engineGlow" x="-10%" y="-10%" width="120%" height="120%" filterUnits="userSpaceOnUse">
-          <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#4f46e5" flood-opacity="0.18" />
+          <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#2165ec" flood-opacity="0.18" />
         </filter>
 
         <!-- Engine Gradient -->
         <linearGradient id="engineBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stop-color="#0f172a" />
-          <stop offset="60%" stop-color="#1e1b4b" />
+          <stop offset="60%" stop-color="#0d42aa" />
           <stop offset="100%" stop-color="#020617" />
         </linearGradient>
 
         <linearGradient id="borderGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#818cf8" stop-opacity="0.6" />
-          <stop offset="50%" stop-color="#4f46e5" stop-opacity="0.1" />
+          <stop offset="0%" stop-color="#5c94ff" stop-opacity="0.6" />
+          <stop offset="50%" stop-color="#2165ec" stop-opacity="0.1" />
           <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.5" />
         </linearGradient>
 
@@ -72,18 +72,18 @@ const erpNodes = [
         <!-- Flow Wires -->
         <linearGradient id="wireIn" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.3" />
-          <stop offset="50%" stop-color="#818cf8" stroke-opacity="0.9" />
-          <stop offset="100%" stop-color="#6366f1" stop-opacity="0.3" />
+          <stop offset="50%" stop-color="#5c94ff" stroke-opacity="0.9" />
+          <stop offset="100%" stop-color="#3d7efc" stop-opacity="0.3" />
         </linearGradient>
 
         <linearGradient id="wireOutPlat" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3" />
+          <stop offset="0%" stop-color="#3d7efc" stop-opacity="0.3" />
           <stop offset="50%" stop-color="#38bdf8" stroke-opacity="0.9" />
           <stop offset="100%" stop-color="#0284c7" stop-opacity="0.3" />
         </linearGradient>
 
         <linearGradient id="wireOutErp" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="#6366f1" stop-opacity="0.3" />
+          <stop offset="0%" stop-color="#3d7efc" stop-opacity="0.3" />
           <stop offset="50%" stop-color="#34d399" stroke-opacity="0.9" />
           <stop offset="100%" stop-color="#10b981" stop-opacity="0.3" />
         </linearGradient>
@@ -194,7 +194,7 @@ const erpNodes = [
           return (
             <g transform={`translate(16, ${yPos})`}>
               <rect width="288" height="76" rx="10" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255, 255, 255, 0.08)" />
-              <rect x="12" y="20" width="36" height="36" rx="8" fill="rgba(99, 102, 241, 0.15)" stroke="rgba(129, 140, 248, 0.2)" />
+              <rect x="12" y="20" width="36" height="36" rx="8" fill="rgba(61, 126, 252, 0.15)" stroke="rgba(92, 148, 255, 0.2)" />
               <text x="30" y="42" text-anchor="middle" class="stage-num">{stage.step}</text>
 
               <text x="58" y="35" class="stage-title">{stage.name}</text>
@@ -216,11 +216,11 @@ const erpNodes = [
         </g>
 
         <!-- Ports (Left) -->
-        <circle cx="0" cy="90" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
-        <circle cx="0" cy="135" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
-        <circle cx="0" cy="205" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
-        <circle cx="0" cy="275" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
-        <circle cx="0" cy="320" r="4" fill="#0f172a" stroke="#818cf8" stroke-width="2" />
+        <circle cx="0" cy="90" r="4" fill="#0f172a" stroke="#5c94ff" stroke-width="2" />
+        <circle cx="0" cy="135" r="4" fill="#0f172a" stroke="#5c94ff" stroke-width="2" />
+        <circle cx="0" cy="205" r="4" fill="#0f172a" stroke="#5c94ff" stroke-width="2" />
+        <circle cx="0" cy="275" r="4" fill="#0f172a" stroke="#5c94ff" stroke-width="2" />
+        <circle cx="0" cy="320" r="4" fill="#0f172a" stroke="#5c94ff" stroke-width="2" />
 
         <!-- Ports (Right) -->
         <circle cx="320" cy="90" r="4" fill="#0f172a" stroke="#38bdf8" stroke-width="2" />
@@ -340,7 +340,7 @@ const erpNodes = [
     width: 100%;
     height: auto;
     display: block;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: var(--font-sans);
   }
 
   .pec-col-header {
@@ -381,7 +381,7 @@ const erpNodes = [
     font-size: 9px;
     font-weight: 800;
     letter-spacing: 0.6px;
-    fill: #a5b4fc;
+    fill: #a4c5ff;
   }
   .engine-title {
     font-size: 18px;
@@ -398,7 +398,7 @@ const erpNodes = [
   .stage-num {
     font-size: 11px;
     font-weight: 800;
-    fill: #a5b4fc;
+    fill: #a4c5ff;
   }
   .stage-title {
     font-size: 12px;

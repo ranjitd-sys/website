@@ -23,7 +23,7 @@ export function LogoMark({ size = 26 }: { size?: number }) {
         <text
           x="50%"
           y="53%"
-          fontFamily="Inter, Arial, Helvetica, sans-serif"
+          fontFamily="var(--font-sans)"
           fontSize="260"
           fontWeight="bold"
           fill="#ffffff"
@@ -100,7 +100,7 @@ export function AlertBellIcon(props: IconProps) {
 export function CheckCircle({ className = "" }: { className?: string }) {
   return (
     <span
-      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 ${className}`}
+      className={`grid h-6 w-6 shrink-0 place-items-center rounded-full border border-success-200 bg-success-50 text-success-700 ${className}`}
       aria-hidden="true"
     >
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">

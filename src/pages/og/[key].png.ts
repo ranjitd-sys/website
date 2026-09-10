@@ -68,13 +68,13 @@ export function getStaticPaths() {
 }
 
 const COLORS = {
-  bgTop: "#171040",
-  bgMid: "#1d1149",
-  bgBottom: "#2a1761",
-  glow: "rgba(83,58,253,0.55)",
+  bgTop: "#0a317c",
+  bgMid: "#0d42aa",
+  bgBottom: "#1253d2",
+  glow: "rgba(33,101,236,0.55)",
   white: "#ffffff",
   muted: "#b6bdd3",
-  accent: "#b9a9ff",
+  accent: "#a4c5ff",
   grid: "rgba(255,255,255,0.05)",
 }
 
@@ -102,7 +102,7 @@ function Logo() {
           fontSize: "26px",
           fontWeight: 800,
           letterSpacing: "-1px",
-          color: "#150f38",
+          color: "#0a317c",
           fontFamily: "Inter",
         },
       },
@@ -179,7 +179,7 @@ export const GET: APIRoute = async ({ params }) => {
           background:
             "radial-gradient(820px 460px at 88% -18%, " +
             COLORS.glow +
-            " 0%, rgba(83,58,253,0) 55%)",
+            " 0%, rgba(33,101,236,0) 55%)",
         },
       },
     ),
@@ -236,7 +236,7 @@ export const GET: APIRoute = async ({ params }) => {
       ),
       React.createElement(
         "div",
-        { style: { width: 6, height: 6, borderRadius: 999, background: "#533afd" } },
+        { style: { width: 6, height: 6, borderRadius: 999, background: "#2165EC" } },
       ),
       React.createElement(
         "span",

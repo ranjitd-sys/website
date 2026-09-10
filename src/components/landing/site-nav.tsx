@@ -302,10 +302,10 @@ function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants 
 
       <motion.div
         variants={variants}
-        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-[#101228] via-[#161a3e] to-[#241b78] p-5"
+        className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-brand-700 via-brand-800 to-brand-900 p-5"
       >
         <div className="relative z-10">
-          <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 ring-1 ring-white/15">
+          <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-200 ring-1 ring-white/15">
             DeepEcom Platform
           </span>
           <h4 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white">
@@ -326,7 +326,7 @@ function ProductsPanel({ item, variants }: { item: NavItem; variants?: Variants 
           <p className="text-[10px] font-bold uppercase tracking-wider text-white/50">ERP integrations</p>
           <a
             href="/integrations"
-            className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-indigo-200 focus:outline-none focus:underline"
+            className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-brand-200 focus:outline-none focus:underline"
           >
             Tally · SAP · Zoho Books
             <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
@@ -445,10 +445,10 @@ function PricingPanel({ variants }: { variants?: Variants }) {
         {/* RIGHT — enterprise CTA card */}
         <motion.div
           variants={variants}
-          className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-[#101228] via-[#161a3e] to-[#241b78] p-5"
+          className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-brand-700 via-brand-800 to-brand-900 p-5"
         >
           <div className="relative z-10">
-            <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 ring-1 ring-white/15">
+            <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-200 ring-1 ring-white/15">
               Enterprise
             </span>
             <h4 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white">
@@ -468,7 +468,7 @@ function PricingPanel({ variants }: { variants?: Variants }) {
           <div className="relative z-10 mt-5 border-t border-white/10 pt-4">
             <a
               href="/pricing#compare"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-indigo-200 focus:outline-none focus:underline"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-brand-200 focus:outline-none focus:underline"
             >
               Compare all plans
               <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
@@ -519,7 +519,7 @@ const BRAND_STYLE: Record<string, { text: string; color: string; bold?: boolean;
   cashfree: { text: "cashfree", color: "#28327a", fs: "0.68rem" },
   phonepe: { text: "phonePe", color: "#5f259f", bold: true, fs: "0.72rem" },
   paytm: { text: "Paytm", color: "#00b9f5", bold: true },
-  mps: { text: "§", color: "#533afd", bold: true, fs: "1.15rem" },
+  mps: { text: "§", color: "#2165EC", bold: true, fs: "1.15rem" },
   shiprocket: { text: "Shiprocket", color: "#14b26a", bold: true, fs: "0.66rem" },
   delhivery: { text: "Delhivery", color: "#00a86b", bold: true, fs: "0.64rem" },
   ekart: { text: "Ekart", color: "#f59f00", bold: true, bg: "#111", fs: "0.68rem" },

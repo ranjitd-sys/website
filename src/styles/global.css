@@ -141,8 +141,9 @@
   --leading-loose: 2;
 
   /* Font Families */
-  --font-sans: var(--font-inter), Inter, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+  --font-sans: var(--font-geist), "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-heading: var(--font-plex), "IBM Plex Sans", var(--font-sans);
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
   /* Border Radius */
   --radius: 8px;
@@ -152,30 +153,6 @@
   --radius-xl: 12px;
   --radius-2xl: 16px;
   --radius-3xl: 24px;
-
-  /* Colors - Zinc */
-  --color-zinc-900: #18181b;
-  --color-zinc-950: #09090b;
-}
-
-:root {
-  --zinc-700: #3f3f46;
-  --zinc-800: #27272a;
-  --zinc-950: #09090b;
-
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.141 0.004 285.766);
-  --muted-foreground: oklch(0.552 0.014 285.866);
-  --ring: oklch(0.696 0.149 162.505);
-  --border: oklch(0.92 0.004 285.888);
-}
-
-.dark {
-  --background: oklch(0.141 0.004 285.766);
-  --foreground: oklch(0.985 0 0);
-  --muted-foreground: oklch(0.712 0.013 285.965);
-  --ring: oklch(0.773 0.153 163.251);
-  --border: oklch(0.274 0.005 285.941);
 }
 
 :root {
@@ -183,13 +160,22 @@
 }
 
 body {
-  font-family: var(--font-inter), Inter, sans-serif;
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
 }
 
 code,
 pre,
 .font-mono {
-  font-family: var(--font-jetbrains-mono), "JetBrains Mono", monospace !important;
+  font-family: var(--font-mono) !important;
 }
 
 /* Toggle Switch Styles */

@@ -355,7 +355,7 @@ textarea {
 }
 
 .btn-white {
-  background-color: #ffffff;
+  background-color: var(--surface);
   color: var(--ink-900);
 }
 

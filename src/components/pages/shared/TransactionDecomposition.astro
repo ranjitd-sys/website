@@ -1,7 +1,7 @@
 ---
 const events = [
-  { label: "Sale", sub: "Taxable value", icon: "receipt", color: "#6366f1", badge: "+ Credit", type: "credit", amount: "₹2,499.00" },
-  { label: "GST", sub: "CGST / SGST / IGST", icon: "scale", color: "#8b5cf6", badge: "Tax", type: "tax", amount: "-₹381.20" },
+  { label: "Sale", sub: "Taxable value", icon: "receipt", color: "#3d7efc", badge: "+ Credit", type: "credit", amount: "₹2,499.00" },
+  { label: "GST", sub: "CGST / SGST / IGST", icon: "scale", color: "#2165ec", badge: "Tax", type: "tax", amount: "-₹381.20" },
   { label: "Marketplace Fee", sub: "Commission & charges", icon: "wallet", color: "#f59e0b", badge: "Fee", type: "debit", amount: "-₹180.00" },
   { label: "TCS / TDS", sub: "Sec 194O / Sec 52", icon: "file", color: "#06b6d4", badge: "Withheld", type: "tax", amount: "-₹24.99" },
   { label: "Receivable", sub: "Net amount due", icon: "bank", color: "#3b82f6", badge: "Pending", type: "neutral", amount: "₹1,912.81" },
@@ -32,7 +32,7 @@ const ICONS: Record<string, string> = {
     --saas-text-main: #0f172a;
     --saas-text-muted: #64748b;
     --saas-line-color: #cbd5e1;
-    --saas-primary: #6366f1;
+    --saas-primary: #3d7efc;
   }
 
   /* Transparent container - adapts to any background */
@@ -212,7 +212,7 @@ const ICONS: Record<string, string> = {
 
   .type-credit { background: #ecfdf5; color: #047857; }
   .type-debit { background: #fef2f2; color: #b91c1c; }
-  .type-tax { background: #f5f3ff; color: #6d28d9; }
+  .type-tax { background: #f2f7ff; color: #6d28d9; }
   .type-neutral { background: #f1f5f9; color: #475569; }
 </style>
 

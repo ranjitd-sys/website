@@ -101,22 +101,22 @@ const mismatches = [
       align-items: center;
       gap: 0.5rem;
       padding: 0.25rem 0.75rem;
-      background: var(--brand-50, #eef2ff);
-      border: 1px solid var(--brand-100, #e0e7ff);
+      background: var(--brand-50, #f2f7ff);
+      border: 1px solid var(--brand-100, #e3edff);
       border-radius: 999px;
       font-size: 0.68rem;
       font-weight: 800;
       letter-spacing: 0.12em;
-      color: var(--brand-700, #4f46e5);
+      color: var(--brand-700, #2165ec);
       margin-bottom: 0.5rem;
     }
 
     :global(.pulse-dot) {
       width: 6px;
       height: 6px;
-      background: var(--brand-600, #4f46e5);
+      background: var(--brand-600, #2165ec);
       border-radius: 50%;
-      box-shadow: 0 0 8px var(--brand-600, #4f46e5);
+      box-shadow: 0 0 8px var(--brand-600, #2165ec);
       animation: pulseWarning 2s infinite;
     }
 
@@ -141,7 +141,7 @@ const mismatches = [
     :global(.fwall-matrix-bg) {
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(99, 102, 241, 0.08) 1px, transparent 1px);
+      background-image: radial-gradient(rgba(61, 126, 252, 0.08) 1px, transparent 1px);
       background-size: 24px 24px;
       mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 100%);
       pointer-events: none;
@@ -183,7 +183,7 @@ const mismatches = [
       top: 0; left: 0; right: 0;
       height: 3px;
     }
-    :global(.fwall-cluster.sell::before) { background: var(--brand-600, #4f46e5); }
+    :global(.fwall-cluster.sell::before) { background: var(--brand-600, #2165ec); }
     :global(.fwall-cluster.collect::before) { background: #64748b; }
     :global(.fwall-cluster.account::before) { background: #0284c7; }
 
@@ -204,7 +204,7 @@ const mismatches = [
       border-radius: 999px;
       width: fit-content;
     }
-    :global(.fwall-clabel.sell) { background: var(--brand-50, #eef2ff); color: var(--brand-700, #4338ca); }
+    :global(.fwall-clabel.sell) { background: var(--brand-50, #f2f7ff); color: var(--brand-700, #1253d2); }
     :global(.fwall-clabel.collect) { background: var(--ink-100, #f1f5f9); color: var(--ink-700, #334155); }
     :global(.fwall-clabel.account) { background: #e0f2fe; color: #0369a1; }
 
@@ -241,8 +241,8 @@ const mismatches = [
     }
 
     :global(.fwall-chip.sell) { 
-      background: var(--brand-50, #eef2ff); 
-      border: 1px solid var(--brand-100, #e0e7ff); 
+      background: var(--brand-50, #f2f7ff); 
+      border: 1px solid var(--brand-100, #e3edff); 
       color: var(--brand-900, #312e81); 
     }
     :global(.fwall-chip.collect) { 

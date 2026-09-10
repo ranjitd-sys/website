@@ -16,18 +16,18 @@ export default defineConfig({
   fonts: [
     {
       provider: GoogleFontProvider,
-      name: "Inter",
-      weights: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-      cssVariable: "--font-inter",
+      name: "Geist",
+      weights: ["400", "500", "600", "700"],
+      cssVariable: "--font-geist",
       fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
     },
     {
       provider: GoogleFontProvider,
-      name: "JetBrains Mono",
-      weights: ["300", "400", "500", "600", "700"],
+      name: "IBM Plex Sans",
+      weights: ["400", "500", "600", "700"],
       display: "swap",
-      cssVariable: "--font-jetbrains-mono",
-      fallbacks: ["ui-monospace", "SFMono-Regular", "monospace"],
+      cssVariable: "--font-plex",
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
     },
   ],
 
