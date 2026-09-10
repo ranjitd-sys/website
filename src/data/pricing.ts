@@ -93,7 +93,7 @@ export const PLANS: Plan[] = [
   {
     id: "established",
     name: "Established Seller",
-    monthly: 4000,
+    monthly: 6000,
     volume: "Up to 4,000 orders/month",
     billed: { quarterly: 12000 },
     features: [
@@ -110,7 +110,7 @@ export const PLANS: Plan[] = [
   {
     id: "high-volume",
     name: "High-Volume Seller",
-    monthly: 5000,
+    monthly: 7500,
     volume: "Up to 6,000 orders/month",
     billed: { quarterly: 15000 },
     features: [
@@ -127,7 +127,7 @@ export const PLANS: Plan[] = [
   {
     id: "power",
     name: "Power Seller",
-    monthly: 6000,
+    monthly: 9000,
     volume: "Up to 8,000 orders/month",
     billed: { quarterly: 18000 },
     features: [
