@@ -20,7 +20,6 @@ const logoed = customers.map((c) => ({
                 src={logo.src}
                 alt={`${c.logoText} logo`}
                 class="ls-logo-img"
-                style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
                 loading="lazy"
                 decoding="async"
               />
@@ -58,7 +57,7 @@ const logoed = customers.map((c) => ({
   .ls-item:hover .ls-logo { color: var(--ink-500); }
   .ls-logo-img {
     width: auto;
-    height: 26px;
+    height: 28px;
     max-width: 100px;
     object-fit: contain;
     opacity: 0.62;

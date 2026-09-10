@@ -633,16 +633,14 @@ function CaseStudiesPanel({ variants }: { variants?: Variants }) {
               <div className="flex items-center justify-between gap-2">
                 <span className="flex min-w-0 items-center gap-2.5">
                   {logo ? (
-                    <span className="grid h-10 w-12 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-border/60">
-                      <img
-                        src={logo.src}
-                        alt=""
-                        style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
-                        className="max-h-5 w-auto max-w-[40px] object-contain"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </span>
+                    <img
+                      src={logo.src}
+                      alt={c.logoText}
+                      style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
+                      className="h-7 w-auto shrink-0 object-contain"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   ) : (
                     <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold tracking-tight text-primary">
                       {c.logoText
@@ -875,8 +873,7 @@ function MobileAccordion({
                                 <img
                                   src={asset.src}
                                   alt=""
-                                  style={{ aspectRatio: `${Math.round(asset.ratio * 10)} / 10` }}
-                                  className="h-5 w-auto max-w-[48px] object-contain"
+                                  className="h-6 w-auto object-contain"
                                   loading="lazy"
                                   decoding="async"
                                 />

@@ -35,9 +35,9 @@ export const LOGO_ASSETS: Record<string, LogoAsset> = {
   dynamics: { src: "/logos/microsoft-dynamamics.webp", ratio: 1 },
   "microsoft-dynamics": { src: "/logos/microsoft-dynamamics.webp", ratio: 1 },
   // case studies (customers)
-  gati: { src: "/logos/gati.png", ratio: 1.74 },
-  vanalaya: { src: "/logos/vanalaya-logo.png", ratio: 2 },
-  zeneme: { src: "/logos/zeneme.jpg", ratio: 1 },
+  gati: { src: "/logos/gati.png", ratio: 0.96 },
+  vanalaya: { src: "/logos/vanalaya-logo.png", ratio: 1.67 },
+  zeneme: { src: "/logos/zeneme.png", ratio: 0.75 },
 }
 
 export function logoAsset(slug: string): LogoAsset | undefined {
