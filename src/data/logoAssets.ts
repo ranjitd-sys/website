@@ -34,6 +34,10 @@ export const LOGO_ASSETS: Record<string, LogoAsset> = {
   zoho: { src: "/logos/zoho_Books.png", ratio: 1 },
   dynamics: { src: "/logos/microsoft-dynamamics.webp", ratio: 1 },
   "microsoft-dynamics": { src: "/logos/microsoft-dynamamics.webp", ratio: 1 },
+  // case studies (customers)
+  gati: { src: "/logos/gati.png", ratio: 1.74 },
+  vanalaya: { src: "/logos/vanalaya-logo.png", ratio: 2 },
+  zeneme: { src: "/logos/zeneme.jpg", ratio: 1 },
 }
 
 export function logoAsset(slug: string): LogoAsset | undefined {

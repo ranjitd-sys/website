@@ -600,7 +600,7 @@ return (
 }
 
 function CaseStudiesPanel({ variants }: { variants?: Variants }) {
-  const slides = [...customers, ...customers]
+  const slides = [...customers, ...customers].map((c) => ({ c, logo: logoAsset(c.slug) }))
 
   return (
     <div className="w-full">
@@ -623,7 +623,7 @@ function CaseStudiesPanel({ variants }: { variants?: Variants }) {
 
       <div className="de-marquee-viewport overflow-hidden">
         <div className="de-marquee-track">
-          {slides.map((c, i) => (
+          {slides.map(({ c, logo }, i) => (
             <motion.a
               key={`${c.slug}-${i}`}
               variants={variants}
@@ -632,14 +632,27 @@ function CaseStudiesPanel({ variants }: { variants?: Variants }) {
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="flex min-w-0 items-center gap-2.5">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold tracking-tight text-primary">
-                    {c.logoText
-                      .split(/\s+/)
-                      .map((w) => w[0])
-                      .join("")
-                      .slice(0, 2)
-                      .toUpperCase()}
-                  </span>
+                  {logo ? (
+                    <span className="grid h-10 w-12 shrink-0 place-items-center rounded-lg bg-white ring-1 ring-border/60">
+                      <img
+                        src={logo.src}
+                        alt=""
+                        style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
+                        className="max-h-5 w-auto max-w-[40px] object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  ) : (
+                    <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-primary/10 text-sm font-bold tracking-tight text-primary">
+                      {c.logoText
+                        .split(/\s+/)
+                        .map((w) => w[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
+                    </span>
+                  )}
                   <span className="truncate text-[15px] font-bold tracking-tight text-foreground">{c.logoText}</span>
                 </span>
                 <span className="shrink-0 rounded-full bg-background px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground ring-1 ring-border/50">
@@ -853,8 +866,22 @@ function MobileAccordion({
                         <a
                           href={l.href}
                           onClick={onNavigate}
-                          className="block rounded-xl px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                          className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         >
+                          {item.id === "case-studies" &&
+                            (() => {
+                              const asset = logoAsset(l.href.split("/").pop() ?? "")
+                              return asset ? (
+                                <img
+                                  src={asset.src}
+                                  alt=""
+                                  style={{ aspectRatio: `${Math.round(asset.ratio * 10)} / 10` }}
+                                  className="h-5 w-auto max-w-[48px] object-contain"
+                                  loading="lazy"
+                                  decoding="async"
+                                />
+                              ) : null
+                            })()}
                           {l.label}
                         </a>
                       </li>

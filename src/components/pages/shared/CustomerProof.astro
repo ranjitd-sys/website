@@ -1,5 +1,8 @@
 ---
 import SectionHeading from "@/components/landing/section-heading.astro"
+import { logoAsset } from "@/data/logoAssets"
+
+const gatiLogo = logoAsset("gati")
 ---
 
 <style is:global>
@@ -24,10 +27,18 @@ import SectionHeading from "@/components/landing/section-heading.astro"
     height: 4rem;
     margin: 0 auto 1.25rem;
     border-radius: 1rem;
-    background: var(--ink-50);
+    background: #fff;
+    border: 1px solid var(--ink-200);
     color: var(--ink-400);
     font-size: 1.25rem;
     font-weight: 700;
+    overflow: hidden;
+  }
+  .cp-logo img {
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    object-fit: contain;
   }
   .cp-quote {
     font-size: 1.125rem;
@@ -45,14 +56,6 @@ import SectionHeading from "@/components/landing/section-heading.astro"
     font-size: 0.8125rem;
     color: var(--ink-400);
   }
-  .cp-placeholder {
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    background: var(--ink-50);
-    font-size: 0.75rem;
-    color: var(--ink-400);
-  }
 </style>
 
 <section class="cp">
@@ -63,11 +66,21 @@ import SectionHeading from "@/components/landing/section-heading.astro"
       center
     />
     <div class="cp-card reveal">
-      <div class="cp-logo">DC</div>
-      <p class="cp-quote">"DeepEcom has transformed how we handle ecommerce accounting. The detail and accuracy is exactly what our finance team needed."</p>
-      <div class="cp-author">Rajesh Kumar</div>
-      <div class="cp-role">CFO, Example Company</div>
-      <div class="cp-placeholder">Placeholder — replace with actual customer testimonial when available.</div>
+      <div class="cp-logo">
+        {gatiLogo && (
+          <img
+            src={gatiLogo.src}
+            alt="Gati logo"
+            style={{ aspectRatio: `${Math.round(gatiLogo.ratio * 10)} / 10` }}
+            loading="lazy"
+            decoding="async"
+          />
+        )}
+        {!gatiLogo && "GA"}
+      </div>
+      <p class="cp-quote">"We moved from complex settlements to a complete financial trail for every order. Every order is accounted for, every payment can be traced, every deduction can be validated."</p>
+      <div class="cp-author">Gati</div>
+      <div class="cp-role">Finance Team · Order-level reconciliation &amp; complete ecommerce accounting</div>
     </div>
   </div>
 </section>

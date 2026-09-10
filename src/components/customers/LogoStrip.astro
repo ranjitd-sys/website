@@ -1,5 +1,11 @@
 ---
 import { customers } from "@/data/customers"
+import { logoAsset } from "@/data/logoAssets"
+
+const logoed = customers.map((c) => ({
+  customer: c,
+  logo: logoAsset(c.slug),
+}))
 ---
 
 <section class="ls-section">
@@ -7,9 +13,20 @@ import { customers } from "@/data/customers"
     <div class="ls-inner reveal">
       <span class="ls-label">TRUSTED BY BUSINESSES ACROSS MARKETPLACES, D2C AND ENTERPRISE</span>
       <div class="ls-row">
-        {customers.map((c) => (
+        {logoed.map(({ customer: c, logo }) => (
           <div class="ls-item">
-            <span class="ls-logo">{c.logoText}</span>
+            {logo ? (
+              <img
+                src={logo.src}
+                alt={`${c.logoText} logo`}
+                class="ls-logo-img"
+                style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <span class="ls-logo">{c.logoText}</span>
+            )}
             <span class="ls-rule" aria-hidden="true"></span>
           </div>
         ))}
@@ -39,6 +56,16 @@ import { customers } from "@/data/customers"
     transition: color 0.2s ease;
   }
   .ls-item:hover .ls-logo { color: var(--ink-500); }
+  .ls-logo-img {
+    width: auto;
+    height: 26px;
+    max-width: 100px;
+    object-fit: contain;
+    opacity: 0.62;
+    filter: grayscale(1);
+    transition: opacity 0.2s ease, filter 0.2s ease;
+  }
+  .ls-item:hover .ls-logo-img { opacity: 1; filter: grayscale(0); }
   .ls-rule {
     width: 1px; height: 18px;
     background: var(--ink-200);

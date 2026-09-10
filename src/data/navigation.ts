@@ -140,10 +140,9 @@ export const NAV_ITEMS: NavItem[] = [
       {
         title: "Case Studies",
         links: [
-          { label: "GlobalBees", href: "/case-studies/globalbees" },
-          { label: "Sampatti", href: "/case-studies/sampatti" },
-          { label: "Shree Maa Group", href: "/case-studies/shree-maa-group" },
-          { label: "PEE SAFE", href: "/case-studies/pee-safe" },
+          { label: "Gati", href: "/case-studies/gati" },
+          { label: "Vanalaya", href: "/case-studies/vanalaya" },
+          { label: "Zeneme", href: "/case-studies/zeneme" },
         ],
       },
     ],

@@ -1,28 +1,33 @@
 ---
 import { customers } from "@/data/customers"
+import { logoAsset } from "@/data/logoAssets"
 
 const clientLogos = [
-  { name: "GlobalBees", logo: "globalbees" },
-  { name: "Shiprocket", logo: "shiprocket" },
-  { name: "Sampatti", logo: "sampatti" },
-  { name: "Shree Maa Group", logo: "shreemaa" },
-  { name: "PEE SAFE", logo: "peesafe" },
+  { name: "Gati", logo: "gati" },
+  { name: "Vanalaya", logo: "vanalaya" },
+  { name: "Zeneme", logo: "zeneme" },
 ];
 
+const featured = customers.find((c) => c.featured) ?? customers[0];
+const featuredLogo = logoAsset(featured.slug)
+
 const caseStudy = {
-  title: "How GlobalBees automated accounting across marketplaces and warehouses.",
-  stats: [
-    { num: 90, suffix: "%", label: "Reduction in manual accounting" },
-    { num: 100, suffix: "%", label: "Orders accounted accurately" },
-    { num: 3, suffix: "x", label: "Faster month-end closing" },
+  title: featured.headline,
+  highlights: featured.after.slice(0, 3),
+  impact: [
+    "Order-wise reconciliation",
+    "Settlement validation",
+    "Expense verification",
+    "Complete ERP accounting",
   ],
-  href: "/case-studies/globalbees",
-  image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800",
+  href: `/case-studies/${featured.slug}`,
+  logoText: featured.logoText,
 };
 
 const teaserStories = customers.map((c) => ({
   slug: c.slug,
   logoText: c.logoText,
+  logo: logoAsset(c.slug),
   industry: c.industry,
   headline: c.headline
     .replace(/^how\s+/i, "")
@@ -49,7 +54,19 @@ const teaserStories = customers.map((c) => ({
             aria-hidden={i === 0 ? "false" : "true"}
           >
             <span class="cs-slide-tag">{story.industry}</span>
-            <span class="cs-slide-logo">{story.logoText}</span>
+            <span class="cs-slide-logo">
+                {story.logo ? (
+                  <img
+                    src={story.logo.src}
+                    alt={`${story.logoText} logo`}
+                    style={{ aspectRatio: `${Math.round(story.logo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  story.logoText
+                )}
+              </span>
             <p class="cs-slide-headline">{story.headline}.</p>
             <span class="cs-slide-cta">Read their story <span class="arrow">→</span></span>
           </a>
@@ -74,44 +91,26 @@ const teaserStories = customers.map((c) => ({
       <span class="kicker">TRUSTED BY GROWING BUSINESSES</span>
       
       <div class="logo-row">
-        {clientLogos.map((item) => (
-          <div class="logo-item">
-            {item.logo === 'globalbees' && (
-              <div class="brand-text globalbees">
-                <span class="gb-icon">🐝</span>
-                <div class="gb-title">
-                  <strong>GlobalBees</strong>
-                  <small>BRANDS DELIVERED</small>
-                </div>
+        {clientLogos.map((item) => {
+          const asset = logoAsset(item.logo)
+          return (
+            <div class="logo-item">
+              {asset && (
+                <img
+                  src={asset.src}
+                  alt=""
+                  class="customer-logo"
+                  style={{ aspectRatio: `${Math.round(asset.ratio * 10)} / 10` }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              )}
+              <div class="brand-text">
+                <strong>{item.name}</strong>
               </div>
-            )}
-            {item.logo === 'shiprocket' && (
-              <div class="brand-text shiprocket">
-                <span class="sr-icon">📦</span> Shiprocket
-              </div>
-            )}
-            {item.logo === 'sampatti' && (
-              <div class="brand-text sampatti">
-                <span class="sp-logo">C</span>
-                <strong>Sampatti</strong>
-              </div>
-            )}
-            {item.logo === 'shreemaa' && (
-              <div class="brand-text shreemaa">
-                <span class="sm-icon">☀️</span>
-                <div class="sm-title">
-                  <strong>Shree Maa</strong>
-                  <small>Group</small>
-                </div>
-              </div>
-            )}
-            {item.logo === 'peesafe' && (
-              <div class="brand-text peesafe">
-                PEE SAFE
-              </div>
-            )}
-          </div>
-        ))}
+            </div>
+          )
+        })}
       </div>
     </div>
 
@@ -120,10 +119,10 @@ const teaserStories = customers.map((c) => ({
         <h3>{caseStudy.title}</h3>
         
         <div class="stats-grid">
-          {caseStudy.stats.map((stat) => (
+          {caseStudy.highlights.map((hl, i) => (
             <div class="stat-item">
-              <span class="stat-value"><span class="count-num" data-count={stat.num}>{stat.num}</span>{stat.suffix}</span>
-              <span class="stat-label">{stat.label}</span>
+              <span class="stat-value stat-check">✓</span>
+              <span class="stat-label">{hl}</span>
             </div>
           ))}
         </div>
@@ -134,7 +133,32 @@ const teaserStories = customers.map((c) => ({
       </div>
 
       <div class="case-study-image">
-        <img src={caseStudy.image} alt="Warehouse Operations Manager" />
+        <div class="impact-panel">
+          <div class="impact-head">
+            {featuredLogo ? (
+              <span class="impact-logo" aria-hidden="true">
+                <img
+                  src={featuredLogo.src}
+                  alt=""
+                  style={{ aspectRatio: `${Math.round(featuredLogo.ratio * 10)} / 10` }}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </span>
+            ) : (
+              <span class="impact-logo">{caseStudy.logoText}</span>
+            )}
+            <span class="impact-tag">Featured Story</span>
+          </div>
+          <div class="impact-chain">
+            {caseStudy.impact.map((step, i) => (
+              <div class="impact-step">
+                <span class="impact-step-label">{step}</span>
+                {i < caseStudy.impact.length - 1 && <span class="impact-arrow">→</span>}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -259,10 +283,10 @@ const teaserStories = customers.map((c) => ({
   .logo-item {
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 0.85rem;
-    border-right: 1px solid #f1f5f9;
-    height: 40px;
+    gap: 0.6rem;
+    padding: 0 1.1rem;
+    border-right: 1px solid #eceef3;
+    height: 52px;
   }
 
   .logo-item:last-child {
@@ -276,63 +300,22 @@ const teaserStories = customers.map((c) => ({
     align-items: center;
     gap: 0.35rem;
   }
-
-  .globalbees {
+  .brand-text strong {
+    font-size: 0.98rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
     color: #0f172a;
-  }
-  .gb-title {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-  .gb-title small {
-    font-size: 0.45rem;
-    letter-spacing: 0.05em;
-    color: #64748b;
+    white-space: nowrap;
   }
 
-  .shiprocket {
-    font-weight: 800;
-    color: #0f172a;
-    font-size: 0.95rem;
+  .customer-logo {
+    height: 38px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
   }
-
-  .sampatti {
-    color: #1d4ed8;
-  }
-  .sp-logo {
-    background: #f59e0b;
-    color: #fff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.65rem;
-    font-weight: bold;
-  }
-
-  .shreemaa {
-    color: #1e3a8a;
-  }
-  .sm-title {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-  }
-  .sm-title small {
-    font-size: 0.55rem;
-    color: #dc2626;
-  }
-
-  .peesafe {
-    border: 1.5px solid #0f172a;
-    padding: 2px 6px;
-    font-weight: 800;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    color: #0f172a;
+  .logo-row {
+    row-gap: 1rem;
   }
 
   /* Right Column: Case Study Card */
@@ -372,27 +355,36 @@ const teaserStories = customers.map((c) => ({
 
   .stats-grid {
     display: flex;
-    gap: 1.25rem;
+    flex-direction: column;
+    gap: 0.5rem;
     margin-bottom: 1.25rem;
   }
 
   .stat-item {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .stat-value {
-    font-size: 1.25rem;
+  .stat-check {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #f0fdf4;
+    color: #22c55e;
+    font-size: 0.65rem;
     font-weight: 800;
-    color: #533afd;
     line-height: 1;
+    flex: none;
   }
 
   .stat-label {
-    font-size: 0.65rem;
-    color: #64748b;
-    line-height: 1.25;
-    margin-top: 0.25rem;
+    font-size: 0.72rem;
+    color: #475569;
+    line-height: 1.35;
+    font-weight: 500;
   }
 
   .case-study-link {
@@ -405,25 +397,83 @@ const teaserStories = customers.map((c) => ({
     gap: 0.25rem;
   }
 
+  .case-study-link .arrow {
+    font-size: 0.9rem;
+  }
+
   .case-study-image {
     width: 100%;
-    height: 140px;
+    height: auto;
+    min-height: 150px;
     border-radius: 8px;
     overflow: hidden;
     flex-shrink: 0;
+    border: 1px solid var(--ink-100, #eef2f7);
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(83, 58, 253, 0.08), transparent 60%),
+      linear-gradient(180deg, #ffffff 0%, #fafaff 100%);
   }
 
   @media (min-width: 40rem) {
     .case-study-image {
-      width: 160px;
-      height: 140px;
+      width: 200px;
     }
   }
 
-  .case-study-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .impact-panel {
+    padding: 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  .impact-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .impact-logo {
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+  }
+  .impact-logo img {
+    max-width: 84px;
+    max-height: 30px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  .impact-tag {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #533afd;
+    background: var(--brand-50, #eef2ff);
+    border: 1px solid var(--brand-100, #e0e7ff);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+    white-space: nowrap;
+  }
+  .impact-chain {
+    display: flex;
+    flex-direction: column;
+  }
+  .impact-step {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .impact-step-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #334155;
+    line-height: 1.4;
+  }
+  .impact-arrow {
+    color: #533afd;
+    font-size: 0.8rem;
   }
 
   /* ----- Mobile-only auto-rotating case study teaser ----- */
@@ -487,7 +537,7 @@ const teaserStories = customers.map((c) => ({
           rgba(83, 58, 253, 0) 0 2px,
           rgba(83, 58, 253, 0.04) 2px 34px
         ),
-        linear-gradient(160deg, #ffe9f0 0%, #ffffff 55%);
+        linear-gradient(160deg, #eef2ff 0%, #ffffff 55%);
     }
     .cs-slide-tag {
       align-self: flex-start;
@@ -506,6 +556,12 @@ const teaserStories = customers.map((c) => ({
       font-weight: 800;
       letter-spacing: -0.02em;
       color: var(--ink-950);
+    }
+    .cs-slide-logo img {
+      width: auto;
+      max-width: 128px;
+      max-height: 34px;
+      object-fit: contain;
     }
     .cs-slide-headline {
       margin: 0;

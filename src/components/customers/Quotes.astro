@@ -1,9 +1,11 @@
 ---
 import { customers } from "@/data/customers"
+import { logoAsset } from "@/data/logoAssets"
 import { Quote } from "lucide-react"
 
 const verifiedQuotes = customers.filter((c) => c.quote && c.quoteAuthor !== "CONTENT NEEDED")
 const hasQuotes = verifiedQuotes.length > 0
+const quoteLogos = verifiedQuotes.map((c) => ({ customer: c, logo: logoAsset(c.slug) }))
 ---
 
 <section class="quotes-section">
@@ -16,7 +18,7 @@ const hasQuotes = verifiedQuotes.length > 0
 
       {hasQuotes ? (
         <div class="quotes-grid">
-          {verifiedQuotes.map((c, i) => (
+          {quoteLogos.map(({ customer: c, logo }, i) => (
             <blockquote class="quote-card reveal" data-delay={i * 80}>
               <span class="quote-icon"><Quote size={18} /></span>
               <p class="quote-text">"{c.quote}"</p>
@@ -24,7 +26,19 @@ const hasQuotes = verifiedQuotes.length > 0
                 <span class="quote-author">{c.quoteAuthor}</span>
                 <span class="quote-role">{c.quoteRole}</span>
               </cite>
-              <span class="quote-brand">{c.logoText}</span>
+              {logo ? (
+                <span class="quote-brand">
+                  <img
+                    src={logo.src}
+                    alt={`${c.logoText} logo`}
+                    style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="quote-brand quote-brand-text">{c.logoText}</span>
+              )}
             </blockquote>
           ))}
         </div>
@@ -88,6 +102,14 @@ const hasQuotes = verifiedQuotes.length > 0
     color: var(--ink-300);
     letter-spacing: 0.02em;
   }
+  .quote-brand img {
+    width: auto;
+    max-width: 120px;
+    max-height: 30px;
+    object-fit: contain;
+    opacity: 0.75;
+  }
+  .quote-brand-text { color: var(--ink-300); }
 
   .quotes-placeholder {
     margin-top: 2.5rem;

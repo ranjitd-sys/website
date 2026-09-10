@@ -1,8 +1,10 @@
 ---
 import { customers } from "@/data/customers"
+import { logoAsset } from "@/data/logoAssets"
 import { ArrowRight, CheckCircle2, XCircle, Boxes, Wallet, LayoutDashboard, BookOpenCheck } from "lucide-react"
 
 const featured = customers.find((c) => c.featured)
+const featuredLogo = featured ? logoAsset(featured.slug) : undefined
 const productIcons = {
   Platform: LayoutDashboard,
   "ERP Connector": BookOpenCheck,
@@ -28,7 +30,19 @@ const productTags = (label: string) =>
         <span class="eyebrow">FEATURED STORY</span>
         <div class="fs-head-row">
           <h2 class="fs-title">{featured.headline}</h2>
-          <span class="fs-brand-pill">{featured.logoText}</span>
+          {featuredLogo ? (
+            <span class="fs-brand-pill">
+              <img
+                src={featuredLogo.src}
+                alt={`${featured.logoText} logo`}
+                style={{ aspectRatio: `${Math.round(featuredLogo.ratio * 10)} / 10` }}
+                loading="lazy"
+                decoding="async"
+              />
+            </span>
+          ) : (
+            <span class="fs-brand-pill fs-brand-pill-text">{featured.logoText}</span>
+          )}
         </div>
         <p class="fs-industry">{featured.industry} · {featured.businessType}</p>
       </div>
@@ -55,7 +69,19 @@ const productTags = (label: string) =>
 
           <div class="fs-step fs-step-deepecom">
             <div class="fs-step-play">
-              <span class="fs-brand-badge">{featured.logoText.charAt(0)}</span>
+              {featuredLogo ? (
+                <span class="fs-brand-badge">
+                  <img
+                    src={featuredLogo.src}
+                    alt=""
+                    style={{ aspectRatio: `${Math.round(featuredLogo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="fs-brand-badge fs-brand-badge-text">{featured.logoText.charAt(0)}</span>
+              )}
               <span class="fs-step-label">DEEPECOM</span>
             </div>
             <div class="fs-products">
@@ -90,7 +116,19 @@ const productTags = (label: string) =>
         <aside class="fs-side">
           <div class="fs-summary-card">
             <div class="fs-summary-head">
-              <span class="fs-summary-brand">{featured.logoText}</span>
+              {featuredLogo ? (
+                <span class="fs-summary-brand">
+                  <img
+                    src={featuredLogo.src}
+                    alt={`${featured.logoText} logo`}
+                    style={{ aspectRatio: `${Math.round(featuredLogo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="fs-summary-brand">{featured.logoText}</span>
+              )}
               <a href={`/case-studies/${featured.slug}`} class="fs-summary-link">
                 Read full story <ArrowRight size={14} />
               </a>
@@ -99,7 +137,7 @@ const productTags = (label: string) =>
             {featured.quote && (
               <blockquote class="fs-quote">
                 <p>"{featured.quote}"</p>
-                <cite>{featured.quoteAuthor !== "CONTENT NEEDED" ? featured.quoteAuthor : ""} · {featured.quoteRole !== "CONTENT NEEDED — GlobalBees finance team member" ? featured.quoteRole : "GlobalBees Finance Team"}</cite>
+                <cite>{featured.quoteAuthor !== "CONTENT NEEDED" ? featured.quoteAuthor : ""} · {featured.quoteRole !== "CONTENT NEEDED" ? featured.quoteRole : `${featured.logoText} Team`}</cite>
               </blockquote>
             )}
 
@@ -120,7 +158,7 @@ const productTags = (label: string) =>
             </div>
 
             <a href={`/case-studies/${featured.slug}`} class="fs-card-cta">
-              Explore the GlobalBees case study <ArrowRight size={15} />
+              Explore the {featured.logoText} case study <ArrowRight size={15} />
             </a>
           </div>
         </aside>
@@ -135,10 +173,26 @@ const productTags = (label: string) =>
   .fs-head-row { margin-top: 0.75rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .fs-title { font-size: clamp(1.75rem, 3vw, 2.4rem); line-height: 1.12; letter-spacing: -0.03em; font-weight: 800; color: var(--ink-950); }
   .fs-brand-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     font-size: 0.72rem; font-weight: 800; letter-spacing: 0.08em;
+    color: var(--brand-600); background: #fff;
+    border: 1px solid var(--ink-200); border-radius: 999px;
+    padding: 0.2rem 0.7rem;
+    height: 34px;
+  }
+  .fs-brand-pill-text {
     color: var(--brand-600); background: var(--brand-50);
-    border: 1px solid var(--brand-100); border-radius: 999px;
+    border: 1px solid var(--brand-100);
     padding: 0.32rem 0.85rem;
+    height: auto;
+  }
+  .fs-brand-pill img {
+    width: auto;
+    max-width: 110px;
+    max-height: 26px;
+    object-fit: contain;
   }
   .fs-industry { margin-top: 0.6rem; font-size: 0.85rem; font-weight: 600; color: var(--ink-500); }
 
@@ -175,6 +229,20 @@ const productTags = (label: string) =>
   .fs-brand-badge {
     background: linear-gradient(135deg, var(--brand-500), var(--brand-300));
     color: #fff; font-weight: 800; font-size: 0.75rem;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px var(--ink-200);
+  }
+  .fs-brand-badge-text {
+    background: linear-gradient(135deg, var(--brand-500), var(--brand-300));
+    color: #fff;
+    box-shadow: none;
+  }
+  .fs-brand-badge img {
+    width: 100%;
+    height: 100%;
+    padding: 4px;
+    object-fit: contain;
   }
   .fs-step-divider { display: flex; justify-content: center; padding: 0.4rem 0; }
   .fs-chev {
@@ -224,6 +292,14 @@ const productTags = (label: string) =>
   }
   .fs-summary-head { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
   .fs-summary-brand { font-size: 1.15rem; font-weight: 800; color: var(--ink-900); }
+  .fs-summary-brand img {
+    display: block;
+    max-width: 140px;
+    max-height: 34px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
   .fs-summary-link {
     display: inline-flex; align-items: center; gap: 0.35rem;
     font-size: 0.78rem; font-weight: 600; color: var(--brand-600); text-decoration: none;

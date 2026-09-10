@@ -2,9 +2,11 @@
 import { ArrowRight } from "lucide-react"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { customers } from "@/data/customers"
+import { logoAsset } from "@/data/logoAssets"
 
 const featured = customers.find((c) => c.featured)
-const others = customers.filter((c) => !c.featured).slice(0, 3)
+const featuredLogo = featured ? logoAsset(featured.slug) : undefined
+const others = customers.filter((c) => !c.featured).slice(0, 3).map((c) => ({ customer: c, logo: logoAsset(c.slug) }))
 ---
 
 <section class="cust-hero">
@@ -35,8 +37,20 @@ const others = customers.filter((c) => !c.featured).slice(0, 3)
         </div>
         <div class="ch-proof">
           <div class="ch-avatars" aria-hidden="true">
-            {others.map((c) => (
-              <span class="ch-avatar">{c.logoText.charAt(0)}</span>
+            {others.map(({ customer: c, logo }) => (
+              <span class="ch-avatar">
+                {logo ? (
+                  <img
+                    src={logo.src}
+                    alt=""
+                    style={{ aspectRatio: `${Math.round(logo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  c.logoText.charAt(0)
+                )}
+              </span>
             ))}
           </div>
           <div class="ch-proof-copy">
@@ -51,14 +65,26 @@ const others = customers.filter((c) => !c.featured).slice(0, 3)
           <div class="ch-feature-card">
             <div class="ch-qmark">"</div>
             <p class="ch-qtext">
-              {featured?.quote || "CONTENT NEEDED — Featured customer quote."}
+              {featured?.headline || "Real ecommerce businesses running on a clean financial picture."}
             </p>
             <div class="ch-qmeta">
-              <span class="ch-qname">{featured?.quoteAuthor || "CONTENT NEEDED"}</span>
-              <span class="ch-qrole">{featured?.quoteRole || "Verified attribution required"}</span>
+              <span class="ch-qname">{featured?.logoText || "DeepEcom Customers"}</span>
+              <span class="ch-qrole">{featured?.industry || "Verified ecommerce businesses"}</span>
             </div>
             <div class="ch-qfoot">
-              <span class="ch-qbrand">{featured?.logoText || "Featured Customer"}</span>
+              {featuredLogo ? (
+                <span class="ch-qbrand">
+                  <img
+                    src={featuredLogo.src}
+                    alt={`${featured?.logoText} logo`}
+                    style={{ aspectRatio: `${Math.round(featuredLogo.ratio * 10)} / 10` }}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="ch-qbrand">{featured?.logoText || "Featured Customer"}</span>
+              )}
               <span class="ch-qtag">Featured Story</span>
             </div>
           </div>
@@ -201,30 +227,32 @@ const others = customers.filter((c) => !c.featured).slice(0, 3)
   font-weight: 800;
   margin-left: -8px;
   box-shadow: 0 2px 4px rgba(11, 17, 32, 0.05);
+  overflow: hidden;
+  background: #ffffff;
 }
 .ch-avatar:first-child { 
   margin-left: 0; 
 }
+.ch-avatar img {
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  object-fit: contain;
+}
 
 /* Soft Lavender/Purple */
 .ch-avatar:nth-child(1) {
-  background: #f0eefd;
-  color: #533afd;
-  border-color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(83, 58, 253, 0.18), 0 2px 4px rgba(11, 17, 32, 0.05);
 }
 
 /* Soft Honey/Yellow */
 .ch-avatar:nth-child(2) {
-  background: #fef3c7;
-  color: #d97706;
-  border-color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(217, 119, 6, 0.18), 0 2px 4px rgba(11, 17, 32, 0.05);
 }
 
 /* Soft Sky/Blue */
 .ch-avatar:nth-child(3) {
-  background: #e0f2fe;
-  color: #0284c7;
-  border-color: #ffffff;
+  box-shadow: inset 0 0 0 1px rgba(2, 132, 199, 0.18), 0 2px 4px rgba(11, 17, 32, 0.05);
 } 
   .ch-avatar:first-child { margin-left: 0; }
   .ch-proof-copy { display: flex; flex-direction: column; gap: 0.1rem; }
@@ -290,6 +318,14 @@ const others = customers.filter((c) => !c.featured).slice(0, 3)
     gap: 0.75rem;
   }
   .ch-qbrand { font-size: 0.95rem; font-weight: 800; color: var(--ink-900); }
+  .ch-qbrand img {
+    display: block;
+    max-width: 110px;
+    max-height: 30px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
   .ch-qtag {
     font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
     color: var(--brand-600);
