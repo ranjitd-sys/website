@@ -43,6 +43,7 @@ import { BOOK_DEMO_URL, LOGIN_URL, NAV_ITEMS, type NavGroup, type NavItem, type 
 import { INTEGRATION_CATEGORIES, integrationsByCategory, type IntegrationCategoryId } from "@/data/integrations"
 import { logoAsset } from "@/data/logoAssets"
 import { customers } from "@/data/customers"
+import { PLANS } from "@/data/pricing"
 import { Button } from "./ui/button"
 
 const OPEN_DELAY = 100
@@ -408,12 +409,98 @@ function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants
   )
 }
 
+function PricingPanel({ variants }: { variants?: Variants }) {
+  const inr = (n: number) => n.toLocaleString("en-IN")
+  const standard = PLANS.filter((p) => !p.custom)
+  return (
+    <div className="w-full">
+      <div className="grid grid-cols-[1.55fr_0.8fr] gap-5 p-6">
+        {/* LEFT — plan cards */}
+        <div>
+          <div className="mb-3 flex items-center justify-between px-1">
+            <h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Plans · billed quarterly</h3>
+            <a href="/pricing" className="text-[11px] font-semibold text-primary hover:underline focus:outline-none focus:underline">
+              View all pricing
+            </a>
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            {standard.map((plan) => (
+              <motion.a
+                key={plan.id}
+                variants={variants}
+                href={`/pricing#${plan.id}`}
+                className="group flex flex-col rounded-xl border border-border/60 bg-muted/20 px-3.5 py-3 transition-colors hover:border-primary/40 hover:bg-primary/5 focus:outline-none focus:ring-2 focus:ring-primary/40"
+              >
+                <span className="text-[11px] font-semibold text-foreground transition-colors group-hover:text-primary">{plan.name}</span>
+                <span className="mt-1.5 text-lg font-bold tracking-tight text-foreground">
+                  ₹{inr(plan.monthly!)}
+                  <span className="ml-0.5 text-xs font-medium text-muted-foreground">/mo</span>
+                </span>
+                <span className="mt-1 text-[10.5px] leading-snug text-muted-foreground">{plan.volume}</span>
+              </motion.a>
+            ))}
+          </div>
+        </div>
+
+        {/* RIGHT — enterprise CTA card */}
+        <motion.div
+          variants={variants}
+          className="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-[#101228] via-[#161a3e] to-[#241b78] p-5"
+        >
+          <div className="relative z-10">
+            <span className="inline-block rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-indigo-200 ring-1 ring-white/15">
+              Enterprise
+            </span>
+            <h4 className="mt-3 text-xl font-bold leading-snug tracking-tight text-white">
+              High volumes? Let's build a custom plan.
+            </h4>
+            <p className="mt-1.5 text-xs leading-relaxed text-white/70">
+              Above 8,000 orders a month, multiple GST numbers and ERP accounting at scale.
+            </p>
+            <a
+              href="/pricing#enterprise"
+              className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-primary/30 transition-transform hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-white/40"
+            >
+              Let's Discuss
+              <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+          <div className="relative z-10 mt-5 border-t border-white/10 pt-4">
+            <a
+              href="/pricing#compare"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white transition-colors hover:text-indigo-200 focus:outline-none focus:underline"
+            >
+              Compare all plans
+              <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+            </a>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* footer bar */}
+      <div className="flex items-center justify-between gap-3 border-t border-border/50 px-8 py-4">
+        <p className="hidden text-xs leading-relaxed text-muted-foreground sm:block">
+          Plans are sized by monthly order volume and billed quarterly. No per-seat fees, no hidden charges.
+        </p>
+        <a
+          href="/pricing"
+          className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold !text-white shadow-md shadow-primary/25 transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        >
+          View all pricing
+          <ArrowRight size={13} className="transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+    </div>
+  )
+}
+
 const PANEL_WIDTHS: Record<string, string> = {
   products: "w-[860px]",
   solutions: "w-[820px]",
   resources: "w-[840px]",
   integrations: "w-[880px]",
   "case-studies": "w-[720px]",
+  pricing: "w-[800px]",
 }
 
 // --- Integration brand monograms (kept small & typographic like the ecosystem page) ---
@@ -762,6 +849,7 @@ function NavPanel({ item, open, pinned, registerPanel, onKeyDown, onFocusOut, on
             {item.id === "resources" && <ResourcesPanel item={item} variants={itemVariants} />}
             {item.id === "integrations" && <IntegrationsPanel variants={itemVariants} />}
             {item.id === "case-studies" && <CaseStudiesPanel variants={itemVariants} />}
+            {item.id === "pricing" && <PricingPanel variants={itemVariants} />}
           </div>
         </motion.div>
       )}

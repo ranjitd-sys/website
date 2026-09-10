@@ -1,0 +1,42 @@
+---
+import { BOOK_DEMO_URL } from "@/data/navigation"
+import { PLANS } from "@/data/pricing"
+import { ArrowRight, Building2 } from "lucide-react"
+
+const enterprise = PLANS.find((p) => p.custom)
+---
+
+<section id="enterprise" class="scroll-mt-24">
+  <div class="relative isolate overflow-hidden rounded-2xl border border-brand-200/60 bg-gradient-to-br from-[#0a0b22] via-[#111648] to-[#241b78] p-6 shadow-card sm:p-8">
+    <div
+      class="pointer-events-none absolute -top-24 -left-16 right-0 h-64"
+      aria-hidden="true"
+      style="background:
+        radial-gradient(40% 62% at 18% 0%, rgba(139, 121, 255, 0.3), transparent 70%),
+        radial-gradient(30% 55% at 92% 0%, rgba(83, 58, 253, 0.28), transparent 70%)"
+    ></div>
+
+    <div class="relative flex flex-wrap items-center gap-5 xl:gap-8">
+      <span class="grid flex-none place-items-center rounded-xl bg-white text-brand-600 shadow-lg shadow-black/30" style="width:52px;height:52px">
+        <Building2 size={22} />
+      </span>
+
+      <div class="min-w-[16rem] flex-1">
+        <p class="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/55">Enterprise</p>
+        <h3 class="mt-1 text-xl font-bold tracking-tight text-white sm:text-2xl">Enterprise Seller</h3>
+        <p class="mt-0.5 text-sm font-semibold text-brand-200">Above 8,000 orders/month · Custom plan</p>
+        <p class="mt-1.5 max-w-xl text-sm leading-relaxed text-white/70">
+          Sellers above 8,000 orders a month get a plan sized around their volume, GST structure and ERP requirements.
+        </p>
+      </div>
+
+      <a
+        href={BOOK_DEMO_URL}
+        class="inline-flex flex-none items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-bold text-brand-600 shadow-lg shadow-black/30 transition hover:-translate-y-0.5"
+      >
+        Let's Discuss
+        <ArrowRight size={15} />
+      </a>
+    </div>
+  </div>
+</section>

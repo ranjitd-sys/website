@@ -1,166 +1,62 @@
 ---
-import { COMPARISON_ROWS, PLANS } from "@/data/pricing"
+import { COMPARISON_ROWS, STANDARD_PLANS } from "@/data/pricing"
 import { Check } from "lucide-react"
 ---
 
-<section class="pricing-comparison" aria-labelledby="comparison-title">
-  <div class="pricing-cmp-head reveal">
-    <span class="eyebrow">COMPARE</span>
-    <h2 id="comparison-title" class="h2-md">Compare plans at a glance</h2>
-    <p class="lead">See the exact limits and included features across the three plans.</p>
-  </div>
+<section id="compare" aria-labelledby="comparison-title" class="scroll-mt-24">
+  <div class="sec">
+    <div class="max-w-3xl reveal">
+      <span class="eyebrow">COMPARE</span>
+      <h2 id="comparison-title" class="h2-md mt-4">Compare plans at a glance</h2>
+      <p class="lead mt-5">See the exact limits and included features across the six standard plans.</p>
+    </div>
 
-  <div class="pricing-cmp-wrap reveal" data-delay="80">
-    <table class="pricing-cmp-table">
-      <caption class="sr-only">Comparison of the Beginner, Emerging and Scaling plans</caption>
-      <thead>
-        <tr>
-          <th scope="col" class="cmp-corner"><span class="sr-only">Plan</span></th>
-          {PLANS.map((plan) => (
-            <th key={plan.id} scope="col" class:list={["cmp-plan-head", plan.id === "scaling" && "cmp-plan-head--hi"]}>
-              {plan.name}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {COMPARISON_ROWS.map((row) => (
-          <tr key={row.label}>
-            <th scope="row" class="cmp-row-label">{row.label}</th>
-            {row.values.map((value, i) => (
-              <td key={i} class:list={["cmp-cell", PLANS[i].id === "scaling" && "cmp-cell--hi"]}>
-                {typeof value === "boolean" ? (
-                  value ? (
-                    <span class="cmp-check" aria-label="Included">
-                      <Check size={13} strokeWidth={3} />
-                    </span>
-                  ) : (
-                    <span class="cmp-dash" aria-label="Not included">—</span>
-                  )
-                ) : (
-                  <span class="cmp-value num">{value}</span>
-                )}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-    <p class="pricing-cmp-note">
-      Order volumes, marketplaces and GST limits are per month. Data Insights and Profit Tracking are only
-      listed where they are included in the plan.
-    </p>
+    <div class="mt-10 reveal" data-delay="80">
+      <div class="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[46rem] text-left">
+            <caption class="sr-only">
+              Comparison of the Beginner, Emerging, Scaling, Established, High-Volume and Power plans
+            </caption>
+            <thead>
+              <tr class="border-b border-ink-100 bg-ink-50/60">
+                <th scope="col" class="w-[30%] py-3.5 pl-5 pr-4 text-sm font-semibold text-ink-600"><span class="sr-only">Plan</span></th>
+                {STANDARD_PLANS.map((plan) => (
+                  <th key={plan.id} scope="col" class="py-3.5 px-4 text-sm font-bold tracking-tight text-ink-900">
+                    {plan.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARISON_ROWS.map((row) => (
+                <tr key={row.label} class="border-b border-ink-100 last:border-0">
+                  <th scope="row" class="py-3.5 pl-5 pr-4 text-sm font-semibold text-ink-700">{row.label}</th>
+                  {row.values.map((value, i) => (
+                    <td key={i} class="py-3.5 px-4 text-sm">
+                      {typeof value === "boolean" ? (
+                        value ? (
+                          <span class="inline-grid h-5 w-5 place-items-center rounded-full border border-brand-100 bg-brand-50 text-brand-600" aria-label="Included">
+                            <Check size={13} strokeWidth={3} />
+                          </span>
+                        ) : (
+                          <span class="font-semibold text-ink-300" aria-label="Not included">—</span>
+                        )
+                      ) : (
+                        <span class="font-bold tabular-nums text-ink-950">{value}</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="border-t border-ink-100 px-5 py-4 text-xs leading-relaxed text-ink-400">
+          Order volumes, marketplaces and GST limits are per month. Enterprise plans above 8,000 orders a month are
+          sized individually. Data Insights and Profit Tracking are only listed where they are included.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
-
-<style>
-  .pricing-comparison {
-    border-block: 1px solid var(--ink-200);
-    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
-  }
-  .pricing-cmp-head {
-    text-align: center;
-    max-width: 44rem;
-    margin-inline: auto;
-  }
-  .pricing-cmp-head h2 {
-    margin-top: 0.7rem;
-  }
-  .pricing-cmp-head p {
-    margin-top: 0.7rem;
-  }
-
-  .pricing-cmp-wrap {
-    margin-top: 1.75rem;
-    position: relative;
-    border: 1px solid var(--ink-200);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.04);
-    overflow: hidden;
-  }
-
-  .pricing-cmp-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-  .pricing-cmp-table th,
-  .pricing-cmp-table td {
-    padding: 0.9rem 1.25rem;
-    border-bottom: 1px solid var(--ink-100);
-    font-size: 0.9rem;
-  }
-  .pricing-cmp-table tbody tr:last-child th,
-  .pricing-cmp-table tbody tr:last-child td {
-    border-bottom: none;
-  }
-  .cmp-corner {
-    width: 34%;
-  }
-  .cmp-plan-head {
-    width: 22%;
-    font-size: 0.86rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink-900);
-  }
-  .cmp-plan-head--hi {
-    color: var(--brand-600);
-  }
-  .cmp-row-label {
-    font-weight: 600;
-    color: var(--ink-700);
-  }
-  .cmp-cell--hi {
-    background: linear-gradient(180deg, transparent 0%, rgba(240, 237, 255, 0.5) 100%);
-  }
-  .cmp-value {
-    font-weight: 700;
-    color: var(--ink-950);
-  }
-  .cmp-check {
-    display: inline-grid;
-    place-items: center;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: var(--brand-50);
-    border: 1px solid var(--brand-100);
-    color: var(--brand-600);
-  }
-  .cmp-dash {
-    color: var(--ink-300);
-    font-weight: 600;
-  }
-
-  .pricing-cmp-note {
-    padding: 0.85rem 1.25rem 1rem;
-    font-size: 0.78rem;
-    line-height: 1.55;
-    color: var(--ink-400);
-    border-top: 1px solid var(--ink-100);
-  }
-
-  @media (max-width: 48rem) {
-    .cmp-corner {
-      width: 40%;
-      position: sticky;
-      left: 0;
-      background: #fff;
-      z-index: 1;
-    }
-    .cmp-row-label {
-      position: sticky;
-      left: 0;
-      background: #fff;
-      z-index: 1;
-    }
-    .pricing-cmp-wrap {
-      overflow-x: auto;
-    }
-    .pricing-cmp-table {
-      min-width: 40rem;
-    }
-  }
-</style>

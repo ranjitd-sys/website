@@ -1,14 +1,13 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
 import PricingHero from "@/components/pages/pricing/PricingHero.astro"
-import BillingSelector from "@/components/pages/pricing/BillingSelector"
 import PricingCard from "@/components/pages/pricing/PricingCard.astro"
+import PricingEnterprise from "@/components/pages/pricing/PricingEnterprise.astro"
 import PricingComparison from "@/components/pages/pricing/PricingComparison.astro"
 import PlanGuidance from "@/components/pages/pricing/PlanGuidance.astro"
 import PricingFAQ from "@/components/pages/pricing/PricingFAQ.astro"
 import PricingCTA from "@/components/pages/pricing/PricingCTA.astro"
-import { BOOK_DEMO_URL } from "@/data/navigation"
-import { PLANS, BILLING_CYCLES } from "@/data/pricing"
+import { STANDARD_PLANS } from "@/data/pricing"
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -16,7 +15,7 @@ const jsonLd = {
   name: "DeepEcom Seller Plans",
   description:
     "DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting. Plans are sized by monthly order volume and billed quarterly.",
-  offers: PLANS.map((plan) => ({
+  offers: STANDARD_PLANS.map((plan) => ({
     "@type": "Offer",
     name: plan.name,
     price: plan.monthly,
@@ -30,166 +29,73 @@ const jsonLd = {
 
 <PageLayout
   title="Pricing — Simple plans for every ecommerce stage | DeepEcom"
-  description="DeepEcom pricing is sized by monthly order volume: Beginner Seller ₹1,000/month, Emerging Seller ₹2,000/month and Scaling Seller ₹3,000/month, billed quarterly. No per-seat fees, no hidden charges."
+  description="DeepEcom pricing is sized by monthly order volume: from Beginner Seller ₹1,000/month up to Power Seller ₹6,000/month, billed quarterly. Custom Enterprise plans for sellers above 8,000 orders a month."
+  ogKey="pricing"
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Pricing", item: "https://deepecom.com/pricing" },
+      ],
+    },
+    jsonLd,
+  ]}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  <!-- 01 — HERO -->
+  <PricingHero />
 
-  <div id="pricing-period-root" data-pricing-root data-active="quarterly">
-    <PricingHero
-      title="Flexible plans for every stage of your ecommerce business."
-      lead="Plans are sized by monthly order volume and billed quarterly. No per-seat fees, no hidden charges."
-    />
-
-    <section class="pricing-body" aria-label="Plans and billing">
-      <div class="billing-shell reveal">
-        <BillingSelector client:load />
-        <p class="billing-hint">Choose a billing period to see the full picture.</p>
+  <!-- 02 — PLANS -->
+  <section class="section-band" aria-label="Plans and billing">
+    <div class="sec">
+      <div class="flex flex-wrap items-end justify-between gap-4 reveal">
+        <div class="max-w-3xl">
+          <span class="eyebrow">PLANS</span>
+          <h2 class="h2-md mt-4">Six plans, sized by monthly order volume.</h2>
+          <p class="lead mt-5">Pick the plan that fits your current stage — you can always move up as your business grows.</p>
+        </div>
+        <a
+          href="#compare"
+          class="group inline-flex shrink-0 items-center gap-1.5 text-sm font-bold text-brand-600 transition-colors hover:text-brand-700"
+        >
+          Compare all plans
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transition-transform group-hover:translate-x-0.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
-      <div class="pricing-cards-grid">
-        <div class="reveal">
-          <PricingCard plan={PLANS[0]} emphasis={0} />
-        </div>
-        <div class="reveal" data-delay="80">
-          <PricingCard plan={PLANS[1]} emphasis={1} />
-        </div>
-        <div class="reveal" data-delay="160">
-          <PricingCard plan={PLANS[2]} emphasis={2} />
-        </div>
+      <div class="mt-10 grid reveal gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {STANDARD_PLANS.map((plan) => (
+          <PricingCard plan={plan} featured={plan.id === "scaling"} key={plan.id} />
+        ))}
       </div>
-    </section>
 
-    <PricingComparison />
+      <PricingEnterprise />
+    </div>
+  </section>
+
+  <!-- 03 — COMPARISON -->
+  <PricingComparison />
+
+  <!-- 04 — GUIDED -->
+  <section class="section-band">
     <PlanGuidance />
+  </section>
 
-    <aside class="pagy-band reveal" aria-label="Pay as you go">
-      <p class="pagy-title">Pay as you go</p>
-      <p class="pagy-text">A plan for every monthly order volume — upgrade or downgrade as you grow. Ever.</p>
-      <a class="pagy-link" href={BOOK_DEMO_URL}>Talk to us about your volume →</a>
-    </aside>
+  <!-- 05 — FAQ -->
+  <PricingFAQ />
 
-    <PricingFAQ />
-    <PricingCTA />
-  </div>
+  <!-- 06 — FINAL CTA -->
+  <PricingCTA />
 </PageLayout>
 
 <style is:global>
-  .pricing-body {
-    padding-bottom: var(--section-pad, 5rem);
+  html {
+    scroll-behavior: smooth;
   }
-
-  /* Billing selector */
-  .billing-shell {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 2rem;
-  }
-  .billing-selector {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0.3rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 999px;
-    background: var(--ink-50);
-  }
-  .billing-option {
-    appearance: none;
-    border: none;
-    border-radius: 999px;
-    padding: 0.5rem 1.15rem;
-    font-family: var(--font-sans);
-    font-size: 0.86rem;
-    font-weight: 600;
-    color: var(--ink-600);
-    background: transparent;
-    cursor: pointer;
-    transition: background var(--transition-fast), color var(--transition-fast), box-shadow var(--transition-fast);
-  }
-  .billing-option:hover {
-    color: var(--ink-950);
-  }
-  .billing-option:focus-visible {
-    outline: 2px solid var(--brand-500);
-    outline-offset: 2px;
-  }
-  .billing-option.is-active {
-    background: var(--brand-500);
-    color: #fff;
-    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.12), 0 8px 18px -8px rgba(83, 58, 253, 0.55);
-  }
-  .billing-hint {
-    font-size: 0.76rem;
-    color: var(--ink-400);
-  }
-
-  /* Cards */
-  .pricing-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.1rem;
-  }
-
-  /* Billing-period switching (driven by data-active on #pricing-period-root) */
-  [data-pricing-root] .plan-billed-line {
-    display: none;
-  }
-  [data-pricing-root][data-active="quarterly"] [data-cycle="quarterly"],
-  [data-pricing-root][data-active="halfYearly"] [data-cycle="halfYearly"],
-  [data-pricing-root][data-active="yearly"] [data-cycle="yearly"] {
-    display: block;
-  }
-
-  /* Pay-as-you-go band */
-  .pagy-band {
-    max-width: var(--container-content);
-    margin-inline: auto;
-    margin-bottom: var(--section-pad, 5rem);
-    padding: 1.6rem clamp(1.5rem, 4vw, 2.5rem);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.75rem 2rem;
-    border: 1px solid var(--ink-200);
-    border-radius: 14px;
-    background: linear-gradient(180deg, #ffffff 0%, var(--ink-50) 100%);
-  }
-  .pagy-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: -0.01em;
-    color: var(--ink-950);
-  }
-  .pagy-text {
-    flex: 1;
-    min-width: 16rem;
-    font-size: 0.88rem;
-    line-height: 1.6;
-    color: var(--ink-500);
-  }
-  .pagy-link {
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--brand-600);
-    text-decoration: none;
-    white-space: nowrap;
-  }
-  .pagy-link:hover {
-    text-decoration: underline;
-  }
-  .pagy-link:focus-visible {
-    outline: 2px solid var(--brand-500);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
-
-  @media (max-width: 64rem) {
-    .pricing-cards-grid {
-      grid-template-columns: 1fr;
-      max-width: 26rem;
-      margin-inline: auto;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
     }
   }
 </style>

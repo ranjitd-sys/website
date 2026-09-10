@@ -1,38 +1,68 @@
 ---
-// Import the new wrapper instead of the individual pieces
-import { FaqAccordion } from "@/components/landing/ui/accordion"
 import { PRICING_FAQS } from "@/data/pricing"
 ---
 
-<section class="pricing-faq" aria-labelledby="faq-title">
-  <div class="pricing-faq-head reveal">
-    <span class="eyebrow">FAQ</span>
-    <h2 id="faq-title" class="h2-md">Pricing questions, answered</h2>
-    <p class="lead">Everything below is based on the published plan limits. Questions beyond that? Ask us.</p>
-  </div>
+<section aria-labelledby="faq-title">
+  <div class="sec-narrow">
+    <div class="reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 id="faq-title" class="h2-md mt-4">Pricing questions, answered</h2>
+      <p class="lead mt-5">Everything below is based on the published plan limits. Questions beyond that? Ask us.</p>
+    </div>
 
-  <div class="pricing-faq-acc reveal" data-delay="80">
-    {/* Render the single island and pass the data */}
-    <FaqAccordion client:load faqs={PRICING_FAQS} className="mx-auto max-w-3xl" />
+    <div class="mt-8 flex flex-col gap-3 reveal" data-delay="80">
+      {PRICING_FAQS.map((f, i) => (
+        <details class="faq-item" open={i === 0}>
+          <summary class="faq-q">{f.question}</summary>
+          <p class="faq-a">{f.answer}</p>
+        </details>
+      ))}
+    </div>
   </div>
 </section>
 
-<style>
-  .pricing-faq {
-    padding-bottom: var(--section-pad, 5rem);
+<style is:global>
+  .faq-item {
+    border: 1px solid var(--ink-200);
+    border-radius: 0.9rem;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   }
-  .pricing-faq-head {
-    text-align: center;
-    max-width: 44rem;
-    margin-inline: auto;
+  .faq-item:hover {
+    border-color: var(--ink-300);
   }
-  .pricing-faq-head h2 {
-    margin-top: 0.7rem;
+  .faq-q {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-800);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
   }
-  .pricing-faq-head p {
-    margin-top: 0.7rem;
+  .faq-q::-webkit-details-marker {
+    display: none;
   }
-  .pricing-faq-acc {
-    margin-top: 2rem;
+  .faq-q::after {
+    content: "+";
+    flex: none;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--brand-600);
+    transition: transform var(--transition-fast);
+  }
+  details[open] .faq-q::after {
+    transform: rotate(45deg);
+  }
+  .faq-a {
+    margin: 0;
+    padding: 0 1.25rem 1.1rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--ink-500);
   }
 </style>

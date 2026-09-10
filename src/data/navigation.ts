@@ -21,6 +21,8 @@ export interface NavItem {
   featured?: NavLink
 }
 
+import { PLANS } from "@/data/pricing"
+
 export const NAV_ITEMS: NavItem[] = [
   {
     id: "products",
@@ -179,8 +181,22 @@ export const NAV_ITEMS: NavItem[] = [
   {
     id: "pricing",
     label: "Pricing",
-    type: "link",
-    href: "/pricing",
+    type: "menu",
+    groups: [
+      {
+        title: "Plans",
+        description: "Sized by monthly order volume, billed quarterly",
+        icon: "pricing",
+        links: [
+          ...PLANS.map((plan) => ({
+            label: plan.name,
+            href: `/pricing#${plan.id}`,
+            description: plan.volume,
+          })),
+          { label: "Compare all plans", href: "/pricing#compare", description: "See every plan side by side" },
+        ],
+      },
+    ],
   },
 ]
 

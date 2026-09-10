@@ -1,52 +1,75 @@
 ---
 import { BOOK_DEMO_URL } from "@/data/navigation"
-import { BILLING_CYCLES, type Plan } from "@/data/pricing"
-import { Check } from "lucide-react"
+import type { Plan } from "@/data/pricing"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, Check } from "lucide-react"
 
 interface Props {
   plan: Plan
-  emphasis?: 0 | 1 | 2
+  featured?: boolean
 }
-const { plan, emphasis = 0 } = Astro.props
+const { plan, featured = false } = Astro.props
 const inr = (n: number) => n.toLocaleString("en-IN")
+const quarterly = plan.billed.quarterly
 ---
 
 <article
-  class:list={["plan-card", emphasis === 1 && "plan-em-1", emphasis === 2 && "plan-em-2", `plan-${plan.id}`]}
+  id={plan.id}
+  class:list={[
+    "group relative flex h-full flex-col rounded-2xl border p-6 transition hover:-translate-y-0.5 hover:shadow-md scroll-mt-24",
+    featured
+      ? "border-brand-300 bg-white shadow-card hover:border-brand-400 plan-featured"
+      : "border-ink-200 bg-white shadow-card hover:border-ink-300",
+  ]}
   aria-label={`${plan.name} plan`}
 >
-  <span class="plan-name">{plan.name.toUpperCase()}</span>
-
-  <div class="plan-price">
-    <span class="plan-amount num">₹{inr(plan.monthly)}</span>
-    <span class="plan-per">/month</span>
+  <div class="flex items-start justify-between gap-3">
+    <h3 class:list={["text-[0.72rem] font-bold uppercase tracking-[0.14em]", featured ? "text-brand-600" : "text-ink-500"]}>
+      {plan.name}
+    </h3>
+    {featured ? (
+      <span class="flex-none rounded-full bg-brand-500 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wider text-white shadow-sm shadow-brand-500/40">
+        Most popular
+      </span>
+    ) : (
+      <span class="flex-none rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[0.65rem] font-semibold text-ink-500">
+        Quarterly
+      </span>
+    )}
   </div>
 
-  <p class="plan-billed" aria-live="polite">
-    {BILLING_CYCLES.map((cycle) => {
-      const amount = plan.billed[cycle.id]
-      const text = amount
-        ? `Billed ₹${inr(amount)} / ${cycle.months} Months`
-        : `Billed ${cycle.label.toLowerCase()}`
-      return (
-        <span class="plan-billed-line" data-cycle={cycle.id} key={cycle.id}>
-          {text}
-        </span>
-      )
-    })}
+  <div class="mt-5 flex items-baseline gap-1.5">
+    <span class="text-[2.6rem] font-extrabold leading-none tracking-tight text-ink-950 num">₹{inr(plan.monthly!)}</span>
+    <span class="text-sm font-medium text-ink-400">/month</span>
+  </div>
+
+  <p class="mt-3 text-sm text-ink-500">
+    {quarterly ? (
+      <>Billed <b class="font-semibold text-ink-800">₹{inr(quarterly)}</b> every 3 months</>
+    ) : (
+      "Custom billing"
+    )}
   </p>
 
-  <a href={BOOK_DEMO_URL} class="plan-cta">
+  <span
+    class:list={[
+      "mt-3 inline-flex w-fit items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
+      featured ? "border-brand-100 bg-brand-50 text-brand-700" : "border-ink-200 bg-ink-50 text-ink-600",
+    ]}
+  >
+    {plan.volume}
+  </span>
+
+  <a href={BOOK_DEMO_URL} class={buttonVariants({ size: "default", className: "mt-6 w-full" })}>
     Buy Now
+    <ArrowRight size={15} />
   </a>
 
-  <p class="plan-options">Billing options · {BILLING_CYCLES.map((c) => c.planLabel).join(" · ")}</p>
-
-  <ul class="plan-features">
+  <ul class="mt-6 flex flex-1 flex-col gap-3 border-t border-ink-100 pt-6">
     {plan.features.map((feature) => (
-      <li class="plan-feature">
-        <span class="plan-check" aria-hidden="true">
-          <Check size={13} strokeWidth={3} />
+      <li class="flex items-start gap-2.5 text-sm leading-relaxed text-ink-700">
+        <span class="mt-0.5 grid h-[18px] w-[18px] flex-none place-items-center rounded-full border border-brand-100 bg-brand-50 text-brand-600">
+          <Check size={12} strokeWidth={3} />
         </span>
         {feature}
       </li>
@@ -55,44 +78,7 @@ const inr = (n: number) => n.toLocaleString("en-IN")
 </article>
 
 <style>
-  .plan-card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--ink-200);
-    border-radius: 16px;
-    background: #fff;
-    box-shadow:
-      0 1px 2px rgba(11, 17, 32, 0.04),
-      0 14px 30px -18px rgba(11, 17, 32, 0.1);
-    padding: 1.6rem 1.5rem 1.5rem;
-    transition: transform var(--transition-base), box-shadow var(--transition-base), border-color var(--transition-base);
-  }
-  .plan-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--ink-300);
-    box-shadow:
-      0 1px 2px rgba(11, 17, 32, 0.04),
-      0 22px 40px -20px rgba(11, 17, 32, 0.14);
-  }
-
-  .plan-em-1::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    background: linear-gradient(180deg, var(--brand-50) 0%, rgba(240, 237, 255, 0) 26%);
-    z-index: -1;
-  }
-
-  .plan-em-2 {
-    border-color: var(--brand-200);
-    box-shadow:
-      0 1px 2px rgba(11, 17, 32, 0.04),
-      0 24px 44px -22px rgba(83, 58, 253, 0.22);
-  }
-  .plan-em-2::after {
+  .plan-featured::before {
     content: "";
     position: absolute;
     top: 0;
@@ -102,105 +88,5 @@ const inr = (n: number) => n.toLocaleString("en-IN")
     border-radius: 2px;
     background: linear-gradient(90deg, var(--brand-500), var(--brand-300));
     pointer-events: none;
-  }
-
-  .plan-name {
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    color: var(--ink-500);
-  }
-  .plan-em-2 .plan-name {
-    color: var(--brand-600);
-  }
-
-  .plan-price {
-    margin-top: 0.9rem;
-    display: flex;
-    align-items: baseline;
-    gap: 0.2rem;
-  }
-  .plan-amount {
-    font-size: 2.6rem;
-    line-height: 1;
-    font-weight: 800;
-    letter-spacing: -0.04em;
-    color: var(--ink-950);
-  }
-  .plan-per {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--ink-400);
-  }
-
-  .plan-billed {
-    margin-top: 0.45rem;
-    min-height: 1.25rem;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--ink-600);
-  }
-  .plan-billed-line {
-    display: none;
-  }
-
-  .plan-cta {
-    margin-top: 1.15rem;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    border-radius: 10px;
-    background: var(--brand-500);
-    color: #fff;
-    font-size: 0.92rem;
-    font-weight: 600;
-    padding: 0.7rem 1rem;
-    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.08), 0 12px 24px -12px rgba(83, 58, 253, 0.5);
-    text-decoration: none;
-    transition: background var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
-  }
-  .plan-cta:hover {
-    background: var(--brand-600);
-    box-shadow: 0 1px 2px rgba(11, 17, 32, 0.08), 0 16px 28px -12px rgba(83, 58, 253, 0.55);
-  }
-  .plan-cta:focus-visible {
-    outline: 2px solid var(--brand-500);
-    outline-offset: 2px;
-  }
-
-  .plan-options {
-    margin-top: 0.8rem;
-    font-size: 0.74rem;
-    color: var(--ink-400);
-  }
-
-  .plan-features {
-    margin-top: 1.15rem;
-    padding-top: 1.15rem;
-    border-top: 1px solid var(--ink-100);
-    display: flex;
-    flex-direction: column;
-    gap: 0.62rem;
-  }
-  .plan-feature {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
-    font-size: 0.9rem;
-    line-height: 1.45;
-    color: var(--ink-700);
-  }
-  .plan-check {
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    width: 18px;
-    height: 18px;
-    margin-top: 1px;
-    border-radius: 50%;
-    background: var(--brand-50);
-    border: 1px solid var(--brand-100);
-    color: var(--brand-600);
   }
 </style>
