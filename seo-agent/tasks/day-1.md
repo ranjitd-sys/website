@@ -41,17 +41,19 @@
   - [x] **Verify:** fresh DB → migrate → seed → read back 5 rows; re-run migrate → no duplicate/error
   - [x] **Done:** local `postgres:16-alpine` via docker (`localhost:54329`); migrate + seed idempotent; `\dt` shows all 5 tables; 5 keywords + 5 pages. Notes: `Layer.scoped` replaced by `Layer.effect` + `Effect.acquireRelease`; dropped `@effect/platform-node` (imports `effect/ByteSize`, missing from `effect@4.0.0-beta.100`) → files read via `node:fs/promises` in Effect; `volume`/`difficulty` stay NULL (no fabrication).
 
-- [ ] **T4 — State machine skeleton**
-  - [ ] `seo-agent/src/agent/Machine.ts` — XState v5: `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` + `REVISE` (≤3 retries)
-  - [ ] Each transition typed so it calls an Effect program (stubs for now)
-  - [ ] `seo-agent/src/agent/Driver.ts` — Effect service that drives the machine; `effect.gen` pipeline, typed errors on abort
-  - [ ] `seo-agent/src/agent/Reviewer.ts` — Effect service stub (returns `pass`)
-  - [ ] **Verify:** `bun run src/index.ts optimize --dry-run` walks the machine end-to-end with stub data and exits clean
+- [x] **T4 — State machine skeleton**
+  - [x] `seo-agent/src/agent/Machine.ts` — XState v5: `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` + `REVISE` (≤3 retries)
+  - [x] Each transition typed so it calls an Effect program (stubs for now)
+  - [x] `seo-agent/src/agent/Driver.ts` — Effect service that drives the machine; `effect.gen` pipeline, typed errors on abort
+  - [x] `seo-agent/src/agent/Reviewer.ts` — Effect service stub (returns `pass`)
+  - [x] **Verify:** `bun run src/cli.ts optimize --dry-run` walks the machine end-to-end with stub data and exits clean
+  - [x] **Done:** dry-run visits `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` (exit 0); driver threads `PR_CREATED.prUrl` into the result; retry-cap probe confirms 3 `REVISE` loops then `ABORT → ABORTED`. Notes: `Effect.service`/`Effect.catchAll` absent in this beta — used `Layer.succeed` + `Effect.catchCause`; machine snapshot typed via `SnapshotFrom<typeof optimizeMachine>` + `getInitialSnapshot`.
 
-- [ ] **T5 — Tools registry**
-  - [ ] `seo-agent/src/tools/registry.ts` — empty tool registry typed for future `serp`, `gsc`, `crawl`, `build`, `validate`, `github`
-  - [ ] Each tool shape defined with Effect `Schema` (input/output contracts)
-  - [ ] **Verify:** registry compiles; contract schemas decode a sample payload
+- [x] **T5 — Tools registry**
+  - [x] `seo-agent/src/tools/registry.ts` — empty tool registry typed for future `serp`, `gsc`, `crawl`, `build`, `validate`, `github`
+  - [x] Each tool shape defined with Effect `Schema` (input/output contracts)
+  - [x] **Verify:** registry compiles; contract schemas decode a sample payload; bad GSC window (`90d`) rejected
+  - [x] **Done:** 6 tools registered behind `ToolRegistry` (`Context.Service` + `Layer.succeed`); contracts decode sample payloads (serp/crawl outputs, GH PR url, validate findings) and reject bad input. Notes: this beta's `Schema` is the new single-type-param `Schema<out T>` (constructors are `Codec`); `Schema.Literals` takes one array arg (`["google","bing"]`); no `Schema.Tag`/`runSync` returns values directly.
 
 ---
 
