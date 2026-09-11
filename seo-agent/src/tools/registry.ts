@@ -34,7 +34,9 @@ export const CrawlOutput = Schema.Struct({
   brokenLinks: Schema.Number,
 })
 
-export const BuildInput = Schema.Struct({ branch: Schema.String })
+export const BuildInput = Schema.Struct({
+  cwd: Schema.String,
+})
 export const BuildOutput = Schema.Struct({
   ok: Schema.Boolean,
   errors: Schema.Array(Schema.Struct({ file: Schema.String, message: Schema.String })),
