@@ -253,6 +253,7 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
 
     case "PLAN":
       return Effect.succeed({
+        //Need ai 
         event: { type: "PLANNED", action: "optimize metadata (dry-run stub)" },
         carry,
       })
