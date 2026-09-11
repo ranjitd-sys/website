@@ -72,15 +72,17 @@
   - [x] **Verify:** valid change (49-char title, 137-char desc, valid JSON-LD) → `pass: true, findings: []`; 61-char title → `field === "title"`; 80-char desc → `field === "description"`; 180-char desc → `field === "description"`; `{not valid json` → `field === "jsonLd"`
   - [x] **Done:** `ValidateServiceLive` via `Layer.succeed`; updated `ValidateInput` registry schema to `{ filePath, title, description, jsonLd }` matching the change shape the agent will validate.
 
-- [ ] **T11 — Wire tools into Driver**
-  - [ ] `seo-agent/src/agent/Driver.ts` — `step()` calls real tools per state; services added to the Optimize service's requirements
-  - [ ] RESEARCH → `yield* SerpService.fetchResults` + `yield* GscService.fetchMetrics` + `yield* CrawlService.crawlPage`, log data, emit `RESEARCHED`
-  - [ ] SCOPE → compute `score = volume × position × intent × momentum`, apply filters (already-completed / open PR / stable top-3 / missing-data), emit `OPPORTUNITY_SELECTED` with `opportunityId`
-  - [ ] VALIDATE → `yield* BuildService.runBuild` + `yield* ValidateService.validateChange`; fail → `VALIDATION_FAILED { reason }` (triggers REVISE/retry cap), pass → `VALIDATION_PASSED`
-  - [ ] Keep PLAN/ACT/CREATE_PR as stubs (LLM + PR on Day 3); REVIEWER unchanged
-  - [ ] Wire `keywords`/`targetUrl` into driver input (read target from seeded DB via `Database` service where available)
-  - [ ] Provide new Layers in `seo-agent/src/cli.ts` (`SerpServiceLive`, `GscServiceLive`, `CrawlServiceLive`, `BuildServiceLive`, `ValidateServiceLive`)
-  - [ ] **Verify:** `bun run src/cli.ts optimize --dry-run` walks `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` end-to-end with real tool calls, exits 0
+- [x] **T11 — Wire tools into Driver**
+  - [x] `seo-agent/src/agent/Driver.ts` — `step()` calls real tools per state; services added to the Optimize service's requirements
+  - [x] RESEARCH → reads active keywords from DB, then `yield* SerpService.fetchResults` + `yield* GscService.fetchMetrics(…, "28d")` + `yield* CrawlService.crawlPage(siteOrigin + target_url)` per keyword, logs data, emits `RESEARCHED`; crawl failures are logged and tolerated (crawl row = null) so the run stays robust against transient site outages
+  - [x] SCOPE → computes `score = impressions × position × intent × momentum`, applies filters (already-completed via `opportunities.status IN (done,measured,optimizing)`; open-PR via `changes.pr_url IS NOT NULL AND deployed_at IS NULL`; stable top-3 via `position <= 3 && ctr >= 0.03`; missing-data via `serp/gsc == null`), sorts desc, picks the winner, inserts an `opportunities` row (status `proposed`), emits `OPPORTUNITY_SELECTED { opportunityId }`; no eligible → `ABORT` "no eligible opportunity after filters"
+  - [x] VALIDATE → `yield* BuildService.runBuild({ cwd: REPO_ROOT })` then `yield* ValidateService.validateChange(change)`; build error or findings → `VALIDATION_FAILED { reason }` (triggers REVISE/retry cap), else `VALIDATION_PASSED`; ACT stub builds a deterministic metadata change (title truncated to 60, description padded to 120–160, valid JSON-LD) so the pipeline reaches REVIEWER
+  - [x] Keep PLAN/ACT/CREATE_PR as stubs (LLM + PR on Day 3); REVIEWER unchanged (reviews the threaded change)
+  - [x] `keywords`/`targetUrl` read from seeded DB via `Database` service; `new URL(target_url, config.gscSiteUrl)` builds the crawl URL
+  - [x] `cli.ts` provides `SerpServiceLive`, `GscServiceLive`, `CrawlServiceLive`, `BuildServiceLive`, `ValidateServiceLive`, `DatabaseLive` + existing layers
+  - [x] Machine.ts: `OPPORTUNITY_SELECTED` now carries `opportunityId`; `assign` actions update `context.opportunityId` (SCOPE) and `context.lastReason` (VALIDATION_FAILED/REVIEW_FAILED)
+  - [x] **Verify:** `bun run src/cli.ts optimize --dry-run` walks `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` end-to-end with real tool calls, exits 0; winner `amazon seller gst accounting` score 32800 (5000 impressions × 4.1 pos × 1.0 commercial × 1.6 rising momentum) matches spec Example A; an `opportunities` row (proposed) is written per run; real crawls pull live titles/H1s/jsonLd counts from deepecom.com
+  - [x] **Done:** tools are wired and the machine is fully deterministic — the same seed data always picks keyword 2 (`amazon seller gst accounting`) and validates its page successfully. Notes: dry-run writes an `opportunities` row (intended — mirror of a real weekly run); crawl uses the live site origin from config.
 
 ---
 
@@ -101,10 +103,10 @@ No package needed for SERP/GSC (mocked/stubbed), build (`node:child_process`), o
 - [x] `src/tools/crawl.ts` — real crawl (fetch + `node-html-parser`) over a target URL
 - [x] `src/tools/build.ts` — real `astro build` execution with parsed errors
 - [x] `src/tools/validate.ts` — deterministic title/description/JSON-LD checks
-- [ ] `src/agent/Driver.ts` — `step()` calls real tools at RESEARCH, SCOPE, VALIDATE
-- [ ] `src/cli.ts` — provides all five new tool Layers
-- [ ] `bun run check` passes; `bun run src/cli.ts optimize --dry-run` walks the machine with live tool calls and exits 0
-- [ ] Every tool is `Context.Service` + `Layer`; zero try/catch in new code
+- [x] `src/agent/Driver.ts` — `step()` calls real tools at RESEARCH, SCOPE, VALIDATE
+- [x] `src/cli.ts` — provides all five new tool Layers + `DatabaseLive`
+- [x] `bun run check` passes; `bun run src/cli.ts optimize --dry-run` walks the machine with live tool calls and exits 0
+- [x] Every tool is `Context.Service` + `Layer`; zero try/catch in new code
 
 ---
 

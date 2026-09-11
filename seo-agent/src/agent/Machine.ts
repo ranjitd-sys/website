@@ -1,9 +1,9 @@
-import { createMachine } from "xstate"
+import { assign, createMachine } from "xstate"
 
 export type OptimizeEvent =
   | { readonly type: "START" }
   | { readonly type: "RESEARCHED" }
-  | { readonly type: "OPPORTUNITY_SELECTED" }
+  | { readonly type: "OPPORTUNITY_SELECTED"; readonly opportunityId: number }
   | { readonly type: "PLANNED"; readonly action: string }
   | { readonly type: "EDITED" }
   | { readonly type: "VALIDATION_PASSED" }
@@ -44,7 +44,10 @@ export const optimizeMachine = createMachine({
     },
     SCOPE: {
       on: {
-        OPPORTUNITY_SELECTED: { target: "PLAN" },
+        OPPORTUNITY_SELECTED: {
+          target: "PLAN",
+          actions: assign({ opportunityId: ({ event }) => event.opportunityId }),
+        },
         ABORT: { target: "FINISHED" },
       },
     },
@@ -63,7 +66,10 @@ export const optimizeMachine = createMachine({
     VALIDATE: {
       on: {
         VALIDATION_PASSED: { target: "REVIEWER" },
-        VALIDATION_FAILED: { target: "REVISE" },
+        VALIDATION_FAILED: {
+          target: "REVISE",
+          actions: assign({ lastReason: ({ event }) => event.reason }),
+        },
         ABORT: { target: "ABORTED" },
       },
     },
@@ -76,7 +82,10 @@ export const optimizeMachine = createMachine({
     REVIEWER: {
       on: {
         REVIEW_PASSED: { target: "CREATE_PR" },
-        REVIEW_FAILED: { target: "REVISE" },
+        REVIEW_FAILED: {
+          target: "REVISE",
+          actions: assign({ lastReason: ({ event }) => event.reason }),
+        },
         ABORT: { target: "ABORTED" },
       },
     },

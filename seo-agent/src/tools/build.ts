@@ -29,6 +29,7 @@ export class BuildService extends Context.Service<BuildService, BuildShape>()("B
 const MAX_OUTPUT_BYTES = 200_000
 
 const REPO_ROOT = path.resolve(import.meta.dirname, "..", "..", "..")
+export { REPO_ROOT }
 
 interface SpawnResult {
   readonly exitCode: number

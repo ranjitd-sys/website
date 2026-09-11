@@ -2,6 +2,12 @@ import { Effect } from "effect"
 import { OptimizeLive, OptimizeMachineService } from "./agent/Driver.js"
 import { ReviewerLive } from "./agent/Reviewer.js"
 import { SeoConfig, SeoConfigLayer } from "./Config.js"
+import { DatabaseLive } from "./services/Database.js"
+import { SerpServiceLive } from "./tools/serp.js"
+import { GscServiceLive } from "./tools/gsc.js"
+import { CrawlServiceLive } from "./tools/crawl.js"
+import { BuildServiceLive } from "./tools/build.js"
+import { ValidateServiceLive } from "./tools/validate.js"
 import { runProgram } from "./edge.js"
 
 const command = process.argv[2] ?? "optimize"
@@ -36,6 +42,12 @@ if (command === "measure") {
 } else if (command === "optimize") {
   await runProgram(
     optimize.pipe(
+      Effect.provide(ValidateServiceLive),
+      Effect.provide(BuildServiceLive),
+      Effect.provide(CrawlServiceLive),
+      Effect.provide(GscServiceLive),
+      Effect.provide(SerpServiceLive),
+      Effect.provide(DatabaseLive),
       Effect.provide(ReviewerLive),
       Effect.provide(OptimizeLive),
       Effect.provide(SeoConfigLayer),
