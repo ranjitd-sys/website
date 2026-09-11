@@ -1,6 +1,6 @@
 import { Effect } from "effect"
 import { OptimizeLive, OptimizeMachineService } from "./agent/Driver.js"
-import { ReviewerLive } from "./agent/Reviewer.js"
+import { BrainServiceLive } from "./agent/brain.js"
 import { SeoConfig, SeoConfigLayer } from "./Config.js"
 import { DatabaseLive } from "./services/Database.js"
 import { SerpServiceLive } from "./tools/serp.js"
@@ -20,7 +20,7 @@ const loadConfig = Effect.gen(function* () {
     gscClientEmail: config.gscClientEmail,
     gscSiteUrl: config.gscSiteUrl,
     gscPrivateKey: config.gscPrivateKey,
-    openaiApiKey: config.openaiApiKey,
+    groqApiKey: config.groqApiKey,
     githubToken: config.githubToken,
   })
 })
@@ -48,7 +48,7 @@ if (command === "measure") {
       Effect.provide(GscServiceLive),
       Effect.provide(SerpServiceLive),
       Effect.provide(DatabaseLive),
-      Effect.provide(ReviewerLive),
+      Effect.provide(BrainServiceLive),
       Effect.provide(OptimizeLive),
       Effect.provide(SeoConfigLayer),
     ),

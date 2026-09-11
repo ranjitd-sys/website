@@ -5,7 +5,9 @@ export interface SeoConfigShape {
   readonly gscClientEmail: string
   readonly gscSiteUrl: string
   readonly gscPrivateKey: Redacted.Redacted
-  readonly openaiApiKey: Redacted.Redacted
+  readonly groqApiKey: Redacted.Redacted
+  readonly groqModel: string
+  readonly groqReviewerModel: string
   readonly githubToken: Redacted.Redacted
 }
 
@@ -25,7 +27,9 @@ const config = Config.all({
   gscClientEmail: Config.nonEmptyString("GSC_CLIENT_EMAIL"),
   gscSiteUrl: Config.nonEmptyString("GSC_SITE_URL"),
   gscPrivateKey: Config.redacted("GSC_PRIVATE_KEY"),
-  openaiApiKey: Config.redacted("OPENAI_API_KEY"),
+  groqApiKey: Config.redacted("GROQ_API_KEY").pipe(Config.withDefault(Redacted.make(""))),
+  groqModel: Config.string("GROQ_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
+  groqReviewerModel: Config.string("GROQ_REVIEWER_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
   githubToken: Config.redacted("GITHUB_TOKEN"),
 })
 

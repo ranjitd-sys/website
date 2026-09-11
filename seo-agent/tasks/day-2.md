@@ -1,6 +1,6 @@
 # Today — P3 Deterministic Tools + Wire Into Driver
 
-> DeepRank work session. CTO decision: **build the agent on Effect** (`effect` + `@effect/platform-node`), not plain async/await.
+> DeepRank work session. : **build the agent on Effect** (`effect` + `@effect/platform-node`), not plain async/await.
 > Spec: `docs/deeprank-seo-agent.md` · Execution plan: `docs/deeprank-execution-plan.md`
 > Date: 2026-09-12
 

@@ -2,7 +2,7 @@ import { Context, Data, Effect, Layer, Result } from "effect"
 import { getInitialSnapshot, transition, type SnapshotFrom } from "xstate"
 import type { OptimizeEvent } from "./Machine.js"
 import { optimizeMachine } from "./Machine.js"
-import { Reviewer } from "./Reviewer.js"
+import { BrainService, type Change, type PlanOutput } from "./brain.js"
 import { Database } from "../services/Database.js"
 import { SeoConfig } from "../Config.js"
 import { SerpService } from "../tools/serp.js"
@@ -66,16 +66,10 @@ interface SelectedOpportunity {
   readonly intent: string
 }
 
-interface Change {
-  readonly filePath: string
-  readonly title: string
-  readonly description: string
-  readonly jsonLd: string
-}
-
 interface RunCarry {
   readonly research: ReadonlyArray<ResearchRow>
   readonly selected: SelectedOpportunity | null
+  readonly plan: PlanOutput | null
   readonly change: Change | null
   readonly maxRetries: number
 }
@@ -112,10 +106,10 @@ export interface Optimize {
 
 export class OptimizeMachineService extends Context.Service<OptimizeMachineService, Optimize>()("Optimize") {}
 
-const EMPTY_CARRY: RunCarry = { research: [], selected: null, change: null, maxRetries: 0 }
+const EMPTY_CARRY: RunCarry = { research: [], selected: null, plan: null, change: null, maxRetries: 0 }
 
 export type OptimizeEnv =
-  | Reviewer
+  | BrainService
   | Database
   | SeoConfig
   | SerpService
@@ -252,32 +246,62 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
       })
 
     case "PLAN":
-      return Effect.succeed({
-        //Need ai 
-        event: { type: "PLANNED", action: "optimize metadata (dry-run stub)" },
-        carry,
+      return Effect.gen(function* () {
+        const brain = yield* BrainService
+        const selected = carry.selected
+        const research = carry.research.find((row) => row.keywordId === selected?.keywordId)
+        if (!selected || !research) {
+          return { event: { type: "ABORT", reason: "no selection to plan" }, carry }
+        }
+        const crawl =
+          research.crawl === null
+            ? null
+            : { title: research.crawl.title, description: research.crawl.description }
+        const serp =
+          research.serp && research.serp.results.length > 0
+            ? { results: research.serp.results as ReadonlyArray<{ rank: number; url: string; title: string; snippet: string }> }
+            : null
+        const gsc =
+          research.gsc === null
+            ? null
+            : { impressions: research.gsc.impressions, position: research.gsc.position, ctr: research.gsc.ctr }
+        const plan = yield* brain.plan({
+          keyword: selected.term,
+          intent: selected.intent,
+          crawl,
+          serp,
+          gsc,
+          learnings: [],
+        })
+        yield* Effect.log(`optimize: plan -> ${plan.action}`)
+        return {
+          event: { type: "PLANNED", action: plan.action },
+          carry: { ...carry, plan },
+        }
       })
 
     case "ACT":
       return Effect.gen(function* () {
+        const brain = yield* BrainService
         const selected = carry.selected
-        if (!selected) {
-          return { event: { type: "ABORT", reason: "no opportunity selected" }, carry }
+        const plan = carry.plan
+        if (!selected || !plan) {
+          return { event: { type: "ABORT", reason: "missing selection or plan for ACT" }, carry }
         }
-        const filePath = `src/pages${selected.targetUrl}.astro`
-        const title = `Optimize ${selected.term}`.slice(0, 60)
-        const jsonLd =
-          '{"@context":"https://schema.org","@type":"Article","headline":"Ecommerce Accounting with DeepEcom","author":{"@type":"Organization","name":"DeepEcom"}}'
-        const shortTrack = "Track marketplace orders, fees, GST, TCS/TDS, returns and settlements for online sellers."
-        let description = shortTrack
-        while (Array.from(description).length < 120) {
-          description += " Reconcile payments and get ERP-ready accounting automatically."
-        }
-        if (Array.from(description).length > 160) {
-          description = Array.from(description).slice(0, 160).join("")
-        }
-        const change: Change = { filePath, title, description, jsonLd }
-        yield* Effect.log(`optimize: wrote change -> ${filePath} (title="${title}")`)
+        const research = carry.research.find((row) => row.keywordId === selected.keywordId)
+        const crawl =
+          research?.crawl === null || research?.crawl === undefined
+            ? null
+            : { title: research.crawl.title, description: research.crawl.description }
+        const change = yield* brain.act({
+          keyword: selected.term,
+          targetUrl: selected.targetUrl,
+          crawl,
+          diagnosis: plan.diagnosis,
+          action: plan.action,
+          rationale: plan.rationale,
+        })
+        yield* Effect.log(`optimize: wrote change -> ${change.filePath} (title="${change.title}")`)
         return { event: { type: "EDITED" }, carry: { ...carry, change } }
       })
 
@@ -315,7 +339,7 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
 
     case "REVIEWER":
       return Effect.gen(function* () {
-        const reviewer = yield* Reviewer
+        const brain = yield* BrainService
         const selected = carry.selected
         const change = carry.change
         const review = change
@@ -329,7 +353,7 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
               description: "dry-run",
               diffSummary: "no change (dry-run)",
             }
-        const verdict = yield* reviewer.review(review).pipe(Effect.catchCause(() => Effect.succeed("fail" as const)))
+        const verdict = yield* brain.review(review).pipe(Effect.catchCause(() => Effect.succeed("fail" as const)))
         return verdict === "pass"
           ? { event: { type: "REVIEW_PASSED" }, carry }
           : { event: { type: "REVIEW_FAILED", reason: "reviewer rejected the change" }, carry }
@@ -373,6 +397,20 @@ const walk = (
         event = { type: "ABORT", reason: "max retries exceeded" }
       } else {
         nextRetries = retries + 1
+        const brain = yield* BrainService
+        const change = carry.change
+        const lastReason = snapshot.context.lastReason ?? "validation failed"
+        if (change) {
+          const revised = yield* brain.revise({ change, lastReason }).pipe(
+            Effect.catchCause((cause) =>
+              Effect.log(`optimize: revise failed (${String(cause)})`).pipe(
+                Effect.andThen(Effect.succeed(change)),
+              ),
+            ),
+          )
+          nextCarry = { ...carry, change: revised }
+          yield* Effect.log(`optimize: revised change (attempt ${nextRetries}/${carry.maxRetries})`)
+        }
         event = { type: "REVISED" }
       }
     } else {
