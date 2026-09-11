@@ -33,12 +33,13 @@
   - [x] **Verify:** run with clean env → fails with the missing key named; run with `.env` → loads
   - [x] **Done:** `env -i` run exits 1 naming `SEO_DATABASE_URL`; `.env` run exits 0, secrets logged as `<redacted>`. Note: this effect beta dropped `Context.Tag` — class-style tags are now `Context.Service<Self, Shape>()("Name")`; error tree moved to SchemaError `issue`/`Pointer.path`.
 
-- [ ] **T3 — Database service + schema**
-  - [ ] `seo-agent/src/store/schema.sql` — 5 tables from spec §17: `keywords`, `keyword_positions`, `pages`, `opportunities`, `changes` (incl. `changes.measurement` JSONB — the weekly↔monthly link)
-  - [ ] `seo-agent/src/services/Database.ts` — `Context.Tag` + `Layer` wrapping a Postgres pool (through **Effect**), typed `query` helper
-  - [ ] `seo-agent/src/store/seed.ts` — Effect program seeding the 5 keywords from spec §22
-  - [ ] `seo-agent/src/store/migrate.ts` — applies `schema.sql` idempotently
-  - [ ] **Verify:** fresh DB → migrate → seed → read back 5 rows; re-run migrate → no duplicate/error
+- [x] **T3 — Database service + schema**
+  - [x] `seo-agent/src/store/schema.sql` — 5 tables from spec §17: `keywords`, `keyword_positions`, `pages`, `opportunities`, `changes` (incl. `changes.measurement` JSONB — the weekly↔monthly link)
+  - [x] `seo-agent/src/services/Database.ts` — `Context.Service` + `Layer.effect` wrapping a `pg` pool (through **Effect**), typed `query` helper
+  - [x] `seo-agent/src/store/seed.ts` — Effect program seeding the 5 keywords from spec §22
+  - [x] `seo-agent/src/store/migrate.ts` — applies `schema.sql` idempotently
+  - [x] **Verify:** fresh DB → migrate → seed → read back 5 rows; re-run migrate → no duplicate/error
+  - [x] **Done:** local `postgres:16-alpine` via docker (`localhost:54329`); migrate + seed idempotent; `\dt` shows all 5 tables; 5 keywords + 5 pages. Notes: `Layer.scoped` replaced by `Layer.effect` + `Effect.acquireRelease`; dropped `@effect/platform-node` (imports `effect/ByteSize`, missing from `effect@4.0.0-beta.100`) → files read via `node:fs/promises` in Effect; `volume`/`difficulty` stay NULL (no fabrication).
 
 - [ ] **T4 — State machine skeleton**
   - [ ] `seo-agent/src/agent/Machine.ts` — XState v5: `IDLE → RESEARCH → SCOPE → PLAN → ACT → VALIDATE → REVIEWER → CREATE_PR → FINISHED` + `REVISE` (≤3 retries)
