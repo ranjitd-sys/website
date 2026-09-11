@@ -46,14 +46,15 @@
   - [x] **Verify:** seeded keyword returns `pos=7.2 clicks=45 trend=[8,7.5,7.2,7.2]`; fallback returns 4-point trend; `GscOutput` (now including `trend` array) decodes both
   - [x] **Done:** `GscServiceLive` via `Layer.succeed`; stub map covers all 5 seed keywords with plausible metrics + momentum trend; deterministic fallback for unknown queries. Notes: updated `GscOutput` schema in `registry.ts` to include `trend: Schema.Array(Schema.Number)`; real GSC swap changes only `fetchMetrics` body (adds `googleapis` service account auth).
 
-- [ ] **T8 — Crawl tool (undici/Node fetch + HTML parser)**
-  - [ ] `seo-agent/src/tools/crawl.ts` — Effect `Context.Service` `CrawlService` + `CrawlServiceLive`
-  - [ ] Method `crawlPage(url)` → `{ title, description, h1, jsonLdBlocks, internalLinks, brokenLinks }` matching `CrawlOutput` in registry
-  - [ ] Fetch page HTML via Node built-in `fetch`; parse with `node-html-parser` (title, `meta[name=description]`, first `h1`, `<script type="application/ld+json">` count, internal `<a href>` count)
-  - [ ] Broken-link check: HEAD/GET sibling pages, count non-2xx → `brokenLinks` (bounded, e.g. first 10 internal links)
-  - [ ] Typed error `CrawlError { url, reason }` (timeout, non-2xx status, parse failure)
-  - [ ] New dep: `node-html-parser`
-  - [ ] **Verify:** crawl a seeded target URL (e.g. `https://deepecom.com/resources/ecommerce-accounting`) OR a local `astro dev` page; log parsed title/h1/description/jsonLdBlocks; `CrawlOutput` decodes output
+- [x] **T8 — Crawl tool (undici/Node fetch + HTML parser)**
+  - [x] `seo-agent/src/tools/crawl.ts` — Effect `Context.Service` `CrawlService` + `CrawlServiceLive`
+  - [x] Method `crawlPage(url)` → `{ title, description, h1, jsonLdBlocks, internalLinks, brokenLinks }` matching `CrawlOutput` in registry
+  - [x] Fetch page HTML via Node built-in `fetch`; parse with `node-html-parser` (title, `meta[name=description]`, first `h1`, `<script type="application/ld+json">` count, internal `<a href>` count)
+  - [x] Broken-link check: HEAD/GET sibling pages, count non-2xx → `brokenLinks` (bounded, e.g. first 10 internal links)
+  - [x] Typed error `CrawlError { url, reason }` (timeout, non-2xx status, parse failure)
+  - [x] New dep: `node-html-parser`
+  - [x] **Verify:** local fixture page (Node `http` server) — title/desc/h1 extracted, `jsonLdBlocks=1`, `internalLinks=2`, `brokenLinks=1` (404 via HEAD→GET fallback); `CrawlOutput` decodes
+  - [x] **Done:** `CrawlServiceLive` via `Layer.succeed`; `Effect.tryPromise` with external-received `AbortSignal` (thrown errors mapped to typed `CrawlError`). Notes: link checks bounded to first 10 internal links, with `HEAD` → `GET` fallback on 405/501; `#anchor` and external links excluded from count; async crawl must run via `Effect.runPromise` (not `runSync`).
 
 - [ ] **T9 — Build tool**
   - [ ] `seo-agent/src/tools/build.ts` — Effect `Context.Service` `BuildService` + `BuildServiceLive`
