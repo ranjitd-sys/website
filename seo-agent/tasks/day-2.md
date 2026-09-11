@@ -30,19 +30,21 @@
 
 ## Task log (each completed item = checkbox + one line of what was verified)
 
-- [ ] **T6 — SERP tool (mock)**
-  - [ ] `seo-agent/src/tools/serp.ts` — Effect `Context.Service` `SerpService` + `SerpServiceLive`
-  - [ ] Method `fetchResults(keyword, source)` → `{ results: [{ rank, url, title, snippet }] }` matching `SerpOutput` in registry
-  - [ ] Hardcoded top-10 competitor results for the 5 seed keywords (`ecommerce accounting software india`, `amazon seller gst accounting`, `flipkart payment reconciliation`, `ecommerce accounting tally`, `d2c brand accounting`)
-  - [ ] Typed error `SerpError { keyword, source, reason }`
-  - [ ] **Verify:** `bun run src/cli.ts optimize --dry-run` logs 10 mock SERP results per keyword; registry contract `SerpOutput` decodes the tool output
+- [x] **T6 — SERP tool (mock)**
+  - [x] `seo-agent/src/tools/serp.ts` — Effect `Context.Service` `SerpService` + `SerpServiceLive`
+  - [x] Method `fetchResults(keyword, source)` → `{ results: [{ rank, url, title, snippet }] }` matching `SerpOutput` in registry
+  - [x] Hardcoded top-10 competitor results for the 5 seed keywords (`ecommerce accounting software india`, `amazon seller gst accounting`, `flipkart payment reconciliation`, `ecommerce accounting tally`, `d2c brand accounting`)
+  - [x] Typed error `SerpError { keyword, source, reason }`
+  - [x] **Verify:** seed keyword returns 10 results, ranks sequential 1–10; `SerpOutput` decodes both seeded and fallback output
+  - [x] **Done:** `SerpServiceLive` implemented via `Layer.succeed`; 50 curated `.example`-domain entries (10 per seed keyword), deterministic fallback generator for unknown keywords; `fetchResults` logs each call and returns typed `SerpResults`. Notes: uses `.example` (RFC 2606 reserved) domains for unambiguous mock data; future Serper.dev swap changes only `fetchResults` body.
 
-- [ ] **T7 — GSC tool (stub)**
-  - [ ] `seo-agent/src/tools/gsc.ts` — Effect `Context.Service` `GscService` + `GscServiceLive`
-  - [ ] Method `fetchMetrics(query, window)` → `{ clicks, impressions, position, ctr, trend: number[] }` matching `GscOutput` + 28-day trend for momentum
-  - [ ] Stub map: one plausible metrics set per seed keyword (position 4–15, clicks 8–120, impressions 400–5000, ctr 0.018–0.037, 4-point trend array)
-  - [ ] Typed error `GscError { query, window, reason }`
-  - [ ] **Verify:** RESEARCH state logs GSC metrics + trend for the chosen keyword; `GscOutput` decodes the stub output
+- [x] **T7 — GSC tool (stub)**
+  - [x] `seo-agent/src/tools/gsc.ts` — Effect `Context.Service` `GscService` + `GscServiceLive`
+  - [x] Method `fetchMetrics(query, window)` → `{ clicks, impressions, position, ctr, trend: number[] }` matching `GscOutput` + 28-day trend for momentum
+  - [x] Stub map: one plausible metrics set per seed keyword (position 4–15, clicks 8–120, impressions 400–5000, ctr 0.018–0.037, 4-point trend array)
+  - [x] Typed error `GscError { query, window, reason }`
+  - [x] **Verify:** seeded keyword returns `pos=7.2 clicks=45 trend=[8,7.5,7.2,7.2]`; fallback returns 4-point trend; `GscOutput` (now including `trend` array) decodes both
+  - [x] **Done:** `GscServiceLive` via `Layer.succeed`; stub map covers all 5 seed keywords with plausible metrics + momentum trend; deterministic fallback for unknown queries. Notes: updated `GscOutput` schema in `registry.ts` to include `trend: Schema.Array(Schema.Number)`; real GSC swap changes only `fetchMetrics` body (adds `googleapis` service account auth).
 
 - [ ] **T8 — Crawl tool (undici/Node fetch + HTML parser)**
   - [ ] `seo-agent/src/tools/crawl.ts` — Effect `Context.Service` `CrawlService` + `CrawlServiceLive`

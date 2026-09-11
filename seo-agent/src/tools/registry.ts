@@ -21,6 +21,7 @@ export const GscOutput = Schema.Struct({
   impressions: Schema.Number,
   position: Schema.Number,
   ctr: Schema.Number,
+  trend: Schema.Array(Schema.Number),
 })
 
 export const CrawlInput = Schema.Struct({ path: Schema.String })
