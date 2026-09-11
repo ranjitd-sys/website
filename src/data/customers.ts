@@ -124,6 +124,108 @@ export const customers: Customer[] = [
     categories: ["Profitability", "Pricing", "Reports"],
     featured: false,
   },
+  {
+    name: "Hinduja Group",
+    slug: "hinduja-group",
+    industry: "Enterprise",
+    logoText: "Hinduja Group",
+    businessType: "enterprise",
+    headline: "How Hinduja Group streamlined multi-entity ecommerce accounting across marketplaces.",
+    problem:
+      "Hinduja Group operates across multiple entities and marketplaces, making ecommerce accounting complex. Transaction volume was high, reconciliation was manual, and consolidating financial data across entities for ERP posting was time-consuming and error-prone.",
+    before: [
+      "Multi-entity ecommerce accounting was fragmented",
+      "High transaction volume across multiple marketplaces",
+      "Manual reconciliation across entities",
+      "Consolidating financial data for ERP was slow",
+    ],
+    implementation: [
+      { label: "Platform", detail: "Multi-entity marketplace data aggregation and reconciliation" },
+      { label: "ERP Connector", detail: "Automated order-wise and GST-wise accounting posted to ERP" },
+    ],
+    after: [
+      "Unified view of ecommerce finances across all entities",
+      "Automated reconciliation at order level",
+      "Detailed GST and TCS/TDS accounting",
+      "Consolidated ERP posting across entities",
+    ],
+    outcome:
+      "Hinduja Group achieved a connected financial picture across all entities and marketplaces, with automated reconciliation and detailed ERP accounting replacing manual consolidation.",
+    quote: "",
+    quoteAuthor: "",
+    quoteRole: "",
+    products: ["Payment Reconciliation", "Order-wise Accounting", "GST", "ERP Connector"],
+    categories: ["Enterprise", "Multi-entity", "Ecommerce Accounting"],
+    featured: false,
+  },
+  {
+    name: "Paragon",
+    slug: "paragon",
+    industry: "Ecommerce Seller",
+    logoText: "Paragon",
+    businessType: "amazon-seller",
+    headline: "How Paragon simplified marketplace reconciliation and ERP accounting.",
+    problem:
+      "Paragon needed a clearer picture of marketplace finances. Settlements were complex, fees and deductions were hard to track, and accounting for every order in the ERP required significant manual effort.",
+    before: [
+      "Complex marketplace settlements",
+      "Fees and deductions difficult to track per order",
+      "Manual ERP accounting for ecommerce transactions",
+      "No single view of marketplace financial health",
+    ],
+    implementation: [
+      { label: "Platform", detail: "Payment reconciliation and marketplace visibility" },
+      { label: "ERP Connector", detail: "Order-wise accounting posted to Tally" },
+    ],
+    after: [
+      "Settlements reconciled at order level",
+      "Marketplace fees and deductions visible and validated",
+      "Automated accounting in ERP",
+      "Clear financial picture across marketplaces",
+    ],
+    outcome:
+      "Paragon moved from manual reconciliation and accounting to an automated workflow where every order is accounted for and every settlement is validated.",
+    quote: "",
+    quoteAuthor: "",
+    quoteRole: "",
+    products: ["Payment Reconciliation", "Order-wise Accounting", "Tally"],
+    categories: ["Payment Reconciliation", "Ecommerce Accounting", "ERP Integration"],
+    featured: false,
+  },
+  {
+    name: "Rivona",
+    slug: "rivona",
+    industry: "D2C Brand",
+    logoText: "Rivona",
+    businessType: "d2c-brand",
+    headline: "How Rivona brought marketplace and D2C financial data together.",
+    problem:
+      "Rivona sold across multiple channels including marketplaces and their own D2C store. Financial data was scattered across platforms, making it difficult to get a unified view of profitability and reconcile payments accurately.",
+    before: [
+      "Financial data scattered across multiple channels",
+      "No unified view of profitability",
+      "Manual payment reconciliation",
+      "Difficulty consolidating marketplace and D2C data",
+    ],
+    implementation: [
+      { label: "Platform", detail: "Multi-channel data aggregation and profitability dashboard" },
+      { label: "ERP Connector", detail: "Consolidated accounting posted to ERP" },
+    ],
+    after: [
+      "Unified financial view across all channels",
+      "Product and channel-level profitability visible",
+      "Automated payment reconciliation",
+      "Consolidated accounting in ERP",
+    ],
+    outcome:
+      "Rivona gained a single connected financial picture across all sales channels, enabling better business decisions and streamlined accounting.",
+    quote: "",
+    quoteAuthor: "",
+    quoteRole: "",
+    products: ["Dashboard", "Profitability", "Payment Reconciliation", "ERP Connector"],
+    categories: ["D2C", "Multi-channel", "Profitability"],
+    featured: false,
+  },
 ]
 
 export const customerFaqs = [

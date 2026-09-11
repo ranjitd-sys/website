@@ -201,4 +201,4 @@ export const NAV_ITEMS: NavItem[] = [
 ]
 
 export const BOOK_DEMO_URL = "/contact"
-export const LOGIN_URL = "/login"
+export const LOGIN_URL = "https://app.deepecom.com/"

@@ -37,8 +37,8 @@ const logoed = customers.map((c) => ({
 <style>
   .ls-section { padding: clamp(0.5rem, 1.5vh, 1rem) 0 clamp(1.25rem, 2.5vh, 2rem); }
   .ls-inner { text-align: center; }
-  .ls-label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-400); }
-  .ls-row { margin-top: 1.1rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem 2rem; }
+  .ls-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-400); }
+  .ls-row { margin-top: 1.6rem; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5rem 3rem; }
   .ls-item {
     display: flex;
     align-items: center;
@@ -47,7 +47,7 @@ const logoed = customers.map((c) => ({
     padding: 0.5rem 0;
   }
   .ls-logo {
-    font-size: 1.02rem;
+    font-size: 1.4rem;
     font-weight: 800;
     color: var(--ink-300);
     letter-spacing: -0.015em;
@@ -57,17 +57,27 @@ const logoed = customers.map((c) => ({
   .ls-item:hover .ls-logo { color: var(--ink-500); }
   .ls-logo-img {
     width: auto;
-    height: 28px;
-    max-width: 100px;
+    height: 56px;
+    max-width: 200px;
     object-fit: contain;
-    opacity: 0.62;
+    opacity: 0.75;
     filter: grayscale(1);
-    transition: opacity 0.2s ease, filter 0.2s ease;
+    transition: opacity 0.2s ease, filter 0.2s ease, transform 0.25s ease;
   }
-  .ls-item:hover .ls-logo-img { opacity: 1; filter: grayscale(0); }
+  .ls-item:hover .ls-logo-img { opacity: 1; filter: grayscale(0); transform: scale(1.04); }
   .ls-rule {
-    width: 1px; height: 18px;
+    width: 1px; height: 32px;
     background: var(--ink-200);
   }
   .ls-item:last-child .ls-rule { display: none; }
+
+  @media (max-width: 48rem) {
+    .ls-logo-img {
+      height: 44px;
+      max-width: 150px;
+    }
+    .ls-logo {
+      font-size: 1.15rem;
+    }
+  }
 </style>

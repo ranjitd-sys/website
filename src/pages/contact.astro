@@ -1,20 +1,23 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
 import PageHero from "@/components/pages/shared/PageHero.astro"
+import CtaBand from "@/components/pages/shared/CtaBand.astro"
 import ContactForm from "@/components/landing/contact-form"
+import { buttonVariants } from "@/components/landing/ui/button"
+import { ArrowRight, Mail } from "lucide-react"
 
 const expectations = [
   {
     title: "Response within one business day",
-    description: "Real humans, no ticket black holes.",
+    body: "Real humans, no ticket black holes.",
   },
   {
     title: "Free guided demo",
-    description: "See reconciliation running on sample settlements.",
+    body: "See reconciliation running on sample settlements.",
   },
   {
     title: "Migration assistance included",
-    description: "We help import backdated settlements and map SKUs.",
+    body: "We help import backdated settlements and map SKUs.",
   },
 ]
 ---
@@ -27,28 +30,43 @@ const expectations = [
     eyebrow="BOOK A DEMO"
     title="Let's talk about your ecommerce business."
     lead="Tell us about your store and we'll show you exactly how DeepEcom fits your workflow."
-  />
+  >
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      <a href="#contact-form" class={buttonVariants({ size: "lg" })}>
+        Book a Demo
+        <ArrowRight size={16} />
+      </a>
+      <a
+        href="mailto:info@deepecom.com"
+        class={buttonVariants({ variant: "outline", size: "lg" })}
+      >
+        <Mail size={16} />
+        Email us directly
+      </a>
+    </div>
+  </PageHero>
 
-  <section class="mx-auto max-w-2xl px-6 pb-20">
+  <section id="contact-form" class="mx-auto max-w-2xl px-6 py-16">
     <ContactForm client:load />
   </section>
 
-  <section class="mx-auto max-w-2xl px-6 pb-24">
-    <div class="rounded-2xl border border-border bg-white p-7 shadow-card">
-      <h2 class="text-lg font-bold text-ink-900">What to expect</h2>
-      <ul class="mt-5 flex flex-col gap-4">
-        {
-          expectations.map((e) => (
-            <li class="flex items-start gap-3">
-              <span class="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-brand-500" />
-              <div>
-                <strong class="block text-sm font-semibold text-ink-900">{e.title}</strong>
-                <span class="text-sm text-muted-foreground">{e.description}</span>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
+  <section class="mx-auto max-w-3xl px-6 py-16">
+    <div class="divide-y divide-border">
+      {
+        expectations.map((e) => (
+          <div class="grid gap-3 py-8 sm:grid-cols-[1fr_2fr] sm:gap-10">
+            <h2 class="text-lg font-semibold tracking-tight text-ink-900">{e.title}</h2>
+            <p class="text-[15px]/relaxed text-muted-foreground">{e.body}</p>
+          </div>
+        ))
+      }
     </div>
   </section>
+
+  <CtaBand
+    title="Prefer to talk it through?"
+    lead="Email the team directly and we'll arrange a walkthrough on your own marketplace data."
+    cta="Email info@deepecom.com"
+    ctaHref="mailto:info@deepecom.com"
+  />
 </PageLayout>

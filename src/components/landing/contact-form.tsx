@@ -1,55 +1,133 @@
 import { useState, useId, type FormEvent } from "react"
 import { Button } from "@/components/landing/ui/button"
 import { Label } from "@/components/landing/ui/label"
-import { ArrowRight, Calendar, CircleCheck, Clock } from "lucide-react"
-import { Download, Loader2 } from "lucide-react"
+import { ArrowRight, CircleCheck, Loader2 } from "lucide-react"
 
-const FACTS = [
-  {
-    icon: Clock,  
-    title: "Response within one business day",
-    desc: "Real humans, no ticket black holes.",
-  },
-  {
-    icon: Calendar,
-    title: "Free guided demo",
-    desc: "See reconciliation running on sample settlements.",
-  },
-  {
-    icon: Download,
-    title: "Migration assistance included",
-    desc: "We help import backdated settlements and map SKUs.",
-  },
-] as const
+type FieldName = "name" | "email" | "phone" | "message"
+type Errors = Partial<Record<FieldName, string>>
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
+// Indian phone: optional +91 / 0, then 10 digits. Tolerates spaces and dashes.
+const PHONE_RE = /^(?:\+?91[\s.-]?|0)?\s*[6-9]\d{9}$/
+
+function validateField(name: FieldName, value: string): string {
+  const v = value.trim()
+
+  switch (name) {
+    case "name":
+      if (!v) return "Please enter your name."
+      if (v.length < 2) return "Name must be at least 2 characters."
+      if (v.length > 120) return "Name must be under 120 characters."
+      if (!/^[\p{L}\p{M}.'\-\s]+$/u.test(v)) return "Name contains invalid characters."
+      return ""
+    case "email":
+      if (!v) return "Please enter your email address."
+      if (v.length > 254) return "Email is too long."
+      if (!EMAIL_RE.test(v)) return "Please enter a valid email address."
+      return ""
+    case "phone":
+      if (!v) return ""
+      if (v.length > 20) return "Phone number is too long."
+      if (!PHONE_RE.test(v)) return "Please enter a valid 10-digit Indian phone number."
+      return ""
+    case "message":
+      if (!v) return "Please tell us a little about your business."
+      if (v.length < 10) return "Message must be at least 10 characters."
+      if (v.length > 5000) return "Message must be under 5000 characters."
+      return ""
+  }
+}
 
 // Shared base styling for native form inputs & textarea
 const fieldBaseClass =
   "w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-ink ring-offset-white placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
 
+function fieldClass(invalid: boolean) {
+  return `${fieldBaseClass} ${
+    invalid ? "border-red-400 focus-visible:ring-red-400" : ""
+  }`
+}
+
 export default function ContactForm() {
   const [refId, setRefId] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<Errors>({})
 
   const nameId = useId()
   const emailId = useId()
   const phoneId = useId()
   const msgId = useId()
 
+  const setFieldError = (name: FieldName, message: string) =>
+    setErrors((prev) => (message ? { ...prev, [name]: message } : { ...prev, [name]: undefined }))
+
+  const handleBlur = (name: FieldName) => (e: { target: HTMLInputElement | HTMLTextAreaElement }) => {
+    setFieldError(name, validateField(name, e.target.value))
+  }
+
+  const handleChange = (name: FieldName) => (e: { target: HTMLInputElement | HTMLTextAreaElement }) => {
+    // Re-validate live only after the field has failed once, so we don't nag while typing.
+    if (errors[name]) {
+      setFieldError(name, validateField(name, e.target.value))
+    }
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const form = e.currentTarget
 
-    if (!form.checkValidity()) {
-      form.reportValidity()
+    const formData = new FormData(form)
+    const values: Record<FieldName, string> = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      phone: String(formData.get("phone") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    }
+
+    const newErrors: Errors = {}
+    for (const [name, value] of Object.entries(values) as [FieldName, string][]) {
+      const message = validateField(name, value)
+      if (message) newErrors[name] = message
+    }
+    setErrors(newErrors)
+
+    if (Object.keys(newErrors).length > 0) {
+      const firstInvalid = document.querySelector<HTMLElement>(`.invalid-field input, .invalid-field textarea`)
+      firstInvalid?.focus()
       return
     }
 
     setIsSubmitting(true)
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800))
-      const referenceId = Math.floor(100000 + Math.random() * 900000)
-      setRefId(String(referenceId))
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, _honey: String(formData.get("_honey") ?? "") }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        // Apply any field-level errors returned by the server.
+        const fieldIssues = data?.issues?.fieldErrors as Record<string, string[]> | undefined
+        if (fieldIssues) {
+          const serverErrors: Errors = {}
+          for (const key of ["name", "email", "phone", "message"] as FieldName[]) {
+            const messages = fieldIssues[key]
+            if (messages && messages.length > 0) serverErrors[key] = messages[0]
+          }
+          if (Object.keys(serverErrors).length > 0) {
+            setErrors(serverErrors)
+            return
+          }
+        }
+        throw new Error(data?.error ?? "Request failed")
+      }
+
+      setRefId(String(data.referenceId ?? Math.floor(100000 + Math.random() * 900000)))
+    } catch {
+      alert("Something went wrong sending your message. Please try again, or email us directly at info@deepecom.com.")
     } finally {
       setIsSubmitting(false)
     }
@@ -83,82 +161,101 @@ export default function ContactForm() {
   }
 
   return (
-    <>
-      <div className="reveal">
-        <span className="eyebrow">Contact us</span>
-        <h2 className="h2 mt-1">Get in touch.</h2>
-        <p className="lead mt-4 max-w-xl">
-          Do you need help with something, or have questions about a feature? Tell us about your store and
-          we'll show you exactly how DeepEcom fits your workflow.
-        </p>
-        <div className="mt-9">
-          {FACTS.map(({ icon: Icon, title, desc }) => (
-            <div key={title} className="flex items-start gap-3.5 border-b border-subtle py-3.5 last:border-0">
-              <span className="grid size-9.5 shrink-0 place-items-center rounded-xl border border-brand-100 bg-accent text-primary">
-                <Icon size={18} />
-              </span>
-              <div>
-                <strong className="block text-[14.5px] font-bold text-ink">{title}</strong>
-                <span className="text-[13.5px] text-muted-foreground">{desc}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+    <form
+      noValidate
+      onSubmit={handleSubmit}
+      className="reveal grid gap-4.5 rounded-2xl border border-border bg-white p-6 shadow-card sm:grid-cols-2 md:p-8"
+    >
+      <input
+        type="text"
+        name="_honey"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
 
-      <form
-        noValidate
-        onSubmit={handleSubmit}
-        className="reveal grid gap-4.5 rounded-2xl border border-border bg-white p-6 shadow-card sm:grid-cols-2 md:p-8"
-      >
-        <div className="flex flex-col gap-1.5">
+        <div className={`flex flex-col gap-1.5${errors.name ? " invalid-field" : ""}`}>
           <Label htmlFor={nameId}>Full name</Label>
           <input
             id={nameId}
             name="name"
             type="text"
-            required
-            placeholder="Priya Sharma"
             autoComplete="name"
-            className={`${fieldBaseClass} h-10`}
+            placeholder="Priya Sharma"
+            aria-invalid={errors.name ? "true" : "false"}
+            aria-describedby={errors.name ? `${nameId}-error` : undefined}
+            className={fieldClass(!!errors.name)}
+            onBlur={handleBlur("name")}
+            onChange={handleChange("name")}
           />
+          {errors.name && (
+            <p id={`${nameId}-error`} className="text-xs font-medium text-red-600" role="alert">
+              {errors.name}
+            </p>
+          )}
         </div>
 
-        <div className="flex flex-col gap-1.5">
+        <div className={`flex flex-col gap-1.5${errors.email ? " invalid-field" : ""}`}>
           <Label htmlFor={emailId}>Email</Label>
           <input
             id={emailId}
             name="email"
             type="email"
-            required
-            placeholder="priya@yourstore.com"
             autoComplete="email"
-            className={`${fieldBaseClass} h-10`}
+            placeholder="priya@yourstore.com"
+            aria-invalid={errors.email ? "true" : "false"}
+            aria-describedby={errors.email ? `${emailId}-error` : undefined}
+            className={fieldClass(!!errors.email)}
+            onBlur={handleBlur("email")}
+            onChange={handleChange("email")}
           />
+          {errors.email && (
+            <p id={`${emailId}-error`} className="text-xs font-medium text-red-600" role="alert">
+              {errors.email}
+            </p>
+          )}
         </div>
 
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
+        <div className={`flex flex-col gap-1.5 sm:col-span-2${errors.phone ? " invalid-field" : ""}`}>
           <Label htmlFor={phoneId}>Contact number</Label>
           <input
             id={phoneId}
             name="phone"
             type="tel"
-            placeholder="+91 98765 43210"
             autoComplete="tel"
-            className={`${fieldBaseClass} h-10`}
+            placeholder="+91 98765 43210"
+            aria-invalid={errors.phone ? "true" : "false"}
+            aria-describedby={errors.phone ? `${phoneId}-error` : undefined}
+            className={fieldClass(!!errors.phone)}
+            onBlur={handleBlur("phone")}
+            onChange={handleChange("phone")}
           />
+          {errors.phone && (
+            <p id={`${phoneId}-error`} className="text-xs font-medium text-red-600" role="alert">
+              {errors.phone}
+            </p>
+          )}
         </div>
 
-        <div className="flex flex-col gap-1.5 sm:col-span-2">
+        <div className={`flex flex-col gap-1.5 sm:col-span-2${errors.message ? " invalid-field" : ""}`}>
           <Label htmlFor={msgId}>Message</Label>
           <textarea
             id={msgId}
             name="message"
-            required
             rows={5}
             placeholder="Tell us about your store — channels, monthly order volume, and what you'd like to automate…"
-            className={fieldBaseClass}
+            aria-invalid={errors.message ? "true" : "false"}
+            aria-describedby={errors.message ? `${msgId}-error` : undefined}
+            className={fieldClass(!!errors.message)}
+            onBlur={handleBlur("message")}
+            onChange={handleChange("message")}
           />
+          {errors.message && (
+            <p id={`${msgId}-error`} className="text-xs font-medium text-red-600" role="alert">
+              {errors.message}
+            </p>
+          )}
         </div>
 
         <Button type="submit" size="lg" disabled={isSubmitting} className="gap-2 sm:col-span-2">
@@ -175,7 +272,6 @@ export default function ContactForm() {
           )}
         </Button>
         <p className="-mt-2 text-center text-xs text-ink-400 sm:col-span-2">We'll never share your details. No spam, ever.</p>
-      </form>
-    </>
+    </form>
   )
 }

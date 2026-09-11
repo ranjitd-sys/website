@@ -37,7 +37,10 @@ export const LOGO_ASSETS: Record<string, LogoAsset> = {
   // case studies (customers)
   gati: { src: "/logos/gati.png", ratio: 0.96 },
   vanalaya: { src: "/logos/vanalaya-logo.png", ratio: 1.67 },
-  zeneme: { src: "/logos/zeneme.png", ratio: 0.75 },
+  zeneme: { src: "/logos/zeneme.jpg ", ratio: 0.75 },
+  "hinduja-group": { src: "/logos/Hinduja_Group_Logo.svg", ratio: 1.2 },
+  paragon: { src: "/logos/paragon.png", ratio: 1 },
+  rivona: { src: "/logos/rivona.png", ratio: 1 },
 }
 
 export function logoAsset(slug: string): LogoAsset | undefined {
