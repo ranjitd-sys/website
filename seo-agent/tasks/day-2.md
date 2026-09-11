@@ -56,19 +56,21 @@
   - [x] **Verify:** local fixture page (Node `http` server) — title/desc/h1 extracted, `jsonLdBlocks=1`, `internalLinks=2`, `brokenLinks=1` (404 via HEAD→GET fallback); `CrawlOutput` decodes
   - [x] **Done:** `CrawlServiceLive` via `Layer.succeed`; `Effect.tryPromise` with external-received `AbortSignal` (thrown errors mapped to typed `CrawlError`). Notes: link checks bounded to first 10 internal links, with `HEAD` → `GET` fallback on 405/501; `#anchor` and external links excluded from count; async crawl must run via `Effect.runPromise` (not `runSync`).
 
-- [ ] **T9 — Build tool**
-  - [ ] `seo-agent/src/tools/build.ts` — Effect `Context.Service` `BuildService` + `BuildServiceLive`
-  - [ ] Method `runBuild()` → `{ ok: boolean, errors: [{ file, message }] }` matching `BuildOutput` in registry
-  - [ ] Runs `astro build` as child process in the repo root (`bun run build`, cwd = parent of `seo-agent/`), captures exit code + stderr
-  - [ ] Parse stderr into `errors: [{ file, message }]` where possible; empty `errors` + `ok: true` when exit 0
-  - [ ] Typed error `BuildError { reason }` (missing astro, spawn failure)
-  - [ ] **Verify:** build passes → `{ ok: true, errors: [] }`; break a file → `{ ok: false, errors: [...] }` captures the failing file
+- [x] **T9 — Build tool**
+  - [x] `seo-agent/src/tools/build.ts` — Effect `Context.Service` `BuildService` + `BuildServiceLive`
+  - [x] Methods `runBuild({ cwd })` → `{ ok: boolean, errors: [{ file, message }] }` matching `BuildOutput` in registry
+  - [x] Runs `astro build` as child process in the repo root (spawns `node_modules/.bin/astro`, cwd = parent of `seo-agent/`), captures exit code + stderr (bounded to 200KB)
+  - [x] Parse stderr into `errors: [{ file, message }]` (Astro `error  <msg>` + `File:` blocks); empty `errors` + `ok: true` when exit 0
+  - [x] Typed error `BuildError { reason }` (missing astro binary, spawn failure)
+  - [x] **Verify:** real repo build → `{ ok: true, errors: [] }` (took ~11s); fixture dir with failing fake `astro` binary → `{ ok: false, errors: [{file: probe.astro, message: "Failed to resolve import..."}, {file: Broken.tsx, message: "Build failed..."}] }`; abort signal kills child
+  - [x] **Done:** `BuildServiceLive` via `Layer.succeed`; service accessed via `yield* BuildService` inside `Effect.gen`. Notes: uses `Effect.tryPromise` around a `spawn` wrapper; `astro` binary path resolved from `cwd/node_modules/.bin` (no shell, dependency-free); updated `BuildInput` registry schema to `{ cwd }` (build always targets repo root, LLM-facing input has no free parameters); REPO_ROOT constant = parent of `seo-agent/`.
 
-- [ ] **T10 — Validate tool**
-  - [ ] `seo-agent/src/tools/validate.ts` — Effect `Context.Service` `ValidateService` + `ValidateServiceLive`
-  - [ ] Method `validateChange(change)` → `{ pass: boolean, findings: [{ field, message }] }` matching `ValidateOutput` in registry
-  - [ ] Checks (pure code, spec §6): title ≤60 chars; description 120–160 chars inclusive; JSON-LD string parses via `JSON.parse` when present
-  - [ ] **Verify:** valid change (50-char title, 140-char desc, valid JSON-LD) → `pass: true`; 70-char title → `findings[0].field === "title"`; 80-char desc → `field === "description"`; malformed JSON-LD → `field === "jsonLd"`
+- [x] **T10 — Validate tool**
+  - [x] `seo-agent/src/tools/validate.ts` — Effect `Context.Service` `ValidateService` + `ValidateServiceLive`
+  - [x] Method `validateChange(change)` → `{ pass: boolean, findings: [{ field, message }] }` matching `ValidateOutput` in registry
+  - [x] Checks (pure code, spec §6): title ≤60 chars (`Array.from` codepoint count); description 120–160 chars inclusive; JSON-LD parses via `Effect.try` + `Effect.option` (no raw try/catch) when `jsonLd` non-empty
+  - [x] **Verify:** valid change (49-char title, 137-char desc, valid JSON-LD) → `pass: true, findings: []`; 61-char title → `field === "title"`; 80-char desc → `field === "description"`; 180-char desc → `field === "description"`; `{not valid json` → `field === "jsonLd"`
+  - [x] **Done:** `ValidateServiceLive` via `Layer.succeed`; updated `ValidateInput` registry schema to `{ filePath, title, description, jsonLd }` matching the change shape the agent will validate.
 
 - [ ] **T11 — Wire tools into Driver**
   - [ ] `seo-agent/src/agent/Driver.ts` — `step()` calls real tools per state; services added to the Optimize service's requirements
@@ -94,11 +96,11 @@ No package needed for SERP/GSC (mocked/stubbed), build (`node:child_process`), o
 
 ## Deliverables (end of day)
 
-- [ ] `src/tools/serp.ts` — mock SERP data for 5 seed keywords
-- [ ] `src/tools/gsc.ts` — stub GSC metrics + 28-day trend for 5 seed keywords
-- [ ] `src/tools/crawl.ts` — real crawl (fetch + `node-html-parser`) over a target URL
-- [ ] `src/tools/build.ts` — real `astro build` execution with parsed errors
-- [ ] `src/tools/validate.ts` — deterministic title/description/JSON-LD checks
+- [x] `src/tools/serp.ts` — mock SERP data for 5 seed keywords
+- [x] `src/tools/gsc.ts` — stub GSC metrics + 28-day trend for 5 seed keywords
+- [x] `src/tools/crawl.ts` — real crawl (fetch + `node-html-parser`) over a target URL
+- [x] `src/tools/build.ts` — real `astro build` execution with parsed errors
+- [x] `src/tools/validate.ts` — deterministic title/description/JSON-LD checks
 - [ ] `src/agent/Driver.ts` — `step()` calls real tools at RESEARCH, SCOPE, VALIDATE
 - [ ] `src/cli.ts` — provides all five new tool Layers
 - [ ] `bun run check` passes; `bun run src/cli.ts optimize --dry-run` walks the machine with live tool calls and exits 0

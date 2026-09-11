@@ -42,7 +42,12 @@ export const BuildOutput = Schema.Struct({
   errors: Schema.Array(Schema.Struct({ file: Schema.String, message: Schema.String })),
 })
 
-export const ValidateInput = Schema.Struct({ filePath: Schema.String })
+export const ValidateInput = Schema.Struct({
+  filePath: Schema.String,
+  title: Schema.String,
+  description: Schema.String,
+  jsonLd: Schema.String,
+})
 export const ValidateOutput = Schema.Struct({
   pass: Schema.Boolean,
   findings: Schema.Array(Schema.Struct({ field: Schema.String, message: Schema.String })),
