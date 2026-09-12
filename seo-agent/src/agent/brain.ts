@@ -1,80 +1,31 @@
 import { Context, Data, Effect, Layer, Option, Redacted, Schema } from "effect"
 import { SeoConfig, type SeoConfigShape } from "../Config.js"
+import type {
+  ActInput,
+  Change,
+  LearnedDelta,
+  LearnInput,
+  PlanInput,
+  PlanOutput,
+  ReviseInput,
+  ReviewInput,
+  ReviewOutput,
+  ReviewVerdict,
+} from "../types/agent.js"
 import {
   actPrompt,
   driverPrompt,
   learnPrompt,
   revisePrompt,
   reviewerPrompt,
-  type LearnedDelta,
-  type PromptCrawl,
-  type PromptGsc,
-  type PromptSerpEntry,
 } from "./prompts.js"
+
+export type { ActInput, Change, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict }
 
 export class BrainError extends Data.TaggedError("BrainError")<{
   readonly step: string
   readonly reason: string
 }> {}
-
-export interface Change {
-  readonly filePath: string
-  readonly title: string
-  readonly description: string
-  readonly jsonLd: string
-}
-
-export interface PlanOutput {
-  readonly diagnosis: string
-  readonly action: string
-  readonly rationale: string
-}
-
-export type ReviewVerdict = "pass" | "fail"
-
-export interface ReviewOutput {
-  readonly verdict: ReviewVerdict
-  readonly reason: string
-}
-
-export interface PlanInput {
-  readonly keyword: string
-  readonly intent: string
-  readonly crawl: PromptCrawl | null
-  readonly serp: { readonly results: ReadonlyArray<PromptSerpEntry> } | null
-  readonly gsc: PromptGsc | null
-  readonly learnings: ReadonlyArray<string>
-}
-
-export interface ActInput {
-  readonly keyword: string
-  readonly targetUrl: string
-  readonly crawl: PromptCrawl | null
-  readonly diagnosis: string
-  readonly action: string
-  readonly rationale: string
-}
-
-export interface ReviseInput {
-  readonly change: Change
-  readonly lastReason: string
-}
-
-export interface ReviewInput {
-  readonly title: string
-  readonly description: string
-  readonly diffSummary: string
-}
-
-export interface LearnInput {
-  readonly deltas: ReadonlyArray<{
-    readonly keyword: string
-    readonly before: number
-    readonly after: number
-    readonly delta: number
-    readonly verdict: "won" | "stuck" | "falling"
-  }>
-}
 
 export interface BrainShape {
   readonly plan: (input: PlanInput) => Effect.Effect<PlanOutput, BrainError, SeoConfig>
@@ -274,9 +225,7 @@ const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effe
           : complete(
               "learn",
               LearningsSchema,
-              learnPrompt(
-                input.deltas as ReadonlyArray<LearnedDelta>,
-              ),
+              learnPrompt(input.deltas),
               "Generalize the measured results into learnings.",
               false,
             ).pipe(Effect.map((out) => out.learnings)),

@@ -17,3 +17,4 @@ INSERT INTO keywords (term, intent, volume, difficulty, target_url, status) VALU
   ('ecommerce accounting tally', 'commercial', NULL, NULL, '/erp-connector/accounting', 'active'),
   ('d2c brand accounting', 'transactional', NULL, NULL, '/solutions/d2c-brands', 'active')
 ON CONFLICT (term) DO NOTHING;
+

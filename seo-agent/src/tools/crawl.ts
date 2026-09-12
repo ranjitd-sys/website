@@ -1,14 +1,8 @@
 import { Context, Data, Effect, Layer } from "effect"
 import { parse } from "node-html-parser"
+import type { CrawlResult } from "../types/market.js"
 
-export interface CrawlResult {
-  readonly title: string
-  readonly description: string
-  readonly h1: string
-  readonly jsonLdBlocks: number
-  readonly internalLinks: number
-  readonly brokenLinks: number
-}
+export type { CrawlResult }
 
 export class CrawlError extends Data.TaggedError("CrawlError")<{
   readonly url: string

@@ -1,14 +1,7 @@
 import { Context, Data, Effect, Layer } from "effect"
+import type { GscMetrics, GscWindow } from "../types/market.js"
 
-export type GscWindow = "7d" | "28d"
-
-export interface GscMetrics {
-  readonly clicks: number
-  readonly impressions: number
-  readonly position: number
-  readonly ctr: number
-  readonly trend: ReadonlyArray<number>
-}
+export type { GscMetrics, GscWindow }
 
 export class GscError extends Data.TaggedError("GscError")<{
   readonly query: string

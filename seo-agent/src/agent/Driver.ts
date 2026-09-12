@@ -2,7 +2,7 @@ import { Context, Data, Effect, Layer, Result } from "effect"
 import { getInitialSnapshot, transition, type SnapshotFrom } from "xstate"
 import type { OptimizeEvent } from "./Machine.js"
 import { optimizeMachine } from "./Machine.js"
-import { BrainService, type Change, type PlanOutput } from "./brain.js"
+import { BrainService } from "./brain.js"
 import { Database } from "../services/Database.js"
 import { SeoConfig } from "../Config.js"
 import { SerpService } from "../tools/serp.js"
@@ -12,21 +12,21 @@ import { BuildService, REPO_ROOT } from "../tools/build.js"
 import { ValidateService } from "../tools/validate.js"
 import { ContentService } from "../tools/content.js"
 import { GithubService } from "../tools/github.js"
+import type {
+  Change,
+  OptimizeResult,
+  PlanOutput,
+  RunOptions,
+  SelectedOpportunity,
+} from "../types/agent.js"
+import type { CrawlResult, GscMetrics, SerpResults } from "../types/market.js"
+import { opportunityScore } from "../shared/scoring.js"
+import { describeFinding, slugify } from "../shared/text.js"
 
 export class DriverError extends Data.TaggedError("DriverError")<{
   readonly state: string
   readonly reason: string
 }> {}
-
-export interface OptimizeResult {
-  readonly status: "finished"
-  readonly prUrl: string
-  readonly visited: ReadonlyArray<string>
-}
-
-export interface RunOptions {
-  readonly dryRun: boolean
-}
 
 interface KeywordRow {
   readonly id: number
@@ -40,33 +40,9 @@ interface ResearchRow {
   readonly term: string
   readonly intent: string
   readonly targetUrl: string
-  readonly serp: SerpResultsLike | null
-  readonly gsc: GscMetricsLike | null
-  readonly crawl: CrawlResultLike | null
-}
-
-interface SerpResultsLike {
-  readonly results: ReadonlyArray<unknown>
-}
-interface GscMetricsLike {
-  readonly clicks: number
-  readonly impressions: number
-  readonly position: number
-  readonly ctr: number
-  readonly trend: ReadonlyArray<number>
-}
-interface CrawlResultLike {
-  readonly title: string
-  readonly description: string
-}
-
-interface SelectedOpportunity {
-  readonly keywordId: number
-  readonly opportunityId: number
-  readonly term: string
-  readonly targetUrl: string
-  readonly score: number
-  readonly intent: string
+  readonly serp: SerpResults | null
+  readonly gsc: GscMetrics | null
+  readonly crawl: CrawlResult | null
 }
 
 interface RunCarry {
@@ -76,39 +52,6 @@ interface RunCarry {
   readonly change: Change | null
   readonly maxRetries: number
 }
-
-const INTENT_WEIGHT: Readonly<Record<string, number>> = {
-  commercial: 1.0,
-  transactional: 0.9,
-  informational: 0.5,
-}
-
-const momentumMultiplier = (trend: ReadonlyArray<number>): number => {
-  if (trend.length === 0) return 1.0
-  const first = trend[0] ?? 0
-  const last = trend[trend.length - 1] ?? first
-  if (first === 0) return 1.0
-  const improvement = (first - last) / first
-  if (improvement >= 0.3) return 1.6
-  if (improvement >= 0.1) return 1.3
-  if (improvement <= -0.05) return 0.6
-  return 1.0
-}
-
-const score = (row: ResearchRow): number => {
-  if (row.gsc === null) return 0
-  const position = Math.max(row.gsc.position, 1)
-  return row.gsc.impressions * position * (INTENT_WEIGHT[row.intent] ?? 0.5) * momentumMultiplier(row.gsc.trend)
-}
-
-const describe = (entry: { field: string; message: string }): string => `${entry.field}: ${entry.message}`
-
-const slugify = (value: string): string =>
-  value
-    .toLowerCase()
-    .replace(/^\/+|\/+$/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "")
 
 const buildPrBody = (selected: SelectedOpportunity, change: Change, plan: PlanOutput | null): string =>
   [
@@ -248,9 +191,9 @@ const step = (
           }
         }
 
-        const ranked = [...eligible].sort((a, b) => score(b) - score(a))
+        const ranked = [...eligible].sort((a, b) => opportunityScore(b.intent, b.gsc) - opportunityScore(a.intent, a.gsc))
         const winner = ranked[0]!
-        const winnerScore = score(winner)
+        const winnerScore = opportunityScore(winner.intent, winner.gsc)
         const page = pageId.find((p) => p.url === winner.targetUrl)
 
         let opportunityId: number
@@ -299,10 +242,7 @@ const step = (
           research.crawl === null
             ? null
             : { title: research.crawl.title, description: research.crawl.description }
-        const serp =
-          research.serp && research.serp.results.length > 0
-            ? { results: research.serp.results as ReadonlyArray<{ rank: number; url: string; title: string; snippet: string }> }
-            : null
+        const serp = research.serp && research.serp.results.length > 0 ? research.serp : null
         const gsc =
           research.gsc === null
             ? null
@@ -374,7 +314,7 @@ const step = (
         const verdict = yield* validate.validateChange(change)
         if (!verdict.pass) {
           return {
-            event: { type: "VALIDATION_FAILED", reason: verdict.findings.map(describe).join("; ") },
+            event: { type: "VALIDATION_FAILED", reason: verdict.findings.map(describeFinding).join("; ") },
             carry,
           }
         }

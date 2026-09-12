@@ -1,11 +1,7 @@
 import { Context, Effect, Layer, Option } from "effect"
+import type { Change } from "../types/agent.js"
 
-export interface ValidateChangeInput {
-  readonly filePath: string
-  readonly title: string
-  readonly description: string
-  readonly jsonLd: string
-}
+export type ValidateChangeInput = Change
 
 export interface ValidateFinding {
   readonly field: string

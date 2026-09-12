@@ -1,18 +1,8 @@
 import { Context, Data, Effect, Layer, Redacted, Result } from "effect"
 import { SeoConfig } from "../Config.js"
+import type { SerpResult, SerpResults, SerpSource } from "../types/market.js"
 
-export type SerpSource = "google" | "bing"
-
-export interface SerpResult {
-  readonly rank: number
-  readonly url: string
-  readonly title: string
-  readonly snippet: string
-}
-
-export interface SerpResults {
-  readonly results: ReadonlyArray<SerpResult>
-}
+export type { SerpResult, SerpResults, SerpSource }
 
 export class SerpError extends Data.TaggedError("SerpError")<{
   readonly keyword: string

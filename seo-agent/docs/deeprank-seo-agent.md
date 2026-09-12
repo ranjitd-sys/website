@@ -8,7 +8,7 @@
 
 > Every tracked keyword should have a clear, measurable path toward a better ranking.
 
-**Last updated:** 2026-09-12 — §16 rewritten: why DeepRank is called an agent (schedule as trigger, Brain vs Body, agent checklist, state-machine classification).
+**Last updated:** why DeepRank is called an agent (schedule as trigger, Brain vs Body, agent checklist, state-machine classification).
 
 ---
 
@@ -1864,26 +1864,42 @@ seo-agent/
 ├─ src/
 │  ├─ config.ts
 │  ├─ cli.ts
+│  ├─ edge.ts
+│  │
+│  ├─ types/
+│  │  ├─ market.ts      # SerpResult, SerpResults, SerpSource, GscWindow, GscMetrics, CrawlResult
+│  │  ├─ agent.ts       # Change, PlanOutput, ReviewVerdict, ReviewOutput, PlanInput, ActInput,
+│  │  │                 #   ReviseInput, ReviewInput, LearnInput, Verdict, SelectedOpportunity,
+│  │  │                 #   RunOptions, OptimizeResult
+│  │  └─ index.ts       # barrel
+│  │
+│  ├─ shared/
+│  │  ├─ scoring.ts     # INTENT_WEIGHT, momentumMultiplier, opportunityScore
+│  │  ├─ text.ts        # slugify, describeFinding
+│  │  └─ index.ts       # barrel
 │  │
 │  ├─ agent/
-│  │  ├─ machine.ts
-│  │  ├─ driver.ts
-│  │  └─ reviewer.ts
+│  │  ├─ Machine.ts
+│  │  ├─ Driver.ts
+│  │  ├─ brain.ts       # LLM plan/act/revise/review/learn (Groq)
+│  │  ├─ prompts.ts     # system prompt builders
+│  │  └─ Reviewer.ts    # (legacy stub, superseded by brain.review)
 │  │
 │  ├─ tools/
 │  │  ├─ registry.ts
 │  │  ├─ serp.ts
 │  │  ├─ gsc.ts
-│  │  ├─ analytics.ts
 │  │  ├─ crawl.ts
 │  │  ├─ content.ts
 │  │  ├─ validate.ts
 │  │  ├─ build.ts
 │  │  └─ github.ts
 │  │
+│  ├─ services/
+│  │  └─ Database.ts
+│  │
 │  ├─ store/
-│  │  ├─ schema.sql
-│  │  └─ client.ts
+│  │  └─ schema.sql
 │  │
 │  └─ measurement/
 │     └─ measure.ts

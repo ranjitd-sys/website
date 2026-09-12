@@ -2,7 +2,11 @@ import { Context, Data, Effect, Layer } from "effect"
 import { BrainService } from "../agent/brain.js"
 import { Database } from "../services/Database.js"
 import { SeoConfig } from "../Config.js"
-import { GscService, type GscMetrics } from "../tools/gsc.js"
+import { GscService } from "../tools/gsc.js"
+import type { Verdict } from "../types/agent.js"
+import type { GscMetrics } from "../types/market.js"
+
+export type { Verdict }
 
 export class MeasureError extends Data.TaggedError("MeasureError")<{
   readonly step: string
@@ -19,8 +23,6 @@ interface ChangeRow {
 interface PositionRow {
   readonly position: number
 }
-
-export type Verdict = "won" | "stuck" | "falling"
 
 export interface MeasureResult {
   readonly measured: number

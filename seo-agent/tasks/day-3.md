@@ -183,3 +183,26 @@ GSC is still **pending** — T18 stays stubbed with a documented TODO swap path;
 ## Definition of done for today
 
 `bun run src/cli.ts optimize` creates a **real draft PR** with LLM-written metadata; the reviewer catches fabrication/scope/positioning violations; `bun run src/cli.ts measure` detects merged PRs and writes deltas + learnings. `bun run check` is green. That's P4 + P5 done (except Runbook/Day-4 items).
+
+---
+
+## Refactor (after Day-3 core) — shared types + helpers consolidation
+
+Goal per user: "structured files better, like types and shared and other". Centralize what was duplicated/scattered.
+
+- [x] **`src/types/`** — canonical domain types, single source of truth:
+  - `market.ts` — `SerpSource`, `SerpResult`, `SerpResults`, `GscWindow`, `GscMetrics`, `CrawlResult`
+  - `agent.ts` — `Change`, `PlanOutput`, `ReviewVerdict`, `ReviewOutput`, `PlanInput`, `ActInput`, `ReviseInput`, `ReviewInput`, `LearnInput`, `LearnedDelta`, `Verdict`, `SelectedOpportunity`, `RunOptions`, `OptimizeResult`, prompt-view aliases (`PromptSerpEntry`, `PromptCrawl`, `PromptGsc`)
+  - `index.ts` barrel re-export
+- [x] **`src/shared/`** — pure helpers independent of services:
+  - `scoring.ts` — `INTENT_WEIGHT`, `momentumMultiplier`, `opportunityScore` (moved from Driver.ts)
+  - `text.ts` — `slugify`, `describeFinding` (moved from Driver.ts)
+  - `index.ts` barrel
+- [x] **Duplicates removed:**
+  - Driver.ts: dropped `SerpResultsLike`/`GscMetricsLike`/`CrawlResultLike` + local `OptimizeResult`/`RunOptions`/`SelectedOpportunity`; PLAN now passes `research.serp` straight through instead of re-shaping
+  - prompts.ts: dropped local `PromptSerpEntry`/`PromptCrawl`/`PromptGsc`/`Plan*PromptInput`/`ReviewPromptInput`/`LearnedDelta`; imports from `types/agent`
+  - brain.ts: dropped local `Change`/`PlanOutput`/`Review*`/`PlanInput`/`ActInput`/`ReviseInput`/`LearnInput`; imports + re-exports from `types/agent`
+  - measure.ts: `Verdict` moved to `types/agent`
+  - Reviewer.ts: `ReviewVerdict`/`ChangeSummary` → `ReviewVerdict`/`ReviewInput` from `types/agent`
+  - `content.ts` (`ApplyChangeInput`) + `validate.ts` (`ValidateChangeInput`) are now aliases of shared `Change`
+- [x] **Verify:** `bun run check` green; `optimize --dry-run` still runs full loop (selected "amazon seller gst accounting", opportunity=10, score=32800, FINISHED); `measure` runs clean (0 merged).

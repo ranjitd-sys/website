@@ -1,44 +1,11 @@
-export interface PromptSerpEntry {
-  readonly rank: number
-  readonly url: string
-  readonly title: string
-  readonly snippet: string
-}
+import type {
+  ActInput,
+  LearnedDelta,
+  PlanInput,
+  ReviewInput,
+} from "../types/agent.js"
 
-export interface PromptCrawl {
-  readonly title: string
-  readonly description: string
-}
-
-export interface PromptGsc {
-  readonly impressions: number
-  readonly position: number
-  readonly ctr: number
-}
-
-export interface PlanPromptInput {
-  readonly keyword: string
-  readonly intent: string
-  readonly crawl: PromptCrawl | null
-  readonly serp: { readonly results: ReadonlyArray<PromptSerpEntry> } | null
-  readonly gsc: PromptGsc | null
-  readonly learnings: ReadonlyArray<string>
-}
-
-export interface ActPromptInput {
-  readonly keyword: string
-  readonly targetUrl: string
-  readonly crawl: PromptCrawl | null
-  readonly diagnosis: string
-  readonly action: string
-  readonly rationale: string
-}
-
-export interface ReviewPromptInput {
-  readonly title: string
-  readonly description: string
-  readonly diffSummary: string
-}
+export type { ActInput, LearnedDelta, PlanInput, ReviewInput }
 
 export interface RevisePromptInput {
   readonly title: string
@@ -62,7 +29,7 @@ const METADATA_RULES = [
   "Return ONLY a JSON object — no markdown fences, no commentary.",
 ].join("\n")
 
-export const driverPrompt = (input: PlanPromptInput): string => [
+export const driverPrompt = (input: PlanInput): string => [
   `You are DeepEcom's SEO agent. Your job: diagnose why "${input.keyword}" is under-trusted for an existing page, then propose the right fix.`,
   "",
   "DeepEcom background and hard rules:",
@@ -89,7 +56,7 @@ export const driverPrompt = (input: PlanPromptInput): string => [
   '{"diagnosis": "one-sentence analysis", "action": "string", "rationale": "string"}',
 ].join("\n")
 
-export const actPrompt = (input: ActPromptInput): string => [
+export const actPrompt = (input: ActInput): string => [
   `Write the optimized metadata for the page ${input.targetUrl} targeting "${input.keyword}".`,
   "",
   "DeepEcom background and hard rules:",
@@ -125,7 +92,7 @@ export const revisePrompt = (input: RevisePromptInput): string => [
   'Return ONLY a JSON object: {"title": "string", "description": "string", "jsonLd": "string"}',
 ].join("\n")
 
-export const reviewerPrompt = (input: ReviewPromptInput): string => [
+export const reviewerPrompt = (input: ReviewInput): string => [
   "You are DeepEcom's senior SEO reviewer. Judge the following proposed change.",
   "",
   "Proposed change:",
@@ -143,14 +110,6 @@ export const reviewerPrompt = (input: ReviewPromptInput): string => [
   POSITIONING_RULES,
   'Respond with a single JSON object: {"verdict": "pass" or "fail", "reason": "string"}',
 ].join("\n")
-
-export interface LearnedDelta {
-  readonly keyword: string
-  readonly before: number
-  readonly after: number
-  readonly delta: number
-  readonly verdict: "won" | "stuck" | "falling"
-}
 
 export const learnPrompt = (deltas: ReadonlyArray<LearnedDelta>): string => [
   "You are DeepEcom's SEO performance analyst. Below are the measured results of recent metadata optimizations.",

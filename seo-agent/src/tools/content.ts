@@ -1,18 +1,14 @@
 import { readFile } from "node:fs/promises"
 import path from "node:path"
 import { Context, Data, Effect, Layer } from "effect"
+import type { Change } from "../types/agent.js"
 
 export class ContentError extends Data.TaggedError("ContentError")<{
   readonly filePath: string
   readonly reason: string
 }> {}
 
-export interface ApplyChangeInput {
-  readonly filePath: string
-  readonly title: string
-  readonly description: string
-  readonly jsonLd: string
-}
+export type ApplyChangeInput = Change
 
 export interface ApplyChangeResult {
   readonly filePath: string
