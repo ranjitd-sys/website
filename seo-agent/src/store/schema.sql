@@ -66,3 +66,12 @@ CREATE TABLE IF NOT EXISTS changes (
 
 CREATE INDEX IF NOT EXISTS changes_measurement_idle_idx ON changes (opportunity_id)
   WHERE deployed_at IS NOT NULL AND measurement IS NULL;
+
+CREATE TABLE IF NOT EXISTS learnings (
+  id BIGSERIAL PRIMARY KEY,
+  content TEXT NOT NULL,
+  change_id BIGINT REFERENCES changes (id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS learnings_created_idx ON learnings (created_at DESC);

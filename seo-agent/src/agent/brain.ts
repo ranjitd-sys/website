@@ -3,8 +3,10 @@ import { SeoConfig, type SeoConfigShape } from "../Config.js"
 import {
   actPrompt,
   driverPrompt,
+  learnPrompt,
   revisePrompt,
   reviewerPrompt,
+  type LearnedDelta,
   type PromptCrawl,
   type PromptGsc,
   type PromptSerpEntry,
@@ -64,11 +66,22 @@ export interface ReviewInput {
   readonly diffSummary: string
 }
 
+export interface LearnInput {
+  readonly deltas: ReadonlyArray<{
+    readonly keyword: string
+    readonly before: number
+    readonly after: number
+    readonly delta: number
+    readonly verdict: "won" | "stuck" | "falling"
+  }>
+}
+
 export interface BrainShape {
   readonly plan: (input: PlanInput) => Effect.Effect<PlanOutput, BrainError, SeoConfig>
   readonly act: (input: ActInput) => Effect.Effect<Change, BrainError, SeoConfig>
   readonly revise: (input: ReviseInput) => Effect.Effect<Change, BrainError, SeoConfig>
   readonly review: (input: ReviewInput) => Effect.Effect<ReviewOutput, BrainError, SeoConfig>
+  readonly learn: (input: LearnInput) => Effect.Effect<ReadonlyArray<string>, BrainError, SeoConfig>
 }
 
 export class BrainService extends Context.Service<BrainService, BrainShape>()("BrainService") {}
@@ -90,6 +103,10 @@ const ChangeSchema = Schema.Struct({
 const ReviewSchema = Schema.Struct({
   verdict: Schema.Literals(["pass", "fail"]),
   reason: Schema.String,
+})
+
+const LearningsSchema = Schema.Struct({
+  learnings: Schema.Array(Schema.String),
 })
 
 const decodeJson = <S extends Schema.Schema<any>>(
@@ -205,7 +222,13 @@ const stubAct = (input: ActInput): Change => {
   )
 }
 
-const stubRevise = (input: ReviseInput): Change => input.change
+const stubRevise = (input: ReviseInput): Change => input.change;
+
+const stubLearn = (input: LearnInput): ReadonlyArray<string> =>
+  input.deltas.map(
+    (d) =>
+      `"${d.keyword}" moved ${d.before} → ${d.after} (${d.verdict}); metadata changes can shift ranking. (stub; no GROQ_API_KEY configured)`,
+  )
 
 const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effect(
   BrainService,
@@ -245,6 +268,18 @@ const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effe
               reason: "stub reviewer (no GROQ_API_KEY configured)",
             })
           : complete("review", ReviewSchema, reviewerPrompt(input), "Return your verdict.", true),
+      learn: (input) =>
+        stub
+          ? Effect.succeed(stubLearn(input))
+          : complete(
+              "learn",
+              LearningsSchema,
+              learnPrompt(
+                input.deltas as ReadonlyArray<LearnedDelta>,
+              ),
+              "Generalize the measured results into learnings.",
+              false,
+            ).pipe(Effect.map((out) => out.learnings)),
     }
   }),
 )

@@ -9,6 +9,7 @@ export interface SeoConfigShape {
   readonly groqModel: string
   readonly groqReviewerModel: string
   readonly githubToken: Redacted.Redacted
+  readonly serpApiKey: Redacted.Redacted
 }
 
 export class SeoConfig extends Context.Service<SeoConfig, SeoConfigShape>()("SeoConfig") {}
@@ -31,6 +32,7 @@ const config = Config.all({
   groqModel: Config.string("GROQ_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
   groqReviewerModel: Config.string("GROQ_REVIEWER_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
   githubToken: Config.redacted("GITHUB_TOKEN"),
+  serpApiKey: Config.redacted("SERPAPI_KEY").pipe(Config.withDefault(Redacted.make(""))),
 })
 
 const collectMissing = (cause: unknown): ReadonlyArray<MissingEntry> => {

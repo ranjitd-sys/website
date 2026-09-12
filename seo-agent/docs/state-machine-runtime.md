@@ -230,7 +230,6 @@ split would need to be thrown away — only the driving loop changes.
 ---
 
 ## 7. Decision
-
 | | |
 |---|---|
 | **Chosen** | Approach C — Interpreter + Strategy, implemented in `Driver.ts` |

@@ -8,6 +8,9 @@ import { GscServiceLive } from "./tools/gsc.js"
 import { CrawlServiceLive } from "./tools/crawl.js"
 import { BuildServiceLive } from "./tools/build.js"
 import { ValidateServiceLive } from "./tools/validate.js"
+import { ContentServiceLive } from "./tools/content.js"
+import { GithubServiceLive } from "./tools/github.js"
+import { MeasureService, MeasureLive } from "./measurement/measure.js"
 import { runProgram } from "./edge.js"
 
 const command = process.argv[2] ?? "optimize"
@@ -22,6 +25,7 @@ const loadConfig = Effect.gen(function* () {
     gscPrivateKey: config.gscPrivateKey,
     groqApiKey: config.groqApiKey,
     githubToken: config.githubToken,
+    serpApiKey: config.serpApiKey,
   })
 })
 
@@ -34,11 +38,21 @@ const optimize = Effect.gen(function* () {
 
 const measure = Effect.gen(function* () {
   yield* loadConfig
-  yield* Effect.log("measure: not implemented (landing in P9)")
+  const measurer = yield* MeasureService
+  const result = yield* measurer.run()
+  yield* Effect.log(`measure finished: ${result.measured} change(s) measured, ${result.learnings.length} learning(s) persisted`)
 })
 
 if (command === "measure") {
-  await runProgram(measure.pipe(Effect.provide(SeoConfigLayer)))
+  await runProgram(
+    measure.pipe(
+      Effect.provide(GscServiceLive),
+      Effect.provide(DatabaseLive),
+      Effect.provide(BrainServiceLive),
+      Effect.provide(MeasureLive),
+      Effect.provide(SeoConfigLayer),
+    ),
+  )
 } else if (command === "optimize") {
   await runProgram(
     optimize.pipe(
@@ -49,6 +63,8 @@ if (command === "measure") {
       Effect.provide(SerpServiceLive),
       Effect.provide(DatabaseLive),
       Effect.provide(BrainServiceLive),
+      Effect.provide(ContentServiceLive),
+      Effect.provide(GithubServiceLive),
       Effect.provide(OptimizeLive),
       Effect.provide(SeoConfigLayer),
     ),

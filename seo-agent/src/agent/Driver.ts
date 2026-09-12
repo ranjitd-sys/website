@@ -10,6 +10,8 @@ import { GscService } from "../tools/gsc.js"
 import { CrawlService } from "../tools/crawl.js"
 import { BuildService, REPO_ROOT } from "../tools/build.js"
 import { ValidateService } from "../tools/validate.js"
+import { ContentService } from "../tools/content.js"
+import { GithubService } from "../tools/github.js"
 
 export class DriverError extends Data.TaggedError("DriverError")<{
   readonly state: string
@@ -47,6 +49,7 @@ interface SerpResultsLike {
   readonly results: ReadonlyArray<unknown>
 }
 interface GscMetricsLike {
+  readonly clicks: number
   readonly impressions: number
   readonly position: number
   readonly ctr: number
@@ -100,6 +103,38 @@ const score = (row: ResearchRow): number => {
 
 const describe = (entry: { field: string; message: string }): string => `${entry.field}: ${entry.message}`
 
+const slugify = (value: string): string =>
+  value
+    .toLowerCase()
+    .replace(/^\/+|\/+$/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+
+const buildPrBody = (selected: SelectedOpportunity, change: Change, plan: PlanOutput | null): string =>
+  [
+    `## SEO Optimization — ${selected.term}`,
+    "",
+    `**Target:** ${selected.targetUrl}`,
+    `**Opportunity score:** ${selected.score.toFixed(1)}`,
+    `**Intent:** ${selected.intent}`,
+    "",
+    "### Change summary",
+    "",
+    `- **Title:** ${change.title}`,
+    `- **Description:** ${change.description}`,
+    `- **JSON-LD:** present`,
+    "",
+    "### Diagnosis",
+    "",
+    `> ${plan?.diagnosis ?? "n/a"}`,
+    "",
+    "### Action",
+    "",
+    `> ${plan?.action ?? "n/a"}`,
+    "",
+    "Human review required before merge. DeepRank never merges automatically.",
+  ].join("\n")
+
 export interface Optimize {
   readonly run: (options: RunOptions) => Effect.Effect<OptimizeResult, DriverError, OptimizeEnv>
 }
@@ -117,6 +152,8 @@ export type OptimizeEnv =
   | CrawlService
   | BuildService
   | ValidateService
+  | ContentService
+  | GithubService
 
 type Snapshot = SnapshotFrom<typeof optimizeMachine>
 
@@ -130,7 +167,11 @@ interface StepResult {
   readonly carry: RunCarry
 }
 
-const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, unknown, OptimizeEnv> => {
+const step = (
+  snapshot: Snapshot,
+  carry: RunCarry,
+  options: RunOptions,
+): Effect.Effect<StepResult, unknown, OptimizeEnv> => {
   switch (stateName(snapshot)) {
     case "RESEARCH":
       return Effect.gen(function* () {
@@ -248,6 +289,7 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
     case "PLAN":
       return Effect.gen(function* () {
         const brain = yield* BrainService
+        const db = yield* Database
         const selected = carry.selected
         const research = carry.research.find((row) => row.keywordId === selected?.keywordId)
         if (!selected || !research) {
@@ -265,13 +307,16 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
           research.gsc === null
             ? null
             : { impressions: research.gsc.impressions, position: research.gsc.position, ctr: research.gsc.ctr }
+        const recentLearnings = yield* db.query<{ content: string }>(
+          `SELECT content FROM learnings ORDER BY created_at DESC LIMIT 5`,
+        )
         const plan = yield* brain.plan({
           keyword: selected.term,
           intent: selected.intent,
           crawl,
           serp,
           gsc,
-          learnings: [],
+          learnings: recentLearnings.map((row) => row.content),
         })
         yield* Effect.log(`optimize: plan -> ${plan.action}`)
         return {
@@ -367,9 +412,81 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
       })
 
     case "CREATE_PR":
-      return Effect.succeed({
-        event: { type: "PR_CREATED", prUrl: "https://github.com/placeholder/dry-run" },
-        carry,
+      return Effect.gen(function* () {
+        const selected = carry.selected
+        const change = carry.change
+        if (!selected || !change) {
+          return { event: { type: "ABORT", reason: "no selection or change for PR" }, carry }
+        }
+
+        if (options.dryRun) {
+          yield* Effect.log("optimize: dry-run — skipping branch/commit/PR")
+          return {
+            event: { type: "PR_CREATED", prUrl: "https://github.com/placeholder/dry-run" },
+            carry,
+          }
+        }
+
+        const github = yield* GithubService
+        const content = yield* ContentService
+        const db = yield* Database
+
+        const branch = `seo/${slugify(selected.targetUrl)}-${slugify(selected.term)}`
+        const applied = yield* content.applyChange({
+          filePath: change.filePath,
+          title: change.title,
+          description: change.description,
+          jsonLd: change.jsonLd,
+        })
+        const result = yield* github.createBranch(branch)
+        yield* github.commit({
+          branch: result,
+          filePath: applied.filePath,
+          content: applied.content,
+          message: `SEO: optimize metadata for "${selected.term}"`,
+        })
+        const prUrl = yield* github.createPR({
+          branch: result,
+          title: `SEO: better metadata for "${selected.term}"`,
+          body: buildPrBody(selected, change, carry.plan),
+        })
+
+        if (selected.opportunityId > 0) {
+          yield* db.query(
+            `UPDATE opportunities SET status = 'optimizing' WHERE id = $1`,
+            [selected.opportunityId],
+          )
+          yield* db.query(
+            `INSERT INTO changes (opportunity_id, branch, pr_url, diff_summary)
+             VALUES ($1, $2, $3, $4)
+             ON CONFLICT (opportunity_id) DO UPDATE SET branch = EXCLUDED.branch, pr_url = EXCLUDED.pr_url, diff_summary = EXCLUDED.diff_summary`,
+            [
+              selected.opportunityId,
+              result,
+              prUrl,
+              `metadata for "${selected.term}" -> ${selected.targetUrl} (title ${Array.from(change.title).length}c, desc ${Array.from(change.description).length}c, jsonLd ${Array.from(change.jsonLd).length}c)`,
+            ],
+          )
+          const research = carry.research.find((row) => row.keywordId === selected.keywordId)
+          if (research?.gsc) {
+            yield* db.query(
+              `INSERT INTO keyword_positions (keyword_id, sample_date, position, clicks, impressions, ctr)
+               VALUES ($1, now(), $2, $3, $4, $5)`,
+              [
+                selected.keywordId,
+                Math.max(research.gsc.position, 1),
+                research.gsc.clicks ?? 0,
+                research.gsc.impressions,
+                research.gsc.ctr,
+              ],
+            )
+          }
+          yield* Effect.log(`optimize: recorded opportunity ${selected.opportunityId} + changes row + baseline`)
+        } else {
+          yield* Effect.log("optimize: no opportunity row to link (page not found); PR still opened")
+        }
+
+        return { event: { type: "PR_CREATED", prUrl }, carry }
       })
 
     default:
@@ -383,6 +500,7 @@ const walk = (
   carry: RunCarry,
   prUrl: string | null,
   visited: ReadonlyArray<string>,
+  options: RunOptions,
 ): Effect.Effect<OptimizeResult, DriverError, OptimizeEnv> => {
   const state = stateName(snapshot)
   if (state === "FINISHED") {
@@ -421,7 +539,7 @@ const walk = (
         event = { type: "REVISED" }
       }
     } else {
-      const output = yield* Effect.result(step(snapshot, carry))
+      const output = yield* Effect.result(step(snapshot, carry, options))
       if (Result.isSuccess(output)) {
         const result = output.success
         event = result.event
@@ -439,7 +557,7 @@ const walk = (
     const [nextSnapshot] = transition(optimizeMachine, snapshot, event)
     const nextState = stateName(nextSnapshot)
     yield* logTransition(state, event, nextState)
-    return yield* walk(nextSnapshot, nextRetries, nextCarry, nextPrUrl, [...visited, state])
+    return yield* walk(nextSnapshot, nextRetries, nextCarry, nextPrUrl, [...visited, state], options)
   })
 }
 
@@ -450,7 +568,7 @@ const impl: Optimize = {
       const initial = getInitialSnapshot(optimizeMachine)
       const nextCarry: RunCarry = { ...EMPTY_CARRY, maxRetries: initial.context.maxRetries }
       const [started] = transition(optimizeMachine, initial, { type: "START" })
-      return yield* walk(started, 0, nextCarry, null, [stateName(initial)])
+      return yield* walk(started, 0, nextCarry, null, [stateName(initial)], options)
     }),
 }
 

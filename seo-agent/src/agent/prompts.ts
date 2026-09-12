@@ -143,3 +143,28 @@ export const reviewerPrompt = (input: ReviewPromptInput): string => [
   POSITIONING_RULES,
   'Respond with a single JSON object: {"verdict": "pass" or "fail", "reason": "string"}',
 ].join("\n")
+
+export interface LearnedDelta {
+  readonly keyword: string
+  readonly before: number
+  readonly after: number
+  readonly delta: number
+  readonly verdict: "won" | "stuck" | "falling"
+}
+
+export const learnPrompt = (deltas: ReadonlyArray<LearnedDelta>): string => [
+  "You are DeepEcom's SEO performance analyst. Below are the measured results of recent metadata optimizations.",
+  "",
+  deltas
+    .map(
+      (d) =>
+        `- "${d.keyword}": position ${d.before} → ${d.after} (delta ${d.delta > 0 ? "+" : ""}${d.delta}) — verdict: ${d.verdict}`,
+    )
+    .join("\n"),
+  "",
+  "Generalize 1–3 concise, transferable learnings about which kinds of ecommerce metadata interventions correlate with ranking movement (intent alignment, CTR, coverage, depth).",
+  "Do not claim guarantees. Notes are historical patterns only.",
+  "",
+  "Keep each learning under 200 characters.",
+  'Respond with a single JSON object: {"learnings": ["string", ...]}',
+].join("\n")

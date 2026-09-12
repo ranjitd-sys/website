@@ -22,6 +22,34 @@ export interface GscShape {
 
 export class GscService extends Context.Service<GscService, GscShape>()("Gsc") {}
 
+// ============================================================================
+// TODO (GSC swap — pending approval)
+// ----------------------------------------------------------------------------
+// GSC access has NOT been granted yet, so this service stays on the stub.
+// When GSC is approved, replace ONLY the `fetchMetrics` implementation with a
+// Search Console `searchanalytics.query` call (interface unchanged):
+//
+//   1. Install `google-auth-library` (deferred — only when the swap ships).
+//   2. Build a JWT client:
+//        const auth = new JWT({
+//          email: <GSC_CLIENT_EMAIL>,
+//          key:   <GSC_PRIVATE_KEY>.replace(/\\n/g, "\n"),
+//          scopes: ["https://www.googleapis.com/auth/webmasters.readonly"],
+//        })
+//   3. GET https://www.googleapis.com/webmasters/v3/sites/<URL>/searchAnalytics/query
+//      with body { startDate, endDate, dimensions: ["query"], rowLimit }
+//      for the given query + window. Map the response rows to GscMetrics.
+//   4. trend = 4 weekly snapshot queries (day 1/7/14/28) or one query grouped
+//      by week; store position snapshots in order so momentum math stays intact.
+//   5. Use GSC_CLIENT_EMAIL + GSC_PRIVATE_KEY + GSC_SITE_URL from SeoConfig.
+//
+// Optional add once approved: `fetchAllQueries(siteUrl, window)` →
+// { query, page, position, clicks, impressions } for keyword discovery
+// (upsert into `keywords` with `target_url = page`).
+//
+// Fallback to stub when credentials are absent so the run stays green.
+// ============================================================================
+
 // Stub metrics for the 5 seed keywords. trend = position snapshots at day 1/7/14/28.
 // Falling numbers = ranking improving; rising = worsening; flat = stable.
 const STUB: Readonly<Record<string, GscMetrics>> = {

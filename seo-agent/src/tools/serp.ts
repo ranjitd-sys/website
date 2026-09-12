@@ -1,4 +1,5 @@
-import { Context, Data, Effect, Layer } from "effect"
+import { Context, Data, Effect, Layer, Redacted, Result } from "effect"
+import { SeoConfig } from "../Config.js"
 
 export type SerpSource = "google" | "bing"
 
@@ -31,7 +32,8 @@ const asResults = (rows: ReadonlyArray<Row>): ReadonlyArray<SerpResult> =>
   rows.map(([url, title, snippet], index) => ({ rank: index + 1, url, title, snippet }))
 
 // Mock SERP data. Unambiguous placeholder domains (RFC 2606 `.example`).
-// Real Serper.dev wiring replaces only the `fetchResults` body — the contract stays.
+// Real SerpApi wiring in `SerpServiceLive.fetchResults` (raw `fetch`); the
+// contract stays. Falls back to mock when `SERPAPI_KEY` is absent or fails.
 const SEED_SERP: Readonly<Record<string, ReadonlyArray<Row>>> = {
   "ecommerce accounting software india": [
     ["https://accounting-suite.example/india", "Ecommerce Accounting Software in India | AccountingSuite", "Track orders, fees and settlements with marketplace-ready accounting built for Indian sellers."],
@@ -114,18 +116,84 @@ const fallbackResults = (keyword: string): ReadonlyArray<SerpResult> => {
   })
 }
 
-export const SerpServiceLive: Layer.Layer<SerpService> = Layer.succeed(SerpService, {
-  fetchResults: (keyword, source) =>
-    Effect.log(`serp: fetching top 10 "${keyword}" (${source}, mock)`).pipe(
-      Effect.andThen(
-        Effect.sync((): SerpResults => {
-          const rows = SEED_SERP[keyword]
-          return { results: rows ? asResults(rows) : fallbackResults(keyword) }
+const SERP_SEARCH_URL = "https://serpapi.com/search"
+
+const fetchSerpApi = (
+  keyword: string,
+  source: SerpSource,
+  apiKey: string,
+  signal: AbortSignal,
+): Promise<{ organic_results?: ReadonlyArray<{ position?: number; link?: string; title?: string; snippet?: string }> }> => {
+  const params = new URLSearchParams({
+    engine: "google",
+    q: keyword,
+    api_key: apiKey,
+    gl: "in",
+    hl: "en",
+    num: "10",
+  })
+  const url = `${SERP_SEARCH_URL}?${params.toString()}`
+  return fetch(url, { signal }).then((res) => {
+    if (!res.ok) throw new Error(`SerpApi HTTP ${res.status}: ${res.statusText}`)
+    return res.json() as Promise<{
+      organic_results?: ReadonlyArray<{ position?: number; link?: string; title?: string; snippet?: string }>
+    }>
+  })
+}
+
+const toSerpResults = (data: {
+  organic_results?: ReadonlyArray<{ position?: number; link?: string; title?: string; snippet?: string }>
+}): ReadonlyArray<SerpResult> =>
+  (data.organic_results ?? [])
+    .map((entry) => ({
+      rank: entry.position ?? 0,
+      url: entry.link ?? "",
+      title: entry.title ?? "",
+      snippet: entry.snippet ?? "",
+    }))
+    .filter((entry) => entry.url !== "")
+    .slice(0, 10)
+
+export const SerpServiceLive: Layer.Layer<SerpService, never, SeoConfig> = Layer.effect(
+  SerpService,
+  Effect.gen(function* () {
+    const config = yield* SeoConfig
+    const apiKey = Redacted.value(config.serpApiKey)
+    const real = apiKey.trim() !== ""
+
+    const mockResults = (keyword: string): ReadonlyArray<SerpResult> => {
+      const rows = SEED_SERP[keyword]
+      return rows ? asResults(rows) : fallbackResults(keyword)
+    }
+
+    const realResults = (keyword: string, source: SerpSource): Effect.Effect<ReadonlyArray<SerpResult>, SerpError, never> =>
+      Effect.tryPromise({
+        try: async (signal) => {
+          const data = await fetchSerpApi(keyword, source, apiKey, signal)
+          return toSerpResults(data)
+        },
+        catch: (error) =>
+          new SerpError({ keyword, source, reason: error instanceof Error ? error.message : String(error) }),
+      })
+
+    return {
+      fetchResults: (keyword, source) =>
+        Effect.gen(function* () {
+          yield* Effect.log(`serp: fetching top 10 "${keyword}" (${source}${real ? ", serpapi" : ", mock"})`)
+          const results = yield* (real
+            ? Effect.result(realResults(keyword, source)).pipe(
+                Effect.flatMap((result) =>
+                  Result.isSuccess(result)
+                    ? Effect.succeed(result.success)
+                    : Effect.log(`serp: falling back to mock for "${keyword}": ${result.failure.reason}`).pipe(
+                        Effect.andThen(Effect.succeed(mockResults(keyword))),
+                      ),
+                ),
+              )
+            : Effect.succeed(mockResults(keyword)))
+          yield* Effect.log(`serp: ${results.length} results for "${keyword}"`)
+          return { results }
         }),
-      ),
-      Effect.tap((output) => Effect.log(`serp: ${output.results.length} results for "${keyword}"`)),
-      Effect.catchCause((cause) =>
-        Effect.fail(new SerpError({ keyword, source, reason: String(cause) })),
-      ),
-    ),
-})
+    }
+  }),
+)
