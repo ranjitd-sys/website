@@ -108,15 +108,24 @@ const GithubServiceLive: Layer.Layer<GithubService, never, SeoConfig> = Layer.ef
     const baseBranch = (owner: string, repo: string): Effect.Effect<string, GithubError, never> =>
       wrap("default-branch", () => octokit.rest.repos.get({ owner, repo }).then((r) => r.data.default_branch))
 
+    const baseSha = (owner: string, repo: string): Effect.Effect<string, GithubError, never> =>
+      Effect.gen(function* () {
+        const branch = yield* baseBranch(owner, repo)
+        const ref = yield* wrap("default-branch-sha", () =>
+          octokit.rest.git.getRef({ owner, repo, ref: `heads/${branch}` }),
+        )
+        return ref.data.object.sha
+      })
+
     return {
       createBranch: (name) =>
         Effect.gen(function* () {
           const { owner, repo } = yield* repoRef(githubRepo)
-          const base = yield* baseBranch(owner, repo)
+          const base = yield* baseSha(owner, repo)
           yield* wrap("branch", () =>
             octokit.rest.git.createRef({ owner, repo, ref: `refs/heads/${name}`, sha: base }),
           )
-          yield* Effect.log(`github: branch '${name}' created on ${owner}/${repo} (from ${base})`)
+          yield* Effect.log(`github: branch '${name}' created on ${owner}/${repo} (from ${base.slice(0, 7)})`)
           return name
         }).pipe(
           Effect.tapError((error) => Effect.log(`github: branch '${name}' failed — ${error.reason}`)),

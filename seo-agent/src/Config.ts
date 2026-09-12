@@ -25,13 +25,13 @@ export class ConfigLoadError extends Data.TaggedError("ConfigLoadError")<{
 
 const config = Config.all({
   databaseUrl: Config.nonEmptyString("SEO_DATABASE_URL"),
-  gscClientEmail: Config.nonEmptyString("GSC_CLIENT_EMAIL"),
-  gscSiteUrl: Config.nonEmptyString("GSC_SITE_URL"),
-  gscPrivateKey: Config.redacted("GSC_PRIVATE_KEY"),
+  gscClientEmail: Config.string("GSC_CLIENT_EMAIL").pipe(Config.withDefault("")),
+  gscSiteUrl: Config.string("GSC_SITE_URL").pipe(Config.withDefault("")),
+  gscPrivateKey: Config.redacted("GSC_PRIVATE_KEY").pipe(Config.withDefault(Redacted.make(""))),
   groqApiKey: Config.redacted("GROQ_API_KEY").pipe(Config.withDefault(Redacted.make(""))),
   groqModel: Config.string("GROQ_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
   groqReviewerModel: Config.string("GROQ_REVIEWER_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
-  githubToken: Config.redacted("GITHUB_TOKEN"),
+  githubToken: Config.redacted("GITHUB_TOKEN").pipe(Config.withDefault(Redacted.make(""))),
   serpApiKey: Config.redacted("SERPAPI_KEY").pipe(Config.withDefault(Redacted.make(""))),
 })
 
