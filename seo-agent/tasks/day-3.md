@@ -20,7 +20,8 @@
 - **Groq via raw `fetch`** to `https://api.groq.com/openai/v1/chat/completions` wrapped in `Effect.tryPromise` (JSON mode `response_format: { type: "json_object" }`), decoded with Effect `Schema`; NEVER raw `try/catch`.
 - **PR = draft** — human reviews and merges. No automatic merge.
 - **Reviewer rules:** fabrication, product scope, positioning (accounting layer, NOT ERP replacement), tone, technical accuracy (GST/TCS/TDS/accounting).
-- **Real SERP + GSC swaps** are included today but are **independent** — if credentials aren't ready, mocks/stubs stay and the run is still green.
+- **SERP (T17) = SerpApi — signed up, real swap today.** `SERPAPI_KEY` goes in `.env`; `SerpServiceLive.fetchResults` calls SerpApi via raw `fetch` (no SDK dep). Fallback to mock when key absent so the run stays green.
+- **GSC (T18) = PENDING — stays stubbed today.** GSC access has NOT been granted yet. Keep the stub in `GscServiceLive`; document the exact swap path as a TODO. When GSC is approved, replace the stub body with Search Console `searchanalytics.query` (JWT via `google-auth-library`) — interface unchanged. The run must stay green on the stub meanwhile.
 - `bun run check` must stay green after every task.
 
 ---
@@ -63,16 +64,22 @@
   - [x] **Verify:** `bun run check` green; `bun run src/cli.ts optimize --dry-run` completes: RESEARCH → SCOPE → PLAN(brain) → ACT(brain) → VALIDATE → REVIEWER(brain) → CREATE_PR → FINISHED, exit 0.
   - [x] **Done:** stub-mode dry-run verified above; real-key run pending.
 
-- [ ] **T19 — Reviewer hardening (4 test cases)**
-  - [ ] 4 deterministic probes against the LLM reviewer (fixture-driven, runnable via a small script or test):
+- [x] **T19 — Reviewer hardening (4 test cases)**
+  - [x] 4 deterministic probes against the LLM reviewer (fixture-driven, runnable via a small script or test):
     | Case | Input change contains… | Expected |
     |---|---|---|
     | fabrication | "500+ businesses trust DeepEcom" (unverified) | `fail` |
     | scope | "AI-powered autonomous inventory management" (future feature) | `fail` |
     | positioning | "DeepEcom replaces your ERP" | `fail` |
     | clean pass | verified, accurate, scoped metadata | `pass` |
-  - [ ] **Verify:** all 4 return the expected verdict with a reason; `Bun test` (or `bun run` script) green.
-  - [ ] **Done:** (fill in after verification)
+  - [x] **Verify:** all 4 return the expected verdict with a reason; runs against the real Groq key now in `.env`; `Bun test` (or `bun run` script) green.
+  - [x] **Done:** `src/agent/reviewerProbe.ts` + `bun run probe:reviewer` green against real Groq.
+    - [x] `brain.review` contract now returns `ReviewOutput { verdict, reason }` (reason fed into `REVIEW_FAILED` in Driver instead of a generic string).
+    - [x] fabrication → `fail` ("over 500 businesses" = unverified customer count)
+    - [x] scope → `fail` (AI-powered autonomous inventory/order mgmt = future product)
+    - [x] positioning → `fail` ("DeepEcom replaces your ERP" violates accounting-layer positioning)
+    - [x] clean pass → `pass` (title 48 chars, desc 152 chars, no violations)
+    - [x] Full dry-run with real key: PLAN → ACT → VALIDATE → REVIEWER (passed) → CREATE_PR → FINISHED, exit 0.
 
 ### P5 — PR Creation + Measure + Workflows
 
@@ -93,20 +100,22 @@
   - [ ] **Verify:** `optimize --dry-run` (with `--no-dry-run` for real PR test) returns a real PR URL instead of the placeholder; `changes` row recorded.
   - [ ] **Done:** (fill in after verification)
 
-- [ ] **T17 — Real SERP swap (Serper.dev / SerpApi / Serpstack)**
-  - [ ] Replace `SerpServiceLive.fetchResults` body with the real provider call; interface unchanged (`{ results: [{ rank, url, title, snippet }] }`).
-  - [ ] New Config: `SERPER_API_KEY` (or `SERPAPI_KEY` / `SERPSTACK_ACCESS_KEY`) — pick one provider; add to `.env.example` + Config service. Fallback to mock when key absent (run stays green).
-  - [ ] **Verify:** real competitor titles/snippets returned for a seed keyword (compare against Google).
+- [ ] **T17 — Real SERP swap (SerpApi)**
+  - [ ] Replace `SerpServiceLive.fetchResults` body with the SerpApi call; interface unchanged (`{ results: [{ rank, url, title, snippet }] }`).
+  - [ ] Endpoint: `GET https://serpapi.com/search?engine=google&q=<keyword>&api_key=<key>&gl=in&hl=en` via raw `fetch` wrapped in `Effect.tryPromise`. Parse `organic_results[].{ position, link, title, snippet }` → `SerpResult[]`.
+  - [ ] New Config: `SERPAPI_KEY` (redacted, default `""`); add to `.env.example` + Config service. Fallback to mock when key absent or request fails (run stays green).
+  - [ ] **Verify:** with key in `.env` — real competitor titles/snippets for a seed keyword (spot-check against Google); without key — mock fallback, `bun run check` green.
   - [ ] **Done:** (fill in after verification)
 
-- [ ] **T18 — Real GSC swap (Search Console API + service account)**
-  - [ ] Replace `GscServiceLive.fetchMetrics` body with `searchanalytics.query` (googleapis or raw REST + JWT); interface unchanged (`{ clicks, impressions, position, ctr, trend[] }`).
+- [ ] **T18 — Real GSC swap (PENDING — stays stubbed until GSC access is granted)**
+  - [ ] **Status today: GSC creds are still PENDING.** Keep `GscServiceLive` on the stub. Add a TODO header comment in `src/tools/gsc.ts` documenting the exact swap path below.
+  - [ ] **When GSC is approved, replace** `GscServiceLive.fetchMetrics` body with Search Console `searchanalytics.query` (raw REST + JWT via `google-auth-library`, or googleapis); interface unchanged (`{ clicks, impressions, position, ctr, trend[] }`).
   - [ ] Trend = 4 weekly snapshot queries (day 1/7/14/28) or one query grouped by week.
-  - [ ] Use `GSC_CLIENT_EMAIL` + `GSC_PRIVATE_KEY` + `GSC_SITE_URL` from Config (already wired).
-  - [ ] Optional Day-3 add: `fetchAllQueries(siteUrl, window)` → `{ query, page, position, clicks, impressions }` for GSC keyword discovery (upsert into `keywords` with `target_url = page`).
+  - [ ] Use `GSC_CLIENT_EMAIL` + `GSC_PRIVATE_KEY` + `GSC_SITE_URL` from Config (already wired); install `google-auth-library` only when the swap ships.
+  - [ ] Optional add when approved: `fetchAllQueries(siteUrl, window)` → `{ query, page, position, clicks, impressions }` for GSC keyword discovery (upsert into `keywords` with `target_url = page`).
   - [ ] Fallback to stub when credentials absent (run stays green).
-  - [ ] **Verify:** real position/impressions returned for a seed keyword; site must be verified in Search Console.
-  - [ ] **Done:** (fill in after verification)
+  - [ ] **Verify (post-approval):** real position/impressions returned for a seed keyword; site must be verified in Search Console.
+  - [ ] **Done:** (fill in after verification) — stub stays green meanwhile.
 
 - [ ] **T20 — measure.ts (monthly measure job)**
   - [ ] `seo-agent/src/measurement/measure.ts` — Effect `Context.Service` `MeasureService` + `MeasureServiceLive`; pipeline `DETECT_MERGES → GSC_PULL → WRITE_DELTAS → LEARNINGS → FEED_RESEARCH` (spec §13).
@@ -139,9 +148,10 @@
 |---|---|---|
 | raw `fetch` | Groq chat completions (brain.ts) | `https://api.groq.com/openai/v1/chat/completions`; JSON mode; no new dep |
 | `octokit` | GitHub branch/commit/PR | `bun add octokit` |
-| (provider SDK) | Real SERP + GSC | `google-auth-library` for GSC JWT; SERP via plain fetch + key |
+| SerpApi (raw `fetch` + key) | Real SERP results (T17) | `https://serpapi.com/search?...` — no SDK dep; account already signed up |
+| `google-auth-library` | GSC JWT (T18) | **Deferred** — install only when GSC access is approved |
 
-If Google creds aren't ready, T17/T18 stay stubbed — no blocker.
+GSC is still **pending** — T18 stays stubbed with a documented TODO swap path; no blocker. SERP ships today via SerpApi.
 
 ---
 
@@ -151,7 +161,7 @@ If Google creds aren't ready, T17/T18 stay stubbed — no blocker.
 - [ ] `src/agent/brain.ts` — `BrainService` + `BrainServiceLive` (plan/act/revise/review)
 - [ ] `src/tools/github.ts` — `GithubService` (branch, commit, draft PR)
 - [ ] Driver PLAN/ACT/REVISE/REVIEWER/CREATE_PR calling real services
-- [ ] Reviewer hardened: 4 test cases pass
+- [x] Reviewer hardened: 4 test cases pass
 - [ ] Real SERP swap (or fallback-to-mock documented)
 - [ ] Real GSC swap (or fallback-to-stub documented)
 - [ ] `src/measurement/measure.ts` full pipeline

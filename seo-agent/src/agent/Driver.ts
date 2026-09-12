@@ -353,10 +353,17 @@ const step = (snapshot: Snapshot, carry: RunCarry): Effect.Effect<StepResult, un
               description: "dry-run",
               diffSummary: "no change (dry-run)",
             }
-        const verdict = yield* brain.review(review).pipe(Effect.catchCause(() => Effect.succeed("fail" as const)))
-        return verdict === "pass"
+        const verdict = yield* brain.review(review).pipe(
+          Effect.catchCause((cause) =>
+            Effect.succeed({
+              verdict: "fail" as const,
+              reason: `reviewer unavailable: ${String(cause)}`,
+            }),
+          ),
+        )
+        return verdict.verdict === "pass"
           ? { event: { type: "REVIEW_PASSED" }, carry }
-          : { event: { type: "REVIEW_FAILED", reason: "reviewer rejected the change" }, carry }
+          : { event: { type: "REVIEW_FAILED", reason: verdict.reason }, carry }
       })
 
     case "CREATE_PR":

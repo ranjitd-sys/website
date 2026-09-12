@@ -30,6 +30,11 @@ export interface PlanOutput {
 
 export type ReviewVerdict = "pass" | "fail"
 
+export interface ReviewOutput {
+  readonly verdict: ReviewVerdict
+  readonly reason: string
+}
+
 export interface PlanInput {
   readonly keyword: string
   readonly intent: string
@@ -63,7 +68,7 @@ export interface BrainShape {
   readonly plan: (input: PlanInput) => Effect.Effect<PlanOutput, BrainError, SeoConfig>
   readonly act: (input: ActInput) => Effect.Effect<Change, BrainError, SeoConfig>
   readonly revise: (input: ReviseInput) => Effect.Effect<Change, BrainError, SeoConfig>
-  readonly review: (input: ReviewInput) => Effect.Effect<ReviewVerdict, BrainError, SeoConfig>
+  readonly review: (input: ReviewInput) => Effect.Effect<ReviewOutput, BrainError, SeoConfig>
 }
 
 export class BrainService extends Context.Service<BrainService, BrainShape>()("BrainService") {}
@@ -235,10 +240,11 @@ const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effe
             ).pipe(Effect.map((raw) => clamp(raw, input.change.filePath))),
       review: (input) =>
         stub
-          ? Effect.succeed("pass" as ReviewVerdict)
-          : complete("review", ReviewSchema, reviewerPrompt(input), "Return your verdict.", true).pipe(
-              Effect.map((output) => output.verdict),
-            ),
+          ? Effect.succeed({
+              verdict: "pass" as ReviewVerdict,
+              reason: "stub reviewer (no GROQ_API_KEY configured)",
+            })
+          : complete("review", ReviewSchema, reviewerPrompt(input), "Return your verdict.", true),
     }
   }),
 )
