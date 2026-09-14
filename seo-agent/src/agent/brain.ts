@@ -20,7 +20,7 @@ import {
   reviewerPrompt,
 } from "./prompts.js"
 
-export type { ActInput, Change, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict }
+export type { ActInput, Change, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict } 
 
 export class BrainError extends Data.TaggedError("BrainError")<{
   readonly step: string
@@ -124,7 +124,7 @@ const clamp = (raw: { title: string; description: string; jsonLd: string }, file
   const title = Array.from(raw.title).slice(0, 60).join("")
   let description = raw.description
   while (Array.from(description).length < 120) {
-    description += " Reconcile payments and get ERP-ready accounting automatically."
+    description += "Reconcile payments and get ERP-ready accounting automatically."
   }
   if (Array.from(description).length > 160) {
     description = Array.from(description).slice(0, 160).join("")
