@@ -16,10 +16,10 @@ import type {
   Change,
   OptimizeResult,
   PlanOutput,
+  ResearchRow,
   RunOptions,
   SelectedOpportunity,
 } from "../types/agent.js"
-import type { CrawlResult, GscMetrics, SerpResults } from "../types/market.js"
 import { opportunityScore } from "../shared/scoring.js"
 import { describeFinding, slugify } from "../shared/text.js"
 
@@ -33,24 +33,6 @@ interface KeywordRow {
   readonly term: string
   readonly intent: string
   readonly target_url: string | null
-}
-
-interface ResearchRow {
-  readonly keywordId: number
-  readonly term: string
-  readonly intent: string
-  readonly targetUrl: string
-  readonly serp: SerpResults | null
-  readonly gsc: GscMetrics | null
-  readonly crawl: CrawlResult | null
-}
-
-interface RunCarry {
-  readonly research: ReadonlyArray<ResearchRow>
-  readonly selected: SelectedOpportunity | null
-  readonly plan: PlanOutput | null
-  readonly change: Change | null
-  readonly maxRetries: number
 }
 
 const buildPrBody = (selected: SelectedOpportunity, change: Change, plan: PlanOutput | null): string =>
@@ -84,8 +66,6 @@ export interface Optimize {
 
 export class OptimizeMachineService extends Context.Service<OptimizeMachineService, Optimize>()("Optimize") {}
 
-const EMPTY_CARRY: RunCarry = { research: [], selected: null, plan: null, change: null, maxRetries: 0 }
-
 export type OptimizeEnv =
   | BrainService
   | Database
@@ -107,14 +87,13 @@ const logTransition = (from: string, event: OptimizeEvent, to: string): Effect.E
 
 interface StepResult {
   readonly event: OptimizeEvent
-  readonly carry: RunCarry
 }
 
 const step = (
   snapshot: Snapshot,
-  carry: RunCarry,
   options: RunOptions,
 ): Effect.Effect<StepResult, unknown, OptimizeEnv> => {
+  const carry = snapshot.context
   switch (stateName(snapshot)) {
     case "RESEARCH":
       return Effect.gen(function* () {
@@ -154,7 +133,7 @@ const step = (
             `optimize: researched "${keyword.term}" -> pos=${gscRes?.position ?? "?"} impressions=${gscRes?.impressions ?? "?"} crawlTitle="${crawlRes?.title ?? "n/a"}"`,
           )
         }
-        return { event: { type: "RESEARCHED" }, carry: { ...carry, research } }
+        return { event: { type: "RESEARCHED", research } }
       })
 
     case "SCOPE":
@@ -187,7 +166,6 @@ const step = (
           yield* Effect.log("optimize: no eligible opportunity after filters")
           return {
             event: { type: "ABORT", reason: "no eligible opportunity after filters" },
-            carry,
           }
         }
 
@@ -214,9 +192,9 @@ const step = (
         )
 
         return {
-          event: { type: "OPPORTUNITY_SELECTED", opportunityId },
-          carry: {
-            ...carry,
+          event: {
+            type: "OPPORTUNITY_SELECTED",
+            opportunityId,
             selected: {
               keywordId: winner.keywordId,
               opportunityId,
@@ -236,7 +214,7 @@ const step = (
         const selected = carry.selected
         const research = carry.research.find((row) => row.keywordId === selected?.keywordId)
         if (!selected || !research) {
-          return { event: { type: "ABORT", reason: "no selection to plan" }, carry }
+          return { event: { type: "ABORT", reason: "no selection to plan" } }
         }
         const crawl =
           research.crawl === null
@@ -260,8 +238,7 @@ const step = (
         })
         yield* Effect.log(`optimize: plan -> ${plan.action}`)
         return {
-          event: { type: "PLANNED", action: plan.action },
-          carry: { ...carry, plan },
+          event: { type: "PLANNED", action: plan.action, plan },
         }
       })
 
@@ -271,7 +248,7 @@ const step = (
         const selected = carry.selected
         const plan = carry.plan
         if (!selected || !plan) {
-          return { event: { type: "ABORT", reason: "missing selection or plan for ACT" }, carry }
+          return { event: { type: "ABORT", reason: "missing selection or plan for ACT" } }
         }
         const research = carry.research.find((row) => row.keywordId === selected.keywordId)
         const crawl =
@@ -287,7 +264,7 @@ const step = (
           rationale: plan.rationale,
         })
         yield* Effect.log(`optimize: wrote change -> ${change.filePath} (title="${change.title}")`)
-        return { event: { type: "EDITED" }, carry: { ...carry, change } }
+        return { event: { type: "EDITED", change } }
       })
 
     case "VALIDATE":
@@ -296,7 +273,7 @@ const step = (
         const validate = yield* ValidateService
         const change = carry.change
         if (!change) {
-          return { event: { type: "VALIDATION_FAILED", reason: "no change to validate" }, carry }
+          return { event: { type: "VALIDATION_FAILED", reason: "no change to validate" } }
         }
 
         const buildResult = yield* build.runBuild({ cwd: REPO_ROOT })
@@ -307,7 +284,6 @@ const step = (
               type: "VALIDATION_FAILED",
               reason: first ? `${first.file}: ${first.message}` : "build failed",
             },
-            carry,
           }
         }
 
@@ -315,11 +291,10 @@ const step = (
         if (!verdict.pass) {
           return {
             event: { type: "VALIDATION_FAILED", reason: verdict.findings.map(describeFinding).join("; ") },
-            carry,
           }
         }
 
-        return { event: { type: "VALIDATION_PASSED" }, carry }
+        return { event: { type: "VALIDATION_PASSED" } }
       })
 
     case "REVIEWER":
@@ -347,8 +322,8 @@ const step = (
           ),
         )
         return verdict.verdict === "pass"
-          ? { event: { type: "REVIEW_PASSED" }, carry }
-          : { event: { type: "REVIEW_FAILED", reason: verdict.reason }, carry }
+          ? { event: { type: "REVIEW_PASSED" } }
+          : { event: { type: "REVIEW_FAILED", reason: verdict.reason } }
       })
 
     case "CREATE_PR":
@@ -356,14 +331,13 @@ const step = (
         const selected = carry.selected
         const change = carry.change
         if (!selected || !change) {
-          return { event: { type: "ABORT", reason: "no selection or change for PR" }, carry }
+          return { event: { type: "ABORT", reason: "no selection or change for PR" } }
         }
 
         if (options.dryRun) {
           yield* Effect.log("optimize: dry-run — skipping branch/commit/PR")
           return {
             event: { type: "PR_CREATED", prUrl: "https://github.com/placeholder/dry-run" },
-            carry,
           }
         }
 
@@ -426,7 +400,7 @@ const step = (
           yield* Effect.log("optimize: no opportunity row to link (page not found); PR still opened")
         }
 
-        return { event: { type: "PR_CREATED", prUrl }, carry }
+        return { event: { type: "PR_CREATED", prUrl } }
       })
 
     default:
@@ -436,34 +410,30 @@ const step = (
 
 const walk = (
   snapshot: Snapshot,
-  retries: number,
-  carry: RunCarry,
-  prUrl: string | null,
   visited: ReadonlyArray<string>,
   options: RunOptions,
 ): Effect.Effect<OptimizeResult, DriverError, OptimizeEnv> => {
   const state = stateName(snapshot)
   if (state === "FINISHED") {
-    return Effect.succeed({ status: "finished", prUrl: prUrl ?? "none", visited })
+    return Effect.succeed({
+      status: "finished",
+      prUrl: snapshot.context.prUrl ?? "none",
+      visited,
+    })
   }
   if (state === "ABORTED") {
-    return Effect.fail(new DriverError({ state, reason: prUrl ?? "aborted" }))
+    return Effect.fail(new DriverError({ state, reason: snapshot.context.lastReason ?? "aborted" }))
   }
 
   return Effect.gen(function* () {
     let event: OptimizeEvent
-    let nextRetries = retries
-    let nextPrUrl = prUrl
-    let nextCarry = carry
 
     if (state === "REVISE") {
-      if (retries >= carry.maxRetries) {
-        nextPrUrl = "max retries exceeded"
+      if (snapshot.context.retries >= snapshot.context.maxRetries) {
         event = { type: "ABORT", reason: "max retries exceeded" }
       } else {
-        nextRetries = retries + 1
         const brain = yield* BrainService
-        const change = carry.change
+        const change = snapshot.context.change
         const lastReason = snapshot.context.lastReason ?? "validation failed"
         if (change) {
           const revised = yield* brain.revise({ change, lastReason }).pipe(
@@ -473,23 +443,20 @@ const walk = (
               ),
             ),
           )
-          nextCarry = { ...carry, change: revised }
-          yield* Effect.log(`optimize: revised change (attempt ${nextRetries}/${carry.maxRetries})`)
+          event = { type: "REVISED", change: revised }
+          yield* Effect.log(
+            `optimize: revised change (attempt ${snapshot.context.retries + 1}/${snapshot.context.maxRetries})`,
+          )
+        } else {
+          event = { type: "REVISED" }
         }
-        event = { type: "REVISED" }
       }
     } else {
-      const output = yield* Effect.result(step(snapshot, carry, options))
+      const output = yield* Effect.result(step(snapshot, options))
       if (Result.isSuccess(output)) {
-        const result = output.success
-        event = result.event
-        nextCarry = result.carry
-        if (event.type === "PR_CREATED") {
-          nextPrUrl = event.prUrl
-        }
+        event = output.success.event
       } else {
         const reason = output.failure instanceof DriverError ? output.failure.reason : String(output.failure)
-        nextPrUrl = reason
         event = { type: "ABORT", reason }
       }
     }
@@ -497,7 +464,7 @@ const walk = (
     const [nextSnapshot] = transition(optimizeMachine, snapshot, event)
     const nextState = stateName(nextSnapshot)
     yield* logTransition(state, event, nextState)
-    return yield* walk(nextSnapshot, nextRetries, nextCarry, nextPrUrl, [...visited, state], options)
+    return yield* walk(nextSnapshot, [...visited, state], options)
   })
 }
 
@@ -506,9 +473,8 @@ const impl: Optimize = {
     Effect.gen(function* () {
       yield* Effect.log(`optimize run${options.dryRun ? " (dry-run)" : ""}`)
       const initial = getInitialSnapshot(optimizeMachine)
-      const nextCarry: RunCarry = { ...EMPTY_CARRY, maxRetries: initial.context.maxRetries }
       const [started] = transition(optimizeMachine, initial, { type: "START" })
-      return yield* walk(started, 0, nextCarry, null, [stateName(initial)], options)
+      return yield* walk(started, [stateName(initial)], options)
     }),
 }
 

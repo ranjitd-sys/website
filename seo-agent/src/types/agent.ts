@@ -1,6 +1,6 @@
 // Canonical agent/optimization types shared across brain, prompts, driver and measure.
 
-import type { GscMetrics, SerpResults } from "./market.js"
+import type { CrawlResult, GscMetrics, SerpResults } from "./market.js"
 
 // The change a tool can apply to the content repository.
 export interface Change {
@@ -78,6 +78,16 @@ export interface LearnInput {
 }
 
 // Driver run domain.
+
+export interface ResearchRow {
+  readonly keywordId: number
+  readonly term: string
+  readonly intent: string
+  readonly targetUrl: string
+  readonly serp: SerpResults | null
+  readonly gsc: GscMetrics | null
+  readonly crawl: CrawlResult | null
+}
 
 export interface SelectedOpportunity {
   readonly keywordId: number
