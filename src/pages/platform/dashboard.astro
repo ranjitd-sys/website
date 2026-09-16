@@ -45,7 +45,26 @@ const faqs = [
 
 <PageLayout
   title="Dashboard — See Your Ecommerce Business in One View | DeepEcom"
-  description="DeepEcom Dashboard brings marketplace sales, profitability, payments and performance together in one clear business view — no more switching between systems."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Platform", item: "https://deepecom.com/platform" },
+        { "@type": "ListItem", position: 3, name: "Dashboard", item: "https://deepecom.com/platform/dashboard" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
 
   <!-- 01 — HERO -->

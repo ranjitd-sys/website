@@ -30,6 +30,17 @@ const topics = [
 <PageLayout
   title="Payment Reconciliation — Expected, settled and received, in agreement | DeepEcom"
   description="How marketplace payment reconciliation works: matching orders to settlements and settlements to bank deposits until receivables, settlements and payouts agree with nothing unexplained."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Resources", item: "https://deepecom.com/resources" },
+        { "@type": "ListItem", position: 3, name: "Reconciliation", item: "https://deepecom.com/resources/reconciliation" },
+      ],
+    },
+  ]}
 >
   <header class="rs-hero">
     <div class="rs-container">

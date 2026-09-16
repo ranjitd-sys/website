@@ -12,6 +12,11 @@ CREATE TABLE IF NOT EXISTS keywords (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Growth columns (Keyword Planner volume/competition/CPC) — idempotent for
+-- databases created before these columns existed.
+ALTER TABLE keywords ADD COLUMN IF NOT EXISTS competition TEXT;
+ALTER TABLE keywords ADD COLUMN IF NOT EXISTS cpc_micros BIGINT;
+
 CREATE INDEX IF NOT EXISTS keywords_status_idx ON keywords (status);
 
 CREATE TABLE IF NOT EXISTS keyword_positions (

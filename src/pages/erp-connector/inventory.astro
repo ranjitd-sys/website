@@ -57,6 +57,26 @@ const faqs = [
 <PageLayout
   title="Inventory & Stock Transfers — Warehouse Accounting for ERP | DeepEcom"
   description="Account for ecommerce inventory movement across warehouses. DeepEcom connects orders, returns and stock transfers to warehouse-wise inventory and detailed ERP accounting."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "ERP Connector", item: "https://deepecom.com/erp-connector" },
+        { "@type": "ListItem", position: 3, name: "Inventory & Stock Transfers", item: "https://deepecom.com/erp-connector/inventory" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- 01 — HERO -->
   <InventoryHero />

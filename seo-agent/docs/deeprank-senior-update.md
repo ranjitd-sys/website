@@ -31,14 +31,23 @@
 
 | # | Data source | Data it provides | How to access | Cost | Status |
 |---|---|---|---|---|---|
-| 1 | **Google Search Console (GSC)** | Keyword list (real queries), clicks, impressions, position, CTR, 28-day trend — **your site's performance** | Search Console API (service account) | Free | ⏳ Pending — creds not granted |
-| 2 | **Google Ads Keyword Planner / Ads API** | **Search volume** (market demand), competition level | Google Ads API (Ads account required) | Free (with Ads account) | ❌ Not wired |
-| 3 | **Ahrefs / SEMrush / Moz** | **Keyword difficulty** (0–100), competitor insights | Paid API | ~$99–199/mo | ❌ Optional / not wired |
-| 4 | **SERP data** (SerpApi / Serper.dev / Serpstack) | Top-10 competitor results (titles, URLs, snippets) | Paid API (or mock) | ~$50–150/mo | ⏸ Mock → API optional |
+| 1 | **Google Search Console (GSC)** | Keyword list (real queries), clicks, impressions, position, CTR, 28-day trend — **your site's performance** | Search Console API (service account, JWT) | Free | ✅ Wired live — 403 until service account is added as a Search Console user; falls back to stub |
+| 2 | **Google Ads Keyword Planner / Ads API** | **Search volume** (market demand), competition level, CPC | Google Ads API (Ads account + developer token) | Free (with Ads account) | ✅ Wired (raw REST) — CSV fallback active; live API needs developer token + Basic/Explorer access |
+| 3 | **Ahrefs / SEMrush / Moz** | **Keyword difficulty** (0–100), competitor insights | Paid API | ~$99–199/mo | ❌ Optional / not wired (difficulty derived from Planner competition meanwhile) |
+| 4 | **SERP data** (SerpApi / Serper.dev / Serpstack) | Top-10 competitor results (titles, URLs, snippets) | Paid API (or mock) | ~$50–150/mo | ✅ Wired live (SerpApi key present); falls back to mock |
 | 5 | **Live page crawl** | Current title, description, H1, JSON-LD, links | Internal (`crawl.ts`) | Free | ✅ Working |
 | 6 | **PostgreSQL** | Keywords, pages, opportunities, changes, learnings | Internal DB | Hosting cost | ✅ Working |
 | 7 | **LLM (Groq)** | Diagnosis, metadata writing, review, learnings | Groq API | Free tier → per-use | ✅ Working |
 | 8 | **GitHub** | Branch, commit, draft PR | PAT / Actions token | Free | ✅ Working |
+
+### Getting the developer token (Google Ads API)
+
+1. In Google Ads (MCC), go to **Tools → API Center** (`https://ads.google.com/aw/apicenter`).
+2. Accept the terms, then request a **developer token** (22-char string).
+3. Approvals are tiered: **Test** access → test accounts only; **Basic** access (production campaigns) requires a review form in the API Center and can take days.
+4. Without Basic/Explorer approval, live `generateKeywordHistoricalMetrics` fails with `DEVELOPER_TOKEN_NOT_APPROVED`.
+5. Enable the **Google Ads API** in Google Cloud for the linked project and create OAuth client credentials; generate a refresh token with the `adwords` scope.
+6. Populate the `GOOGLE_ADS_*` vars (see `.env.example`); the tool auto-switches from CSV to live API.
 
 ---
 
@@ -49,12 +58,12 @@ Formula:  Volume  ×  Position  ×  Intent  ×  Momentum
               │           │            │           │
 Source:  Keyword     GSC (own     DB seed     GSC trend
          Planner     ranking)     (manual)    (4-week)
-                                  (LLM/brain planned)
+         (CSV now)                (LLM/brain planned)
 ```
 
-- **Required now:** GSC API (positions, trend) — the only blocker for real runs.
-- **Nice-to-have next:** Keyword Planner volume + difficulty → populate `keywords.volume` / `keywords.difficulty` (columns already exist, currently NULL).
-- **Optional:** SERP API for richer competitor context in the LLM.
+- **GSC live** → wired (JWT service account); returns stub until the service account is added in Search Console.
+- **Volume / difficulty / competition** → `keywords sync` now populates `keywords.volume`, `difficulty`, `competition`, `cpc_micros` from Keyword Planner (CSV fallback today; live API once the developer token is approved). Difficulty is derived from the Planner competition level/range where available.
+- **Optional:** SERP API for richer competitor context in the LLM — already live via SerpApi; mock used only when the key is missing.
 
 ---
 

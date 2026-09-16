@@ -33,6 +33,17 @@ const topics = [
 <PageLayout
   title="Ecommerce Accounting — From one order to ERP-ready entries | DeepEcom"
   description="How ecommerce accounting works: order-wise, GST-wise and warehouse-wise entry from marketplace order events, with charges, TCS, TDS, returns, settlements and inventory explained."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Resources", item: "https://deepecom.com/resources" },
+        { "@type": "ListItem", position: 3, name: "Ecommerce Accounting", item: "https://deepecom.com/resources/ecommerce-accounting" },
+      ],
+    },
+  ]}
 >
   <header class="rs-hero">
     <div class="rs-container">

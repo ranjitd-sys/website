@@ -60,6 +60,23 @@ export const GithubInput = Schema.Struct({
 })
 export const GithubOutput = Schema.Struct({ prUrl: Schema.String })
 
+export const KeywordPlannerInput = Schema.Struct({
+  keywords: Schema.Array(Schema.String),
+})
+export const KeywordPlannerOutput = Schema.Struct({
+  metrics: Schema.Array(
+    Schema.Struct({
+      keyword: Schema.String,
+      avgMonthlySearches: Schema.NullOr(Schema.Number),
+      competition: Schema.String,
+      competitionIndex: Schema.NullOr(Schema.Number),
+      lowTopOfPageBidMicros: Schema.NullOr(Schema.Number),
+      highTopOfPageBidMicros: Schema.NullOr(Schema.Number),
+      averageCpcMicros: Schema.NullOr(Schema.Number),
+    }),
+  ),
+})
+
 export interface ToolDefinition {
   readonly name: string
   readonly description: string
@@ -103,6 +120,12 @@ export const registry: Readonly<Record<string, ToolDefinition>> = {
     description: "Open a pull request for an approved change and return its URL.",
     input: GithubInput,
     output: GithubOutput,
+  },
+  keywordPlanner: {
+    name: "keywordPlanner",
+    description: "Pull Google Keyword Planner historical metrics (search volume, competition, bids) for a list of keywords.",
+    input: KeywordPlannerInput,
+    output: KeywordPlannerOutput,
   },
 }
 

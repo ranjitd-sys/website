@@ -81,9 +81,8 @@ const faqSchema = {
 <PageLayout
   title="Ecommerce Accounting & ERP Automation | DeepEcom"
   description="Automate order-wise, GST-wise, and warehouse-wise accounting from Amazon, Flipkart, and Shopify directly into Tally, SAP, or Zoho Books."
+  structuredData={[faqSchema]}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
-
   <!-- 01 HERO -->
   <AccountingHero />
 

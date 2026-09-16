@@ -10,6 +10,13 @@ export interface SeoConfigShape {
   readonly groqReviewerModel: string
   readonly githubToken: Redacted.Redacted
   readonly serpApiKey: Redacted.Redacted
+  readonly googleAdsDeveloperToken: Redacted.Redacted
+  readonly googleAdsClientId: string
+  readonly googleAdsClientSecret: Redacted.Redacted
+  readonly googleAdsRefreshToken: Redacted.Redacted
+  readonly googleAdsCustomerId: string
+  readonly googleAdsLoginCustomerId: string
+  readonly googleAdsApiVersion: string
 }
 
 export class SeoConfig extends Context.Service<SeoConfig, SeoConfigShape>()("SeoConfig") {}
@@ -33,6 +40,13 @@ const config = Config.all({
   groqReviewerModel: Config.string("GROQ_REVIEWER_MODEL").pipe(Config.withDefault("openai/gpt-oss-120b")),
   githubToken: Config.redacted("GITHUB_TOKEN").pipe(Config.withDefault(Redacted.make(""))),
   serpApiKey: Config.redacted("SERPAPI_KEY").pipe(Config.withDefault(Redacted.make(""))),
+  googleAdsDeveloperToken: Config.redacted("GOOGLE_ADS_DEVELOPER_TOKEN").pipe(Config.withDefault(Redacted.make(""))),
+  googleAdsClientId: Config.string("GOOGLE_ADS_CLIENT_ID").pipe(Config.withDefault("")),
+  googleAdsClientSecret: Config.redacted("GOOGLE_ADS_CLIENT_SECRET").pipe(Config.withDefault(Redacted.make(""))),
+  googleAdsRefreshToken: Config.redacted("GOOGLE_ADS_REFRESH_TOKEN").pipe(Config.withDefault(Redacted.make(""))),
+  googleAdsCustomerId: Config.string("GOOGLE_ADS_CUSTOMER_ID").pipe(Config.withDefault("")),
+  googleAdsLoginCustomerId: Config.string("GOOGLE_ADS_LOGIN_CUSTOMER_ID").pipe(Config.withDefault("")),
+  googleAdsApiVersion: Config.string("GOOGLE_ADS_API_VERSION").pipe(Config.withDefault("v25")),
 })
 
 const collectMissing = (cause: unknown): ReadonlyArray<MissingEntry> => {

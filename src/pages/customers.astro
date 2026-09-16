@@ -17,6 +17,16 @@ import FinalCTA from "@/components/customers/FinalCTA.astro"
 <PageLayout
   title="Customers — DeepEcom"
   description="See how ecommerce businesses use DeepEcom to bring marketplace data, profitability, payment reconciliation and detailed accounting into one connected workflow."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Customers", item: "https://deepecom.com/customers" },
+      ],
+    },
+  ]}
 >
   <!-- 01 HERO -->
   <Hero />

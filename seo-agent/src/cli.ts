@@ -10,6 +10,8 @@ import { BuildServiceLive } from "./tools/build.js"
 import { ValidateServiceLive } from "./tools/validate.js"
 import { ContentServiceLive } from "./tools/content.js"
 import { GithubServiceLive } from "./tools/github.js"
+import { KeywordPlannerServiceLive } from "./tools/keywordPlanner.js"
+import { KeywordsSyncLive, KeywordsSyncService } from "./tools/keywordsSync.js"
 import { MeasureService, MeasureLive } from "./measurement/measure.js"
 import { runProgram } from "./edge.js"
 
@@ -43,6 +45,15 @@ const measure = Effect.gen(function* () {
   yield* Effect.log(`measure finished: ${result.measured} change(s) measured, ${result.learnings.length} learning(s) persisted`)
 })
 
+const keywordsSync = Effect.gen(function* () {
+  yield* loadConfig
+  const syncer = yield* KeywordsSyncService
+  const result = yield* syncer.run()
+  yield* Effect.log(
+    `keywords sync finished: ${result.fetched} fetched, ${result.updated} updated, ${result.missingVolume} without volume`,
+  )
+})
+
 if (command === "measure") {
   await runProgram(
     measure.pipe(
@@ -50,6 +61,15 @@ if (command === "measure") {
       Effect.provide(DatabaseLive),
       Effect.provide(BrainServiceLive),
       Effect.provide(MeasureLive),
+      Effect.provide(SeoConfigLayer),
+    ),
+  )
+} else if (command === "keywords") {
+  await runProgram(
+    keywordsSync.pipe(
+      Effect.provide(KeywordPlannerServiceLive),
+      Effect.provide(KeywordsSyncLive),
+      Effect.provide(DatabaseLive),
       Effect.provide(SeoConfigLayer),
     ),
   )
@@ -70,6 +90,6 @@ if (command === "measure") {
     ),
   )
 } else {
-  console.error(`fatal: unknown command '${command}' (expected optimize|measure)`)
+  console.error(`fatal: unknown command '${command}' (expected keywords|optimize|measure)`)
   process.exit(1)
 }

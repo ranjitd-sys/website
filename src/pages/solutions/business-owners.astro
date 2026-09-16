@@ -54,6 +54,26 @@ const faqs = [
 <PageLayout
   title="Business Owners — Know what you're really making | DeepEcom"
   description="DeepEcom gives business owners one connected view of ecommerce — what you sold, what you received, what you made and where every transaction lands in accounting."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Solutions", item: "https://deepecom.com/solutions" },
+        { "@type": "ListItem", position: 3, name: "Business Owners", item: "https://deepecom.com/solutions/business-owners" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- HERO — SOLD → RECEIVED → MADE → ACCOUNTED -->
   <BusinessOwnerHero />

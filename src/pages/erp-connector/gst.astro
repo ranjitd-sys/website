@@ -56,6 +56,26 @@ const faqs = [
 <PageLayout
   title="GST Accounting for Ecommerce — GST-wise ERP Accounting | DeepEcom"
   description="Keep GST connected to every ecommerce transaction. DeepEcom carries GST details from marketplaces into structured accounting — order-wise, tax-wise and warehouse-wise — inside your ERP."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "ERP Connector", item: "https://deepecom.com/erp-connector" },
+        { "@type": "ListItem", position: 3, name: "GST", item: "https://deepecom.com/erp-connector/gst" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- 01 — HERO -->
   <GstHero />

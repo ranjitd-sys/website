@@ -30,6 +30,17 @@ const topics = [
 <PageLayout
   title="ERP Integration — Make your ERP ecommerce-ready | DeepEcom"
   description="How DeepEcom posts order-wise, GST-wise, warehouse-wise accounting into Tally, SAP and Zoho — making your ERP ecommerce-ready without replacing it."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Resources", item: "https://deepecom.com/resources" },
+        { "@type": "ListItem", position: 3, name: "ERP", item: "https://deepecom.com/resources/erp" },
+      ],
+    },
+  ]}
 >
   <header class="rs-hero">
     <div class="rs-container">

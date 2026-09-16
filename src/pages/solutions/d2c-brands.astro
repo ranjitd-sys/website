@@ -78,6 +78,26 @@ const faqs = [
 <PageLayout
   title="D2C Brands — Run Every Channel From One Platform | DeepEcom"
   description="DeepEcom connects your D2C selling platforms, marketplaces and payment systems into one financial view — sales, profitability, payment reconciliation, reporting and detailed ERP accounting."
+  structuredData={[
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: "https://deepecom.com/" },
+        { "@type": "ListItem", position: 2, name: "Solutions", item: "https://deepecom.com/solutions" },
+        { "@type": "ListItem", position: 3, name: "D2C Brands", item: "https://deepecom.com/solutions/d2c-brands" },
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ]}
 >
   <!-- 01 — HERO -->
   <D2CBrandsHero />
