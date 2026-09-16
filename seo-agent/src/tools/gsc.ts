@@ -130,6 +130,15 @@ const STUB: Readonly<Record<string, GscMetrics>> = {
   "d2c brand accounting": { clicks: 8, impressions: 400, position: 15.1, ctr: 0.02, trend: [16.0, 15.5, 15.2, 15.1] },
 }
 
+// Stub rows map back to the seeded pages so discovery resolves a real page.
+const STUB_PAGES: Readonly<Record<string, string>> = {
+  "ecommerce accounting software india": "/resources/ecommerce-accounting",
+  "amazon seller gst accounting": "/solutions/amazon-sellers",
+  "flipkart payment reconciliation": "/resources/reconciliation",
+  "ecommerce accounting tally": "/erp-connector/accounting",
+  "d2c brand accounting": "/solutions/d2c-brands",
+}
+
 const fallbackMetrics = (query: string): GscMetrics => ({
   clicks: 20,
   impressions: 600,
@@ -226,7 +235,7 @@ export const GscServiceLive: Layer.Layer<GscService, never, SeoConfig> = Layer.e
     const stubAllQueries = (): ReadonlyArray<GscQueryRow> =>
       Object.entries(STUB).map(([query, m]) => ({
         query,
-        page: "/",
+        page: STUB_PAGES[query] ?? "/",
         clicks: m.clicks,
         impressions: m.impressions,
         position: m.position,

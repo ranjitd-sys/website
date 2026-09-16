@@ -1,11 +1,12 @@
 import type {
   ActInput,
+  ClassifyIntentInput,
   LearnedDelta,
   PlanInput,
   ReviewInput,
 } from "../types/agent.js"
 
-export type { ActInput, LearnedDelta, PlanInput, ReviewInput }
+export type { ActInput, ClassifyIntentInput, LearnedDelta, PlanInput, ReviewInput }
 
 export interface RevisePromptInput {
   readonly title: string
@@ -54,6 +55,20 @@ export const driverPrompt = (input: PlanInput): string => [
   "Diagnose the gap: intent mismatch, technical issue, weak CTR, thin content, or poor coverage.",
   "Respond with a single JSON object:",
   '{"diagnosis": "one-sentence analysis", "action": "string", "rationale": "string"}',
+].join("\n")
+
+export const classifyIntentPrompt = (input: ClassifyIntentInput): string => [
+  `Classify the search intent of the keyword "${input.keyword}" from what is actually ranking for it.`,
+  "",
+  ...(input.serp && input.serp.results.length > 0
+    ? input.serp.results.slice(0, 5).map(
+        (r) => `- Rank ${r.rank}: ${r.title}${r.snippet ? ` — ${r.snippet}` : ""}`,
+      )
+    : ["- (no competitor results available; classify from the keyword text alone)"]),
+  "",
+  "Labels: commercial (comparing/choosing a product or service: best, review, software, platform, tool, provider), transactional (ready to act: buy, price, pricing, deal, order, sign up, download, demo, trial), informational (learning: what is, how to, guide, tutorial, examples, tips, benefits).",
+  "Read the competitor titles, not the keyword alone, when results are available.",
+  'Return ONLY a JSON object: {"intent": "commercial" or "transactional" or "informational"}',
 ].join("\n")
 
 export const actPrompt = (input: ActInput): string => [

@@ -32,12 +32,12 @@
 | # | Data source | Data it provides | How to access | Cost | Status |
 |---|---|---|---|---|---|
 | 1 | **Google Search Console (GSC)** | Keyword list (real queries), clicks, impressions, position, CTR, 28-day trend — **your site's performance** | Search Console API (service account, JWT) | Free | ✅ Wired live — 403 until service account is added as a Search Console user; falls back to stub |
-| 2 | **Google Ads Keyword Planner / Ads API** | **Search volume** (market demand), competition level, CPC | Google Ads API (Ads account + developer token) | Free (with Ads account) | ✅ Wired (raw REST) — CSV fallback active; live API needs developer token + Basic/Explorer access |
+| 2 | **Google Ads Keyword Planner / Ads API** | **Search volume** (market demand), competition level, CPC | Google Ads API (Ads account + developer token) | Free (with Ads account) | ✅ Wired (raw REST) — stub volume from GSC impressions today; live API needs developer token + Basic/Explorer access |
 | 3 | **Ahrefs / SEMrush / Moz** | **Keyword difficulty** (0–100), competitor insights | Paid API | ~$99–199/mo | ❌ Optional / not wired (difficulty derived from Planner competition meanwhile) |
 | 4 | **SERP data** (SerpApi / Serper.dev / Serpstack) | Top-10 competitor results (titles, URLs, snippets) | Paid API (or mock) | ~$50–150/mo | ✅ Wired live (SerpApi key present); falls back to mock |
 | 5 | **Live page crawl** | Current title, description, H1, JSON-LD, links | Internal (`crawl.ts`) | Free | ✅ Working |
 | 6 | **PostgreSQL** | Keywords, pages, opportunities, changes, learnings | Internal DB | Hosting cost | ✅ Working |
-| 7 | **LLM (Groq)** | Diagnosis, metadata writing, review, learnings | Groq API | Free tier → per-use | ✅ Working |
+| 7 | **LLM (Groq)** | Diagnosis, metadata writing, review, learnings + **intent classification from competitor SERP titles** | Groq API | Free tier → per-use | ✅ Working |
 | 8 | **GitHub** | Branch, commit, draft PR | PAT / Actions token | Free | ✅ Working |
 
 ### Getting the developer token (Google Ads API)
@@ -62,7 +62,7 @@ Source:  Keyword     GSC (own     DB seed     GSC trend
 ```
 
 - **GSC live** → wired (JWT service account); returns stub until the service account is added in Search Console.
-- **Volume / difficulty / competition** → `keywords sync` now populates `keywords.volume`, `difficulty`, `competition`, `cpc_micros` from Keyword Planner (CSV fallback today; live API once the developer token is approved). Difficulty is derived from the Planner competition level/range where available.
+- **Volume / difficulty / competition** → `KeywordPlannerService` populates `keywords.volume`, `difficulty`, `competition`, `cpc_micros` during `optimize` discovery (stub volume from GSC impressions today; live API once the developer token is approved). Difficulty is derived from the Planner competition level/range where available.
 - **Optional:** SERP API for richer competitor context in the LLM — already live via SerpApi; mock used only when the key is missing.
 
 ---

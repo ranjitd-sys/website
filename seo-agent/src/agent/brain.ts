@@ -3,6 +3,8 @@ import { SeoConfig, type SeoConfigShape } from "../Config.js"
 import type {
   ActInput,
   Change,
+  ClassifyIntentInput,
+  Intent,
   LearnedDelta,
   LearnInput,
   PlanInput,
@@ -14,13 +16,15 @@ import type {
 } from "../types/agent.js"
 import {
   actPrompt,
+  classifyIntentPrompt,
   driverPrompt,
   learnPrompt,
   revisePrompt,
   reviewerPrompt,
 } from "./prompts.js"
+import { classifySerpIntent } from "../shared/intent.js"
 
-export type { ActInput, Change, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict } 
+export type { ActInput, Change, ClassifyIntentInput, Intent, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict } 
 
 export class BrainError extends Data.TaggedError("BrainError")<{
   readonly step: string
@@ -33,6 +37,8 @@ export interface BrainShape {
   readonly revise: (input: ReviseInput) => Effect.Effect<Change, BrainError, SeoConfig>
   readonly review: (input: ReviewInput) => Effect.Effect<ReviewOutput, BrainError, SeoConfig>
   readonly learn: (input: LearnInput) => Effect.Effect<ReadonlyArray<string>, BrainError, SeoConfig>
+  // Intent comes from the brain reading competitor SERP titles, not from the DB.
+  readonly classifyIntent: (input: ClassifyIntentInput) => Effect.Effect<Intent, BrainError, SeoConfig>
 }
 
 export class BrainService extends Context.Service<BrainService, BrainShape>()("BrainService") {}
@@ -54,6 +60,10 @@ const ChangeSchema = Schema.Struct({
 const ReviewSchema = Schema.Struct({
   verdict: Schema.Literals(["pass", "fail"]),
   reason: Schema.String,
+})
+
+const IntentSchema = Schema.Struct({
+  intent: Schema.Literals(["commercial", "transactional", "informational"]),
 })
 
 const LearningsSchema = Schema.Struct({
@@ -181,6 +191,10 @@ const stubLearn = (input: LearnInput): ReadonlyArray<string> =>
       `"${d.keyword}" moved ${d.before} → ${d.after} (${d.verdict}); metadata changes can shift ranking. (stub; no GROQ_API_KEY configured)`,
   )
 
+// Deterministic intent fallback — same rules the driver uses when a live
+// brain classification fails.
+const stubClassifyIntent = (input: ClassifyIntentInput): Intent => classifySerpIntent(input)
+
 const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effect(
   BrainService,
   Effect.gen(function* () {
@@ -229,6 +243,16 @@ const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effe
               "Generalize the measured results into learnings.",
               false,
             ).pipe(Effect.map((out) => out.learnings)),
+      classifyIntent: (input) =>
+        stub
+          ? Effect.succeed(stubClassifyIntent(input))
+          : complete(
+              "classifyIntent",
+              IntentSchema,
+              classifyIntentPrompt(input),
+              "Return ONLY the intent label.",
+              false,
+            ).pipe(Effect.map((out) => out.intent)),
     }
   }),
 )

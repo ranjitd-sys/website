@@ -27,26 +27,30 @@
 | **GSC** | `tools/gsc.ts` | Keyword list (queries), `{impressions, position, ctr, trend[]}` | Real (Search Console API, JWT service account) — falls back to stub on 403/absent creds |
 | **Crawl** | `tools/crawl.ts` | Page title, description, h1, JSON-LD, links | Real (live fetch) |
 | **LLM (Groq)** | `agent/brain.ts` | Plan/act/revise/review/learn; **planned:** intent classification | Real (works) |
-| **Google Ads Keyword Planner / API** | `tools/keywordPlanner.ts` | **Search volume** (market demand), competition, CPC | ✅ Wired (raw REST) — CSV fallback today; live API needs developer token + Basic/Explorer access |
+| **Google Ads Keyword Planner / API** | `tools/keywordPlanner.ts` | **Search volume** (market demand), competition, CPC | ✅ Wired (raw REST) — stub volume from GSC impressions today; live API needs developer token + Basic/Explorer access |
 | **Ahrefs / SEMrush / Moz** | — (not wired) | **Keyword difficulty** (0–100), competitor authority | ❌ Optional — paid |
 
 ## How to get the keyword list
 
 The two sources are complementary:
 
-- **GSC Queries API** → keywords your site *already gets impressions for* (real, proven demand). Implemented via `searchanalytics.query` with `dimensions: ["query"]`; the `fetchAllQueries()` TODO is already described in `src/tools/gsc.ts:39-41` (upsert into `keywords` with `target_url = page`).
-- **Google Ads Keyword Planner / API** → market-wide keywords you *could* target, including terms you're not ranking for (expansion source). Wired in `tools/keywordPlanner.ts`; see the "Google Ads Keyword Planner" section below.
+- **GSC Queries API** → keywords your site *already gets impressions for*, plus the **page** each query lands on. This is the agent's **primary discovery source** and URL source: implemented via `searchanalytics.query` with `dimensions: ["query", "page"]` → `fetchAllQueries()` → the `optimize` KEYWORD_DISCOVERY step (in `Driver.ts`) upserts each row into `keywords` with `target_url = page`.
+- **Google Ads Keyword Planner / API** → real **search volume** (market demand) once the developer token is approved; until then the volume column is filled with stub volume derived from GSC impressions. See the "Google Ads Keyword Planner" section below.
+
+## Keyword intent — brain reads competitor titles
+
+`keywords.intent` (and the `pages` row written alongside it) is classified by the **brain** (`brain.classifyIntent`, Groq, `prompts.ts: classifyIntentPrompt`) reading the **competitor SERP titles/snippets** fetched during discovery — never from the DB. The discovery SERP is carried into RESEARCH so it is fetched once.
 
 **Important distinction:** GSC provides the keyword *list* and *your* performance, but **not search volume**. Volume = total market searches; impressions = how often *our* page appeared.
 
 ## Google Ads Keyword Planner
 
-`tools/keywordPlanner.ts` exposes `KeywordPlannerService.fetchMetrics(terms)`. Two paths:
+`tools/keywordPlanner.ts` exposes `KeywordPlannerService.fetchMetrics(terms, options?)`. Two paths:
 
-- **CSV fallback (active today):** reads a Keyword Planner export from `data/Keyword Stats*.csv` and matches keywords case-insensitively. Returns `{ avgMonthlySearches, competition, lowTopOfPageBidMicros, highTopOfPageBidMicros }`. No developer token needed.
-- **Live API (raw REST):** `POST https://googleads.googleapis.com/{version}/customers/{customerId}:generateKeywordHistoricalMetrics`. Used automatically once credentials are present.
+- **Stub volume (active today):** derived from the term's GSC impressions × a multiplier (`STUB_VOLUME_MULTIPLIER`). No developer token needed. The volume column is always filled without fabricating anything.
+- **Live API (raw REST):** `POST https://googleads.googleapis.com/{version}/customers/{customerId}:generateKeywordHistoricalMetrics`. Used automatically once `GOOGLE_ADS_*` credentials are present and the developer token is approved.
 
-The `keywords sync` CLI command (`bun run src/cli.ts keywords`) loads active keywords → planner metrics → upserts `volume`, `difficulty`, `competition`, `cpc_micros` on the `keywords` table. A keyword that is **not** in the CSV/API returns `null` volume (never fabricated).
+During `optimize` KEYWORD_DISCOVERY, the driver calls `fetchMetrics` once for the discovered terms (with GSC impressions as the stub volume source) and upserts `volume`, `difficulty`, `competition`, `cpc_micros` on the `keywords` table. COALESCE is used so a stub=null result never erases a previously-filled real volume.
 
 ### Getting the developer token
 
@@ -91,7 +95,7 @@ score = impressions × position × intentWeight × momentumMultiplier
 
 ## Placeholders (by design)
 
-- `keywords.volume`, `competition`, `cpc_micros` → populated by `keywords sync` from Keyword Planner (CSV fallback today; live API once the developer token is approved).
+- `keywords.volume`, `competition`, `cpc_micros` → populated by `KeywordPlannerService` during discovery (stub volume from GSC impressions today; live API once the developer token is approved).
 - `keywords.difficulty` → derived from Keyword Planner competition where available; otherwise NULL until wired to Ahrefs / SEMrush / Moz (optional).
 - GSC/SERP live-fallbacks → GSC returns stub when the service account has no Search Console access (403); SerpApi returns mock only when `SERPAPI_KEY` is absent.
 - `keyword_positions`, `changes` tables → filled by real GSC + GitHub after Day 3.

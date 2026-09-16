@@ -123,7 +123,7 @@ export const registry: Readonly<Record<string, ToolDefinition>> = {
   },
   keywordPlanner: {
     name: "keywordPlanner",
-    description: "Pull Google Keyword Planner historical metrics (search volume, competition, bids) for a list of keywords.",
+    description: "Pull Google Ads Keyword Planner historical metrics (search volume, competition, bids) for a list of keywords. Stub volume from GSC impressions until the developer token is approved.",
     input: KeywordPlannerInput,
     output: KeywordPlannerOutput,
   },

@@ -14,6 +14,7 @@ import { ContentService } from "../tools/content.js"
 import { GithubService } from "../tools/github.js"
 import type {
   Change,
+  DiscoveredKeyword,
   OptimizeResult,
   PlanOutput,
   ResearchRow,
@@ -22,18 +23,15 @@ import type {
 } from "../types/agent.js"
 import { opportunityScore } from "../shared/scoring.js"
 import { describeFinding, slugify } from "../shared/text.js"
+import { classifySerpIntent } from "../shared/intent.js"
+import { KeywordPlannerService, difficultyOf, stubMonthlySearches } from "../tools/keywordPlanner.js"
 
 export class DriverError extends Data.TaggedError("DriverError")<{
   readonly state: string
   readonly reason: string
 }> {}
 
-interface KeywordRow {
-  readonly id: number
-  readonly term: string
-  readonly intent: string
-  readonly target_url: string | null
-}
+const DISCOVERY_ROW_LIMIT = 25
 
 const buildPrBody = (selected: SelectedOpportunity, change: Change, plan: PlanOutput | null): string =>
   [
@@ -72,6 +70,7 @@ export type OptimizeEnv =
   | SeoConfig
   | SerpService
   | GscService
+  | KeywordPlannerService
   | CrawlService
   | BuildService
   | ValidateService
@@ -85,6 +84,22 @@ const stateName = (snapshot: Snapshot): string => String(snapshot.value)
 const logTransition = (from: string, event: OptimizeEvent, to: string): Effect.Effect<void> =>
   Effect.log(`optimize: ${from} -> ${to} (${event.type})`)
 
+// GSC returns the "page" dimension as a full URL. Reduce it to the internal URL
+// path (must match the `pages.url` rows) so discovery can map queries to pages.
+const normalizePagePath = (raw: string): string | null => {
+  const value = raw.trim()
+  if (value === "") return null
+  let path = value
+  try {
+    if (/^https?:\/\//i.test(value)) path = new URL(value).pathname
+  } catch {
+    return null
+  }
+  if (!path.startsWith("/")) path = `/${path}`
+  if (path !== "/" && path.endsWith("/")) path = path.slice(0, -1)
+  return path
+}
+
 interface StepResult {
   readonly event: OptimizeEvent
 }
@@ -95,23 +110,130 @@ const step = (
 ): Effect.Effect<StepResult, unknown, OptimizeEnv> => {
   const carry = snapshot.context
   switch (stateName(snapshot)) {
+    case "KEYWORD_DISCOVERY":
+      return Effect.gen(function* () {
+        const gsc = yield* GscService
+        const serp = yield* SerpService
+        const brain = yield* BrainService
+        const planner = yield* KeywordPlannerService
+        const db = yield* Database
+
+        const queries = yield* gsc.fetchAllQueries("28d", DISCOVERY_ROW_LIMIT)
+        if (queries.length === 0) {
+          yield* Effect.log("optimize: gsc returned no query rows — aborting")
+          return { event: { type: "ABORT", reason: "gsc returned no queries for keyword discovery" } }
+        }
+
+        const seen = new Set<string>()
+        const candidates: Array<{ term: string; targetUrl: string; impressions: number; position: number }> = []
+        const ranked = [...queries].sort((a, b) => b.impressions - a.impressions)
+
+        for (const row of ranked) {
+          const term = row.query.trim()
+          if (term === "" || row.impressions <= 0 || seen.has(term)) continue
+
+          // URL comes from GSC's page dimension — never from the DB.
+          const targetUrl = normalizePagePath(row.page)
+          if (!targetUrl) {
+            yield* Effect.log(`optimize: skip discovery of "${term}" (no resolvable page)`)
+            continue
+          }
+          seen.add(term)
+          candidates.push({ term, targetUrl, impressions: row.impressions, position: row.position })
+        }
+
+       
+        const plannerOutcome = yield* Effect.result(
+          planner.fetchMetrics(candidates.map((c) => c.term), {
+            impressionsOf: (term) => candidates.find((c) => c.term === term)?.impressions ?? null,
+          }),
+        )
+        const metricsByTerm = new Map(
+          (Result.isSuccess(plannerOutcome) ? plannerOutcome.success : []).map((m) => [m.keyword, m]),
+        )
+        if (Result.isFailure(plannerOutcome)) {
+          yield* Effect.log(`optimize: keyword planner unavailable (${String(plannerOutcome.failure)}) — using stub volume`)
+        }
+
+        const discovered: Array<DiscoveredKeyword> = []
+        for (const candidate of candidates) {
+          const { term, targetUrl, impressions, position } = candidate
+
+          
+          const serpRes = yield* serp.fetchResults(term, "google").pipe(
+            Effect.catchCause((cause) =>
+              Effect.log(`optimize: serp unavailable for "${term}" (${String(cause)}) — classifying from keyword`).pipe(
+                Effect.andThen(Effect.succeed(null as DiscoveredKeyword["serp"])),
+              ),
+            ),
+          )
+          const outcome = yield* Effect.result(brain.classifyIntent({ keyword: term, serp: serpRes }))
+          const intent = Result.isSuccess(outcome) ? outcome.success : classifySerpIntent({ keyword: term, serp: serpRes })
+          if (Result.isFailure(outcome)) {
+            yield* Effect.log(`optimize: brain intent failed for "${term}" (${String(outcome.failure)}) — using deterministic fallback`)
+          }
+
+          const metrics = metricsByTerm.get(term)
+          const volume = metrics?.avgMonthlySearches ?? stubMonthlySearches(impressions)
+          const difficulty = metrics ? difficultyOf(metrics) : null
+          const competition = metrics && metrics.competition !== "" ? metrics.competition : null
+          const cpcMicros = metrics ? (metrics.averageCpcMicros ?? metrics.lowTopOfPageBidMicros) : null
+
+          const found = yield* db.query<{ id: number }>(
+            `INSERT INTO keywords (term, intent, target_url, volume, difficulty, competition, cpc_micros, status)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, 'active')
+             ON CONFLICT (term)
+             DO UPDATE SET
+               target_url = EXCLUDED.target_url,
+               intent = EXCLUDED.intent,
+               volume = COALESCE(EXCLUDED.volume, keywords.volume),
+               difficulty = EXCLUDED.difficulty,
+               competition = EXCLUDED.competition,
+               cpc_micros = EXCLUDED.cpc_micros,
+               status = 'active'
+             RETURNING id`,
+            [term, intent, targetUrl, volume, difficulty, competition, cpcMicros],
+          )
+          const keywordId = found[0]?.id ?? 0
+          if (keywordId === 0) {
+            yield* Effect.log(`optimize: skip discovery of "${term}" (keyword upsert returned no id)`)
+            continue
+          }
+
+          yield* db.query(
+            `INSERT INTO pages (url, intent, status) VALUES ($1, $2, 'active')
+             ON CONFLICT (url) DO UPDATE SET status = 'active', intent = EXCLUDED.intent`,
+            [targetUrl, intent],
+          )
+
+          discovered.push({ keywordId, term, intent, targetUrl, serp: serpRes })
+          yield* Effect.log(
+            `optimize: discovered "${term}" (impressions=${impressions}, pos=${position}) -> ${targetUrl} (intent=${intent}, from brain; volume=${volume ?? "?"})`,
+          )
+        }
+
+        if (discovered.length === 0) {
+          yield* Effect.log("optimize: no discoverable queries with a resolvable page — aborting")
+          return { event: { type: "ABORT", reason: "no discoverable queries with a resolvable page" } }
+        }
+
+        yield* Effect.log(`optimize: discovered ${discovered.length} keyword(s) -> researching`)
+        return { event: { type: "DISCOVERED", keywords: discovered } }
+      })
+
     case "RESEARCH":
       return Effect.gen(function* () {
-        const db = yield* Database
         const serp = yield* SerpService
         const gsc = yield* GscService
         const crawl = yield* CrawlService
         const config = yield* SeoConfig
 
-        const keywords = yield* db.query<KeywordRow>(
-          "SELECT id, term, intent, target_url FROM keywords WHERE status = 'active' ORDER BY id",
-        )
-
         const research: Array<ResearchRow> = []
-        for (const keyword of keywords) {
-          if (!keyword.target_url) continue
-          const base = new URL(keyword.target_url, config.gscSiteUrl).href
-          const serpRes = yield* serp.fetchResults(keyword.term, "google")
+        for (const keyword of carry.keywords) {
+          if (keyword.keywordId <= 0 || !keyword.targetUrl) continue
+          const base = new URL(keyword.targetUrl, config.gscSiteUrl).href
+          
+          const serpRes = keyword.serp ?? (yield* serp.fetchResults(keyword.term, "google"))
           const gscRes = yield* gsc.fetchMetrics(keyword.term, "28d")
           const crawlRes = yield* crawl.crawlPage(base).pipe(
             Effect.catchCause((cause) =>
@@ -121,10 +243,10 @@ const step = (
             ),
           )
           research.push({
-            keywordId: keyword.id,
+            keywordId: keyword.keywordId,
             term: keyword.term,
             intent: keyword.intent,
-            targetUrl: keyword.target_url,
+            targetUrl: keyword.targetUrl,
             serp: serpRes,
             gsc: gscRes,
             crawl: crawlRes,

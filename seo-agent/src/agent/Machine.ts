@@ -1,8 +1,9 @@
 import { assign, createMachine } from "xstate"
-import type { Change, PlanOutput, ResearchRow, SelectedOpportunity } from "../types/agent.js"
+import type { Change, DiscoveredKeyword, PlanOutput, ResearchRow, SelectedOpportunity } from "../types/agent.js"
 
 export type OptimizeEvent =
   | { readonly type: "START" }
+  | { readonly type: "DISCOVERED"; readonly keywords: ReadonlyArray<DiscoveredKeyword> }
   | { readonly type: "RESEARCHED"; readonly research: ReadonlyArray<ResearchRow> }
   | { readonly type: "OPPORTUNITY_SELECTED"; readonly opportunityId: number; readonly selected: SelectedOpportunity }
   | { readonly type: "PLANNED"; readonly action: string; readonly plan: PlanOutput }
@@ -20,6 +21,7 @@ export type OptimizeContext = {
   readonly maxRetries: number
   readonly opportunityId: number | null
   readonly lastReason: string | null
+  readonly keywords: ReadonlyArray<DiscoveredKeyword>
   readonly research: ReadonlyArray<ResearchRow>
   readonly selected: SelectedOpportunity | null
   readonly plan: PlanOutput | null
@@ -39,6 +41,7 @@ export const optimizeMachine = createMachine({
     maxRetries: 3,
     opportunityId: null,
     lastReason: null,
+    keywords: [],
     research: [],
     selected: null,
     plan: null,
@@ -50,7 +53,16 @@ export const optimizeMachine = createMachine({
   states: {
     IDLE: {
       on: {
-        START: { target: "RESEARCH" },
+        START: { target: "KEYWORD_DISCOVERY" },
+        ABORT: { target: "FINISHED", actions: assign({ lastReason: ({ event }) => event.reason }) },
+      },
+    },
+    KEYWORD_DISCOVERY: {
+      on: {
+        DISCOVERED: {
+          target: "RESEARCH",
+          actions: assign({ keywords: ({ event }) => event.keywords }),
+        },
         ABORT: { target: "FINISHED", actions: assign({ lastReason: ({ event }) => event.reason }) },
       },
     },

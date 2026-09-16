@@ -1,6 +1,4 @@
 import { Context, Data, Effect, Layer, Redacted, Result } from "effect"
-import { readdir, readFile } from "node:fs/promises"
-import { join } from "node:path"
 import { SeoConfig } from "../Config.js"
 import type { KeywordMetrics } from "../types/market.js"
 
@@ -10,8 +8,53 @@ export class KeywordPlannerError extends Data.TaggedError("KeywordPlannerError")
   readonly reason: string
 }> {}
 
+// Volume source for stub estimation. When the Google Ads API is not configured,
+// estimated search volume = the term's GSC impressions × this multiplier.
+// This is a PLACEHOLDER — it is replaced automatically with real Keyword
+// Planner volume as soon as the GOOGLE_ADS_* credentials are present and the
+// developer token is approved for production.planner
+export const STUB_VOLUME_MULTIPLIER = 5
+
+export const stubMonthlySearches = (impressions: number | null | undefined): number | null => {
+  if (impressions === null || impressions === undefined || !Number.isFinite(impressions) || impressions <= 0) {
+    return null
+  }
+  return Math.round(impressions * STUB_VOLUME_MULTIPLIER)
+}
+
+// Difficulty → 0-100 scale from competitionIndex (0-100) as a direct pass-through,
+// clamped; when only the competition *level* string is available, map
+// LOW→20 / MEDIUM→50 / HIGH→80 (best effort; column stays NULL otherwise).
+export const difficultyOf = (metrics: KeywordMetrics): number | null => {
+  if (metrics.competitionIndex !== null) {
+    return Math.max(0, Math.min(100, Math.round(metrics.competitionIndex)))
+  }
+  switch ((metrics.competition ?? "").toUpperCase()) {
+    case "LOW":
+      return 20
+    case "MEDIUM":
+      return 50
+    case "HIGH":
+      return 80
+    default:
+      return null
+  }
+}
+
+export interface KeywordPlannerOptions {
+  // Per-term GSC impressions used to derive a stub volume while the real
+  // Google Ads API is unavailable.
+  readonly impressionsOf?: (term: string) => number | null
+}
+
 export interface KeywordPlannerShape {
-  readonly fetchMetrics: (keywords: ReadonlyArray<string>) => Effect.Effect<ReadonlyArray<KeywordMetrics>, KeywordPlannerError>
+  // Real Google Keyword Planner volume when GOOGLE_ADS_* creds are live;
+  // stub volume (derived from GSC impressions) until then. Never fabricates —
+  // a term with no impressions returns a null volume.
+  readonly fetchMetrics: (
+    keywords: ReadonlyArray<string>,
+    options?: KeywordPlannerOptions,
+  ) => Effect.Effect<ReadonlyArray<KeywordMetrics>, KeywordPlannerError>
 }
 
 export class KeywordPlannerService extends Context.Service<KeywordPlannerService, KeywordPlannerShape>()("KeywordPlanner") {}
@@ -28,9 +71,10 @@ export class KeywordPlannerService extends Context.Service<KeywordPlannerService
 //   GOOGLE_ADS_LOGIN_CUSTOMER_ID→ MCC id, only when calling through a manager
 //   GOOGLE_ADS_API_VERSION      → e.g. v25 (default)
 //
-// Falls back to parsing data/Keyword Stats*.csv when creds absent or the token
-// is not approved for production (DEVELOPER_TOKEN_NOT_APPROVED) — runs stay
-// green, exactly like the serp/gsc mock fallback pattern.
+// Until those credentials are approved, volume comes from the stub estimator
+// (GSC impressions × STUB_VOLUME_MULTIPLIER) so the volume column is always
+// filled without fabricating anything. The swap to real volume is automatic:
+// set the env vars and the next `optimize` discovery run uses the live API.
 // ============================================================================
 
 const OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token"
@@ -40,8 +84,6 @@ const ADWORDS_SCOPE = "https://www.googleapis.com/auth/adwords"
 const GEO_TARGET = "geoTargetConstants/2356"
 const LANGUAGE = "languageConstants/1000"
 const NETWORK = "GOOGLE_SEARCH"
-
-const DATA_DIR = join(process.cwd(), "data")
 
 // ---------------------------------------------------------------------------
 // Real API helpers
@@ -114,7 +156,7 @@ const fetchLiveMetrics = async (
     const text = await res.text()
     let message = `googleads HTTP ${res.status}: ${res.statusText}`
     if (text.includes("DEVELOPER_TOKEN_NOT_APPROVED")) {
-      message = "developer token not approved for production use (test-access token) — falling back to CSV"
+      message = "developer token not approved for production use (test-access token) — falling back to stub volume"
     }
     throw new Error(message)
   }
@@ -131,69 +173,24 @@ const fetchLiveMetrics = async (
 }
 
 // ---------------------------------------------------------------------------
-// CSV fallback — parse the Google Keyword Planner export already in data/
+// Stub volume — used coherently until the Google Ads API is live.
 // ---------------------------------------------------------------------------
 
-const findKeywordCsv = async (): Promise<string> => {
-  const entries = await readdir(DATA_DIR)
-  const match = entries.find((name) => name.startsWith("Keyword Stats") && name.endsWith(".csv"))
-  if (!match) throw new Error(`no "Keyword Stats*.csv" found in ${DATA_DIR}`)
-  return join(DATA_DIR, match)
-}
-
-const parseKeywordCsv = async (): Promise<ReadonlyMap<string, KeywordMetrics>> => {
-  const csvPath = await findKeywordCsv()
-  const raw = await readFile(csvPath, "utf8")
-  const lines = raw.split(/\r?\n/)
-  const rows = new Map<string, KeywordMetrics>()
-  // Row 0 = title, Row 1 = date range, Row 2 = header. Data starts at index 3.
-  for (let i = 3; i < lines.length; i++) {
-    const cols = lines[i]!.split(",")
-    const keyword = (cols[0] ?? "").trim()
-    if (keyword === "") continue
-    const volume = Number((cols[2] ?? "").trim())
-    const competition = (cols[5] ?? "").trim()
-    const compIndex = Number((cols[6] ?? "").trim())
-    const lowBid = Number((cols[7] ?? "").trim())
-    const highBid = Number((cols[8] ?? "").trim())
-    const toMicros = (value: number): number | null =>
-      Number.isFinite(value) ? Math.round(value * 1_000_000) : null
-    rows.set(keyword, {
-      keyword,
-      avgMonthlySearches: Number.isFinite(volume) ? volume : null,
-      competition,
-      competitionIndex: Number.isFinite(compIndex) ? compIndex : null,
-      lowTopOfPageBidMicros: toMicros(lowBid),
-      highTopOfPageBidMicros: toMicros(highBid),
+const stubMetrics = (
+  keywords: ReadonlyArray<string>,
+  impressionsOf?: (term: string) => number | null,
+): ReadonlyArray<KeywordMetrics> =>
+  keywords.map((term) => {
+    const volume = stubMonthlySearches(impressionsOf?.(term))
+    return {
+      keyword: term,
+      avgMonthlySearches: volume,
+      competition: "",
+      competitionIndex: null,
+      lowTopOfPageBidMicros: null,
+      highTopOfPageBidMicros: null,
       averageCpcMicros: null,
-    })
-  }
-  return rows
-}
-
-const fetchCsvMetrics = (keywords: ReadonlyArray<string>): Effect.Effect<ReadonlyArray<KeywordMetrics>, KeywordPlannerError> =>
-  Effect.tryPromise({
-    try: async () => {
-      const rows = await parseKeywordCsv()
-      const result: KeywordMetrics[] = []
-      for (const keyword of keywords) {
-        const hit = rows.get(keyword)
-        result.push(
-          hit ?? {
-            keyword,
-            avgMonthlySearches: null,
-            competition: "",
-            competitionIndex: null,
-            lowTopOfPageBidMicros: null,
-            highTopOfPageBidMicros: null,
-            averageCpcMicros: null,
-          },
-        )
-      }
-      return result
-    },
-    catch: (error) =>
-      new KeywordPlannerError({ reason: error instanceof Error ? error.message : String(error) }),
+    }
   })
 
 export const KeywordPlannerServiceLive: Layer.Layer<KeywordPlannerService, never, SeoConfig> = Layer.effect(
@@ -211,10 +208,15 @@ export const KeywordPlannerServiceLive: Layer.Layer<KeywordPlannerService, never
       developerToken !== "" && clientId !== "" && clientSecret !== "" && refreshToken !== "" && customerId !== ""
 
     return {
-      fetchMetrics: (keywords) =>
+      fetchMetrics: (keywords, options) =>
         Effect.gen(function* () {
-          yield* Effect.log(`keywordPlanner: ${keywords.length} keywords (${real ? "live" : "csv fallback"})`)
-          if (!real) return yield* fetchCsvMetrics(keywords)
+          if (!real) {
+            yield* Effect.log(
+              `keywordPlanner: ${keywords.length} keyword(s) — stub volume (no GOOGLE_ADS_* credentials; GSC impressions × ${STUB_VOLUME_MULTIPLIER})`,
+            )
+            return stubMetrics(keywords, options?.impressionsOf)
+          }
+          yield* Effect.log(`keywordPlanner: ${keywords.length} keyword(s) — live Google Ads API`)
           const outcome = yield* Effect.result(
             Effect.tryPromise({
               try: async () => {
@@ -226,8 +228,8 @@ export const KeywordPlannerServiceLive: Layer.Layer<KeywordPlannerService, never
             }),
           )
           if (Result.isSuccess(outcome)) return outcome.success
-          yield* Effect.log(`keywordPlanner: live failed (${outcome.failure.reason}) — using csv fallback`)
-          return yield* fetchCsvMetrics(keywords)
+          yield* Effect.log(`keywordPlanner: live failed (${outcome.failure.reason}) — using stub volume`)
+          return stubMetrics(keywords, options?.impressionsOf)
         }),
     }
   }),

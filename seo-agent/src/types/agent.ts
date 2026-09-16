@@ -1,8 +1,6 @@
-// Canonical agent/optimization types shared across brain, prompts, driver and measure.
 
 import type { CrawlResult, GscMetrics, SerpResults } from "./market.js"
 
-// The change a tool can apply to the content repository.
 export interface Change {
   readonly filePath: string
   readonly title: string
@@ -22,8 +20,6 @@ export interface ReviewOutput {
   readonly verdict: ReviewVerdict
   readonly reason: string
 }
-
-// Prompt-facing views (what the LLM sees), derived from the canonical types.
 
 export interface PromptCrawl {
   readonly title: string
@@ -61,8 +57,6 @@ export interface ReviewInput {
   readonly diffSummary: string
 }
 
-// Measurement domain.
-
 export type Verdict = "won" | "stuck" | "falling"
 
 export interface LearnedDelta {
@@ -78,6 +72,27 @@ export interface LearnInput {
 }
 
 // Driver run domain.
+
+// The three search intents the agent reasons about. Classified by the brain
+// from competitor SERP titles (see src/shared/intent.ts for the stub fallback).
+export type Intent = "commercial" | "transactional" | "informational"
+
+export interface ClassifyIntentInput {
+  readonly keyword: string
+  readonly serp: SerpResults | null
+}
+
+// A keyword surfaced by GSC query discovery (KEYWORD_DISCOVERY) that is ready
+// to be researched. Discovery upserts it into the `keywords` table and resolves
+// intent (brain, from competitor SERP titles) + target_url (GSC page) before
+// RESEARCH runs. The discovery-fetched SERP is carried so RESEARCH reuses it.
+export interface DiscoveredKeyword {
+  readonly keywordId: number
+  readonly term: string
+  readonly intent: string
+  readonly targetUrl: string
+  readonly serp: SerpResults | null
+}
 
 export interface ResearchRow {
   readonly keywordId: number
