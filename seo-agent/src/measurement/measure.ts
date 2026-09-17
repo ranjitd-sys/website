@@ -60,8 +60,6 @@ const asMeasure = <A, E, R>(
     ),
   )
 
-// DETECT_MERGES — find merged changes (deployed_at set) older than 3 weeks
-// that have no measurement yet.
 const detectMerged: Effect.Effect<ReadonlyArray<ChangeRow>, MeasureError, Database> = asMeasure(
   Effect.gen(function* () {
     const db = yield* Database
@@ -81,7 +79,6 @@ const detectMerged: Effect.Effect<ReadonlyArray<ChangeRow>, MeasureError, Databa
   "detect",
 )
 
-// GSC_PULL — pull fresh current metrics per keyword (28-day window).
 const pullCurrent = (rows: ReadonlyArray<ChangeRow>): Effect.Effect<Map<number, GscMetrics>, MeasureError, GscService> =>
   Effect.gen(function* () {
     const gsc = yield* GscService
@@ -99,7 +96,6 @@ const pullCurrent = (rows: ReadonlyArray<ChangeRow>): Effect.Effect<Map<number, 
     return map
   })
 
-// Baseline — the position recorded at PR creation time, if we logged a snapshot.
 const fetchBaseline = (
   keywordId: number,
 ): Effect.Effect<number | null, MeasureError, Database> =>
@@ -127,8 +123,7 @@ interface PendingMeasurement {
   readonly verdict: Verdict
 }
 
-// WRITE_DELTAS — compute before/after/delta/verdict and persist into
-// `changes.measurement` JSONB. Marks the opportunity measured.
+
 const writeDeltas = (
   rows: ReadonlyArray<ChangeRow>,
   current: Map<number, GscMetrics>,
@@ -173,8 +168,6 @@ const writeDeltas = (
     "write",
   )
 
-// LEARNINGS + FEED_RESEARCH — one LLM pass across the batch, persisted as
-// learnings rows so the next weekly optimize run reads them as context.
 const learnRun = (
   measured: ReadonlyArray<PendingMeasurement>,
 ): Effect.Effect<ReadonlyArray<string>, MeasureError, BrainService | Database | SeoConfig> =>
