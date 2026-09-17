@@ -1,17 +1,27 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import {
   CATEGORIES,
+  CM_PER_LENGTH_UNIT,
+  FEE_DATA_VERSION,
+  KG_PER_WEIGHT_UNIT,
   OPTIONS,
-  SAMPLE_CATALOGUE,
+  STEP_LEVELS,
   ZONES,
+  chargeableSlabs,
+  chargeableWeightKg,
   estimateChannel,
+  pickPackFee,
+  referralFor,
+  sizeTier,
+  volumetricWeightKg,
   type ChannelId,
   type ChannelEstimate,
   type FeeLine,
   type Provenance,
+  type StepLevel,
   type Zone,
 } from "@/data/amazon-fees"
-import { ArrowRight, Check, Layers, Link2, Plus, Search, TrendingDown, X } from "lucide-react"
+import { Check, ChevronDown, Layers, Plus, Search, TrendingDown, X } from "lucide-react"
 
 function money(n: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -22,6 +32,47 @@ function money(n: number) {
   }).format(n)
 }
 
+interface Preset {
+  name: string
+  price: number
+  categoryId: string
+  weight: number
+  weightUnit: "kg" | "g" | "lb"
+  zone: Zone
+  step: StepLevel
+  cost: number
+  units: number
+  shipping: number
+  selfShipCost: number
+  otherCosts: number
+  avgInventory: number
+  dim: { l: number; w: number; h: number }
+  dimUnit: "cm" | "in"
+  includeGst: boolean
+}
+
+const PRESET_KEY = "revcal-presets-v1"
+
+function loadPresets(): Preset[] {
+  try {
+    if (typeof window === "undefined") return []
+    const raw = window.localStorage.getItem(PRESET_KEY)
+    if (!raw) return []
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (p): p is Preset =>
+        typeof p === "object" &&
+        p !== null &&
+        typeof (p as Preset).name === "string" &&
+        typeof (p as Preset).price === "number" &&
+        typeof (p as Preset).categoryId === "string",
+    )
+  } catch {
+    return []
+  }
+}
+
 function badge(prov: Provenance) {
   switch (prov.kind) {
     case "verified":
@@ -30,6 +81,8 @@ function badge(prov: Provenance) {
       return { text: "Est.", cls: "border-amber-200/70 bg-amber-50/60 text-amber-700" }
     case "sp-api":
       return { text: "SP-API", cls: "border-danger-200/70 bg-danger-50/60 text-danger-600" }
+    case "input":
+      return { text: "You", cls: "border-ink-200 bg-ink-50 text-ink-600" }
   }
 }
 
@@ -169,15 +222,35 @@ export default function RevenueCalculator() {
   const [dim, setDim] = useState({ l: 0, w: 0, h: 0 })
   const [includeGst, setIncludeGst] = useState(false)
   const [selected, setSelected] = useState<ChannelId[]>(["fc", "self-ship"])
-  const [tab, setTab] = useState<"define" | "catalogue" | "bulk">("define")
-  const [query, setQuery] = useState("")
-  const [usedAsin, setUsedAsin] = useState<string | null>(null)
-  const [bulkRows, setBulkRows] = useState([
-    { id: 1, name: "Aurora X5 Smartphone", categoryId: "mobile-phones", price: 12999, channel: "fc" as ChannelId },
-    { id: 2, name: "Trailblazer Running Shoes", categoryId: "shoes", price: 1899, channel: "self-ship" as ChannelId },
-  ])
+  const [step, setStep] = useState<StepLevel>("standard")
+  const [otherCosts, setOtherCosts] = useState(0)
+  const [avgInventory, setAvgInventory] = useState(1)
+  const [catQuery, setCatQuery] = useState("")
+  const [catOpen, setCatOpen] = useState(false)
+  const catPopRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!catOpen) return
+    const onDown = (e: PointerEvent) => {
+      if (catPopRef.current && !catPopRef.current.contains(e.target as Node)) setCatOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setCatOpen(false)
+    }
+    document.addEventListener("pointerdown", onDown)
+    document.addEventListener("keydown", onKey)
+    return () => {
+      document.removeEventListener("pointerdown", onDown)
+      document.removeEventListener("keydown", onKey)
+    }
+  }, [catOpen])
+  const [weightUnit, setWeightUnit] = useState<"kg" | "g" | "lb">("kg")
+  const [dimUnit, setDimUnit] = useState<"cm" | "in">("cm")
+  const [presetName, setPresetName] = useState("")
+  const [presets, setPresets] = useState<Preset[]>(() => loadPresets())
 
   const category = CATEGORIES.find((c) => c.id === categoryId) ?? CATEGORIES[0]
+  const refPct = referralFor(category, price).pct
   const baseInput = {
     sellingPrice: price,
     category,
@@ -189,6 +262,9 @@ export default function RevenueCalculator() {
     selfShipCost,
     dimensions: dim,
     includeGst,
+    step,
+    otherCosts,
+    avgInventory,
   }
   const allEstimates = OPTIONS.map((option) => estimateChannel(baseInput, option.id))
   const estimates = selected.flatMap((id) => {
@@ -199,322 +275,379 @@ export default function RevenueCalculator() {
   const scaleMax = Math.max(...allEstimates.map((e) => e.netProceeds), 1)
   const bestPick = rankedEstimates[0]
 
+  const catFilter = catQuery.trim().toLowerCase()
+  const filteredCats = catFilter
+    ? CATEGORIES.filter((c) => c.label.toLowerCase().includes(catFilter))
+    : CATEGORIES
+  const selectedOutsideFilter = !filteredCats.some((c) => c.id === categoryId)
+  const catGroups: Array<{ name: string; items: typeof CATEGORIES }> = []
+  for (const c of CATEGORIES) {
+    const g = catGroups.find((x) => x.name === c.group)
+    if (g) g.items.push(c)
+    else catGroups.push({ name: c.group, items: [c] })
+  }
+
+  const dispWeight = weight / KG_PER_WEIGHT_UNIT[weightUnit]
+  const setDispWeight = (v: number) => setWeight(Math.max(0, v * KG_PER_WEIGHT_UNIT[weightUnit]))
+  const dispDim = (k: "l" | "w" | "h") => dim[k] / CM_PER_LENGTH_UNIT[dimUnit]
+  const setDispDim = (k: "l" | "w" | "h", v: number) =>
+    setDim((d) => ({ ...d, [k]: Math.max(0, v * CM_PER_LENGTH_UNIT[dimUnit]) }))
+
+  const pkgVolumetric = volumetricWeightKg(dim)
+  const pkgChargeable = chargeableWeightKg(weight, dim)
+  const pkgSlabs = chargeableSlabs(pkgChargeable)
+  const pkgTier = sizeTier(categoryId, weight, dim)
+  const pkgPick = pickPackFee("fc", pkgChargeable, pkgTier.tier)
+
+  const savePreset = () => {
+    const name = presetName.trim()
+    if (!name) return
+    const next = [
+      ...presets.filter((p) => p.name !== name),
+      { name, price, categoryId, weight, weightUnit, zone, step, cost, units, shipping, selfShipCost, otherCosts, avgInventory, dim, dimUnit, includeGst },
+    ]
+    setPresets(next)
+    setPresetName("")
+    try {
+      window.localStorage.setItem(PRESET_KEY, JSON.stringify(next))
+    } catch {
+      /* storage unavailable — presets stay in memory */
+    }
+  }
+
+  const loadPreset = (p: Preset) => {
+    setPrice(p.price)
+    if (CATEGORIES.some((c) => c.id === p.categoryId)) setCategoryId(p.categoryId)
+    setWeight(p.weight)
+    setWeightUnit(p.weightUnit ?? "kg")
+    setZone(p.zone)
+    setStep(p.step ?? "standard")
+    setCost(p.cost)
+    setUnits(p.units)
+    setShipping(p.shipping)
+    setSelfShipCost(p.selfShipCost)
+    setOtherCosts(p.otherCosts ?? 0)
+    setAvgInventory(p.avgInventory ?? 1)
+    setDim(p.dim)
+    setDimUnit(p.dimUnit ?? "cm")
+    setIncludeGst(p.includeGst)
+  }
+
+  const deletePreset = (name: string) => {
+    const next = presets.filter((p) => p.name !== name)
+    setPresets(next)
+    try {
+      window.localStorage.setItem(PRESET_KEY, JSON.stringify(next))
+    } catch {
+      /* storage unavailable — presets stay in memory */
+    }
+  }
   const toggle = (id: ChannelId) =>
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]))
 
   const inputCls =
     "w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm font-medium text-ink-900 shadow-xs outline-none transition-colors focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-  const labelCls = "mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink-500"
+  const labelCls = "mb-1 flex h-6 items-end text-xs font-semibold uppercase tracking-wide text-ink-500"
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-200 bg-brand-50 px-4 py-3">
-        <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
-            <Link2 size={16} />
-          </span>
-          <div>
-            <p className="text-sm font-bold text-brand-900">Connect your Seller Central account</p>
-            <p className="text-[13px] text-brand-700">
-              Exact per-order fees need your account — Seller ID / merchant token via SP-API.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Seller ID (e.g. A21TJRUUN4KGV)"
-            aria-label="Seller ID"
-            className="w-56 rounded-lg border border-brand-200 bg-white px-3 py-1.5 text-sm text-ink-700 outline-none focus:border-brand-400"
-          />
-          <span className="inline-flex items-center rounded-full border border-danger-200/70 bg-danger-50/60 px-2 py-[3px] text-[10px] font-semibold whitespace-nowrap text-danger-600">
-            SP-API
-          </span>
-        </div>
-      </div>
-
       <div className="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
-        <div className="flex flex-wrap items-center gap-1 border-b border-ink-200 bg-ink-50/60 px-3 pt-2" role="tablist" aria-label="Product input mode">
-          {(
-            [
-              { id: "define", label: "Define product", icon: <Plus size={13} />, badge: null },
-              { id: "catalogue", label: "Search Amazon catalogue", icon: <Search size={13} />, badge: "preview" },
-              { id: "bulk", label: "Estimate in bulk", icon: <Layers size={13} />, badge: "preview" },
-            ] as const
-          ).map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.id}
-              onClick={() => setTab(t.id)}
-              className={
-                "inline-flex items-center gap-1.5 rounded-t-lg px-3.5 py-2 text-sm transition-colors " +
-                (tab === t.id
-                  ? "border border-b-0 border-ink-200 bg-white font-semibold text-brand-700"
-                  : "font-medium text-ink-400 hover:bg-white/60 hover:text-ink-600")
-              }
-            >
-              {t.icon} {t.label}
-              {t.badge && (
-                <span className="ml-1 inline-flex items-center rounded-full border border-amber-200/70 bg-amber-50/60 px-1.5 py-[2px] text-[10px] font-semibold whitespace-nowrap text-amber-700">
-                  {t.badge}
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
-
-        {tab === "define" && (
-        <div className="grid gap-4 p-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <label htmlFor="rc-price" className={labelCls}>Item price (₹)</label>
-            <input id="rc-price" type="number" min={0} step={1} value={price} onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="rc-category" className={labelCls}>Category</label>
-            <select id="rc-category" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className={inputCls}>
-              {CATEGORIES.map((c) => (
-                <option key={c.id} value={c.id}>{c.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="rc-weight" className={labelCls}>Unit weight (kg)</label>
-            <input id="rc-weight" type="number" min={0} step={0.1} value={weight} onChange={(e) => setWeight(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="rc-zone" className={labelCls}>Shipment zone</label>
-            <select id="rc-zone" value={zone} onChange={(e) => setZone(e.target.value as Zone)} className={inputCls}>
-              {ZONES.map((z) => (
-                <option key={z.id} value={z.id}>{z.label}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="rc-cost" className={labelCls}>Product cost (₹)</label>
-            <input id="rc-cost" type="number" min={0} step={1} value={cost} onChange={(e) => setCost(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="rc-units" className={labelCls}>Units / 30 days</label>
-            <input id="rc-units" type="number" min={0} step={1} value={units} onChange={(e) => setUnits(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="rc-ship" className={labelCls}>Buyer shipping charge (₹)</label>
-            <input id="rc-ship" type="number" min={0} step={1} value={shipping} onChange={(e) => setShipping(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="rc-selfcost" className={labelCls}>Your courier cost (₹)</label>
-            <input id="rc-selfcost" type="number" min={0} step={1} value={selfShipCost} onChange={(e) => setSelfShipCost(Math.max(0, Number(e.target.value)))} className={inputCls} />
-          </div>
-          <div className="sm:col-span-2 lg:col-span-3">
-            <label className={labelCls}>Package dimensions — L × W × H (cm) <span className="font-normal normal-case text-ink-400">for FC storage</span></label>
-            <div className="flex gap-2">
-              {(["l", "w", "h"] as const).map((k) => (
-                <input
-                  key={k}
-                  type="number"
-                  min={0}
-                  step={1}
-                  value={dim[k] || ""}
-                  placeholder={k.toUpperCase()}
-                  onChange={(e) => setDim((d) => ({ ...d, [k]: Math.max(0, Number(e.target.value)) }))}
-                  className={inputCls}
-                  aria-label={`Package ${k}`}
-                />
-              ))}
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-200 bg-ink-50/60 px-5 py-3">
+          <div className="flex items-center gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-brand-600 text-white">
+              <Plus size={15} />
+            </span>
+            <div>
+              <p className="text-sm font-bold text-ink-900">Define product</p>
+              <p className="text-xs text-ink-400">Manual entry — everything updates live.</p>
             </div>
           </div>
-          <label className="flex items-end gap-2 pb-2 text-sm font-medium text-ink-600">
-            <input type="checkbox" checked={includeGst} onChange={(e) => setIncludeGst(e.target.checked)} className="size-4 accent-brand-600" />
-            Apply 18% GST on fees
-          </label>
+          <span className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-1 text-[11px] font-bold text-brand-700 tabular-nums">
+            {FEE_DATA_VERSION}
+          </span>
         </div>
-        )}
 
-        {tab === "catalogue" && (
-        <div className="p-5">
-          <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-2.5 text-[13px] leading-relaxed text-amber-800">
-            <Search size={14} className="mt-0.5 shrink-0" />
-            <span><strong className="font-semibold">Sample catalogue for preview.</strong> Live Amazon catalogue search with your real ASINs, weights and dimensions needs your SP-API connection.</span>
+        <div className="flex flex-col gap-5 p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wide text-ink-400">Saved</span>
+            {presets.length === 0 && (
+              <span className="text-xs text-ink-400">No presets yet — name this setup below to reuse it.</span>
+            )}
+            {presets.map((p) => (
+              <span key={p.name} className="inline-flex items-center gap-1 rounded-full border border-ink-200 bg-white py-0.5 pr-1 pl-2.5 text-xs font-semibold text-ink-700">
+                <button type="button" onClick={() => loadPreset(p)} className="hover:text-brand-700" title="Load preset">
+                  {p.name}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deletePreset(p.name)}
+                  aria-label={`Delete preset ${p.name}`}
+                  className="grid size-4 place-items-center rounded-full text-ink-400 hover:bg-danger-50 hover:text-danger-600"
+                >
+                  <X size={10} />
+                </button>
+              </span>
+            ))}
+            <span className="ml-auto flex items-center gap-2">
+              <input
+                type="text"
+                value={presetName}
+                onChange={(e) => setPresetName(e.target.value)}
+                placeholder="Preset name"
+                aria-label="Preset name"
+                className="w-32 rounded-lg border border-ink-200 bg-white px-2.5 py-1.5 text-xs font-medium text-ink-900 outline-none focus:border-brand-400"
+              />
+              <button
+                type="button"
+                onClick={savePreset}
+                disabled={!presetName.trim()}
+                className="rounded-lg bg-ink-900 px-3 py-1.5 text-xs font-semibold !text-white transition-opacity disabled:opacity-40"
+              >
+                Save
+              </button>
+            </span>
           </div>
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by product name or ASIN — try “shoes” or “B0D3”"
-              aria-label="Search sample catalogue"
-              className={inputCls}
-            />
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {SAMPLE_CATALOGUE.filter((p) => {
-              const q = query.trim().toLowerCase()
-              if (!q) return true
-              const cat = CATEGORIES.find((c) => c.id === p.categoryId)?.label ?? ""
-              return p.name.toLowerCase().includes(q) || p.asin.toLowerCase().includes(q) || cat.toLowerCase().includes(q)
-            }).map((p) => {
-              const cat = CATEGORIES.find((c) => c.id === p.categoryId)
-              const used = usedAsin === p.asin
-              return (
-                <div key={p.asin} className={"flex flex-col gap-2 rounded-xl border p-4 transition-colors " + (used ? "border-brand-300 bg-brand-50/60" : "border-ink-200 bg-white hover:border-ink-300")}>
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate text-sm font-bold text-ink-900">{p.name}</p>
-                      <p className="mt-0.5 font-mono text-[11px] text-ink-400">ASIN · {p.asin}</p>
+          <fieldset>
+            <legend className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-400">Product — drives Amazon fees</legend>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div>
+                <label htmlFor="rc-price" className={labelCls}>Item price (₹)</label>
+                <input id="rc-price" type="number" min={0} step={1} value={price || ""} placeholder="0" onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))} className={inputCls} />
+              </div>
+              <div>
+                <span id="rc-catlabel" className={labelCls}>
+                  Category · {filteredCats.length} of {CATEGORIES.length}
+                </span>
+                <div className="relative" ref={catPopRef}>
+                  <button
+                    type="button"
+                    onClick={() => setCatOpen((o) => !o)}
+                    aria-expanded={catOpen}
+                    aria-haspopup="listbox"
+                    aria-labelledby="rc-catlabel"
+                    className={inputCls + " flex w-full items-center justify-between gap-2 text-left"}
+                  >
+                    <span className="truncate">{category.label}</span>
+                    <ChevronDown size={16} className={"shrink-0 text-ink-400 transition-transform " + (catOpen ? "rotate-180" : "")} />
+                  </button>
+                  {catOpen && (
+                    <div className="absolute inset-x-0 top-full z-30 mt-1.5 overflow-hidden rounded-xl border border-ink-200 bg-white shadow-popover">
+                      <div className="border-b border-ink-100 p-2">
+                        <div className="relative">
+                          <input
+                            autoFocus
+                            type="text"
+                            value={catQuery}
+                            onChange={(e) => setCatQuery(e.target.value)}
+                            placeholder="Type to filter, e.g. shoes"
+                            aria-label="Filter categories"
+                            className="w-full rounded-lg border border-ink-200 bg-white py-2 pr-8 pl-3 text-sm text-ink-900 outline-none focus:border-brand-400"
+                          />
+                          {catQuery ? (
+                            <button
+                              type="button"
+                              onClick={() => setCatQuery("")}
+                              aria-label="Clear category filter"
+                              className="absolute top-1/2 right-2 grid size-5 -translate-y-1/2 place-items-center rounded-full text-ink-400 transition-colors hover:bg-ink-100 hover:text-ink-700"
+                            >
+                              <X size={12} />
+                            </button>
+                          ) : (
+                            <Search size={14} className="pointer-events-none absolute top-1/2 right-2.5 -translate-y-1/2 text-ink-300" />
+                          )}
+                        </div>
+                      </div>
+                      <ul role="listbox" aria-label="Categories" className="max-h-64 overflow-y-auto p-1.5">
+                        {selectedOutsideFilter && (
+                          <li role="option" aria-selected="true">
+                            <button
+                              type="button"
+                              onClick={() => setCatOpen(false)}
+                              className="flex w-full items-center gap-2 rounded-lg bg-brand-50 px-2.5 py-2 text-left text-sm"
+                            >
+                              <span className="min-w-0 flex-1 truncate font-semibold text-brand-800">{category.label}</span>
+                              <span className="shrink-0 rounded-full bg-brand-600 px-1.5 py-px text-[10px] font-bold uppercase text-white">Selected</span>
+                            </button>
+                          </li>
+                        )}
+                        {catGroups.map((g) => {
+                          const items = g.items.filter((c) => filteredCats.some((v) => v.id === c.id))
+                          if (items.length === 0) return null
+                          return (
+                            <li key={g.name} role="presentation">
+                              <p aria-hidden="true" className="px-2.5 pt-2 pb-1 text-[11px] font-bold uppercase tracking-wide text-ink-400">{g.name}</p>
+                              <ul role="group" aria-label={g.name}>
+                                {items.map((c) => (
+                                  <li key={c.id} role="option" aria-selected={c.id === categoryId}>
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setCategoryId(c.id)
+                                        setCatQuery("")
+                                        setCatOpen(false)
+                                      }}
+                                      className={
+                                        "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-sm transition-colors " +
+                                        (c.id === categoryId ? "bg-brand-50 font-semibold text-brand-800" : "text-ink-700 hover:bg-ink-50")
+                                      }
+                                    >
+                                      <span className="min-w-0 flex-1 truncate">{c.label}</span>
+                                      {c.id === categoryId && <Check size={14} className="shrink-0 text-brand-600" />}
+                                    </button>
+                                  </li>
+                                ))}
+                              </ul>
+                            </li>
+                          )
+                        })}
+                        {filteredCats.length === 0 && !selectedOutsideFilter && (
+                          <li className="px-3 py-4 text-center text-sm text-ink-400">No categories match — clear the search.</li>
+                        )}
+                      </ul>
                     </div>
-                    <span className="shrink-0 text-sm font-bold text-ink-900 tabular-nums">{money(p.price)}</span>
-                  </div>
-                  <p className="text-xs text-ink-500">
-                    {cat?.label} · {p.weightKg} kg · {p.dims.l}×{p.dims.w}×{p.dims.h} cm
-                  </p>
-                  <div>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setPrice(p.price)
-                        setCategoryId(p.categoryId)
-                        setWeight(p.weightKg)
-                        setDim({ ...p.dims })
-                        setUsedAsin(p.asin)
-                      }}
-                      className={
-                        "inline-flex w-full items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-semibold transition-all " +
-                        (used
-                          ? "bg-success-50 text-success-700 ring-1 ring-success-200"
-                          : "bg-brand-600 !text-white shadow-sm hover:bg-brand-700 hover:shadow")
-                      }
-                    >
-                      {used ? (
-                        <><Check size={14} strokeWidth={3} /> In calculator</>
-                      ) : (
-                        <>Use in calculator <ArrowRight size={14} /></>
-                      )}
-                    </button>
-                  </div>
+                  )}
                 </div>
-              )
-            })}
-          </div>
+                <p className="mt-1 text-xs text-ink-400">Referral fee at this price: <span className="font-bold text-brand-700 tabular-nums">{refPct}%</span></p>
+              </div>
+              <div>
+                <div className="mb-1 flex h-6 items-end justify-between gap-2">
+                  <label htmlFor="rc-weight" className="text-xs font-semibold uppercase tracking-wide text-ink-500">Unit weight</label>
+                  <select
+                    value={weightUnit}
+                    onChange={(e) => setWeightUnit(e.target.value as "kg" | "g" | "lb")}
+                    aria-label="Weight unit"
+                    className="rounded-md border border-ink-200 bg-white px-1.5 py-0.5 text-xs font-semibold text-ink-600 outline-none focus:border-brand-400"
+                  >
+                    <option value="kg">kg</option>
+                    <option value="g">g</option>
+                    <option value="lb">lb</option>
+                  </select>
+                </div>
+                <input id="rc-weight" type="number" min={0} step={weightUnit === "g" ? 10 : 0.1} value={dispWeight || ""} placeholder="0" onChange={(e) => setDispWeight(Number(e.target.value))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">Billed per 500 g · zone scales the rate</p>
+              </div>
+              <div>
+                <label htmlFor="rc-zone" className={labelCls}>Shipment zone</label>
+                <div className="relative">
+                  <select id="rc-zone" value={zone} onChange={(e) => setZone(e.target.value as Zone)} className={inputCls + " w-full appearance-none pr-9"}>
+                    {ZONES.map((z) => (
+                      <option key={z.id} value={z.id}>{z.label}</option>
+                    ))}
+                  </select>
+                  <span aria-hidden="true" className="pointer-events-none absolute top-1/2 right-3 grid -translate-y-1/2 place-items-center text-ink-400">
+                    <ChevronDown size={16} />
+                  </span>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-400">Your costs — drive profit</legend>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+              <div>
+                <label htmlFor="rc-cost" className={labelCls}>Product cost (₹)</label>
+                <input id="rc-cost" type="number" min={0} step={1} value={cost || ""} placeholder="0" onChange={(e) => setCost(Math.max(0, Number(e.target.value)))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">Taken after settlement for profit &amp; margin</p>
+              </div>
+              <div>
+                <label htmlFor="rc-units" className={labelCls}>Units / 30 days</label>
+                <input id="rc-units" type="number" min={0} step={1} value={units || ""} placeholder="0" onChange={(e) => setUnits(Math.max(0, Number(e.target.value)))} className={inputCls} />
+              </div>
+              <div>
+                <label htmlFor="rc-ship" className={labelCls}>Buyer shipping charge (₹)</label>
+                <input id="rc-ship" type="number" min={0} step={1} value={shipping || ""} placeholder="0" onChange={(e) => setShipping(Math.max(0, Number(e.target.value)))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">Self-ship only · adds to sales price</p>
+              </div>
+              <div>
+                <label htmlFor="rc-selfcost" className={labelCls}>Your courier cost (₹)</label>
+                <input id="rc-selfcost" type="number" min={0} step={1} value={selfShipCost || ""} placeholder="0" onChange={(e) => setSelfShipCost(Math.max(0, Number(e.target.value)))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">Self-ship only · your delivery cost</p>
+              </div>
+              <div>
+                <label htmlFor="rc-other" className={labelCls}>Other fees &amp; promos (₹)</label>
+                <input id="rc-other" type="number" min={0} step={1} value={otherCosts || ""} placeholder="0" onChange={(e) => setOtherCosts(Math.max(0, Number(e.target.value)))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">Deals, promos, extras you pay</p>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend className="mb-2 text-xs font-bold uppercase tracking-wide text-ink-400">Package &amp; seller · optional</legend>
+            <div className="grid items-end gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              <div className="sm:col-span-2">
+                <div className="mb-1 flex h-6 items-end justify-between gap-2">
+                  <label className="text-xs font-semibold uppercase tracking-wide text-ink-500">Dimensions — L × W × H</label>
+                  <select
+                    value={dimUnit}
+                    onChange={(e) => setDimUnit(e.target.value as "cm" | "in")}
+                    aria-label="Dimension unit"
+                    className="rounded-md border border-ink-200 bg-white px-1.5 py-0.5 text-xs font-semibold text-ink-600 outline-none focus:border-brand-400"
+                  >
+                    <option value="cm">cm</option>
+                    <option value="in">in</option>
+                  </select>
+                </div>
+                <div className="flex gap-2">
+                  {(["l", "w", "h"] as const).map((k) => (
+                    <input
+                      key={k}
+                      type="number"
+                      min={0}
+                      step={dimUnit === "in" ? 0.1 : 1}
+                      value={dispDim(k) || ""}
+                      placeholder={k.toUpperCase()}
+                      onChange={(e) => setDispDim(k, Number(e.target.value))}
+                      className={inputCls}
+                      aria-label={`Package ${k} in ${dimUnit}`}
+                    />
+                  ))}
+                </div>
+                <p className="mt-1 text-xs text-ink-400">Drives volumetric weight, size tier, pick &amp; pack and storage</p>
+              </div>
+              <div>
+                <label htmlFor="rc-step" className={labelCls}>STEP level</label>
+                <select id="rc-step" value={step} onChange={(e) => setStep(e.target.value as StepLevel)} className={inputCls}>
+                  {STEP_LEVELS.map((s) => (
+                    <option key={s.id} value={s.id}>{s.label}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-xs text-ink-400">Sets weight-handling rates</p>
+              </div>
+              <div>
+                <label htmlFor="rc-inventory" className={labelCls}>Avg inventory units</label>
+                <input id="rc-inventory" type="number" min={0} step={1} value={avgInventory || ""} placeholder="1" onChange={(e) => setAvgInventory(Math.max(0, Number(e.target.value)))} className={inputCls} />
+                <p className="mt-1 text-xs text-ink-400">For storage per unit sold</p>
+              </div>
+            </div>
+            <label className="mt-3 flex items-center gap-2 text-sm font-medium text-ink-600">
+              <input type="checkbox" checked={includeGst} onChange={(e) => setIncludeGst(e.target.checked)} className="size-4 accent-brand-600" />
+              Apply 18% GST on fees
+            </label>
+            <div className="mt-3 rounded-xl border border-ink-200 bg-ink-50/60 px-4 py-3">
+              <p className="text-xs font-bold uppercase tracking-wide text-ink-400">How Amazon reads this package</p>
+              <dl className="mt-2 grid gap-x-6 gap-y-1.5 text-sm sm:grid-cols-2 lg:grid-cols-4">
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-ink-500">Volumetric</dt>
+                  <dd className="font-semibold text-ink-900 tabular-nums">{pkgVolumetric > 0 ? `${pkgVolumetric.toFixed(2)} kg` : "—"}</dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-ink-500">Chargeable</dt>
+                  <dd className="font-semibold text-ink-900 tabular-nums">{pkgChargeable.toFixed(2)} kg · {pkgSlabs} slabs</dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-ink-500">Size tier</dt>
+                  <dd className="font-semibold text-ink-900" title={pkgTier.reasons.join("; ") || "Standard size"}>
+                    {pkgTier.tier === "heavy-bulky" ? "Heavy & bulky" : "Standard"}
+                  </dd>
+                </div>
+                <div className="flex items-baseline justify-between gap-2">
+                  <dt className="text-ink-500">FC pick &amp; pack</dt>
+                  <dd className="font-semibold text-ink-900 tabular-nums">₹{pkgPick.fee}</dd>
+                </div>
+              </dl>
+              <p className="mt-2 text-xs text-ink-400">Chargeable = higher of actual and volumetric (L×W×H/5000), minimum 500 g, billed per 500 g.</p>
+            </div>
+          </fieldset>
         </div>
-        )}
-
-        {tab === "bulk" && (
-        <div className="p-5">
-          <div className="mb-4 flex items-start gap-2 rounded-xl border border-amber-200/70 bg-amber-50/60 px-3.5 py-2.5 text-[13px] leading-relaxed text-amber-800">
-            <Layers size={14} className="mt-0.5 shrink-0" />
-            <span><strong className="font-semibold">Bulk preview.</strong> Edit rows inline to compare several products at once — file upload and full bulk reports need SP-API.</span>
-          </div>
-          <div className="overflow-x-auto rounded-xl border border-ink-200">
-            <table className="w-full min-w-[680px] border-collapse text-left text-sm">
-              <thead>
-                <tr className="border-b border-ink-200 bg-ink-50/70 text-[11px] font-bold uppercase tracking-wide text-ink-500">
-                  <th scope="col" className="px-3 py-2.5">Product</th>
-                  <th scope="col" className="px-3 py-2.5">Category</th>
-                  <th scope="col" className="px-3 py-2.5">Price (₹)</th>
-                  <th scope="col" className="px-3 py-2.5">Channel</th>
-                  <th scope="col" className="px-3 py-2.5 text-right">Net proceeds</th>
-                  <th scope="col" className="px-3 py-2.5"><span className="sr-only">Remove</span></th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-ink-100">
-                {bulkRows.map((row) => {
-                  const cat = CATEGORIES.find((c) => c.id === row.categoryId) ?? CATEGORIES[0]
-                  const est = estimateChannel(
-                    { sellingPrice: row.price, category: cat, weightKg: weight, zone, productCost: 0, unitsPerMonth: 1, shippingCharge: 0, selfShipCost, dimensions: dim, includeGst },
-                    row.channel,
-                  )
-                  const setRow = (patch: Partial<typeof row>) =>
-                    setBulkRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, ...patch } : r)))
-                  return (
-                    <tr key={row.id}>
-                      <td className="px-3 py-2">
-                        <input
-                          type="text"
-                          value={row.name}
-                          onChange={(e) => setRow({ name: e.target.value })}
-                          aria-label="Bulk product name"
-                          className="w-full min-w-[10rem] rounded-lg border border-transparent px-2 py-1.5 font-medium text-ink-700 outline-none transition-colors hover:border-ink-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <select
-                          value={row.categoryId}
-                          onChange={(e) => setRow({ categoryId: e.target.value })}
-                          aria-label="Bulk product category"
-                          className="rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-ink-600 outline-none transition-colors hover:border-ink-200 focus:border-brand-400"
-                        >
-                          {CATEGORIES.map((c) => (
-                            <option key={c.id} value={c.id}>{c.label}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-3 py-2">
-                        <input
-                          type="number"
-                          min={0}
-                          value={row.price}
-                          onChange={(e) => setRow({ price: Math.max(0, Number(e.target.value)) })}
-                          aria-label="Bulk product price"
-                          className="w-24 rounded-lg border border-transparent px-2 py-1.5 text-right font-semibold text-ink-700 tabular-nums outline-none transition-colors hover:border-ink-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-                        />
-                      </td>
-                      <td className="px-3 py-2">
-                        <select
-                          value={row.channel}
-                          onChange={(e) => setRow({ channel: e.target.value as ChannelId })}
-                          aria-label="Bulk fulfilment channel"
-                          className="rounded-lg border border-transparent bg-transparent px-2 py-1.5 text-ink-600 outline-none transition-colors hover:border-ink-200 focus:border-brand-400"
-                        >
-                          {OPTIONS.map((o) => (
-                            <option key={o.id} value={o.id}>{o.short}</option>
-                          ))}
-                        </select>
-                      </td>
-                      <td className="px-3 py-2 text-right font-bold text-brand-700 tabular-nums">{money(est.netProceeds)}</td>
-                      <td className="px-3 py-2 text-right">
-                        <button
-                          type="button"
-                          onClick={() => setBulkRows((prev) => prev.filter((r) => r.id !== row.id))}
-                          aria-label={`Remove ${row.name}`}
-                          className="grid size-6 place-items-center rounded-lg text-ink-400 transition-colors hover:bg-danger-50 hover:text-danger-600"
-                        >
-                          <X size={13} />
-                        </button>
-                      </td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-              <tfoot>
-                <tr className="border-t border-ink-200 bg-brand-50/60 text-sm font-bold">
-                  <td colSpan={4} className="px-3 py-2.5 text-ink-700">Total net proceeds</td>
-                  <td className="px-3 py-2.5 text-right text-brand-800 tabular-nums">
-                    {money(bulkRows.reduce((sum, row) => {
-                      const cat = CATEGORIES.find((c) => c.id === row.categoryId) ?? CATEGORIES[0]
-                      return sum + estimateChannel(
-                        { sellingPrice: row.price, category: cat, weightKg: weight, zone, productCost: 0, unitsPerMonth: 1, shippingCharge: 0, selfShipCost, dimensions: dim, includeGst },
-                        row.channel,
-                      ).netProceeds
-                    }, 0))}
-                  </td>
-                  <td />
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-          {bulkRows.length < 5 && (
-            <button
-              type="button"
-              onClick={() => setBulkRows((prev) => [...prev, { id: Math.max(0, ...prev.map((r) => r.id)) + 1, name: "New product", categoryId: "mobile-phones", price: 999, channel: "fc" as ChannelId }])}
-              className="mt-3 inline-flex items-center gap-1.5 rounded-lg border border-ink-200 bg-white px-3.5 py-2 text-sm font-semibold text-ink-700 transition-colors hover:border-brand-300 hover:text-brand-700"
-            >
-              <Plus size={14} /> Add product
-            </button>
-          )}
-        </div>
-        )}
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
@@ -603,8 +736,8 @@ export default function RevenueCalculator() {
           Modelled from published examples
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="inline-flex items-center rounded-full border border-danger-200/70 bg-danger-50/60 px-1.5 py-[2px] text-[10px] font-semibold whitespace-nowrap text-danger-600">SP-API</span>
-          Needs your Seller Central account
+          <span className="inline-flex items-center rounded-full border border-ink-200 bg-ink-50 px-1.5 py-[2px] text-[10px] font-semibold whitespace-nowrap text-ink-600">You</span>
+          Numbers you entered yourself
         </span>
         <span className="inline-flex items-center gap-1.5">
           <TrendingDown size={12} />

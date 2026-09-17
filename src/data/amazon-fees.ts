@@ -1,16 +1,47 @@
+import {
+  RATE_CARD_CATEGORIES,
+  RATE_CARD_EFFECTIVE,
+  RATE_CARD_SOURCE,
+  RATE_CARD_VERSION,
+} from "./amazon-in-rate-card"
+
 export const AMAZON_IN_SOURCES = {
-  referral: "https://sell.amazon.in/fees-and-pricing/fee-schedule",
-  feeSchedule: "https://sell.amazon.in/fees-and-pricing/fee-schedule",
+  referral: RATE_CARD_SOURCE,
+  feeSchedule: RATE_CARD_SOURCE,
   zones: "https://sell.amazon.in/fees-and-pricing",
-  gst: "https://sell.amazon.in/fees-and-pricing/fee-schedule",
+  gst: RATE_CARD_SOURCE,
   formula: "https://sell.amazon.in/fees-and-pricing",
-  referedDate: "Effective new referral fee rate card",
+  referedDate: RATE_CARD_EFFECTIVE,
   closingDate: "Closing fees effective September 7, 2026",
 }
 
+export const FEE_DATA_VERSION = RATE_CARD_VERSION
+
 export const GST_RATE = 0.18
 export const STORAGE_PER_CUFT_MONTH = 50
-export const PICK_PACK_FEE = 17
+export const VOLUMETRIC_DIVISOR = 5000
+export const MIN_CHARGEABLE_KG = 0.5
+export const HEAVY_BULKY_KG = 22.5
+export const HEAVY_BULKY_MAX_CM = 183
+export const HEAVY_BULKY_GIRTH_CM = 300
+
+export const KG_PER_WEIGHT_UNIT: Record<"kg" | "g" | "lb", number> = {
+  kg: 1,
+  g: 0.001,
+  lb: 0.45359237,
+}
+
+export const CM_PER_LENGTH_UNIT: Record<"cm" | "in", number> = {
+  cm: 1,
+  in: 2.54,
+}
+
+export const HEAVY_BULKY_CATEGORY_IDS = new Set([
+  "television",
+  "refrigerators",
+  "chimneys",
+  "large-furniture-sofa-beds-wardrobes-recliners-living-and-dining-room-chairs-and-tables",
+])
 
 export type Zone = "local" | "regional" | "national"
 export type ChannelId = "fc" | "easy-ship" | "self-ship" | "seller-flex"
@@ -19,7 +50,8 @@ export interface Provenance {
   /** 'verified' = value taken literally from a public Amazon.in datum */
   /** 'estimate' = modelled from Amazon's published worked examples / structure */
   /** 'sp-api' = only derivable at order level via SP-API */
-  kind: "verified" | "estimate" | "sp-api"
+  /** 'input' = a value you entered yourself */
+  kind: "verified" | "estimate" | "sp-api" | "input"
   note: string
 }
 
@@ -29,89 +61,38 @@ export interface PriceStep {
   pct: number
 }
 
+export type FcLowGroup = "#" | "A" | "B"
+export type FcMidGroup = "##" | "C" | "D"
+
 export interface FeeCategory {
   id: string
   label: string
-  /** fulfilment-centre closing-fee column letter */
-  fc: "#" | "A" | "B"
+  group: string
+  fcLow: FcLowGroup | null
+  fcMid: FcMidGroup | null
+  fcStar: boolean
   referral: PriceStep[]
 }
 
-export const CATEGORIES: FeeCategory[] = [
-  { id: "mobile-phones", label: "Mobile Phones", fc: "A", referral: [{ min: 0, pct: 5 }] },
-  { id: "laptops", label: "Laptops", fc: "A", referral: [{ min: 0, pct: 6 }] },
-  { id: "desktops", label: "Desktops", fc: "A", referral: [{ min: 0, pct: 8 }] },
-  { id: "television", label: "Television", fc: "#", referral: [{ min: 0, pct: 6 }] },
-  { id: "tablets", label: "Tablets", fc: "A", referral: [{ min: 0, pct: 6 }, { min: 12000, pct: 10 }] },
-  { id: "headphones", label: "Headphones & Earphones", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 18 }] },
-  { id: "smart-watches", label: "Smart Watches", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 300, pct: 5 }, { min: 1000, pct: 17 }] },
-  { id: "power-banks", label: "Power Banks & Chargers", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 20.5 }] },
-  { id: "cases-covers", label: "Cases, Covers & Screen Guards", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 25 }] },
-  { id: "cables-adapters", label: "Cables & Adapters", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 20 }] },
-  { id: "speakers", label: "Speakers", fc: "#", referral: [{ min: 0, pct: 11 }, { min: 500, pct: 11.5 }, { min: 1000, pct: 14 }] },
-  { id: "keyboards-mice", label: "Keyboards & Mouse", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 300, pct: 5 }, { min: 1000, pct: 17 }] },
-  { id: "hard-disks", label: "Hard Disks", fc: "#", referral: [{ min: 0, pct: 9.5 }, { min: 1000, pct: 12.5 }] },
-  { id: "memory-cards", label: "Memory Cards", fc: "#", referral: [{ min: 0, pct: 16 }, { min: 500, pct: 5 }, { min: 1000, pct: 16 }] },
-  { id: "monitors", label: "Monitors", fc: "A", referral: [{ min: 0, pct: 6.5 }, { min: 1000, pct: 8 }] },
-  { id: "cameras", label: "Camera & Camcorder", fc: "#", referral: [{ min: 0, pct: 5 }, { min: 1000, pct: 7 }, { min: 19000, pct: 9 }, { min: 49000, pct: 7 }] },
-  { id: "electronic-devices", label: "Electronic Devices (other)", fc: "#", referral: [{ min: 0, pct: 9 }, { min: 1000, pct: 11 }] },
-  { id: "books", label: "Books", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 250, pct: 2 }, { min: 500, pct: 4 }, { min: 1000, pct: 13.5 }] },
-  { id: "movies", label: "Movies", fc: "#", referral: [{ min: 0, pct: 6.5 }, { min: 500, pct: 0 }, { min: 1000, pct: 6.5 }] },
-  { id: "music", label: "Music", fc: "#", referral: [{ min: 0, pct: 6.5 }, { min: 500, pct: 0 }, { min: 1000, pct: 6.5 }] },
-  { id: "videogame-consoles", label: "Video Game Consoles", fc: "#", referral: [{ min: 0, pct: 7 }, { min: 500, pct: 5 }, { min: 1000, pct: 9 }] },
-  { id: "videogame-accessories", label: "Video Game Accessories", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 300, pct: 5 }, { min: 1000, pct: 13.5 }] },
-  { id: "shoes", label: "Shoes", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 8 }] },
-  { id: "kids-shoes", label: "Kids Shoes", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 16 }] },
-  { id: "flip-flops", label: "Flip Flops & Slippers", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 15 }] },
-  { id: "apparel-tshirts", label: "Apparel — Men's T-shirts", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 23 }] },
-  { id: "apparel-shirts", label: "Apparel — Shirts", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 21 }] },
-  { id: "apparel-ethnic", label: "Apparel — Ethnic Wear", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 16.5 }] },
-  { id: "apparel-sarees", label: "Apparel — Sarees & Dress Materials", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 15 }] },
-  { id: "apparel-pants", label: "Apparel — Pants & Jeans", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 19 }] },
-  { id: "apparel-shorts", label: "Apparel — Shorts", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 24 }] },
-  { id: "apparel-baby", label: "Apparel — Baby", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 7 }] },
-  { id: "apparel-jackets", label: "Apparel — Sweatshirts & Jackets", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 18 }] },
-  { id: "apparel-innerwear", label: "Apparel — Innerwear", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 18.5 }] },
-  { id: "watches", label: "Watches", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 15 }] },
-  { id: "eyewear", label: "Eyewear", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 18.5 }] },
-  { id: "handbags", label: "Handbags", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 12 }] },
-  { id: "backpacks", label: "Backpacks", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 14.5 }] },
-  { id: "wallets", label: "Wallets", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 14 }] },
-  { id: "fashion-jewellery", label: "Fashion Jewellery", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 22.5 }] },
-  { id: "luggage", label: "Luggage — Suitcases & Trolleys", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 5.5 }] },
-  { id: "baby-diapers", label: "Baby — Diapers", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 9.5 }] },
-  { id: "baby-hardlines", label: "Baby Hardlines", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 6.5 }] },
-  { id: "toys-drones", label: "Toys — Drones", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 30 }] },
-  { id: "toys-games", label: "Toys — Games & Puzzles", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 12.5 }] },
-  { id: "toys-plush", label: "Toys — Plush & Action Figures", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 10.5 }] },
-  { id: "toys-outdoor", label: "Toys — Outdoor & Sports", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 10.5 }] },
-  { id: "grocery-herbs", label: "Grocery — Herbs & Spices", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 8 }] },
-  { id: "grocery-dryfruits", label: "Grocery — Dried Fruits & Nuts", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 9 }] },
-  { id: "grocery-beverages", label: "Grocery — Beverages", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 10 }] },
-  { id: "grocery-oils", label: "Grocery — Oils", fc: "B", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 5 }] },
-  { id: "beauty-makeup", label: "Beauty — Makeup", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 7 }] },
-  { id: "beauty-haircare", label: "Beauty — Haircare & Bath", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 8 }] },
-  { id: "beauty-fragrance", label: "Beauty — Fragrance", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 500, pct: 14 }, { min: 1000, pct: 10 }] },
-  { id: "personal-care-grooming", label: "Personal Care — Grooming & Styling", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 9.5 }] },
-  { id: "face-wash", label: "Personal Care — Face Wash", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 500, pct: 9 }, { min: 1000, pct: 9.5 }] },
-  { id: "office-supplies", label: "Office Products — Office Supplies", fc: "A", referral: [{ min: 0, pct: 0 }, { min: 1000, pct: 13 }] },
-  { id: "pet-food", label: "Pet Food", fc: "#", referral: [{ min: 0, pct: 0 }, { min: 300, pct: 6.5 }, { min: 1000, pct: 9.5 }] },
-]
+export const CATEGORIES: FeeCategory[] = RATE_CARD_CATEGORIES.map((c) => ({
+  id: c.id,
+  label: c.label,
+  group: c.group,
+  fcLow: c.fcLow,
+  fcMid: c.fcMid,
+  fcStar: c.fcStar,
+  referral: c.referral.map((s) => ({ min: s.min, pct: s.pct })),
+}))
 
 export function referralFor(category: FeeCategory, price: number): { pct: number; prov: Provenance } {
-  const step = [...category.referral].reverse().find((s) => price >= s.min) ?? category.referral[0]
+  const step = [...category.referral].reverse().find((s) => price > s.min) ?? category.referral[0]
   return {
     pct: step.pct,
     prov: {
       kind: "verified",
-      note: `Amazon.in ${AMAZON_IN_SOURCES.referedDate} referral rate card — ${step.pct}% for item price above ₹${step.min} in "${category.label}".`,
+      note: `Amazon.in referral rate card (${RATE_CARD_EFFECTIVE}) — ${step.pct}% for item price above ₹${step.min} in "${category.label}".`,
     },
   }
-}
-
-export interface ClosingChart {
-  column: string
-  bands: Array<{ max: number; fee: number; prov: Provenance }>
 }
 
 const VERIFIED_CLOSING_NOTES: Record<string, string> = {
@@ -121,98 +102,342 @@ const VERIFIED_CLOSING_NOTES: Record<string, string> = {
   "Ahi": "Fulfilment Centre closing fee, Group A, item price ₹301–500 — ₹19.",
   "Blo": "Fulfilment Centre closing fee, Group B, item price ₹0–300 — ₹14.",
   "Bhi": "Fulfilment Centre closing fee, Group B, item price ₹301–500 — ₹15.",
-  esLow: "Easy Ship closing fee, item ≤ ₹300, after the published ₹5 reduction — ₹2.",
-  esMid: "Easy Ship closing fee, item ₹301–500 — ₹23.",
-  sfLow: "Seller Flex closing fee example for a ₹299 item — ₹7.",
-  sfMid: "Seller Flex closing fee example for a ₹499 item — ₹13.",
-  ssLow: "Self Ship closing fee, items under ₹300 — ₹20 (reduced from ₹45).",
-  ssMid: "Self Ship closing fee, items ₹300–500 — ₹26 (reduced from ₹35).",
+  "##hi": "Fulfilment Centre closing fee, Group ##, item price ₹301–500 — ₹23.",
+  Chi: "Fulfilment Centre closing fee, Group C, item price ₹301–500 — ₹19.",
+  Dhi: "Fulfilment Centre closing fee, Group D, item price ₹301–500 — ₹15.",
+  star: "Fulfilment Centre closing fee — ₹75 for items above ₹1,000 in select categories (Chimneys, Refrigerators, Major Appliances – Other, Home Entertainment – Other).",
+  unlisted:
+    "Category not listed in Amazon's published closing-fee groups; using the Standard track as an estimate.",
+  esLow: "Easy Ship closing fee, items ₹0–300 — ₹2 (all categories).",
+  esMid: "Easy Ship closing fee, items ₹301–500 — ₹23 (all categories).",
+  esHigh: "Easy Ship closing fee, items ₹501–1,000 — ₹48 (all categories).",
+  esTop: "Easy Ship closing fee, items above ₹1,000 — ₹79 (all categories).",
+  sfLow: "Seller Flex closing fee, items ₹0–300 — ₹7 (all categories).",
+  sfMid: "Seller Flex closing fee, items ₹301–500 — ₹13 (all categories).",
+  sfHigh: "Seller Flex closing fee, items ₹501–1,000 — ₹38 (all categories).",
+  sfTop: "Seller Flex closing fee, items above ₹1,000 — ₹69 (all categories).",
+  ssLow: "Self Ship closing fee, items ₹0–300 — ₹20 (all categories).",
+  ssMid: "Self Ship closing fee, items ₹301–500 — ₹26 (all categories).",
+  ssHigh: "Self Ship closing fee, items ₹501–1,000 — ₹51 (all categories).",
+  ssTop: "Self Ship closing fee, items above ₹1,000 — ₹101 (all categories).",
+  fcMid1000: "Fulfilment Centre closing fee, items ₹501–1,000 — ₹30 flat, all categories.",
+  fcTop: "Fulfilment Centre closing fee, items above ₹1,000 — ₹55 (₹75 for select categories).",
 }
 
-const EST_NOTE =
-  "Closing fee grids publish as images on Amazon's rate card; per-order values above the verified bands are modelled. Exact fees (incl. account fee overrides) require SP-API."
-
-/** FC per column: verified bands then estimate continuation above ₹500. */
-export const FC_CLOSING: Record<string, ClosingChart> = {
-  "#": {
-    column: "#",
-    bands: [
-      { max: 300, fee: 27, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES["#lo"] } },
-      { max: 500, fee: 23, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES["#hi"] } },
-      { max: 1000, fee: 26, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 2000, fee: 35, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 5000, fee: 45, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 10000, fee: 60, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: Infinity, fee: 75, prov: { kind: "estimate", note: EST_NOTE } },
-    ],
-  },
-  A: {
-    column: "A",
-    bands: [
-      { max: 300, fee: 21, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.Alo } },
-      { max: 500, fee: 19, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.Ahi } },
-      { max: 1000, fee: 22, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 2000, fee: 30, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 5000, fee: 40, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 10000, fee: 55, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: Infinity, fee: 70, prov: { kind: "estimate", note: EST_NOTE } },
-    ],
-  },
-  B: {
-    column: "B",
-    bands: [
-      { max: 300, fee: 14, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.Blo } },
-      { max: 500, fee: 15, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.Bhi } },
-      { max: 1000, fee: 18, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 2000, fee: 25, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 5000, fee: 32, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: 10000, fee: 40, prov: { kind: "estimate", note: EST_NOTE } },
-      { max: Infinity, fee: 50, prov: { kind: "estimate", note: EST_NOTE } },
-    ],
-  },
+const FC_LOW_FEES: Record<FcLowGroup, { fee: number; note: string }> = {
+  "#": { fee: 27, note: VERIFIED_CLOSING_NOTES["#lo"] },
+  A: { fee: 21, note: VERIFIED_CLOSING_NOTES.Alo },
+  B: { fee: 14, note: VERIFIED_CLOSING_NOTES.Blo },
 }
+
+const FC_MID_FEES: Record<FcMidGroup, { fee: number; note: string }> = {
+  "##": { fee: 23, note: VERIFIED_CLOSING_NOTES["##hi"] },
+  C: { fee: 19, note: VERIFIED_CLOSING_NOTES.Chi },
+  D: { fee: 15, note: VERIFIED_CLOSING_NOTES.Dhi },
+}
+
+interface ClosingBand {
+  max: number
+  fee: number
+  noteKey: keyof typeof VERIFIED_CLOSING_NOTES
+}
+
+function closingFromBands(bands: ClosingBand[], price: number): { fee: number; prov: Provenance } {
+  const row = bands.find((b) => price <= b.max) ?? bands[bands.length - 1]
+  return { fee: row.fee, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES[row.noteKey] } }
+}
+
+const ES_CLOSING: ClosingBand[] = [
+  { max: 300, fee: 2, noteKey: "esLow" },
+  { max: 500, fee: 23, noteKey: "esMid" },
+  { max: 1000, fee: 48, noteKey: "esHigh" },
+  { max: Infinity, fee: 79, noteKey: "esTop" },
+]
+
+const SS_CLOSING: ClosingBand[] = [
+  { max: 300, fee: 20, noteKey: "ssLow" },
+  { max: 500, fee: 26, noteKey: "ssMid" },
+  { max: 1000, fee: 51, noteKey: "ssHigh" },
+  { max: Infinity, fee: 101, noteKey: "ssTop" },
+]
+
+const SF_CLOSING: ClosingBand[] = [
+  { max: 300, fee: 7, noteKey: "sfLow" },
+  { max: 500, fee: 13, noteKey: "sfMid" },
+  { max: 1000, fee: 38, noteKey: "sfHigh" },
+  { max: Infinity, fee: 69, noteKey: "sfTop" },
+]
 
 export function closingFor(category: FeeCategory, channel: ChannelId, price: number): { fee: number; prov: Provenance } {
-  if (channel === "self-ship") {
-    const fee = price <= 300 ? 20 : 26
-    return { fee, prov: { kind: "verified", note: price <= 300 ? VERIFIED_CLOSING_NOTES.ssLow : VERIFIED_CLOSING_NOTES.ssMid } }
+  if (channel === "self-ship") return closingFromBands(SS_CLOSING, price)
+  if (channel === "easy-ship") return closingFromBands(ES_CLOSING, price)
+  if (channel === "seller-flex") return closingFromBands(SF_CLOSING, price)
+  if (price <= 300) {
+    if (category.fcLow) {
+      const row = FC_LOW_FEES[category.fcLow]
+      return { fee: row.fee, prov: { kind: "verified", note: row.note } }
+    }
+    return { fee: 27, prov: { kind: "estimate", note: VERIFIED_CLOSING_NOTES.unlisted } }
   }
-  if (channel === "easy-ship") {
-    if (price <= 300) return { fee: 2, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.esLow } }
-    if (price <= 500) return { fee: 23, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.esMid } }
-    return { fee: 25 + Math.ceil((price - 500) / 500) * 2, prov: { kind: "estimate", note: EST_NOTE } }
+  if (price <= 500) {
+    if (category.fcMid) {
+      const row = FC_MID_FEES[category.fcMid]
+      return { fee: row.fee, prov: { kind: "verified", note: row.note } }
+    }
+    return { fee: 23, prov: { kind: "estimate", note: VERIFIED_CLOSING_NOTES.unlisted } }
   }
-  if (channel === "seller-flex") {
-    const fee = price <= 300 ? 7 : 13
-    return { fee, prov: { kind: "verified", note: price <= 300 ? VERIFIED_CLOSING_NOTES.sfLow : VERIFIED_CLOSING_NOTES.sfMid } }
+  if (price <= 1000) {
+    return { fee: 30, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.fcMid1000 } }
   }
-  const chart = FC_CLOSING[category.fc]
-  const row = chart.bands.find((b) => price <= b.max) ?? chart.bands[chart.bands.length - 1]
-  return { fee: row.fee, prov: row.prov }
+  if (category.fcStar) {
+    return { fee: 75, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.star } }
+  }
+  return { fee: 55, prov: { kind: "verified", note: VERIFIED_CLOSING_NOTES.fcTop } }
 }
 
-const WHF_ZONE_FACTOR: Record<Zone, number> = { local: 0.882, regional: 1, national: 1.176 }
+export type StepLevel = "premium" | "standard" | "basic"
 
-export function weightHandlingFor(channel: ChannelId, weightKg: number, zone: Zone): { fee: number; prov: Provenance } {
+export const STEP_LEVELS: Array<{ id: StepLevel; label: string }> = [
+  { id: "premium", label: "Premium / Advanced" },
+  { id: "standard", label: "Standard" },
+  { id: "basic", label: "Basic" },
+]
+
+interface WhfBands {
+  first500: number
+  to1kg: number
+  to2kg: number
+  after2kg: number
+  after5kg: number
+}
+
+const WHF_FC: Record<StepLevel, { regional: WhfBands; national: WhfBands }> = {
+  premium: {
+    regional: { first500: 37, to1kg: 52, to2kg: 76, after2kg: 24, after5kg: 13 },
+    national: { first500: 63, to1kg: 83, to2kg: 120, after2kg: 34, after5kg: 18 },
+  },
+  standard: {
+    regional: { first500: 39, to1kg: 54, to2kg: 78, after2kg: 24, after5kg: 13 },
+    national: { first500: 65, to1kg: 85, to2kg: 122, after2kg: 34, after5kg: 18 },
+  },
+  basic: {
+    regional: { first500: 42, to1kg: 58, to2kg: 82, after2kg: 24, after5kg: 13 },
+    national: { first500: 69, to1kg: 89, to2kg: 126, after2kg: 34, after5kg: 18 },
+  },
+}
+
+const WHF_FLAT: Record<"easy-ship" | "seller-flex", Record<StepLevel, WhfBands>> = {
+  "easy-ship": {
+    premium: { first500: 53, to1kg: 73, to2kg: 110, after2kg: 34, after5kg: 18 },
+    standard: { first500: 55, to1kg: 75, to2kg: 112, after2kg: 34, after5kg: 18 },
+    basic: { first500: 59, to1kg: 79, to2kg: 116, after2kg: 34, after5kg: 18 },
+  },
+  "seller-flex": {
+    premium: { first500: 49, to1kg: 69, to2kg: 106, after2kg: 34, after5kg: 18 },
+    standard: { first500: 51, to1kg: 71, to2kg: 108, after2kg: 34, after5kg: 18 },
+    basic: { first500: 55, to1kg: 75, to2kg: 112, after2kg: 34, after5kg: 18 },
+  },
+}
+
+interface WhfHeavyBulky {
+  first12: number
+  k12to25: number
+  above25: number
+}
+
+const WHF_HB: Record<"fc" | "seller-flex", Record<StepLevel, Record<Zone, WhfHeavyBulky>>> = {
+  fc: {
+    premium: {
+      local: { first12: 108, k12to25: 6, above25: 5 },
+      regional: { first12: 158, k12to25: 10, above25: 6 },
+      national: { first12: 298, k12to25: 18, above25: 12 },
+    },
+    standard: {
+      local: { first12: 110, k12to25: 6, above25: 5 },
+      regional: { first12: 160, k12to25: 10, above25: 6 },
+      national: { first12: 300, k12to25: 18, above25: 12 },
+    },
+    basic: {
+      local: { first12: 114, k12to25: 6, above25: 5 },
+      regional: { first12: 164, k12to25: 10, above25: 6 },
+      national: { first12: 304, k12to25: 18, above25: 12 },
+    },
+  },
+  "seller-flex": {
+    premium: {
+      local: { first12: 148, k12to25: 8, above25: 5 },
+      regional: { first12: 198, k12to25: 12, above25: 6 },
+      national: { first12: 298, k12to25: 18, above25: 12 },
+    },
+    standard: {
+      local: { first12: 150, k12to25: 8, above25: 5 },
+      regional: { first12: 200, k12to25: 12, above25: 6 },
+      national: { first12: 300, k12to25: 18, above25: 12 },
+    },
+    basic: {
+      local: { first12: 154, k12to25: 8, above25: 5 },
+      regional: { first12: 204, k12to25: 12, above25: 6 },
+      national: { first12: 304, k12to25: 18, above25: 12 },
+    },
+  },
+}
+
+function whfFromBands(bands: WhfBands, weightKg: number): number {
+  if (weightKg <= 0.5) return bands.first500
+  if (weightKg <= 1) return bands.to1kg
+  if (weightKg <= 2) return bands.to2kg
+  let fee = bands.to2kg + Math.min(Math.ceil(weightKg - 2), 3) * bands.after2kg
+  if (weightKg > 5) fee += Math.ceil(weightKg - 5) * bands.after5kg
+  return fee
+}
+
+function whfHeavyBulky(table: WhfHeavyBulky, weightKg: number): number {
+  let fee = table.first12
+  if (weightKg > 12) fee += Math.min(Math.ceil(weightKg - 12), 13) * table.k12to25
+  if (weightKg > 25) fee += Math.ceil(weightKg - 25) * table.above25
+  return fee
+}
+
+export interface DimsCm {
+  l: number
+  w: number
+  h: number
+}
+
+export function volumetricWeightKg(dims: DimsCm): number {
+  if (dims.l <= 0 || dims.w <= 0 || dims.h <= 0) return 0
+  return (dims.l * dims.w * dims.h) / VOLUMETRIC_DIVISOR
+}
+
+export function chargeableWeightKg(actualKg: number, dims?: DimsCm): number {
+  const volumetric = dims ? volumetricWeightKg(dims) : 0
+  return Math.max(0, actualKg, volumetric)
+}
+
+export function chargeableSlabs(weightKg: number): number {
+  return Math.max(1, Math.ceil(Math.max(0, weightKg) * 2))
+}
+
+export function girthCm(dims: DimsCm): number {
+  return dims.l + 2 * (dims.w + dims.h)
+}
+
+export function sizeTier(
+  categoryId: string,
+  actualKg: number,
+  dims?: DimsCm,
+): { tier: "standard" | "heavy-bulky"; reasons: string[] } {
+  const reasons: string[] = []
+  if (HEAVY_BULKY_CATEGORY_IDS.has(categoryId)) reasons.push("heavy & bulky category")
+  if (actualKg > HEAVY_BULKY_KG) reasons.push(`package over ${HEAVY_BULKY_KG} kg`)
+  if (dims && dims.l > 0 && dims.w > 0 && dims.h > 0) {
+    if (Math.max(dims.l, dims.w, dims.h) > HEAVY_BULKY_MAX_CM)
+      reasons.push(`side over ${HEAVY_BULKY_MAX_CM} cm`)
+    if (girthCm(dims) > HEAVY_BULKY_GIRTH_CM) reasons.push(`girth over ${HEAVY_BULKY_GIRTH_CM} cm`)
+  }
+  return reasons.length > 0 ? { tier: "heavy-bulky", reasons } : { tier: "standard", reasons: [] }
+}
+
+export function pickPackFee(
+  channel: ChannelId,
+  chargeableKg: number,
+  tier: "standard" | "heavy-bulky",
+): { fee: number; prov: Provenance } {
+  if (channel !== "fc") {
+    return { fee: 0, prov: { kind: "verified", note: "Pick & pack applies to Fulfilment Centre orders only." } }
+  }
+  if (tier === "heavy-bulky") {
+    return {
+      fee: 26,
+      prov: { kind: "verified", note: "Pick & Pack fee (Fulfilment Centre): ₹26 per heavy & bulky unit sold." },
+    }
+  }
+  if (chargeableKg <= 1) {
+    return {
+      fee: 17,
+      prov: { kind: "verified", note: "Pick & Pack fee (Fulfilment Centre): ₹17 per standard unit up to 1 kg." },
+    }
+  }
+  if (chargeableKg <= 5) {
+    const fee = 17 + 5 * Math.ceil(chargeableKg - 1)
+    return {
+      fee,
+      prov: {
+        kind: "verified",
+        note: `Pick & Pack fee (Fulfilment Centre): ₹17 up to 1 kg + ₹5 per additional kg to 5 kg — ₹${fee} at ${chargeableKg.toFixed(2)} kg chargeable.`,
+      },
+    }
+  }
+  const fee = 37 + 2 * Math.ceil((chargeableKg - 5) / 5)
+  return {
+    fee,
+    prov: {
+      kind: "verified",
+      note: `Pick & Pack fee (Fulfilment Centre): ₹37 to 5 kg + ₹2 per additional 5 kg — ₹${fee} at ${chargeableKg.toFixed(2)} kg chargeable.`,
+    },
+  }
+}
+
+const WHF_NOTE =
+  "Weight handling from Amazon's published rate card (effective March 16, 2026). Billed on chargeable weight: higher of actual and volumetric (L×W×H/5000), minimum 500 g."
+
+export function weightHandlingFor(
+  channel: ChannelId,
+  chargeableKg: number,
+  zone: Zone,
+  step: StepLevel = "standard",
+  tier: "standard" | "heavy-bulky" = "standard",
+): { fee: number; prov: Provenance } {
   if (channel === "self-ship") {
     return { fee: 0, prov: { kind: "verified", note: "Self Ship — no weight handling fee; the seller bears its own shipping cost." } }
   }
-  const factor = WHF_ZONE_FACTOR[zone]
-  let fee: number
-  let note: string
-  if (weightKg <= 0.5) {
-    fee = Math.round((channel === "fc" ? 37 : 55) * factor)
-    note = channel === "fc"
-      ? "FC shipping example: 700 g book, Regional — ₹54 (first 500 g ₹37 + next 500 g ₹17), scaled for this weight/zone."
-      : "Easy Ship shipping example: 350 g — flat ₹55, scaled for zone."
-  } else {
-    const slabs = Math.ceil(weightKg * 2)
-    const first = channel === "fc" ? 37 : 51
-    const per = 17
-    fee = Math.round((first + (slabs - 1) * per) * factor)
-    note = `Weight handling per 500 g — ₹${first} for first 500 g, +₹${per} per additional 500 g, scaled for zone. Basis: 800 g Easy Ship Regional = ₹51 + ₹17 = ₹68.`
+  const stepLabel = STEP_LEVELS.find((s) => s.id === step)?.label ?? "Standard"
+  if (tier === "heavy-bulky" && (channel === "fc" || channel === "seller-flex")) {
+    const table = WHF_HB[channel][step][zone]
+    const fee = whfHeavyBulky(table, chargeableKg)
+    return {
+      fee,
+      prov: {
+        kind: "verified",
+        note: `${channel === "fc" ? "FC" : "Seller Flex"} Heavy & Bulky, ${stepLabel} STEP, ${zone} — ₹${table.first12} first 12 kg, +₹${table.k12to25}/kg to 25 kg, +₹${table.above25}/kg after. ${WHF_NOTE}`,
+      },
+    }
   }
-  return { fee, prov: { kind: "estimate", note } }
+  if (tier === "heavy-bulky") {
+    const bands = WHF_FLAT["easy-ship"][step]
+    return {
+      fee: whfFromBands(bands, chargeableKg),
+      prov: {
+        kind: "estimate",
+        note: `Heavy & bulky Easy Ship rates are unpublished; showing standard Easy Ship bands (${stepLabel} STEP) as an estimate. ${WHF_NOTE}`,
+      },
+    }
+  }
+  if (channel === "fc") {
+    if (zone === "local") {
+      const fee = whfFromBands(WHF_FC[step].regional, chargeableKg)
+      return {
+        fee,
+        prov: {
+          kind: "estimate",
+          note: `Local FC rates for standard sizes are unpublished; showing the Regional ${stepLabel} STEP rate as an estimate. ${WHF_NOTE}`,
+        },
+      }
+    }
+    const fee = whfFromBands(WHF_FC[step][zone], chargeableKg)
+    return {
+      fee,
+      prov: { kind: "verified", note: `FC weight handling, ${stepLabel} STEP, ${zone} — ${chargeableSlabs(chargeableKg)} × 500 g slabs. ${WHF_NOTE}` },
+    }
+  }
+  const fee = whfFromBands(WHF_FLAT[channel][step], chargeableKg)
+  return {
+    fee,
+    prov: {
+      kind: "verified",
+      note: `${channel === "easy-ship" ? "Easy Ship" : "Seller Flex"} weight handling is a flat fee — ${stepLabel} STEP, ${chargeableSlabs(chargeableKg)} × 500 g slabs. ${WHF_NOTE}`,
+    },
+  }
 }
 
 export interface OptionMeta {
@@ -294,6 +519,12 @@ export interface FeeEstimate {
   /** optional packed dimensions, used to estimate FC storage */
   dimensions?: { l: number; w: number; h: number }
   includeGst?: boolean
+  /** seller STEP level (weight-handling rates) */
+  step?: StepLevel
+  /** your own extra costs per order: promotions, deal fees */
+  otherCosts?: number
+  /** average inventory units stored (storage allocation) */
+  avgInventory?: number
 }
 
 export interface FeeLine {
@@ -325,19 +556,23 @@ export interface ChannelEstimate {
   marginPct: number
   estimatedSales30: number
   includeGst: boolean
+  packageRead: PackageRead
+}
+
+export interface PackageRead {
+  volumetricKg: number
+  chargeableKg: number
+  slabs: number
+  tier: "standard" | "heavy-bulky"
+  tierReasons: string[]
+  pickPack: number
+  cubicFeet: number
 }
 
 const r2 = (n: number) => Math.round(n * 100) / 100
 
-const SP_API_LINE = (label: string, note: string): FeeLine => ({
-  id: label.toLowerCase().replace(/[^a-z]+/g, "-"),
-  label,
-  amount: null,
-  prov: { kind: "sp-api", note },
-})
-
 export function estimateChannel(input: FeeEstimate, channel: ChannelId): ChannelEstimate {
-  const { sellingPrice, category, weightKg, zone, productCost, unitsPerMonth, shippingCharge = 0, selfShipCost = 0, dimensions, includeGst = false } = input
+  const { sellingPrice, category, weightKg, zone, productCost, unitsPerMonth, shippingCharge = 0, selfShipCost = 0, dimensions, includeGst = false, step = "standard", otherCosts = 0, avgInventory = 1 } = input
   const meta = OPTIONS.find((o) => o.id === channel) ?? OPTIONS[0]
 
   const isSelf = channel === "self-ship"
@@ -346,7 +581,7 @@ export function estimateChannel(input: FeeEstimate, channel: ChannelId): Channel
 
   const ref = referralFor(category, sellingPrice)
   const referralAmt = r2((sellingPrice * ref.pct) / 100)
-  const close = closingFor(category, channel, sellingPrice)
+  const close = closingFor(category, channel, salesPrice)
 
   const referral: FeeLine = {
     id: "referral",
@@ -360,52 +595,66 @@ export function estimateChannel(input: FeeEstimate, channel: ChannelId): Channel
     id: "variable-closing",
     label: "Variable closing fee",
     amount: 0,
-    prov: { kind: "verified", note: "₹0 for most categories; media categories may carry a variable closing fee — exact value via SP-API." },
+    prov: { kind: "verified", note: "₹0 for most categories on Amazon.in; assumed zero here." },
   }
 
-  const whf = weightHandlingFor(channel, weightKg, zone)
+  const chargeableKg = chargeableWeightKg(weightKg, dimensions)
+  const tier = sizeTier(category.id, weightKg, dimensions)
+  const whf = weightHandlingFor(channel, chargeableKg, zone, step, tier.tier)
+  const pick = pickPackFee(channel, chargeableKg, tier.tier)
   let fulfilment: FeeLine
   if (isSelf) {
     fulfilment = {
       id: "fulfilment",
       label: "Your shipping cost",
       amount: selfShipCost,
-      prov: { kind: "estimate", note: "Your own courier cost — you control this, Amazon does not charge weight handling on Self Ship." },
+      prov: { kind: "input", note: "Your own courier cost — you entered this. Amazon does not charge weight handling on Self Ship." },
     }
   } else {
-    const pick = channel === "fc" ? PICK_PACK_FEE : 0
     fulfilment = {
       id: "fulfilment",
       label: channel === "fc" ? "Fulfilment cost" : "Weight handling",
-      amount: r2(whf.fee + pick),
+      amount: r2(whf.fee + pick.fee),
       prov: whf.prov,
-      hint: pick ? "Weight handling + ₹17 pick & pack" : "Weight handling",
+      hint:
+        channel === "fc"
+          ? `Weight handling (${chargeableSlabs(chargeableKg)} × 500 g) + pick & pack ₹${pick.fee}`
+          : `Weight handling (${chargeableSlabs(chargeableKg)} × 500 g)`,
     }
   }
 
+  const hasDims = dimensions && dimensions.l > 0 && dimensions.w > 0 && dimensions.h > 0
+  const cuft = hasDims ? (dimensions.l * dimensions.w * dimensions.h) / 28316.8 : 0
   let storage: FeeLine
   if (channel === "fc" || channel === "seller-flex") {
-    if (dimensions && dimensions.l > 0 && dimensions.w > 0 && dimensions.h > 0) {
-      const cuft = (dimensions.l * dimensions.w * dimensions.h) / 28316.8
+    if (hasDims) {
+      const perUnit = unitsPerMonth > 0 ? (cuft * STORAGE_PER_CUFT_MONTH * Math.max(0, avgInventory)) / unitsPerMonth : 0
       storage = {
         id: "storage",
-        label: "Storage (monthly)",
-        amount: r2(cuft * STORAGE_PER_CUFT_MONTH),
-        prov: { kind: "estimate", note: `₹${STORAGE_PER_CUFT_MONTH}/cu ft/month × ${cuft.toFixed(2)} cu ft — per unit stored. Actual storage is billed on average inventory.` },
+        label: "Storage / unit sold",
+        amount: r2(perUnit),
+        prov: { kind: "estimate", note: `₹${STORAGE_PER_CUFT_MONTH}/cu ft/month × ${cuft.toFixed(2)} cu ft × ${avgInventory} avg units ÷ ${unitsPerMonth} sold = ₹${r2(perUnit)} per unit sold. Amazon bills monthly storage on average inventory.` },
       }
     } else {
-      storage = SP_API_LINE("Storage cost", "FC storage is ₹50/cu ft/month on average inventory — needs your inventory data (SP-API).")
+      storage = {
+        id: "storage",
+        label: "Storage cost",
+        amount: null,
+        prov: { kind: "estimate", note: "Enter package dimensions to estimate FC storage (₹50/cu ft/month on average inventory)." },
+      }
     }
   } else {
     storage = { id: "storage", label: "Storage cost", amount: 0, prov: { kind: "verified", note: "No Amazon storage fee on this channel." } }
   }
 
-  const otherFees = SP_API_LINE(
-    "Other fees, discounts, taxes",
-    "Promotions, deal fees, reimbursements and account-level adjustments appear only in your order/settlement data (SP-API).",
-  )
+  const otherFees: FeeLine = {
+    id: "other",
+    label: "Other fees & promotions",
+    amount: r2(Math.max(0, otherCosts)),
+    prov: { kind: "input", note: "Your own extra costs per order — promotions, deal fees, packaging extras. You entered this." },
+  }
 
-  const base = r2(referralAmt + close.fee + (fulfilment.amount ?? 0) + (storage.amount ?? 0))
+  const base = r2(referralAmt + close.fee + (fulfilment.amount ?? 0) + (storage.amount ?? 0) + (otherFees.amount ?? 0))
   const gstOnFees: FeeLine | null = includeGst
     ? { id: "gst", label: "GST on fees (18%)", amount: r2(base * GST_RATE), prov: { kind: "verified", note: "Amazon applies 18% GST to all fees displayed." } }
     : null
@@ -414,6 +663,16 @@ export function estimateChannel(input: FeeEstimate, channel: ChannelId): Channel
   const netProceeds = r2(salesPrice - costPerUnit)
   const profit = r2(netProceeds - productCost)
   const marginPct = salesPrice > 0 ? (profit / salesPrice) * 100 : 0
+
+  const packageRead: PackageRead = {
+    volumetricKg: r2(hasDims ? volumetricWeightKg(dimensions) : 0),
+    chargeableKg: r2(chargeableKg),
+    slabs: chargeableSlabs(chargeableKg),
+    tier: tier.tier,
+    tierReasons: tier.reasons,
+    pickPack: pick.fee,
+    cubicFeet: r2(hasDims ? (dimensions.l * dimensions.w * dimensions.h) / 28316.8 : 0),
+  }
 
   return {
     channel,
@@ -436,86 +695,10 @@ export function estimateChannel(input: FeeEstimate, channel: ChannelId): Channel
     marginPct,
     estimatedSales30: unitsPerMonth,
     includeGst,
+    packageRead,
   }
 }
 
 export function estimateComparison(input: FeeEstimate, channels: ChannelId[]): ChannelEstimate[] {
   return channels.map((c) => estimateChannel(input, c))
 }
-
-export interface SpApiRow {
-  data: string
-  now: string
-  spApi: string
-  cost: "free-schedule" | "sp-api"
-}
-
-export const SP_API_GAP: SpApiRow[] = [
-  {
-    data: "Referral fee %",
-    now: "Public category rate card",
-    spApi: "Category & node-level rate for your exact ASIN",
-    cost: "free-schedule",
-  },
-  {
-    data: "Closing fee",
-    now: "Band estimate from public rate card",
-    spApi: "Actual per-order closing fee",
-    cost: "sp-api",
-  },
-  {
-    data: "Weight handling fee",
-    now: "Estimate from published examples",
-    spApi: "Order-level shipping fee (actual weight / zone)",
-    cost: "sp-api",
-  },
-  {
-    data: "Storage / removal / inbound",
-    now: "₹50/cu ft/month published; needs inventory",
-    spApi: "Storage, removal and inbound fees via fee reports",
-    cost: "sp-api",
-  },
-  {
-    data: "Account-specific fee overrides",
-    now: "Not visible",
-    spApi: "Program-level fee waivers and STEP level",
-    cost: "sp-api",
-  },
-  {
-    data: "Promotions, deal fees, reimbursements",
-    now: "Not visible",
-    spApi: "Per-order transaction events (Finances API)",
-    cost: "sp-api",
-  },
-  {
-    data: "TCS on sales (1%) / TDS",
-    now: "Statutory, not order-specific",
-    spApi: "TCS/TDS amounts in your settlement report",
-    cost: "sp-api",
-  },
-  {
-    data: "Actual settlement to bank",
-    now: "Derived estimate",
-    spApi: "V2 settlement report — actual payout per order",
-    cost: "sp-api",
-  },
-]
-
-export interface SampleProduct {
-  asin: string
-  name: string
-  categoryId: string
-  price: number
-  weightKg: number
-  dims: { l: number; w: number; h: number }
-  demo: true
-}
-
-export const SAMPLE_CATALOGUE: SampleProduct[] = [
-  { asin: "B0D1EMO111", name: "Aurora X5 Smartphone, 128GB, 5G", categoryId: "mobile-phones", price: 12999, weightKg: 0.4, dims: { l: 16, w: 8, h: 6 }, demo: true },
-  { asin: "B0D2EMO222", name: "Trailblazer Running Shoes, UK 9", categoryId: "shoes", price: 1899, weightKg: 0.9, dims: { l: 32, w: 20, h: 12 }, demo: true },
-  { asin: "B0D3EMO333", name: "Modern Indian Cooking — Hardcover", categoryId: "books", price: 499, weightKg: 0.7, dims: { l: 24, w: 18, h: 4 }, demo: true },
-  { asin: "B0D4EMO444", name: "Premium Almonds, 1kg Pack", categoryId: "grocery-dryfruits", price: 899, weightKg: 1.1, dims: { l: 22, w: 15, h: 10 }, demo: true },
-  { asin: "B0D5EMO555", name: "Herbal Matte Lipstick Set of 4", categoryId: "beauty-makeup", price: 649, weightKg: 0.2, dims: { l: 12, w: 8, h: 5 }, demo: true },
-  { asin: "B0D6EMO666", name: "BuildPro 500-pc Construction Set", categoryId: "toys-games", price: 1499, weightKg: 1.4, dims: { l: 38, w: 26, h: 14 }, demo: true },
-]

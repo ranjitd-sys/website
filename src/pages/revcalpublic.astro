@@ -1,9 +1,8 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
 import RevenueCalculator from "@/components/pages/revcalpublic/RevenueCalculator"
-import SpApiGap from "@/components/pages/revcalpublic/SpApiGap.astro"
 import CtaBand from "@/components/pages/shared/CtaBand.astro"
-import { AMAZON_IN_SOURCES } from "@/data/amazon-fees"
+import { AMAZON_IN_SOURCES, FEE_DATA_VERSION } from "@/data/amazon-fees"
 import { FlaskConical, ShieldCheck } from "lucide-react"
 ---
 
@@ -27,7 +26,7 @@ import { FlaskConical, ShieldCheck } from "lucide-react"
       </p>
       <p class="mt-4 inline-flex items-start gap-2 text-[0.8125rem] leading-relaxed text-ink-500">
         <ShieldCheck size={15} className="mt-0.5 flex-none text-brand-500" />
-        Estimates from Amazon.in's public rate cards. Exact per-order fees need your Seller Central account (SP-API).
+        Estimates computed live from Amazon.in's published rate cards — no account needed.
       </p>
     </div>
   </header>
@@ -38,20 +37,20 @@ import { FlaskConical, ShieldCheck } from "lucide-react"
     </div>
   </section>
 
-  <SpApiGap />
-
   <section class="pb-12 lg:pb-16">
     <div class="mx-auto max-w-6xl px-6">
       <div class="rounded-2xl border border-ink-200 bg-ink-50/60 p-5 sm:p-6">
         <span class="eyebrow">SOURCES &amp; METHOD</span>
         <p class="mt-3 max-w-3xl text-sm leading-relaxed text-ink-500">
-          Referral fees follow Amazon.in's published rate card (effective 16 March). Closing fees follow the rate card
-          effective September 7, 2026. Weight handling is modelled from Amazon's published worked examples (per 500 g,
-          by zone). Storage uses the published ₹50/cu ft/month. Amazon applies 18% GST to all fees. Values marked
+          Referral fees follow Amazon.in's full published rate card (234 categories, data version {FEE_DATA_VERSION}).
+          Closing fees are exact for every band and channel, effective September 7, 2026. Weight handling follows the
+          published STEP × zone tables (effective March 16, 2026), billed on chargeable weight. Storage uses the
+          published ₹50/cu ft/month. Amazon applies 18% GST to all fees. Values marked
           <span class="mx-1 rounded border border-amber-200 bg-amber-50 px-1.5 py-px text-[10px] font-bold uppercase text-amber-700">est</span>
-          are modelled from published examples; values marked
-          <span class="mx-1 rounded border border-danger-200 bg-danger-50 px-1.5 py-px text-[10px] font-bold uppercase text-danger-700">SP-API</span>
-          need your Seller Central account. Amazon's own note applies: fees are indicative and the final fee depends on
+          are modelled where Amazon publishes images instead of text (a few unlisted categories, local standard-size
+          shipping); values marked
+          <span class="mx-1 rounded border border-ink-200 bg-ink-50 px-1.5 py-px text-[10px] font-bold uppercase text-ink-600">you</span>
+          are numbers you entered. Amazon's own note applies: fees are indicative and the final fee depends on
           category, size, weight, volumetric weight and additional services.
         </p>
         <div class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm">
