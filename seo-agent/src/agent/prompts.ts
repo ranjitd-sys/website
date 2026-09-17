@@ -71,6 +71,27 @@ export const classifyIntentPrompt = (input: ClassifyIntentInput): string => [
   'Return ONLY a JSON object: {"intent": "commercial" or "transactional" or "informational"}',
 ].join("\n")
 
+export const filterQueriesPrompt = (keywords: ReadonlyArray<string>): string => [
+  "You are DeepEcom's SEO agent. Classify each search query below as relevant or irrelevant to DeepEcom's business domain.",
+  "",
+  "DeepEcom's domain: ecommerce accounting, marketplace finance, GST, TCS/TDS, payment reconciliation, settlement matching, ERP accounting, inventory accounting, stock transfers, online seller bookkeeping (Amazon, Flipkart, Shopify, Meesho, D2C).",
+  "",
+  "relevant: queries about ecommerce accounting, marketplace payments, GST for sellers, reconciliation, ERP posting, seller tools, accounting software for ecommerce.",
+  "irrelevant: random codes/alphanumeric hashes, brand names with no accounting context, search operator spam, completely unrelated topics (travel, food, entertainment, sports), garbled queries.",
+  "",
+  "Examples:",
+  '- "payment reconciliation" -> relevant',
+  '- "ai33178" -> irrelevant (random code)',
+  '- "xpressbees -site:xpressbees.com -site:facebook.com" -> irrelevant (operator spam)',
+  '- "xpressbees" -> irrelevant (brand only, no accounting context)',
+  '- "xpressbees accounting" -> relevant (brand + accounting)',
+  "",
+  "Queries to classify:",
+  ...keywords.map((term, index) => `${index + 1}. "${term}"`),
+  "",
+  'Return ONLY a JSON object: {"results": [{"term": "<exact query text>", "relevant": true or false}, ...]}. Keep every "term" exactly as given.',
+].join("\n")
+
 export const actPrompt = (input: ActInput): string => [
   `Write the optimized metadata for the page ${input.targetUrl} targeting "${input.keyword}".`,
   "",

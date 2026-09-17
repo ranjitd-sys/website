@@ -82,6 +82,13 @@ export interface ClassifyIntentInput {
   readonly serp: SerpResults | null
 }
 
+// One batched LLM relevance verdict per discovered query. Terms the brain
+// marks irrelevant are skipped before SERP/planner/intent spend.
+export interface FilterQueriesResult {
+  readonly term: string
+  readonly relevant: boolean
+}
+
 // A keyword surfaced by GSC query discovery (KEYWORD_DISCOVERY) that is ready
 // to be researched. Discovery upserts it into the `keywords` table and resolves
 // intent (brain, from competitor SERP titles) + target_url (GSC page) before

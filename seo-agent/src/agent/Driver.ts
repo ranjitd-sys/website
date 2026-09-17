@@ -22,7 +22,7 @@ import type {
   SelectedOpportunity,
 } from "../types/agent.js"
 import { opportunityScore } from "../shared/scoring.js"
-import { describeFinding, slugify } from "../shared/text.js"
+import { describeFinding, isRelevantQuery, slugify } from "../shared/text.js"
 import { classifySerpIntent } from "../shared/intent.js"
 import { KeywordPlannerService, difficultyOf, stubMonthlySearches } from "../tools/keywordPlanner.js"
 
@@ -142,10 +142,42 @@ const step = (
           candidates.push({ term, targetUrl, impressions: row.impressions, position: row.position })
         }
 
-       
+        if (candidates.length === 0) {
+          yield* Effect.log("optimize: no candidate queries with a resolvable page — aborting")
+          return { event: { type: "ABORT", reason: "no candidate queries with a resolvable page" } }
+        }
+
+        // One batched LLM relevance gate: the brain reads the query texts and
+        // drops vague/noisy/off-domain terms before any SERP/planner spend.
+        // Live failure -> deterministic stub rules (never aborts the run).
+        const filterOutcome = yield* Effect.result(brain.filterQueries(candidates.map((c) => c.term)))
+        let relevantTerms: ReadonlySet<string>
+        if (Result.isSuccess(filterOutcome)) {
+          const verdicts = new Map(filterOutcome.success.map((r) => [r.term, r.relevant]))
+          const missing = candidates.filter((c) => !verdicts.has(c.term))
+          if (missing.length > 0) {
+            yield* Effect.log(
+              `optimize: brain filter omitted ${missing.length} term(s) — keeping them (fail-open)`,
+            )
+          }
+          relevantTerms = new Set(candidates.filter((c) => verdicts.get(c.term) ?? true).map((c) => c.term))
+        } else {
+          yield* Effect.log(`optimize: brain filter failed (${String(filterOutcome.failure)}) — using deterministic fallback`)
+          relevantTerms = new Set(candidates.filter((c) => isRelevantQuery(c.term)).map((c) => c.term))
+        }
+        const filtered = candidates.filter((c) => relevantTerms.has(c.term))
+        for (const skipped of candidates.filter((c) => !relevantTerms.has(c.term))) {
+          yield* Effect.log(`optimize: skip discovery of "${skipped.term}" (filtered as irrelevant)`)
+        }
+        if (filtered.length === 0) {
+          yield* Effect.log("optimize: no relevant queries after LLM filter — aborting")
+          return { event: { type: "ABORT", reason: "no relevant queries after LLM filter" } }
+        }
+        yield* Effect.log(`optimize: ${filtered.length}/${candidates.length} queries passed the relevance filter`)
+
         const plannerOutcome = yield* Effect.result(
-          planner.fetchMetrics(candidates.map((c) => c.term), {
-            impressionsOf: (term) => candidates.find((c) => c.term === term)?.impressions ?? null,
+          planner.fetchMetrics(filtered.map((c) => c.term), {
+            impressionsOf: (term) => filtered.find((c) => c.term === term)?.impressions ?? null,
           }),
         )
         const metricsByTerm = new Map(
@@ -156,7 +188,7 @@ const step = (
         }
 
         const discovered: Array<DiscoveredKeyword> = []
-        for (const candidate of candidates) {
+        for (const candidate of filtered) {
           const { term, targetUrl, impressions, position } = candidate
 
           
@@ -172,6 +204,7 @@ const step = (
           if (Result.isFailure(outcome)) {
             yield* Effect.log(`optimize: brain intent failed for "${term}" (${String(outcome.failure)}) — using deterministic fallback`)
           }
+         
 
           const metrics = metricsByTerm.get(term)
           const volume = metrics?.avgMonthlySearches ?? stubMonthlySearches(impressions)

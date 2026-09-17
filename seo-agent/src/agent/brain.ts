@@ -4,6 +4,7 @@ import type {
   ActInput,
   Change,
   ClassifyIntentInput,
+  FilterQueriesResult,
   Intent,
   LearnedDelta,
   LearnInput,
@@ -18,13 +19,15 @@ import {
   actPrompt,
   classifyIntentPrompt,
   driverPrompt,
+  filterQueriesPrompt,
   learnPrompt,
   revisePrompt,
   reviewerPrompt,
 } from "./prompts.js"
 import { classifySerpIntent } from "../shared/intent.js"
+import { isRelevantQuery } from "../shared/text.js"
 
-export type { ActInput, Change, ClassifyIntentInput, Intent, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict } 
+export type { ActInput, Change, ClassifyIntentInput, FilterQueriesResult, Intent, LearnedDelta, LearnInput, PlanInput, PlanOutput, ReviseInput, ReviewInput, ReviewOutput, ReviewVerdict } 
 
 export class BrainError extends Data.TaggedError("BrainError")<{
   readonly step: string
@@ -39,6 +42,10 @@ export interface BrainShape {
   readonly learn: (input: LearnInput) => Effect.Effect<ReadonlyArray<string>, BrainError, SeoConfig>
   // Intent comes from the brain reading competitor SERP titles, not from the DB.
   readonly classifyIntent: (input: ClassifyIntentInput) => Effect.Effect<Intent, BrainError, SeoConfig>
+  // Batched relevance gate over discovered queries — one LLM call per run.
+  readonly filterQueries: (
+    keywords: ReadonlyArray<string>,
+  ) => Effect.Effect<ReadonlyArray<FilterQueriesResult>, BrainError, SeoConfig>
 }
 
 export class BrainService extends Context.Service<BrainService, BrainShape>()("BrainService") {}
@@ -64,6 +71,15 @@ const ReviewSchema = Schema.Struct({
 
 const IntentSchema = Schema.Struct({
   intent: Schema.Literals(["commercial", "transactional", "informational"]),
+})
+
+const FilterQueriesSchema = Schema.Struct({
+  results: Schema.Array(
+    Schema.Struct({
+      term: Schema.String,
+      relevant: Schema.Boolean,
+    }),
+  ),
 })
 
 const LearningsSchema = Schema.Struct({
@@ -195,6 +211,11 @@ const stubLearn = (input: LearnInput): ReadonlyArray<string> =>
 // brain classification fails.
 const stubClassifyIntent = (input: ClassifyIntentInput): Intent => classifySerpIntent(input)
 
+// Deterministic relevance stub — static quality rules; the live brain call
+// generalizes beyond these.
+const stubFilterQueries = (keywords: ReadonlyArray<string>): ReadonlyArray<FilterQueriesResult> =>
+  keywords.map((term) => ({ term, relevant: isRelevantQuery(term) }))
+
 const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effect(
   BrainService,
   Effect.gen(function* () {
@@ -253,6 +274,16 @@ const BrainServiceLive: Layer.Layer<BrainService, never, SeoConfig> = Layer.effe
               "Return ONLY the intent label.",
               false,
             ).pipe(Effect.map((out) => out.intent)),
+      filterQueries: (keywords) =>
+        stub
+          ? Effect.succeed(stubFilterQueries(keywords))
+          : complete(
+              "filterQueries",
+              FilterQueriesSchema,
+              filterQueriesPrompt(keywords),
+              "Return ONLY the classification JSON.",
+              false,
+            ).pipe(Effect.map((out) => out.results)),
     }
   }),
 )
