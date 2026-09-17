@@ -11,6 +11,8 @@ interface Props {
   ogKey?: string
   /** additional JSON-LD objects to inject into <head> */
   structuredData?: Array<Record<string, unknown>>
+  /** when true, robots meta becomes noindex, nofollow */
+  noindex?: boolean
 }
 
 const {
@@ -18,6 +20,7 @@ const {
   description = "DeepEcom connects ecommerce marketplaces to business intelligence, payment reconciliation and detailed ERP accounting.",
   ogKey = "landing",
   structuredData = [],
+  noindex = false,
 } = Astro.props
 
 const site = Astro.site ?? new URL("http://localhost:4321")
@@ -53,7 +56,7 @@ const isHome = pathname === "/"
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#0a317c" />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content={noindex ? "noindex, nofollow" : "index, follow"} />
     {
       structuredData.map((data) => (
         <script type="application/ld+json" set:html={JSON.stringify(data)} />
