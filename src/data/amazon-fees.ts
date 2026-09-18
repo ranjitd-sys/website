@@ -475,7 +475,7 @@ export const OPTIONS: OptionMeta[] = [
   },
   {
     id: "self-ship",
-    name: "Your Fulfilment",
+    name: "Merchant Fulfilment",
     short: "Self Ship",
     blurb: "You pack and ship via your own courier",
     bullets: [
@@ -635,7 +635,7 @@ export function estimateChannel(input: FeeEstimate, channel: ChannelId): Channel
         amount: r2(perUnit),
         prov: { kind: "estimate", note: `₹${STORAGE_PER_CUFT_MONTH}/cu ft/month × ${cuft.toFixed(2)} cu ft × ${avgInventory} avg units ÷ ${unitsPerMonth} sold = ₹${r2(perUnit)} per unit sold. Amazon bills monthly storage on average inventory.` },
       }
-    } else {
+    } else {  
       storage = {
         id: "storage",
         label: "Storage cost",
