@@ -20,6 +20,9 @@ pnpm-debug.log*
 .env
 .env.production
 
+# local test fixtures (may contain real seller/customer PII — never commit)
+fixtures/
+
 # macOS-specific files
 .DS_Store
 

@@ -63,3 +63,10 @@
     opacity: 1 !important;
   }
 }
+
+/* No underline on navbar links on hover — pill/background states carry the affordance.
+   Unlayered, so it wins over the global `a:hover` underline in @layer base.
+   In-page content links with explicit `hover:underline` are unaffected. */
+[data-nav-root] a:hover {
+  text-decoration: none;
+}

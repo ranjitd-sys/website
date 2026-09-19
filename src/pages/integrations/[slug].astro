@@ -214,6 +214,26 @@ const brandImg = logoAsset(item.mark)
 
   <OutcomeBlocks />
 
+  {item.slug === "meesho" && (
+    <section class="d-section">
+      <div class="sec">
+        <div class="d-tool-banner reveal">
+          <div>
+            <span class="eyebrow">FREE TOOL</span>
+            <h2 class="h2-md d-title">Meesho labels, print-ready in seconds.</h2>
+            <p class="lead d-lead">
+              Upload your Meesho shipping-label PDF — we detect each label, split it
+              from the invoice, crop the whitespace and size it for your printer.
+            </p>
+          </div>
+          <a href="/tools/meesho-label-manager" class={buttonVariants({ size: "lg" })}>
+            Open Meesho Label Manager <ArrowRight size={16} />
+          </a>
+        </div>
+      </div>
+    </section>
+  )}
+
   <hr class="d-rule" />
 
   <section class="d-section">
@@ -511,6 +531,19 @@ const brandImg = logoAsset(item.mark)
     border-top: 1px solid var(--ink-200);
     margin: 0;
   }
+
+  .d-tool-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    border: 1px solid var(--ink-200);
+    border-radius: 18px;
+    background: linear-gradient(180deg, var(--ink-50) 0%, #ffffff 100%);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+  .d-tool-banner > div { flex: 1 1 22rem; }
+  .d-tool-banner a { flex: none; }
 
   .d-related {
     margin-top: 1.75rem;

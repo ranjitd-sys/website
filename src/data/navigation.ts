@@ -179,6 +179,27 @@ export const NAV_ITEMS: NavItem[] = [
     ],
   },
   {
+    id: "tools",
+    label: "Tools",
+    type: "menu",
+    groups: [
+      {
+        title: "Free Tools",
+        description: "Calculators and utilities, no sign-up",
+        icon: "tools",
+        links: [
+          { label: "Amazon Revenue Calculator", href: "/revcalpublic", description: "Fees, profit and margin per order" },
+          { label: "Meesho Label Manager", href: "/tools/meesho-label-manager", description: "Print-ready shipping labels in seconds" },
+        ],
+      },
+    ],
+    featured: {
+      label: "All Free Tools",
+      description: "Every calculator and utility in one place",
+      href: "/tools",
+    },
+  },
+  {
     id: "pricing",
     label: "Pricing",
     type: "menu",

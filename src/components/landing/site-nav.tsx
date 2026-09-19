@@ -36,6 +36,8 @@ import {
   type LucideIcon,
   TrendingUp,
   Clock,
+  Wrench,
+  PackageCheck,
 } from "lucide-react"
 import { AnimatePresence, motion, MotionConfig, type Variants } from "framer-motion"
 import { LogoMark } from "./icons"
@@ -86,6 +88,11 @@ const CARD_ICONS: Record<string, LucideIcon> = {
   "erp integrations": Server,
   learn: BookOpen,
   topics: ScrollText,
+  tools: Wrench,
+  "free tools": Wrench,
+  "all free tools": Wrench,
+  "amazon revenue calculator": Calculator,
+  "meesho label manager": PackageCheck,
 }
 
 function iconFor(key?: string): LucideIcon {
@@ -102,6 +109,7 @@ function iconFor(key?: string): LucideIcon {
   if (normalized.includes("operation") || normalized.includes("manager")) return UserCheck
   if (normalized.includes("developer") || normalized.includes("engineer")) return Code2
   if (normalized.includes("compliance") || normalized.includes("legal") || normalized.includes("audit")) return ShieldCheck
+  if (normalized.includes("tool") || normalized.includes("utility") || normalized.includes("calculator")) return Wrench
 
   return Command
 }
@@ -409,6 +417,45 @@ function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants
   )
 }
 
+function ToolsPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
+  return (
+    <div className="grid grid-cols-[1fr_0.72fr] gap-4 p-5">
+      <div className="flex flex-col gap-4">
+        {item.groups?.map((g) => (
+          <GroupCard key={g.title} group={g} variants={variants} />
+        ))}
+      </div>
+
+      <motion.div
+        variants={variants}
+        className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-muted/70 to-muted p-5 ring-1 ring-border/40"
+      >
+        <div className="relative z-10">
+          <div className="mb-3.5 flex size-11 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/25">
+            <Wrench size={18} className="text-white" />
+          </div>
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Free · No sign-up</span>
+          <h4 className="mt-1.5 text-sm font-semibold text-foreground">
+            Every calculator in one place.
+          </h4>
+          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+            Fee calculators, label tools and reconciliation utilities — plus everything planned next.
+          </p>
+        </div>
+        <div className="relative z-10 mt-4">
+          <a
+            href={item.featured?.href ?? "/tools"}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary focus:outline-none focus:underline"
+          >
+            {item.featured?.label ?? "Browse all tools"}
+            <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
+          </a>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
+
 function PricingPanel({ variants }: { variants?: Variants }) {
   const inr = (n: number) => n.toLocaleString("en-IN")
   const standard = PLANS.filter((p) => !p.custom)
@@ -501,6 +548,7 @@ const PANEL_WIDTHS: Record<string, string> = {
   integrations: "w-[880px]",
   "case-studies": "w-[720px]",
   pricing: "w-[800px]",
+  tools: "w-[560px]",
 }
 
 // --- Integration brand monograms (kept small & typographic like the ecosystem page) ---
@@ -850,6 +898,7 @@ function NavPanel({ item, open, pinned, registerPanel, onKeyDown, onFocusOut, on
             {item.id === "integrations" && <IntegrationsPanel variants={itemVariants} />}
             {item.id === "case-studies" && <CaseStudiesPanel variants={itemVariants} />}
             {item.id === "pricing" && <PricingPanel variants={itemVariants} />}
+            {item.id === "tools" && <ToolsPanel item={item} variants={itemVariants} />}
           </div>
         </motion.div>
       )}
