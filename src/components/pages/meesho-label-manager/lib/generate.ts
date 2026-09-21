@@ -13,21 +13,35 @@ function dataUrlToBytes(dataUrl: string): Uint8Array {
   return bytes
 }
 
+export function selectOutputLabels(labels: LabelImage[], includeInvoices: boolean): LabelImage[] {
+  return includeInvoices ? labels : labels.filter((l) => l.kind === "label")
+}
+
+export function nextFrame(): Promise<void> {
+  return new Promise<void>((resolve) => {
+    if (typeof requestAnimationFrame !== "undefined") requestAnimationFrame(() => resolve())
+    else setTimeout(resolve, 0)
+  })
+}
+
 export async function generatePdf(
   labels: LabelImage[],
   size: PrintSizeId,
   includeInvoices: boolean,
+  onProgress?: (current: number, total: number) => void,
 ): Promise<Uint8Array> {
   const doc = await PDFDocument.create()
   const [pw, ph] = pageSizePts(size)
-  const items = includeInvoices
-    ? labels
-    : labels.filter((l) => l.kind === "label")
-  for (const item of items) {
+  const items = selectOutputLabels(labels, includeInvoices)
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i]
     const png = await doc.embedPng(dataUrlToBytes(item.fullUrl))
     const page = doc.addPage([pw, ph])
     page.drawImage(png, { x: 0, y: 0, width: pw, height: ph })
+    onProgress?.(i + 1, items.length)
+    await nextFrame()
   }
+  await nextFrame()
   return doc.save()
 }
 

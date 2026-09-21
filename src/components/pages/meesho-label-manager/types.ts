@@ -55,13 +55,9 @@ export type ProcessStatus =
   | "reading"
   | "detecting"
   | "cropping"
-  | "generating"
   | "done"
   | "error"
 
 export type PrintSizeId = "4x6" | "a4"
 
-export type PrintSettings = {
-  size: PrintSizeId
-  dpi: number
-}
+export type PerSheet = 1 | 2 | 4

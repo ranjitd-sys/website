@@ -78,7 +78,7 @@ function blockDarkness(
   return n === 0 ? 0 : dark / n
 }
 
-export function columnDarkFractions(
+function columnDarkFractions(
   data: Uint8ClampedArray,
   w: number,
   h: number,
@@ -99,14 +99,14 @@ export function columnDarkFractions(
   return out
 }
 
-export interface ContentBox {
+interface ContentBox {
   x0: number
   y0: number
   x1: number
   y1: number
 }
 
-export function contentBounds(
+function contentBounds(
   data: Uint8ClampedArray,
   w: number,
   h: number,
@@ -145,14 +145,14 @@ export function contentBounds(
   return { x0, y0, x1, y1 }
 }
 
-export interface CellRect {
+interface CellRect {
   x: number
   y: number
   width: number
   height: number
 }
 
-export function segmentGrid(box: ContentBox, rows: number, cols: number): CellRect[] {
+function segmentGrid(box: ContentBox, rows: number, cols: number): CellRect[] {
   const r = clampGrid(rows)
   const c = clampGrid(cols)
   const cw = (box.x1 - box.x0 + 1) / c
@@ -175,7 +175,7 @@ export function segmentGrid(box: ContentBox, rows: number, cols: number): CellRe
   return cells
 }
 
-export function detectGridPage(
+function detectGridPage(
   canvas: HTMLCanvasElement,
   page: number,
   spec: GridSpec,
@@ -207,12 +207,12 @@ export function detectGridPage(
   return { page, pageWidth: w, pageHeight: h, foldY: null, totalY: null, regions }
 }
 
-export interface GutterGap {
+interface GutterGap {
   start: number
   end: number
 }
 
-export function findWhiteGutters(profile: Float32Array, dimSize: number): GutterGap[] {
+function findWhiteGutters(profile: Float32Array, dimSize: number): GutterGap[] {
   const minLen = Math.max(4, Math.floor(dimSize * MIN_GUTTER_FRAC))
   const gaps: GutterGap[] = []
   let start = -1
@@ -230,13 +230,13 @@ export function findWhiteGutters(profile: Float32Array, dimSize: number): Gutter
   return gaps
 }
 
-export function internalWhiteGaps(profile: Float32Array, dimSize: number): GutterGap[] {
+function internalWhiteGaps(profile: Float32Array, dimSize: number): GutterGap[] {
   return findWhiteGutters(profile, dimSize).filter(
     (g) => g.start > 0 && g.end < profile.length - 1,
   )
 }
 
-export function cellsFromBounds(xEdges: number[], yEdges: number[]): CellRect[] {
+function cellsFromBounds(xEdges: number[], yEdges: number[]): CellRect[] {
   const cells: CellRect[] = []
   for (let r = 0; r + 1 < yEdges.length; r++) {
     for (let c = 0; c + 1 < xEdges.length; c++) {
@@ -385,7 +385,7 @@ function detectAutoGrid(
   }
 }
 
-export function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection {
+function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection {
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
@@ -455,7 +455,7 @@ export function detectMultiPage(
   return detectAutoPage(canvas, page)
 }
 
-export function detectPage(canvas: HTMLCanvasElement, page: number): PageDetection {
+function detectPage(canvas: HTMLCanvasElement, page: number): PageDetection {
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
