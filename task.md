@@ -147,6 +147,40 @@ valid 4×6 output PDF generated and downloaded. See "Verification log" at the bo
   - **Depends on:** T3.2
   - **Note:** `detectPage()` is a pure function of canvas → regions.
 
+- [x] **T3.7 — Content bounds from row/column profiles**
+  - Add `columnDarkFractions`; trim outer margins to a content box
+  - **Done when:** real 2×2 sheet yields x 1–98%, y 28–72%
+  - **Depends on:** T3.2
+
+- [x] **T3.8 — Grid segmentation + blank-cell filter**
+  - Equal-divide the content box into rows × cols (1–5); drop empty cells
+  - **Done when:** real 2×2 yields 4 non-blank cells; a partial sheet drops empties
+  - **Depends on:** T3.7
+
+- [x] **T3.9 — Dispatcher, id fix, Auto/Grid selector UI**
+  - `detectMultiPage(canvas, page, mode, grid)`; ids `${p}-${i}-${kind}`;
+    layout selector (Auto default, Grid with rows×cols 1–5); per-page counts
+  - **Done when:** grid mode flows end to end; no key collisions
+  - **Depends on:** T3.8
+
+- [x] **T3.10 — Grid test matrix**
+  - Real 2×2 → 4 labels; synthetic 3×3 → 9 labels; partial sheet → blanks
+    filtered; 1-up regression → still exactly 1 label
+  - **Done when:** all four pass via Playwright
+  - **Depends on:** T3.9
+
+- [x] **T3.11 — Auto grid detection (hypothesize-and-verify)**
+  - `detectAutoPage`: even-position dividers must land inside white gutters
+    (±1.5% tolerance); most-cells wins; >5×5 warns and skips; 1-up keeps the
+    fold-line path; output format unchanged (one label per page)
+  - **Done when:** auto 1-up → 1 label; auto 2×2 → 4; auto 3×3 → 9;
+    auto partial → 3; auto 6×6 → exceeds-5×5 warning
+  - **Depends on:** T3.10
+  - **Note:** First attempt (gutter-counting) over-segmented (3×5 on a 2×2
+    sheet) because intra-label whitespace qualified as gutters. Fixed with
+    strict divider-containment + most-cells tie-break; tuned MIN_GUTTER_FRAC
+    to 0.012 against all fixtures.
+
 ---
 
 ## Phase 4 — Crop, Resize, Rotate (Day 3)
@@ -310,3 +344,15 @@ valid 4×6 output PDF generated and downloaded. See "Verification log" at the bo
 - Known issue fixed: pdfjs-dist modern build requires
   `Map.prototype.getOrInsertComputed` (absent in older Chromium/Safari);
   switched to the `legacy` build.
+
+## Verification log — auto grid (2026-09-21)
+
+- Auto 1-up → "1 label detected" (fold path; regression safe).
+- Auto real 2×2 → "4 labels detected", summary "4 auto-grid labels (p1: 2×2 → 4)";
+  all 4 tiles show distinct complete labels.
+- Auto synthetic 3×3 → "9 labels detected" with "3×3" in summary.
+- Auto synthetic partial 2×2 → "3 labels detected" (blank cell filtered).
+- Auto synthetic 6×6 → page skipped with "grid 6×6 exceeds 5×5 — skipped" warning.
+- Manual Grid 2×2 → "4 labels detected"; Grid download yields a valid PDF.
+- Fixtures: `fixtures/synth-3x3.pdf`, `fixtures/synth-partial.pdf`,
+  `fixtures/synth-6x6.pdf` (all git-ignored test artifacts).

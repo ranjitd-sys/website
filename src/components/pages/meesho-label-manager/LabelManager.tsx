@@ -1,10 +1,10 @@
 import { useCallback, useRef, useState } from "react"
 import { FileUp, Loader2, Download, Printer, RotateCcw, ShieldCheck, PackageSearch, AlertTriangle, ZoomIn, X } from "lucide-react"
 import { loadPdf, renderPageToCanvas } from "./lib/pdf"
-import { detectPage } from "./lib/detect"
+import { detectMultiPage } from "./lib/detect"
 import { cropRegion, resizeForPrint, printTargetPx, canvasToPngDataUrl } from "./lib/crop"
 import { generatePdf, downloadBytes } from "./lib/generate"
-import type { LabelImage, ProcessStatus, PrintSizeId } from "./types"
+import type { LabelImage, ProcessStatus, PrintSizeId, LayoutMode } from "./types"
 
 const MAX_BYTES = 50 * 1024 * 1024
 
@@ -35,11 +35,54 @@ export default function LabelManager() {
   const [progress, setProgress] = useState({ current: 0, total: 0 })
   const [size, setSize] = useState<PrintSizeId>("4x6")
   const [includeInvoices, setIncludeInvoices] = useState(false)
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>("auto")
+  const [gridRows, setGridRows] = useState(2)
+  const [gridCols, setGridCols] = useState(2)
   const [fileName, setFileName] = useState("")
   const [busy, setBusy] = useState(false)
   const [detail, setDetail] = useState<LabelImage | null>(null)
   const [foldInfo, setFoldInfo] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const layoutPicker = (
+    <div className="flex flex-wrap items-center justify-center gap-2">
+      <span className="text-sm font-semibold text-ink-700">Labels per page</span>
+      {(["auto", "grid"] as LayoutMode[]).map((m) => (
+        <button
+          key={m}
+          onClick={(e) => { e.stopPropagation(); setLayoutMode(m) }}
+          className={`rounded-lg border px-3 py-1.5 text-sm font-semibold ${layoutMode === m ? "border-brand-600 bg-brand-600 text-white" : "border-ink-200 bg-white text-ink-600 hover:bg-ink-50"}`}
+        >
+          {m === "auto" ? "Auto" : "Grid"}
+        </button>
+      ))}
+      {layoutMode === "grid" && (
+        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-700" onClick={(e) => e.stopPropagation()}>
+          <select
+            value={gridRows}
+            onChange={(e) => setGridRows(Number(e.target.value))}
+            className="rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm font-semibold text-ink-700"
+            aria-label="Grid rows"
+          >
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>{n}</option>
+            ))}
+          </select>
+          ×
+          <select
+            value={gridCols}
+            onChange={(e) => setGridCols(Number(e.target.value))}
+            className="rounded-lg border border-ink-200 bg-white px-2 py-1.5 text-sm font-semibold text-ink-700"
+            aria-label="Grid columns"
+          >
+            {[1, 2, 3, 4, 5].map((n) => (
+              <option key={n} value={n}>{n}</option>
+            ))}
+          </select>
+        </span>
+      )}
+    </div>
+  )
 
   const reset = useCallback(() => {
     setStatus("idle")
@@ -74,18 +117,35 @@ export default function LabelManager() {
       const target = printTargetPx(size)
       const out: LabelImage[] = []
       let folds = 0
+      const gridCounts: number[] = []
+      const autoGridNotes: string[] = []
+      const autoWarnings: string[] = []
+      let autoGridLabels = 0
       for (let p = 1; p <= pdf.numPages; p++) {
         setProgress({ current: p, total: pdf.numPages })
         const canvas = await renderPageToCanvas(pdf, p, 2)
-        const det = detectPage(canvas, p)
+        const det = detectMultiPage(canvas, p, layoutMode, { rows: gridRows, cols: gridCols })
         if (det.foldY != null) folds++
+        if (layoutMode === "grid") gridCounts.push(det.regions.length)
+        else {
+          if (det.warning) autoWarnings.push(`p${p}: ${det.warning}`)
+          else if (
+            det.detectedRows != null &&
+            det.detectedCols != null &&
+            det.detectedRows * det.detectedCols > 1
+          ) {
+            autoGridLabels += det.regions.length
+            autoGridNotes.push(`p${p}: ${det.detectedRows}×${det.detectedCols} → ${det.regions.length}`)
+          }
+        }
         if (det.regions.length === 0) continue
         setStatus("cropping")
-        for (const r of det.regions) {
+        for (let i = 0; i < det.regions.length; i++) {
+          const r = det.regions[i]
           const cropped = cropRegion(canvas, r)
           const resized = resizeForPrint(cropped, target.w, target.h)
           out.push({
-            id: `${p}-${r.kind}`,
+            id: `${p}-${i}-${r.kind}`,
             page: p,
             kind: r.kind,
             previewUrl: downscale(resized),
@@ -99,17 +159,36 @@ export default function LabelManager() {
       }
       if (out.length === 0) {
         setStatus("error")
-        setError("No labels detected. This file may use a different Meesho layout.")
+        if (layoutMode === "grid") {
+          setError(`No labels found with the ${gridRows}×${gridCols} grid. Try a different grid or Auto.`)
+        } else if (autoWarnings.length > 0) {
+          setError(`No labels detected. ${autoWarnings[0]}.`)
+        } else {
+          setError("No labels detected. This file may use a different Meesho layout.")
+        }
         return
       }
       setLabels(out)
-      setFoldInfo(`${folds}/${pdf.numPages} pages: fold line found`)
+      if (layoutMode === "grid") {
+        const total = gridCounts.reduce((a, b) => a + b, 0)
+        setFoldInfo(`${gridRows}×${gridCols} grid · ${total} labels across ${pdf.numPages} pages`)
+      } else {
+        const parts: string[] = []
+        if (folds > 0) parts.push(`${folds}/${pdf.numPages} fold pages`)
+        if (autoGridNotes.length > 0) {
+          const shown = autoGridNotes.slice(0, 5).join(", ")
+          parts.push(`${autoGridLabels} auto-grid labels (${shown}${autoGridNotes.length > 5 ? "…" : ""})`)
+        }
+        if (autoWarnings.length > 0) parts.push(...autoWarnings.slice(0, 3))
+        if (parts.length === 0) parts.push("no structure found")
+        setFoldInfo(parts.join(" · "))
+      }
       setStatus("done")
     } catch (e) {
       setStatus("error")
       setError(e instanceof Error ? e.message : "Failed to process the PDF.")
     }
-  }, [size])
+  }, [size, layoutMode, gridRows, gridCols])
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -172,6 +251,7 @@ export default function LabelManager() {
             </p>
           </div>
           <input ref={inputRef} type="file" accept="application/pdf,.pdf" className="hidden" onChange={onPick} />
+          <div className="mt-4">{layoutPicker}</div>
           {error && (
             <p className="mt-3 inline-flex items-center gap-2 text-sm text-danger-600">
               <AlertTriangle size={15} /> {error}
@@ -245,6 +325,7 @@ export default function LabelManager() {
               <input type="checkbox" checked={includeInvoices} onChange={(e) => setIncludeInvoices(e.target.checked)} className="h-4 w-4 accent-brand-600" />
               Include invoices in output
             </label>
+            {layoutPicker}
             <div className="ml-auto flex gap-2">
               <button onClick={handleDownload} disabled={busy || shown.length === 0} className="inline-flex items-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50">
                 {busy ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />} Download PDF
@@ -255,7 +336,7 @@ export default function LabelManager() {
             </div>
           </div>
           <p className="mt-2 text-xs text-ink-500">
-            Changing size re-processes on next upload. Print at 100% scale with no margins for correct 4×6 output.
+            Changing size or layout re-processes on next upload. Print at 100% scale with no margins for correct 4×6 output.
           </p>
 
           <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">

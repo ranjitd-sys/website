@@ -8,6 +8,21 @@ export type LabelRegion = {
 
 export type RegionKind = "label" | "invoice"
 
+export type LayoutMode = "auto" | "grid"
+
+export type GridSpec = {
+  rows: number
+  cols: number
+}
+
+export const GRID_MIN = 1
+export const GRID_MAX = 5
+
+export function clampGrid(n: number): number {
+  if (!Number.isFinite(n)) return 1
+  return Math.max(GRID_MIN, Math.min(GRID_MAX, Math.floor(n)))
+}
+
 export type DetectedRegion = LabelRegion & {
   kind: RegionKind
   confidence: number
@@ -20,6 +35,9 @@ export type PageDetection = {
   foldY: number | null
   totalY: number | null
   regions: DetectedRegion[]
+  detectedRows?: number | null
+  detectedCols?: number | null
+  warning?: string | null
 }
 
 export type LabelImage = {
