@@ -17,6 +17,7 @@ export interface SeoConfigShape {
   readonly googleAdsCustomerId: string
   readonly googleAdsLoginCustomerId: string
   readonly googleAdsApiVersion: string
+  readonly siteOrigin : string
 }
 
 export class SeoConfig extends Context.Service<SeoConfig, SeoConfigShape>()("SeoConfig") {}
@@ -47,6 +48,7 @@ const config = Config.all({
   googleAdsCustomerId: Config.string("GOOGLE_ADS_CUSTOMER_ID").pipe(Config.withDefault("")),
   googleAdsLoginCustomerId: Config.string("GOOGLE_ADS_LOGIN_CUSTOMER_ID").pipe(Config.withDefault("")),
   googleAdsApiVersion: Config.string("GOOGLE_ADS_API_VERSION").pipe(Config.withDefault("v25")),
+  siteOrigin: Config.string('SITE_ORIGIN').pipe(Config.withDefault("https://deepecom.com"))
 })
 
 const collectMissing = (cause: unknown): ReadonlyArray<MissingEntry> => {

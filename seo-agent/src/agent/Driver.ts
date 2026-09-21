@@ -264,8 +264,8 @@ const step = (
         const research: Array<ResearchRow> = []
         for (const keyword of carry.keywords) {
           if (keyword.keywordId <= 0 || !keyword.targetUrl) continue
-          const base = new URL(keyword.targetUrl, config.gscSiteUrl).href
-          
+          // yield* Effect.log('Basee', keyword.targetUrl, config.gscSiteUrl)
+          const base = new URL(keyword.targetUrl, config.siteOrigin).href
           const serpRes = keyword.serp ?? (yield* serp.fetchResults(keyword.term, "google"))
           const gscRes = yield* gsc.fetchMetrics(keyword.term, "28d")
           const crawlRes = yield* crawl.crawlPage(base).pipe(
