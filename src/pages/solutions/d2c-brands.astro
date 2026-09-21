@@ -76,8 +76,8 @@ const faqs = [
 ---
 
 <PageLayout
-  title="D2C Brands — Run Every Channel From One Platform | DeepEcom"
-  description="DeepEcom connects your D2C selling platforms, marketplaces and payment systems into one financial view — sales, profitability, payment reconciliation, reporting and detailed ERP accounting."
+  title="D2C Platforms Accounting Layer – DeepEcom"
+  description="DeepEcom links D2C platforms, marketplaces and payment systems to give a unified financial view—sales, profitability, payment reconciliation, ERP accounting."
   structuredData={[
     {
       "@context": "https://schema.org",
@@ -91,7 +91,9 @@ const faqs = [
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faqs.map((f) => ({
+      mainEntity: faqs.map((f) =>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"D2C Platforms Accounting Layer – DeepEcom","description":"DeepEcom links D2C platforms, marketplaces and payment systems to give a unified financial view—sales, profitability, payment reconciliation, ERP accounting.","url":"https://www.deep-ecom.com/solutions/d2c-brands"}</script>
+   ({
         "@type": "Question",
         name: f.q,
         acceptedAnswer: { "@type": "Answer", text: f.a },
