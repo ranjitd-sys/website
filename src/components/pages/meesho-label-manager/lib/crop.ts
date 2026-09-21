@@ -19,32 +19,18 @@ export function cropRegion(
   return out
 }
 
-export function resizeForPrint(
-  src: HTMLCanvasElement,
-  targetW: number,
-  targetH: number,
-): HTMLCanvasElement {
-  const scale = Math.min(targetW / src.width, targetH / src.height)
-  const dw = Math.max(1, Math.floor(src.width * scale))
-  const dh = Math.max(1, Math.floor(src.height * scale))
-  const out = document.createElement("canvas")
-  out.width = targetW
-  out.height = targetH
-  const ctx = out.getContext("2d")
-  if (!ctx) throw new Error("Canvas 2D context unavailable")
-  ctx.fillStyle = "#ffffff"
-  ctx.fillRect(0, 0, targetW, targetH)
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = "high"
-  ctx.drawImage(src, Math.floor((targetW - dw) / 2), Math.floor((targetH - dh) / 2), dw, dh)
-  return out
-}
-
-export function printTargetPx(size: "4x6" | "a4"): { w: number; h: number } {
-  if (size === "4x6") return { w: 1200, h: 1800 }
-  return { w: 2480, h: 3508 }
-}
-
 export function canvasToPngDataUrl(canvas: HTMLCanvasElement): string {
   return canvas.toDataURL("image/png")
+}
+
+export function downloadBytes(bytes: Uint8Array, filename: string): void {
+  const blob = new Blob([bytes as BlobPart], { type: "application/pdf" })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 60_000)
 }

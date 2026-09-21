@@ -44,27 +44,27 @@ export async function renderPageToCanvas(
   return canvas
 }
 
-export async function labelBoxByText(page: PDFPageProxy): Promise<PdfBox | null> {
+export interface PageAnchors {
+  productDetailsY: number | null
+  taxInvoiceY: number | null
+  widthPt: number
+  heightPt: number
+}
+
+export async function pageAnchors(page: PDFPageProxy): Promise<PageAnchors> {
   const vp = page.getViewport({ scale: 1 })
   const H = vp.height
   const W = vp.width
   const tc = await page.getTextContent()
-  const findTop = (re: RegExp): number | null => {
-    for (const item of tc.items) {
-      const it = item as { str?: string; transform?: number[]; height?: number }
-      if (!it.str || !it.transform) continue
-      if (re.test(it.str)) {
-        const h = it.height ?? 0
-        const [, yTop] = vp.convertToViewportPoint(it.transform[4], it.transform[5] + h)
-        return yTop
-      }
-    }
-    return null
+  let productDetailsY: number | null = null
+  let taxInvoiceY: number | null = null
+  for (const raw of tc.items) {
+    const it = raw as { str?: string; transform?: number[]; height?: number }
+    if (!it.str || !it.transform) continue
+    const h = it.height ?? 0
+    const [, yTop] = vp.convertToViewportPoint(it.transform[4], it.transform[5] + h)
+    if (productDetailsY == null && /product\s*details/i.test(it.str)) productDetailsY = yTop
+    if (taxInvoiceY == null && /tax\s*invoice/i.test(it.str)) taxInvoiceY = yTop
   }
-  const cut = findTop(/product\s*details/i) ?? findTop(/tax\s*invoice/i)
-  if (cut == null) return null
-  const pad = 8
-  const bottomTopOrigin = cut - pad
-  if (bottomTopOrigin <= H * 0.1 || bottomTopOrigin >= H) return null
-  return { left: 0, bottom: H - bottomTopOrigin, right: W, top: H }
+  return { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H }
 }

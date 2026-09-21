@@ -430,3 +430,249 @@ A4 sheets (Option A: full pages incl. invoice, vector-preserving, no detection).
   produces the same sheet without boxes (30 KB either way).
 - Known caveat: the crop is a form-XObject BBox, so invoice text remains in the
   output's content stream (clipped visually). `pdftotext` can still extract it.
+
+## Phase 9 — Unified vector pipeline + thermal + extra outputs (2026-09-21)
+
+Scope (user-approved "All four features"): thermal output, separate invoices
+PDF, sort, SKU-qty overlay and picklist, on a single analysis pipeline.
+
+- [x] **T9.1 — Unified analysis (`lib/labelbox.ts`)**
+  - `analyzePage(pdf, pageNum)` → `{ box: { labelBox, invoiceBox, fromRaster }, meta }`.
+    Vector path: crop the label down to the "TAX INVOICE" anchor (fallback:
+    "Product Details" anchor); invoice box = page below TAX INVOICE. Raster
+    path: pixel detection (`detectAutoPage`) for label + invoice regions.
+  - `extractMeta`: courier via regex on full text
+    (Valmo/Delhivery/XpressBees/Shadowfax/Ekart/Ecom Express/DTDC/Blue Dart/
+    India Post/Amazon Shipping); SKU/Qty/Order No. via nearest-column lookup in
+    the "Product Details" table (blank-row groups filtered).
+- [x] **T9.2 — Detection refactor**
+  - Removed grid-mode (`LayoutMode`/`GridSpec`/`clampGrid`, `detectGridPage`,
+    `segmentGrid`, `detectMultiPage`); exported `detectAutoPage`/`detectPage`.
+- [x] **T9.3 — Output generators**
+  - `lib/impose.ts`: flat `ImposeUnit` array ({bytes, pageIndex 1-based, box,
+    invoice, meta}); shared `nextFrame`; overlay hook.
+  - `lib/thermal.ts`: one label/page at preset (4×6 in = 288×432 pt,
+    100×150 mm = 283.46×425.2 pt); fit modes contain / fit-width / actual.
+  - `lib/invoices.ts`: separate A4 invoice PDF, one invoice/page, pages without
+    an invoice region are skipped.
+  - `lib/picklist.ts`: single-square picklist page with numbered rows / SKU ×qty.
+  - `lib/overlay.ts`: dark SKU-qty chip drawn on each placed label.
+  - `lib/sort.ts`: default / by courier / by SKU.
+- [x] **T9.4 — UI**
+  - Controls: Output (A4 sheets / Thermal), labels-per-sheet (1/2/4), cut
+    guides, thermal size + fit, SKU-qty overlay, Picklist, Sort, Invoices
+    (off / separate A4 PDF). Unique cache keys per output.
+  - Statuses rewritten to reading → analyzing → preparing.
+- [x] **T9.5 — Cleanup**
+  - Deleted `lib/generate.ts` (raster print path), removed
+    `resizeForPrint`/`printTargetPx`, dropped unused `PrintSizeId` and grid types.
+- [x] **T9.6 — Fixed pageIndex off-by-one**
+  - `unit.pageIndex` is 1-based (pdf.js) but pdf-lib `getPage` is 0-based →
+    crash on single-page sources. Now `getPage(pageIndex - 1)` in impose,
+    thermal and invoices.
+- [x] **T9.7 — Cut back to Product Details (no black line)**
+  - Measured on the real fixture: black rules at ~290pt (right above "Product
+    Details" @294.7) and ~346pt (fold line above "TAX INVOICE" @350.1). Cutting
+    at "TAX INVOICE" pulled the 290pt rule into the middle of the label.
+    Crop now ends at Product Details (cut ~287pt), which excludes the black
+    rule and the product-details table; "TAX INVOICE" still defines where the
+    invoice starts for the invoices PDF.
+- [x] **T9.8 — 2×2 grid for 4-up**
+  - `chooseGrid` now scores by `area / (1 + 2·|rows−cols|)` so layouts prefer
+    a square arrangement: 4/sheet → 2×2 (was 4×1 column). 2/sheet and 1/sheet
+    unchanged.
+- [x] **T9.9/9.13 — Label: through Product Details, no tax details text**
+  - Measured on the real fixture (595×842 pt page): "Product Details" heading
+    @yTop≈294.7, table header row @313.2, product data row @~329.7, table end
+    @~340.7; black fold rule @≈346; "TAX INVOICE" @350.1.
+  - Final crop rule in `analyzePage`: label ends at (`last product-table
+    row + 3pt`) capped just above the tax section (`taxInvoiceY − 2`), so the
+    label runs from the sheet top **through the Product Details section**
+    (heading + SKU/Size/Qty/Color/Order table) and **excludes all tax details
+    text** (TAX INVOICE + the fold rule) and nothing is clipped.
+  - Earlier intermediate steps: T9.7 cut above the heading; the TAX-INVOICE
+    anchor pulled the fold rule into the label; the Product-Details-heading-only
+    cut hid the table. Confirmed via geometry that table-header text and tax
+    text map to negative form-Y (clipped by the embed `/BBox`), while the table
+    data maps inside the crop. Pixel check: the hidden-tax band renders pure
+    white (pdftotext still lists clipped words — text-miner artifact, not
+    visible pixels).
+- [x] **T9.14 — Easy-cut A4 layout (packed, centered cut lanes)**
+  - Replaced the cell-based A4 imposition with a label-driven packed layout:
+    columns/rows are sized to the *actual* placed labels (not full grid cells),
+    which removed the ~180pt center gutter (each rotated label was centered in a
+    297pt column while only ~207pt wide).
+  - New `cutGap` option (default 8pt, UI number input "Cut gap" for A4): a
+    fixed scissor lane between labels. Whole 2×2 block is centered on the page,
+    so one vertical cut down the exact page center + one horizontal cut splits
+    the sheet into 4 labels. Cut-guide dashed boxes no longer overlap (lane
+    gap ≥ 2·pad).
+  - Per-label fit reused for upright/rotated (`fitIn`); rotated draw keeps the
+    pushOperators transform; end lines, overlay and cut guides follow the
+    packed geometry. `chooseGrid` updated to use the packed available sizes.
+  - Verify: 15/15 Playwright pass; pixel scan of the render — content spans
+    x=126..1113 of 1241 (symmetric about page center 620), a fully-white center
+    lane ~15px wide sits exactly at x=620 (single-cut line), and the 4 label
+    end-lines are present (y≈87/853/918/1684 — one per label; the 4 source
+    files have different content heights so end-lines sit at 4 y positions).
+- [x] **T9.15 — Options panel UX**
+  - Rebuilt the crowded single-wrap control row into a structured panel:
+    "Output options" header with a contextual cutting hint; segmented controls
+    (A4 sheets/ Thermal, labels-per-sheet) with captions; real switch toggles
+    (Cut guides · Rotate to fill · Label end line · SKU-qty chip · Picklist);
+    a cut-gap slider with live `8pt` readout replacing the number input; tidy
+    secondary row for Sort and Invoices (icon + select).
+  - Reusable `Segmented` / `Toggle` / `Select` / `Field` controls added to
+    `LabelManager.tsx`; action buttons (Download PDF / Print) are full-width in
+    a right column. Accessible names kept clean (aria-label overrides caption).
+  - Kept 15/15 Playwright checks green (adjusted the header hint to secondary
+    `text-ink-400` so the meta-summary selector stays unambiguous).
+- [x] **T9.16 — Beginner-friendly output flow**
+  - Reframed the done state around a single outcome card: a green-tick
+    "Your labels are ready" summary in plain language plus prominent
+    `Print` / `Download PDF` buttons — no print jargon required.
+  - Moved all technical controls (output type, per-sheet, cut guides, rotate,
+    end line, spacing, sort, invoices, overlays) behind a collapsed
+    **"Customize print (optional)"** disclosure, so the default path is
+    upload → download with zero decisions.
+  - Renamed "Cut gap" → "Space between labels" (unit-less readout) and fixed
+    the label wrapping to a single line; grouped secondary controls under a
+    "More options" heading.
+  - **Default space between labels is now `0`** — at 0pt the guide lines of
+    adjacent labels meet at the exact page centre, so a single cut down the
+    middle and one across separates all four labels (verified: no white lane
+    remains at x=620, guides touch).
+  - Reworded the print hint to plain instructions ("Print on A4 at 100%
+    scale with no margins. The dashed lines show where to cut.").
+- [x] **T9.17 — Customize panel polish**
+  - Fixed the uneven `LAYOUT` segmented control (the captioned "4 / 2×2"
+    option made the buttons different heights): all per-sheet options are now
+    uniform single-line `1 · 2 · 4`, constrained to content width instead of
+    stretching across the column.
+  - Added a plain-language helper under the control ("Four labels per page,
+    arranged 2×2.") and grouped the toggles under a "Cutting & fitting"
+    sub-label, with the spacing slider on its own row.
+- [x] **T9.18 — Cutting & fitting option cards**
+  - Replaced the cramped row of bare switches with three self-explanatory
+    option cards (icon + title + one-line description + switch):
+    Cut guides (Scissors), Rotate to fill (RotateCcw), Label end line (Minus).
+    Icon chip fills brand-600 when a card is on.
+  - Extracted a reusable `Switch` component (used by both `Toggle` and the
+    new `OptionCard`); descriptions styled in `ink-400` to avoid the
+    meta-summary selector collision. Kept 15/15 Playwright checks green.
+- [x] **T9.19 — Option card alignment fix**
+  - Moved the switch inline with the card title (was pinned far right),
+    widening the description column so all three cards wrap identically and
+    sit at equal heights; icon chip softened to `brand-50/brand-600` when on
+    (was solid `brand-600`) to keep the accent restrained.
+- [x] **T9.20 — Symmetric Customize grid**
+  - Replaced the mixed `auto + 1fr` columns with a symmetric 2-column grid so
+    every group shares the Output control's vertical rhythm:
+    Row 1 = `Output | Labels per sheet` (or `Label size` in thermal mode),
+    Row 2 = `Cutting & fitting | Space between labels`. Sub-labels and
+    controls are horizontally aligned across both columns.
+- [x] **T9.21 — End-to-end friendliness pass**
+  - Upload screen now has a 3-step strip under the drop zone
+    (Upload your PDF → We arrange it → Download & print) with soft icon chips.
+  - Processing state reassures with "This usually takes just a few seconds."
+  - Done state gains a "Here's what you'll get" banner with a live
+    `PrintSchematic` mini-visual: a real A4-sheet mock (2×2 label grid with
+    dashed cut lines, or a single thermal label) that tracks the current
+    per-sheet / output settings, next to a short caption.
+- [x] **T9.23 — Real-label sheet preview**
+  - Added `computeLayout` to `lib/impose.ts` — a pure, exported version of
+    the imposer's placement math (same expressions) returning per-label
+    `A4Layout` cells (sheet/col/row/x/y/w/h/rotated). PDF pipeline untouched.
+  - New `SheetPreview` component renders the ACTUAL cropped label images on a
+    mini A4 sheet exactly as they'll print (honouring sort order, rotation is
+    implied by object-fit), with dashed cut-guides around each cell, black
+    end-line bars, per-sheet captions and a "+N more sheets" chip.
+  - Replaced the placeholder schematic in the "Here's what you'll get" banner
+    for A4 output; thermal keeps `PrintSchematic`.
+- [x] **T9.24 — Bolder label end line**
+  - Thickened the per-label black end line from 1.4pt to 2.2pt in both
+    `impose.ts` and `thermal.ts`, and made the preview bar thicker (2.5px) so
+    every printed label is visually "completed" with a black rule. Verified in
+    the rendered A4 PDF (full-width black runs at each label's end).
+- [x] **T9.10 — Label end black line (A4 + thermal)**
+  - New `endLine` option (default on): a 1.4pt black rule is drawn just below
+    each label's bottom edge to mark the end of the label. Applied in
+    `imposePdf` and `thermalPdf` (handles upright, rotated, actual and stretch
+    placements). UI checkbox "Label end line".
+- [x] **T9.11 — Thermal "Auto (rotate to fill)" fit + no stretch**
+  - `FitMode` gains `auto` (default). Thermal chooses the orientation whose
+    contain scale is bigger and rotates 90° (CCW=rotateDegrees(-90)) without
+    stretching: label aspect ~2.08 on 4×6 fills the page height
+    (~288×432 → 208×432 placed content) instead of a small upright band.
+  - Implemented with pdf-lib low-level ops (`pushOperators` translate+rotate+
+    scale wrapping `drawPage`). Overlay chip stays unrotated at page top-left.
+- [x] **T9.12 — A4 per-cell contain + auto-rotate ("fill the A4 page")**
+  - A4 imposition now uses per-cell `contain` with orientation choice
+    (`autoRotate`, default on; checkbox "Rotate to fill"): every label always
+    fully fits its cell (never cropped); when rotating 90° fills the cell
+    better, the label is drawn rotated via the same pushOperators transform.
+    With label aspect ≈1.63 and a 2×2 grid, rotated labels fill the full cell
+    height so the sheet is fully acquired. Cut guides and end line follow the
+    rotated geometry.
+
+## Verification log — Phase 9 (2026-09-21)
+
+15/15 Playwright assertions pass on 4 real `Sub_Order_Labels_*.pdf`:
+
+- A4 N-up: "4 labels · label only → 1 A4 sheet · 2×2"; 1 page 595.28×841.89;
+  vector text preserved ("Valmo Pickup").
+- Thermal: 4 pages, each exactly 288×432 pt, one label per page.
+- Invoices: separate A4 PDF, 4 pages (one per label).
+- Picklist: 1-page PDF with "A7brNEN8"; meta summary "1 courier · 4 SKUs".
+- Overlay: imposed output contains "A7brNEN8 ×1" chip text.
+- Sort by courier: output PDF valid, stable against the single-courier set.
+- Raster fallback (`fixtures/meesho-sample-1.pdf`): "1 label → 1 A4 sheet ·
+  1 raster page (pixel-detected)"; valid 1-page A4 output.
+- No page JS errors.
+
+Re-verified after T9.9–T9.12 (same suite, still 15/15). Post-change pixel
+scan of the A4 render (`pdftoppm` @60dpi):
+- Ink spans the full page (row bands ~y12..700 of 702) → 2×2 rotated labels
+  acquire the A4 sheet.
+- Four solid black horizontal rules detected at y≈144/320/538/672 → the added
+  label end-lines.
+- `pdftotext` on the imposed A4 contains both "Product Details" and
+  "TAX INVOICE" → label now runs through the tax invoice title.
+
+Rendered previews of A4, thermal, invoices and picklist outputs are in
+`/tmp/opencode/mlm-check/` (programmatic pdfinfo/pdftotext checks, not eyeballed).
+
+Open follow-ups:
+- Eyeball the rendered PNGs (`/tmp/opencode/mlm-check/*.png`) for visual QA.
+- Couriers with multiple different couriers (mixed batch) to prove the
+  by-courier sort grouping end-to-end.
+- barcode readability on 100×150 mm preset.
+
+- [x] **T9.25 — Black end line always on the label (thermal fix)**
+  - Root cause: in thermal `auto`/`contain` mode the label fills the page
+    (`y ≈ 0`), so the end line drawn at `y - 2` fell off the page and was
+    invisible. Same risk in `actual`/`stretch` modes.
+  - Fix: draw the end line at the label's bottom edge (`y`, not `y - 2`) in
+    `impose.ts` (rotated + upright) and all four `thermal.ts` fit branches, so
+    every label is completed with a black rule inside its bottom edge.
+  - App now shows the same black line on the "Here's what you'll get" sheet
+    preview, the label thumbnails and the zoom/detail modal (driven by the
+    `endLine` toggle, true black to match the PDF).
+  - Verified: rendered thermal 4×6 (600×900 @150dpi) has full-width black rows
+    at y=897–899 (bottom edge) and A4 at y=1680–1682; 15/15 harness pass.
+
+- [x] **T9.26 — Crop the label to the tax invoice's first black line**
+  - Vector crop used to stop at `min(lastTextY + 3, taxInvoiceY - 2)`, so it
+    ended a few points ABOVE the divider and clipped the closing rule of the
+    Product Details table.
+  - Added `fullWidthLines(canvas, minFrac)` export to `detect.ts` and
+    `firstBlackLineAbove()` in `labelbox.ts`: the label cut is now the first
+    full-width black rule at/above the `TAX INVOICE` text (`line + 2`), so the
+    crop ends cleanly on that divider. Falls back to the old text-based cut if
+    no rule is found.
+  - `invoiceBox` top is aligned to the label bottom when a rule cut is used, so
+    label and invoice no longer overlap.
+  - `analyzePage(pdf, page, canvas?)` now accepts the already-rendered canvas;
+    `processFiles` renders once and reuses it (no extra render pass).
+  - Verified on `Sub_Order_Labels_*.pdf` (A4): computed cut = line at y=346pt,
+    crop's last two rows are 96% black; 15/15 harness pass, tsc/lint clean.

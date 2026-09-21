@@ -1,5 +1,4 @@
-import type { DetectedRegion, GridSpec, LayoutMode, PageDetection } from "../types"
-import { clampGrid } from "../types"
+import type { DetectedRegion, PageDetection } from "../types"
 
 const DARK_THRESHOLD = 128
 const CONTENT_MIN = 0.005
@@ -54,6 +53,15 @@ function findFullWidthLines(
     merged.push(Math.floor((run[0] + run[run.length - 1]) / 2))
 
   return merged
+}
+
+export function fullWidthLines(canvas: HTMLCanvasElement, minFrac = 0.6): number[] {
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+  if (!ctx) return []
+  const w = canvas.width
+  const h = canvas.height
+  const data = ctx.getImageData(0, 0, w, h).data
+  return findFullWidthLines(rowDarkFractions(data, w, h), w, minFrac)
 }
 
 function blockDarkness(
@@ -150,61 +158,6 @@ interface CellRect {
   y: number
   width: number
   height: number
-}
-
-function segmentGrid(box: ContentBox, rows: number, cols: number): CellRect[] {
-  const r = clampGrid(rows)
-  const c = clampGrid(cols)
-  const cw = (box.x1 - box.x0 + 1) / c
-  const ch = (box.y1 - box.y0 + 1) / r
-  const cells: CellRect[] = []
-  for (let row = 0; row < r; row++) {
-    const yStart = row === 0 ? box.y0 : Math.round(box.y0 + row * ch)
-    const yEnd = row === r - 1 ? box.y1 + 1 : Math.round(box.y0 + (row + 1) * ch)
-    for (let col = 0; col < c; col++) {
-      const xStart = col === 0 ? box.x0 : Math.round(box.x0 + col * cw)
-      const xEnd = col === c - 1 ? box.x1 + 1 : Math.round(box.x0 + (col + 1) * cw)
-      cells.push({
-        x: xStart,
-        y: yStart,
-        width: Math.max(1, xEnd - xStart),
-        height: Math.max(1, yEnd - yStart),
-      })
-    }
-  }
-  return cells
-}
-
-function detectGridPage(
-  canvas: HTMLCanvasElement,
-  page: number,
-  spec: GridSpec,
-): PageDetection {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
-  if (!ctx) throw new Error("Canvas 2D context unavailable")
-  const w = canvas.width
-  const h = canvas.height
-  const img = ctx.getImageData(0, 0, w, h)
-  const data = img.data
-  const empty = { page, pageWidth: w, pageHeight: h, foldY: null, totalY: null, regions: [] }
-  const box = contentBounds(data, w, h)
-  if (!box) return empty
-  const cells = segmentGrid(box, spec.rows, spec.cols)
-  const regions: DetectedRegion[] = []
-  for (const cell of cells) {
-    const dark = blockDarkness(data, w, cell.x, cell.y, cell.x + cell.width, cell.y + cell.height, 8)
-    if (dark < BLANK_CELL_MAX) continue
-    regions.push({
-      page,
-      x: cell.x,
-      y: cell.y,
-      width: cell.width,
-      height: cell.height,
-      kind: "label",
-      confidence: 0.75,
-    })
-  }
-  return { page, pageWidth: w, pageHeight: h, foldY: null, totalY: null, regions }
 }
 
 interface GutterGap {
@@ -385,7 +338,7 @@ function detectAutoGrid(
   }
 }
 
-function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection {
+export function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection {
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
@@ -445,17 +398,7 @@ function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection 
   }
 }
 
-export function detectMultiPage(
-  canvas: HTMLCanvasElement,
-  page: number,
-  mode: LayoutMode,
-  grid: GridSpec,
-): PageDetection {
-  if (mode === "grid") return detectGridPage(canvas, page, grid)
-  return detectAutoPage(canvas, page)
-}
-
-function detectPage(canvas: HTMLCanvasElement, page: number): PageDetection {
+export function detectPage(canvas: HTMLCanvasElement, page: number): PageDetection {
   const ctx = canvas.getContext("2d", { willReadFrequently: true })
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
