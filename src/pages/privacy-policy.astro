@@ -1,48 +1,217 @@
 ---
 import PageLayout from "@/layouts/PageLayout.astro"
-import PageHero from "@/components/pages/shared/PageHero.astro"
 import CtaBand from "@/components/pages/shared/CtaBand.astro"
+import Breadcrumbs from "@/components/resources/Breadcrumbs.astro"
+import "@/styles/resources.css"
+
+const sections = [
+  { id: "information-we-collect", num: "01", title: "Information We Collect" },
+  { id: "how-we-use-your-information", num: "02", title: "How We Use Your Information" },
+  { id: "data-sharing-and-disclosure", num: "03", title: "Data Sharing and Disclosure" },
+  { id: "data-retention-and-deletion-policy", num: "04", title: "Data Retention and Deletion Policy" },
+  { id: "data-security-measures", num: "05", title: "Data Security Measures" },
+  { id: "user-rights-and-choices", num: "06", title: "User Rights and Choices" },
+  { id: "updates-to-this-policy", num: "07", title: "Updates to This Policy" },
+  { id: "contact-us", num: "08", title: "Contact Us" },
+]
 ---
 
 <PageLayout
   title="Privacy Policy — DeepEcom"
-  description="How DeepEcom handles the data it connects across your marketplaces and ERP."
+  description="How DeepEcom collects, uses, stores and deletes the data that flows between your marketplaces and ERP."
 >
-  <PageHero
-    eyebrow="LEGAL"
-    title="Privacy Policy"
-    lead="DeepEcom connects marketplace data, payment data and accounting information on your behalf. This page describes how that data is handled."
-  />
+  <main class="rs-section-tight" style="padding-top:5.5rem">
+    <div class="rs-container">
+      <Breadcrumbs crumbs={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]} />
 
-  <section class="mx-auto max-w-3xl px-6 py-16">
-    <div class="space-y-8">
-      <div>
-        <h2 class="text-lg font-semibold tracking-tight text-ink-900">What we connect</h2>
-        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
-          DeepEcom connects the marketplaces you sell on and the ERP you close your books in. We access
-          marketplace data through secure, read-only APIs and process it into intelligence, reconciliation
-          and accounting on your behalf.
+      <header class="rs-article-header" style="margin-bottom:1.75rem">
+        <span class="rs-card-chip">Legal</span>
+        <h1 class="rs-hero-title" style="margin-top:0.85rem">Privacy Policy</h1>
+        <p class="rs-hero-lead" style="max-width:40rem">
+          How we collect, use, store and delete the data that flows through DeepEcom.
         </p>
+        <div class="rs-article-meta">
+          <span>Effective date · 05-04-2025</span>
+          <span>·</span>
+          <span>8 sections</span>
+        </div>
+      </header>
+
+      <div class="rs-article">
+        <div>
+          <article class="rs-prose" id="article-body">
+            <p>
+              DeepEcom ("we," "our," or "us") respects your privacy and is committed to protecting
+              your personal information. This Privacy Policy explains how we collect, use, store,
+              and delete your data in compliance with{" "}
+              <strong>Amazon's Data Protection Policies</strong> and other applicable regulations.
+            </p>
+
+            <h2 id="information-we-collect">Information We Collect</h2>
+            <p>We collect the following types of information:</p>
+            <ul>
+              <li>
+                <strong>Personally Identifiable Information (PII).</strong> Names, email addresses,
+                phone numbers, billing details, and shipping information provided by sellers using
+                our services.
+              </li>
+              <li>
+                <strong>Order and Transaction Data.</strong> Order history, tax invoices, payment
+                details, and reconciliation data.
+              </li>
+              <li>
+                <strong>Technical and Usage Data.</strong> IP addresses, device details, browser
+                type, and interaction logs with our platform.
+              </li>
+            </ul>
+
+            <h2 id="how-we-use-your-information">How We Use Your Information</h2>
+            <p>We use your data for the following purposes:</p>
+            <ul>
+              <li>
+                <strong>Providing Services.</strong> To facilitate ecommerce automation, including
+                payment reconciliation, tax invoicing, and compliance management.
+              </li>
+              <li>
+                <strong>Direct-to-Consumer Shipping.</strong> To process and manage shipping
+                logistics for seller orders.
+              </li>
+              <li>
+                <strong>Regulatory Compliance.</strong> To meet financial and tax compliance
+                requirements based on regional regulations.
+              </li>
+              <li>
+                <strong>Security &amp; Fraud Prevention.</strong> To safeguard user data and prevent
+                fraudulent activities.
+              </li>
+              <li>
+                <strong>Customer Support.</strong> To assist with inquiries and service
+                improvements.
+              </li>
+            </ul>
+
+            <h2 id="data-sharing-and-disclosure">Data Sharing and Disclosure</h2>
+            <p>
+              We do not sell or rent your personal information. However, we may share data under the
+              following circumstances:
+            </p>
+            <ul>
+              <li>
+                <strong>With Authorized Third-Party Service Providers.</strong> For processing
+                payments, tax calculations, and shipment fulfillment.
+              </li>
+              <li>
+                <strong>With Government and Regulatory Bodies.</strong> If required by law or for
+                tax compliance.
+              </li>
+              <li>
+                <strong>With Amazon SP-API.</strong> As necessary to fulfill marketplace order and
+                tax processing requirements.
+              </li>
+            </ul>
+
+            <h2 id="data-retention-and-deletion-policy">Data Retention and Deletion Policy</h2>
+            <p>
+              We retain your data only for as long as required for the purposes stated above. Our
+              data deletion process includes:
+            </p>
+            <ul>
+              <li>
+                <strong>User-Initiated Deletion.</strong> You may request deletion of your account
+                and associated data by contacting{" "}
+                <a href="mailto:support@deepecom.com">support@deepecom.com</a>.
+                Upon verification, we will delete your data within <strong>30 days</strong>.
+              </li>
+              <li>
+                <strong>Automatic Data Deletion.</strong> We automatically delete inactive user data
+                after <strong>X months/years</strong> unless legally required to retain it.
+              </li>
+              <li>
+                <strong>PII Anonymization.</strong> If immediate deletion is not possible due to
+                compliance obligations, we anonymize data to prevent identification.
+              </li>
+              <li>
+                <strong>Backup Data.</strong> Encrypted backups are retained for{" "}
+                <strong>90 days</strong> before permanent deletion.
+              </li>
+            </ul>
+
+            <h2 id="data-security-measures">Data Security Measures</h2>
+            <p>We implement stringent security measures to protect your information, including:</p>
+            <ul>
+              <li><strong>End-to-End Encryption.</strong> For all sensitive data transfers.</li>
+              <li>
+                <strong>Access Control Mechanisms.</strong> To restrict access to authorized
+                personnel only.
+              </li>
+              <li>
+                <strong>Regular Security Audits.</strong> To ensure compliance with Amazon and
+                industry standards.
+              </li>
+            </ul>
+
+            <h2 id="user-rights-and-choices">User Rights and Choices</h2>
+            <p>You have the right to:</p>
+            <ul>
+              <li>Access, modify, or delete your personal data.</li>
+              <li>Request details on how your data is processed.</li>
+              <li>Opt out of non-essential data collection and marketing communications.</li>
+            </ul>
+            <p>
+              For any requests, please contact{" "}
+              <a href="mailto:support@deepecom.com">support@deepecom.com</a>.
+            </p>
+
+            <h2 id="updates-to-this-policy">Updates to This Policy</h2>
+            <p>
+              We may update this Privacy Policy periodically to reflect changes in our services or
+              legal requirements. We will notify users via email or website announcements before
+              changes take effect.
+            </p>
+
+            <h2 id="contact-us">Contact Us</h2>
+            <p>
+              If you have any questions about this Privacy Policy or data handling practices, please
+              contact:
+            </p>
+            <blockquote>
+              <p><strong>DeepEcom Support Team</strong></p>
+              <p>
+                Email: <a href="mailto:support@deepecom.com">support@deepecom.com</a>
+              </p>
+              <p>
+                Website:{" "}
+                <a href="https://deepecom.com/">deepecom.com</a>
+              </p>
+            </blockquote>
+
+            <hr />
+
+            <p>
+              By using our services, you agree to this Privacy Policy and the terms outlined herein.
+            </p>
+          </article>
+        </div>
+
+        <aside>
+          <nav class="rs-toc" aria-label="On this page">
+            <span class="rs-toc-title">On this page</span>
+            <ul>
+              {sections.map((s) => (
+                <li>
+                  <a href={`#${s.id}`}>{s.title}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
       </div>
-      <div>
-        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Your data</h2>
-        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
-          Your business data is used to operate the product and is never resold. Access permissions are
-          scoped to what the product needs to function.
-        </p>
-      </div>
-      <div>
-        <h2 class="text-lg font-semibold tracking-tight text-ink-900">Contact</h2>
-        <p class="mt-2 text-[15px]/relaxed text-muted-foreground">
-          For any privacy question, write to{" "}
-          <a href="mailto:privacy@deepecom.com" class="font-semibold text-brand-600">privacy@deepecom.com</a>.
-        </p>
-      </div>
-      <p class="rounded-xl border border-ink-200 bg-brand-50/40 px-4 py-3 text-sm text-muted-foreground">
-        TODO: Full legal privacy policy text to be provided by the DeepEcom legal team.
-      </p>
     </div>
-  </section>
+  </main>
 
-  <CtaBand title="Questions about how DeepEcom works?" cta="Talk to Us" ctaHref="/contact" />
+  <CtaBand
+    dark
+    title="Questions about how DeepEcom handles your data?"
+    lead="Book a demo and see how marketplace data becomes clean, accounted, ERP-ready information."
+  />
 </PageLayout>

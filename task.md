@@ -676,3 +676,11 @@ Open follow-ups:
     `processFiles` renders once and reuses it (no extra render pass).
   - Verified on `Sub_Order_Labels_*.pdf` (A4): computed cut = line at y=346pt,
     crop's last two rows are 96% black; 15/15 harness pass, tsc/lint clean.
+
+- [x] **T9.27 — Remove the black end line from the in-app previews**
+  - Now that the crop ends on the real tax-invoice divider, the synthetic
+    black bars were redundant in the UI. Removed the overlay bar from the
+    label thumbnails, the zoom/detail modal and the "Here's what you'll get"
+    sheet preview (dropped the now-unused `endLine` prop from `SheetPreview`).
+  - The PDF outputs still draw the end line (per the `Label end line` toggle);
+    only the app previews changed. 15/15 harness pass, tsc/lint clean.
