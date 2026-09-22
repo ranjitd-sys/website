@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, type ReactNode } from "react"
-import { FileUp, Loader2, Download, Printer, RotateCcw, ShieldCheck, PackageSearch, PackageCheck, AlertTriangle, ZoomIn, X, FileText, ArrowDownUp, Settings2, ChevronDown, Scissors, Minus, Wand2 } from "lucide-react"
+import { FileUp, Loader2, Download, Printer, RotateCcw, ShieldCheck, PackageSearch, PackageCheck, AlertTriangle, ZoomIn, X, FileText, ArrowDownUp, Settings2, ChevronDown, Scissors, Minus, Wand2, Check, FileStack } from "lucide-react"
 import { loadPdf, renderPageToCanvas } from "./lib/pdf"
 import { analyzePage } from "./lib/labelbox"
 import { cropRegion, canvasToPngDataUrl, downloadBytes } from "./lib/crop"
@@ -162,6 +162,53 @@ function OptionCard({
         <span className="mt-1 block text-xs leading-snug text-ink-400">{description}</span>
       </span>
     </label>
+  )
+}
+
+function FormatCard({
+  title,
+  description,
+  icon,
+  active,
+  onClick,
+}: {
+  title: string
+  description: string
+  icon: ReactNode
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition ${
+        active
+          ? "border-brand-500 bg-brand-50/60 shadow-sm shadow-brand-600/10"
+          : "border-ink-200 bg-white hover:border-brand-300 hover:bg-ink-50/60"
+      }`}
+    >
+      <span
+        className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition ${
+          active ? "bg-brand-600 text-white" : "bg-ink-100 text-ink-500 group-hover:bg-ink-200"
+        }`}
+      >
+        {icon}
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block text-sm font-semibold leading-tight text-ink-900">{title}</span>
+        <span className="mt-0.5 block text-xs leading-snug text-ink-500">{description}</span>
+      </span>
+      <span
+        className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition ${
+          active ? "border-brand-600 bg-brand-600 text-white" : "border-ink-300 text-transparent"
+        }`}
+        aria-hidden="true"
+      >
+        <Check size={12} strokeWidth={3} />
+      </span>
+    </button>
   )
 }
 
@@ -644,24 +691,29 @@ export default function LabelManager() {
         ? "Two labels per page."
         : "Four labels per page, arranged 2×2."
 
-  const controlRow = (
+  const formatBlock = (
     <div className="flex flex-col gap-5">
-      <div className="grid gap-x-10 gap-y-6 sm:grid-cols-2">
-        <Field title="Output">
-          <Segmented
-            ariaLabel="Output type"
-            value={outputMode}
-            onChange={setOutputMode}
-            options={[
-              { value: "a4", label: "A4 sheets", caption: "regular printer" },
-              { value: "thermal", label: "Thermal", caption: "label printer" },
-            ]}
-          />
-        </Field>
+      <div className="grid gap-2.5 sm:grid-cols-2">
+        <FormatCard
+          title="A4 sheets"
+          description="Print on regular paper and cut the labels out"
+          icon={<FileStack size={18} />}
+          active={outputMode === "a4"}
+          onClick={() => setOutputMode("a4")}
+        />
+        <FormatCard
+          title="Thermal"
+          description="One label per page for a thermal label printer"
+          icon={<Printer size={18} />}
+          active={outputMode === "thermal"}
+          onClick={() => setOutputMode("thermal")}
+        />
+      </div>
 
+      <div className="rounded-xl border border-ink-100 bg-ink-50/50 p-3.5">
         {outputMode === "a4" ? (
           <Field title="Labels per sheet">
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <Segmented
                 ariaLabel="Labels per sheet"
                 value={String(perSheet)}
@@ -672,27 +724,38 @@ export default function LabelManager() {
                   { value: "4", label: "4" },
                 ]}
               />
-              <span className="text-[11px] text-ink-400">{perSheetHint}</span>
+              <span className="text-xs text-ink-500">{perSheetHint}</span>
             </div>
           </Field>
         ) : (
-          <Field title="Label size">
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="flex flex-wrap items-end gap-x-8 gap-y-4">
+            <Field title="Label size">
               <Select value={thermalPreset} onChange={(v) => setThermalPreset(v as ThermalPresetId)} ariaLabel="Thermal label size">
                 {(Object.keys(THERMAL_PRESETS) as ThermalPresetId[]).map((id) => (
                   <option key={id} value={id}>{THERMAL_PRESETS[id].label}</option>
                 ))}
               </Select>
+            </Field>
+            <Field title="Fit on label">
               <Select value={thermalFit} onChange={(v) => setThermalFit(v as FitMode)} ariaLabel="Thermal fit mode">
                 {(Object.keys(FIT_LABELS) as FitMode[]).map((m) => (
                   <option key={m} value={m}>{FIT_LABELS[m]}</option>
                 ))}
               </Select>
-              <Toggle label="Label end line" checked={endLine} onChange={setEndLine} />
+            </Field>
+            <div className="flex items-center gap-2 pb-1.5">
+              <Switch checked={endLine} onChange={setEndLine} ariaLabel="Label end line" />
+              <span className="text-sm font-medium text-ink-700">Label end line</span>
             </div>
-          </Field>
+          </div>
         )}
+      </div>
+    </div>
+  )
 
+  const controlRow = (
+    <div className="flex flex-col gap-5">
+      <div className="grid gap-x-10 gap-y-6 sm:grid-cols-2">
         {outputMode === "a4" && (
           <>
             <Field title="Cutting &amp; fitting">
@@ -903,24 +966,41 @@ export default function LabelManager() {
             </div>
           </div>
 
-          <div className="mt-4 flex w-fit flex-wrap items-center gap-x-6 gap-y-2 rounded-xl border border-brand-100 bg-brand-50/40 px-4 py-3">
-            <span className="text-[11px] font-bold uppercase tracking-wide text-brand-600">Here's what you'll get</span>
-            {outputMode === "a4" ? (
-              <SheetPreview
-                layout={computeLayout(
-                  sortUnits(imposeUnits.current, sortKey),
-                  perSheet,
-                  chooseGrid(perSheet, imposeAspect.current),
-                  { cutGuides, overlay, endLine, autoRotate, cutGap },
-                )}
-                labels={sortUnits(imposeUnits.current, sortKey).map(
-                  (u) => labels[imposeUnits.current.indexOf(u)] ?? null,
-                )}
-                cutGuides={cutGuides}
-              />
-            ) : (
-              <PrintSchematic outputMode={outputMode} perSheet={perSheet} grid={{ rows: 1, cols: 1 }} />
-            )}
+          <div className="mt-4 flex flex-col gap-4 rounded-xl border border-ink-200 bg-white p-4 sm:p-5">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-bold text-ink-900">Choose your print format</span>
+              <span className="text-xs text-ink-500">Pick how you want to print, then download.</span>
+            </div>
+            {formatBlock}
+          </div>
+
+          <div className="mt-4 flex flex-col gap-4 rounded-xl border border-ink-200 bg-white p-4 sm:p-5">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-sm font-bold text-ink-900">Here's what you'll get</span>
+              <span className="text-xs text-ink-500">
+                {outputMode === "a4"
+                  ? `A preview of your printed sheets — ${perSheet} label${perSheet === 1 ? "" : "s"} per page.`
+                  : "A preview of your thermal labels — one per page."}
+              </span>
+            </div>
+            <div className="rounded-xl border border-ink-100 bg-ink-50/50 p-4">
+              {outputMode === "a4" ? (
+                <SheetPreview
+                  layout={computeLayout(
+                    sortUnits(imposeUnits.current, sortKey),
+                    perSheet,
+                    chooseGrid(perSheet, imposeAspect.current),
+                    { cutGuides, overlay, endLine, autoRotate, cutGap },
+                  )}
+                  labels={sortUnits(imposeUnits.current, sortKey).map(
+                    (u) => labels[imposeUnits.current.indexOf(u)] ?? null,
+                  )}
+                  cutGuides={cutGuides}
+                />
+              ) : (
+                <PrintSchematic outputMode={outputMode} perSheet={perSheet} grid={{ rows: 1, cols: 1 }} />
+              )}
+            </div>
           </div>
 
           <div className="mt-4 overflow-hidden rounded-xl border border-ink-200 bg-white">
@@ -938,7 +1018,7 @@ export default function LabelManager() {
               <span className="flex items-center gap-2">
                 {showAdvanced && (
                   <span className="hidden text-xs text-ink-400 sm:inline">
-                    {outputMode === "a4" ? "cut guides · rotate · end line" : "label size · fit · end line"}
+                    {outputMode === "a4" ? "cut guides · rotate · end line · sort" : "sort · invoices · picklist"}
                   </span>
                 )}
                 <ChevronDown size={16} className={`text-ink-400 transition-transform ${showAdvanced ? "rotate-180" : ""}`} />

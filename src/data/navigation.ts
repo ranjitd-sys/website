@@ -9,6 +9,8 @@ export interface NavGroup {
   title: string
   description?: string
   icon?: string
+  /** When set, the group header links here (used instead of a separate "Overview" link). */
+  href?: string
   links: NavLink[]
 }
 
@@ -33,8 +35,8 @@ export const NAV_ITEMS: NavItem[] = [
         title: "DeepEcom Platform",
         description: "Understand your ecommerce business",
         icon: "platform",
+        href: "/platform",
         links: [
-          { label: "Overview", href: "/platform", description: "The connected view across your marketplaces" },
           { label: "Profitability", href: "/platform/profitability", description: "Actual margins per order, channel and SKU" },
           { label: "Payment Reconciliation", href: "/platform/payment-reconciliation", description: "Match settlements and payouts at order level" },
           { label: "Dashboard", href: "/platform/dashboard", description: "Marketplace performance at a glance" },
@@ -45,8 +47,8 @@ export const NAV_ITEMS: NavItem[] = [
         title: "ERP Connector",
         description: "Make your ERP ecommerce-ready",
         icon: "erp connector",
+        href: "/erp-connector",
         links: [
-          { label: "Overview", href: "/erp-connector", description: "Detailed ecommerce accounting inside your ERP" },
           { label: "Accounting", href: "/erp-connector/accounting", description: "Order-wise, GST-wise, warehouse-wise entries" },
           { label: "GST", href: "/erp-connector/gst", description: "GST-ready vouchers posted automatically" },
           { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory", description: "Stock moves accounted across warehouses" },

@@ -281,14 +281,26 @@ function GroupCard({ group, variants }: { group: NavGroup; variants?: Variants }
   const Icon = iconFor(group.icon ?? group.title)
   return (
     <div className="flex flex-col rounded-2xl border border-border/40 bg-muted/30 p-4">
-      <div className="flex items-center gap-3 border-b border-border/50 px-3 pb-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
-          <Icon size={17} />
-        </span>
-        <div className="min-w-0">
-          <h3 className="text-sm font-bold tracking-tight text-foreground">{group.title}</h3>
-          <p className="mt-0.5 text-xs leading-snug text-muted-foreground">{group.description}</p>
-        </div>
+      <div className="flex items-center justify-between gap-3 border-b border-border/50 px-3 pb-3">
+        <a
+          href={group.href ?? group.links[0]?.href}
+          className="group/head flex min-w-0 items-center gap-3 focus:outline-none"
+          aria-label={`${group.title} — Overview`}
+        >
+          <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
+            <Icon size={17} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-sm font-bold tracking-tight text-foreground transition-colors group-hover/head:text-primary">
+              {group.title}
+            </span>
+            <span className="mt-0.5 block text-xs leading-snug text-muted-foreground">{group.description}</span>
+          </span>
+        </a>
+        <ArrowRight
+          size={15}
+          className="shrink-0 -translate-x-1 text-muted-foreground opacity-0 transition-all duration-200 group-hover/head:translate-x-0 group-hover/head:opacity-100 group-focus-within/head:translate-x-0 group-focus-within/head:opacity-100"
+        />
       </div>
       <div className="mt-1 flex flex-col gap-1 pt-2">
         {group.links.map((l) => (
@@ -994,7 +1006,14 @@ function MobileAccordion({
             <div className="pb-4 pl-4 pt-1">
               {item.groups.map((g: NavGroup) => (
                 <div key={g.title} className="mb-5 last:mb-0">
-                  <p className="px-4 pb-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">{g.title}</p>
+                  <a
+                    href={g.href ?? g.links[0]?.href}
+                    onClick={onNavigate}
+                    className="flex items-center justify-between px-4 pb-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    {g.title}
+                    <ArrowRight size={12} />
+                  </a>
                   <ul className="space-y-1">
                     {g.links.map((l) => (
                       <li key={l.href}>
