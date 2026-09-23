@@ -959,7 +959,7 @@ export default function LabelManager() {
               <button
                 onClick={handleDownload}
                 disabled={busy || labels.length === 0}
-                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-50 sm:flex-none"
+                className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-brand-600 px-4 py-2.5 text-sm font-semibold !text-white hover:bg-brand-700 disabled:opacity-50 sm:flex-none"
               >
                 {busy && genTask === "download" ? <Loader2 size={15} className="animate-spin" /> : <Download size={15} />} Download PDF
               </button>
