@@ -10,6 +10,7 @@ import { picklistPdf } from "./lib/picklist"
 import { sortUnits } from "./lib/sort"
 import type { ProcessStatus, OutputMode, ThermalPresetId, FitMode, SortKey, InvoiceMode, PerSheet, LabelImage } from "./types"
 import { THERMAL_PRESETS } from "./types"
+import { getProvider, type ProviderId } from "@/components/pages/label-provider/provider"
 
 const MAX_BYTES = 50 * 1024 * 1024
 
@@ -391,7 +392,8 @@ function Select({
   )
 }
 
-export default function LabelManager() {
+export default function LabelManager({ providerId = "meesho" }: { providerId?: ProviderId }) {
+  const provider = getProvider(providerId)
   const [status, setStatus] = useState<ProcessStatus>("idle")
   const [error, setError] = useState<string | null>(null)
   const [labels, setLabels] = useState<LabelImage[]>([])
@@ -402,7 +404,7 @@ export default function LabelManager() {
   const [cutGuides, setCutGuides] = useState(true)
   const [cutGap, setCutGap] = useState(0)
   const [endLine, setEndLine] = useState(true)
-  const [autoRotate, setAutoRotate] = useState(true)
+  const [autoRotate, setAutoRotate] = useState(provider.autoRotate)
   const [overlay, setOverlay] = useState(false)
   const [thermalPreset, setThermalPreset] = useState<ThermalPresetId>("4x6")
   const [thermalFit, setThermalFit] = useState<FitMode>("auto")
@@ -483,7 +485,7 @@ export default function LabelManager() {
           n++
           setProgress({ current: n, total: totalPages })
           const full = await renderPageToCanvas(pdf, p, 1)
-          const analyzed = await analyzePage(pdf, p, full)
+          const analyzed = await analyzePage(pdf, p, full, provider)
           if (analyzed.box.fromRaster) raster++
           const sw = analyzed.box.labelBox.right - analyzed.box.labelBox.left
           const sh = analyzed.box.labelBox.top - analyzed.box.labelBox.bottom
@@ -653,13 +655,13 @@ export default function LabelManager() {
   const handleDownload = useCallback(async () => {
     const bytes = await buildPrimary("download")
     const base = fileName.replace(/\.pdf$/i, "")
-    const name = fileName.includes("files") ? "meesho-labels.pdf" : `${base}-labels.pdf`
+    const name = fileName.includes("files") ? provider.files.labels : `${base}-labels.pdf`
     downloadBytes(bytes, name)
     const inv = await buildInvoices()
-    if (inv) downloadBytes(inv, fileName.includes("files") ? "meesho-invoices.pdf" : `${base}-invoices.pdf`)
+    if (inv) downloadBytes(inv, fileName.includes("files") ? provider.files.invoices : `${base}-invoices.pdf`)
     const pick = await buildPicklist()
-    if (pick) downloadBytes(pick, fileName.includes("files") ? "meesho-picklist.pdf" : `${base}-picklist.pdf`)
-  }, [buildPrimary, buildInvoices, buildPicklist, fileName])
+    if (pick) downloadBytes(pick, fileName.includes("files") ? provider.files.picklist : `${base}-picklist.pdf`)
+  }, [buildPrimary, buildInvoices, buildPicklist, fileName, provider])
 
   const handlePrint = useCallback(async () => {
     const bytes = await buildPrimary("print")
@@ -851,10 +853,10 @@ export default function LabelManager() {
             role="button"
             tabIndex={0}
             onKeyDown={(e) => { if (e.key === "Enter") inputRef.current?.click() }}
-            aria-label="Upload Meesho label PDF"
+            aria-label={provider.ui.uploadAria}
           >
             <FileUp size={36} className="text-brand-600" />
-            <p className="mt-3 text-base font-semibold text-ink-900">Drop your Meesho label PDFs here</p>
+            <p className="mt-3 text-base font-semibold text-ink-900">{provider.ui.dropTitle}</p>
             <p className="mt-1 text-sm text-ink-500">or click to browse · one or more PDFs · max 50 MB each</p>
             <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-ink-500">
               <ShieldCheck size={13} className="text-brand-500" />
@@ -870,7 +872,7 @@ export default function LabelManager() {
 
           <div className="mt-5 grid gap-3 sm:grid-cols-3">
             {[
-              { Icon: FileUp, title: "Upload your PDF", desc: "The one from your Meesho supplier panel" },
+              { Icon: FileUp, title: provider.ui.step1Title, desc: provider.ui.step1Desc },
               { Icon: Wand2, title: "We arrange it", desc: "Split, crop and lay your labels out" },
               { Icon: Printer, title: "Download & print", desc: "A4 sheets or 4×6 thermal stickers" },
             ].map((s) => (

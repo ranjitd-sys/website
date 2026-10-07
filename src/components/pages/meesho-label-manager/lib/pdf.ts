@@ -51,7 +51,10 @@ export interface PageAnchors {
   heightPt: number
 }
 
-export async function pageAnchors(page: PDFPageProxy): Promise<PageAnchors> {
+export async function pageAnchors(
+  page: PDFPageProxy,
+  anchors: { productDetails?: RegExp; taxInvoice: RegExp } = { taxInvoice: /tax\s*invoice/i },
+): Promise<PageAnchors> {
   const vp = page.getViewport({ scale: 1 })
   const H = vp.height
   const W = vp.width
@@ -63,8 +66,8 @@ export async function pageAnchors(page: PDFPageProxy): Promise<PageAnchors> {
     if (!it.str || !it.transform) continue
     const h = it.height ?? 0
     const [, yTop] = vp.convertToViewportPoint(it.transform[4], it.transform[5] + h)
-    if (productDetailsY == null && /product\s*details/i.test(it.str)) productDetailsY = yTop
-    if (taxInvoiceY == null && /tax\s*invoice/i.test(it.str)) taxInvoiceY = yTop
+    if (productDetailsY == null && anchors.productDetails?.test(it.str)) productDetailsY = yTop
+    if (taxInvoiceY == null && anchors.taxInvoice.test(it.str)) taxInvoiceY = yTop
   }
   return { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H }
 }
