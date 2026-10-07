@@ -8,9 +8,14 @@ Templates for announcing the free tools to customers. Three variants:
 
 > **Ready-to-send HTML** (email-safe: table layout, inline styles, Outlook-safe
 > button, hidden preheader, unsubscribe footer):
+> - [`amazon-revenue-calculator.html`](./amazon-revenue-calculator.html) — Amazon
+>   Revenue Calculator
+> - [`meesho-label-manager.html`](./meesho-label-manager.html) — Meesho Label
+>   Manager
+> - [`flipkart-label-manager.html`](./flipkart-label-manager.html) — Flipkart
+>   Label Manager
 > - [`tools-announcement.html`](./tools-announcement.html) — general announcement
 > - [`tools-followup.html`](./tools-followup.html) — follow-up for non-openers
-> - [`flipkart-label-manager.html`](./flipkart-label-manager.html) — Flipkart-only
 >
 > Paste the file into your email tool's "custom HTML" editor, then swap the
 > placeholders for its merge tags.

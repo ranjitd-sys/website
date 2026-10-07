@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DeepEcom Email Templates</title>
+  <style>
+    :root {
+      --brand: #2165ec;
+      --ink: #0b1120;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --bg: #f1f5f9;
+      --panel: #ffffff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .wrap { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+    header { margin-bottom: 28px; }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      letter-spacing: -0.4px;
+    }
+    header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 22px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow 0.15s ease, transform 0.15s ease;
+    }
+    .card:hover {
+      box-shadow: 0 8px 24px rgba(11, 17, 32, 0.08);
+      transform: translateY(-2px);
+    }
+    .preview {
+      height: 340px;
+      background: #e6ebf2;
+      border-bottom: 1px solid var(--border);
+    }
+    .preview iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--panel);
+    }
+    .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .tag {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+      color: var(--brand);
+      margin-bottom: 4px;
+    }
+    h2 { margin: 0; font-size: 17px; letter-spacing: -0.2px; }
+    .desc {
+      margin: 4px 0 14px;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height: 20px;
+    }
+    a.open {
+      margin-top: auto;
+      display: inline-block;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      background: var(--brand);
+      padding: 10px 0;
+      text-align: center;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+    a.open:hover { background: #1a54d6; }
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 20px;
+    }
+    footer code {
+      background: #e6ebf2;
+      padding: 1px 6px;
+      border-radius: 5px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>DeepEcom Email Templates</h1>
+      <p>Ready-to-send HTML emails for the free seller tools. Open a template, then swap
+        the <code>{{Placeholders}}</code> for your email tool's merge tags before sending.</p>
+    </header>
+
+    <section class="grid">
+      <article class="card">
+        <div class="preview"><iframe src="amazon-revenue-calculator.html" title="Amazon Revenue Calculator preview" loading="lazy"></iframe></div>
+        <div class="body">
+          <span class="tag">Amazon Revenue Calculator</span>
+          <h2>Amazon Revenue Calculator</h2>
+          <p class="desc">Compare FBA, Easy Ship, Self Ship and Seller Flex fees and margin. Link: <code>/revcalpublic</code>.</p>
+          <a class="open" href="amazon-revenue-calculator.html">Open template</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="preview"><iframe src="meesho-label-manager.html" title="Meesho Label Manager preview" loading="lazy"></iframe></div>
+        <div class="body">
+          <span class="tag">Meesho Label Manager</span>
+          <h2>Meesho Label Manager</h2>
+          <p class="desc">Split, crop and print-ready Meesho labels for 4×6 thermal or A4. Runs fully in the browser.</p>
+          <a class="open" href="meesho-label-manager.html">Open template</a>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="preview"><iframe src="flipkart-label-manager.html" title="Flipkart Label Manager preview" loading="lazy"></iframe></div>
+        <div class="body">
+          <span class="tag">Flipkart Label Manager</span>
+          <h2>Flipkart Label Manager</h2>
+          <p class="desc">Split, crop and print-ready Flipkart labels, with SKU quantity and separate invoice/picklist exports.</p>
+          <a class="open" href="flipkart-label-manager.html">Open template</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      Files also include the general <a href="tools-announcement.html">tools announcement</a> and
+      <a href="tools-followup.html">follow-up</a>.<br>
+      Placeholders: <code>{{First Name}}</code> · <code>{{unsubscribe_link}}</code> · <code>{{company_address}}</code>
+    </footer>
+  </main>
+</body>
+</html>
