@@ -2,7 +2,9 @@ import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/types/src/displa
 import type { PdfBox } from "./pdf"
 import { pageAnchors, renderPageToCanvas } from "./pdf"
 import { detectAutoPage, fullWidthLines } from "./detect"
-import type { DetectedRegion, LabelMeta } from "../types"
+import { EMPTY_META, type DetectedRegion, type LabelMeta } from "../types"
+import type { LabelProvider } from "@/components/pages/label-provider/provider"
+import type { TItem } from "./meta"
 
 export interface BoxSet {
   labelBox: PdfBox
@@ -16,15 +18,6 @@ export interface AnalyzedPage {
 }
 
 const PAD = 8
-const COURIER_RE =
-  /\b(Valmo|Delhivery|XpressBees|Shadowfax|Ekart|Ecom Express|DTDC|Blue Dart|India Post|Amazon Shipping)\b/i
-
-interface TItem {
-  str: string
-  x: number
-  y: number
-  w: number
-}
 
 async function textItems(page: PDFPageProxy): Promise<TItem[]> {
   const vp = page.getViewport({ scale: 1 })
@@ -49,67 +42,6 @@ function regionToPt(r: DetectedRegion, H: number): PdfBox {
   }
 }
 
-function center(i: TItem): number {
-  return i.x + i.w / 2
-}
-
-function clusterByY(items: TItem[], tol = 5): TItem[][] {
-  const sorted = [...items].sort((a, b) => a.y - b.y)
-  const groups: TItem[][] = []
-  for (const item of sorted) {
-    const last = groups[groups.length - 1]
-    if (last && item.y - last[0].y <= tol) last.push(item)
-    else groups.push([item])
-  }
-  return groups
-}
-
-function nearestByHeader(hdrRow: TItem[], dataRow: TItem[], re: RegExp): string {
-  const hdr = hdrRow.find((i) => re.test(i.str.trim()))
-  if (!hdr) return ""
-  const hx = center(hdr)
-  let best = ""
-  let bestD = Infinity
-  for (const d of dataRow) {
-    const dist = Math.abs(center(d) - hx)
-    if (dist < bestD) {
-      bestD = dist
-      best = d.str.trim()
-    }
-  }
-  return best
-}
-
-function extractMeta(
-  items: TItem[],
-  productY: number | null,
-  taxY: number | null,
-): LabelMeta {
-  const text = items.map((i) => i.str).join(" ")
-  const courier = (text.match(COURIER_RE)?.[1] || "").trim()
-  let sku = ""
-  let qty = ""
-  let orderNo = ""
-  if (productY != null) {
-    const lo = productY + 1
-    const hi = taxY ?? productY + 180
-    const between = items.filter((i) => i.y > lo && i.y < hi)
-    const groups = clusterByY(between).filter((g) => g.some((i) => i.str.trim() !== ""))
-    const hdr = groups.find((g) => g.some((i) => /^sku$/i.test(i.str.trim())))
-    if (hdr) {
-      const hdrY = hdr[0].y
-      const rows = groups.filter((g) => g[0].y - hdrY > 3).sort((a, b) => a[0].y - b[0].y)
-      const dataRow = rows[0]
-      if (dataRow) {
-        sku = nearestByHeader(hdr, dataRow, /^SKU$/i)
-        qty = nearestByHeader(hdr, dataRow, /^Qty/i)
-        orderNo = nearestByHeader(hdr, dataRow, /^Order/i)
-      }
-    }
-  }
-  return { courier, sku, qty, orderNo }
-}
-
 function firstBlackLineAbove(
   canvas: HTMLCanvasElement,
   yTop: number,
@@ -125,15 +57,87 @@ function firstBlackLineAbove(
   return best
 }
 
+const TRIM_DARK = 128
+const TRIM_MIN_COL = 5
+const TRIM_PAD = 4
+
+// Shrinks a full-width label band [0, cut] to the printed label box: drops blank side
+// margins and stops above a full-width separator (e.g. Flipkart's dashed fold line).
+function trimToContent(
+  canvas: HTMLCanvasElement,
+  cut: number,
+): { top: number; left: number; right: number; cut: number } | null {
+  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+  if (!ctx) return null
+  const w = canvas.width
+  const h = Math.min(canvas.height, Math.ceil(cut))
+  if (w === 0 || h === 0) return null
+  const data = ctx.getImageData(0, 0, w, h).data
+  const isDark = (x: number, y: number) => {
+    const i = (y * w + x) * 4
+    return (data[i] + data[i + 1] + data[i + 2]) / 3 < TRIM_DARK
+  }
+  const cols = new Uint32Array(w)
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (isDark(x, y)) cols[x]++
+  let x0 = -1
+  let x1 = -1
+  for (let x = 0; x < w; x++) {
+    if (cols[x] >= TRIM_MIN_COL) {
+      if (x0 < 0) x0 = x
+      x1 = x
+    }
+  }
+  if (x0 < 0) return null
+  let sepTop: number | null = null
+  for (let y = h - 1; y >= 0; y--) {
+    let outside = 0
+    for (let x = 0; x < x0 - TRIM_PAD; x++) if (isDark(x, y)) outside++
+    for (let x = x1 + TRIM_PAD; x < w; x++) if (isDark(x, y)) outside++
+    if (outside > 10) sepTop = y
+    else if (sepTop != null) break
+  }
+  let y0 = 0
+  for (let y = 0; y < h; y++) {
+    let dark = 0
+    for (let x = x0; x <= x1; x++) if (isDark(x, y)) dark++
+    if (dark > 0) {
+      y0 = y
+      break
+    }
+  }
+  const bottomLimit = sepTop != null ? sepTop - 2 : h
+  let y1 = bottomLimit
+  for (let y = Math.min(h, bottomLimit) - 1; y >= 0; y--) {
+    let dark = 0
+    for (let x = x0; x <= x1; x++) if (isDark(x, y)) dark++
+    if (dark > 0) {
+      y1 = Math.min(bottomLimit, y + 1 + TRIM_PAD)
+      break
+    }
+  }
+  return {
+    top: Math.max(0, y0 - TRIM_PAD),
+    left: Math.max(0, x0 - TRIM_PAD),
+    right: Math.min(w, x1 + 1 + TRIM_PAD),
+    cut: y1,
+  }
+}
+
 export async function analyzePage(
   pdf: PDFDocumentProxy,
   pageNum: number,
   canvas?: HTMLCanvasElement,
+  provider?: LabelProvider,
 ): Promise<AnalyzedPage> {
   const page = await pdf.getPage(pageNum)
   const items = await textItems(page)
-  const { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H } = await pageAnchors(page)
-  const meta = extractMeta(items, productDetailsY, taxInvoiceY)
+  const { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H } = await pageAnchors(
+    page,
+    provider?.anchors ?? { taxInvoice: /tax\s*invoice/i },
+  )
+  const meta = provider
+    ? provider.extractMeta(items, productDetailsY, taxInvoiceY)
+    : { ...EMPTY_META }
 
   let box: BoxSet
   if (productDetailsY != null || taxInvoiceY != null) {
@@ -158,9 +162,23 @@ export async function analyzePage(
     } else {
       cut = (taxInvoiceY as number) - 2
     }
+    let left = 0
+    let right = W
+    let top = H
+    if (provider?.trimSides) {
+      const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+      const sx = cv.width / W
+      const t = trimToContent(cv, cut * sx)
+      if (t) {
+        left = t.left / sx
+        right = t.right / sx
+        top = H - t.top / sx
+        cut = t.cut / sx
+      }
+    }
     const labelBottom = H - cut
     box = {
-      labelBox: { left: 0, bottom: labelBottom, right: W, top: H },
+      labelBox: { left, bottom: labelBottom, right, top },
       invoiceBox:
         taxInvoiceY != null
           ? {
@@ -170,6 +188,18 @@ export async function analyzePage(
               top: lineCut ? labelBottom : Math.min(H, H - (taxInvoiceY - PAD)),
             }
           : null,
+      fromRaster: false,
+    }
+  } else if (provider?.trimSides) {
+    // No invoice anchor: the page is already a cropped label (e.g. a re-uploaded output).
+    const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+    const sx = cv.width / W
+    const t = trimToContent(cv, cv.height)
+    box = {
+      labelBox: t
+        ? { left: t.left / sx, bottom: H - t.cut / sx, right: t.right / sx, top: H - t.top / sx }
+        : { left: 0, bottom: 0, right: W, top: H },
+      invoiceBox: null,
       fromRaster: false,
     }
   } else {

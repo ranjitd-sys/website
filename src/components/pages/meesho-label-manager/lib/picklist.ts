@@ -13,7 +13,12 @@ const codBg = rgb(1, 0.93, 0.85)
 
 // Standard fonts are WinAnsi-only; anything outside Latin-1 would throw.
 function safe(s: string): string {
-  return s.replace(/₹/g, "Rs.").replace(/[^\x20-\x7E\xA0-\xFF]/g, "?")
+  return s
+    .replace(/₹/g, "Rs.")
+    .replace(/[\u2013\u2014]/g, "-")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[^\x20-\x7E\xA0-\xFF]/g, "?")
 }
 
 function fit(text: string, font: PDFFont, size: number, maxW: number): string {

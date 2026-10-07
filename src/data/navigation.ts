@@ -192,6 +192,7 @@ export const NAV_ITEMS: NavItem[] = [
         links: [
           { label: "Amazon Revenue Calculator", href: "/revcalpublic", description: "Fees, profit and margin per order" },
           { label: "Meesho Label Manager", href: "/tools/meesho-label-manager", description: "Print-ready shipping labels in seconds" },
+          { label: "Flipkart Label Manager", href: "/tools/flipkart-label-manager", description: "Print-ready Flipkart labels in seconds" },
         ],
       },
     ],

@@ -63,13 +63,42 @@ export const THERMAL_PRESETS: Record<ThermalPresetId, ThermalSize> = {
 
 export type FitMode = "auto" | "contain" | "fit-width" | "actual"
 
-export type SortKey = "default" | "courier" | "sku"
+export type SortKey = "default" | "courier" | "sku" | "pincode"
 
 export type InvoiceMode = "off" | "a4"
+
+export type PaymentMode = "COD" | "Prepaid" | ""
 
 export type LabelMeta = {
   courier: string
   sku: string
   qty: string
   orderNo: string
+  awb: string
+  payment: PaymentMode
+  name: string
+  city: string
+  state: string
+  pincode: string
+  /** order value in rupees, as printed on the invoice ("" when not found) */
+  amount: string
+  /** total GST in rupees ("" when not found) */
+  tax: string
+  seller: string
+}
+
+export const EMPTY_META: LabelMeta = {
+  courier: "",
+  sku: "",
+  qty: "",
+  orderNo: "",
+  awb: "",
+  payment: "",
+  name: "",
+  city: "",
+  state: "",
+  pincode: "",
+  amount: "",
+  tax: "",
+  seller: "",
 }

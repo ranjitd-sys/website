@@ -142,6 +142,16 @@ export const FREE_TOOLS: FreeTool[] = [
     status: "live",
     keywords: ["meesho label cropper", "meesho shipping label printer", "meesho label pdf crop"],
   },
+  {
+    id: "flipkart-label-manager",
+    name: "Flipkart Label Manager",
+    tagline: "Print-ready labels in seconds",
+    description: "Upload your Flipkart shipping-label PDF. We detect each label, split it from the invoice, crop whitespace and size it for your printer.",
+    tier: "Tier 1 — Calculator Extensions",
+    href: "/tools/flipkart-label-manager",
+    status: "live",
+    keywords: ["flipkart label cropper", "flipkart shipping label printer", "flipkart label pdf crop"],
+  },
 ]
 
 export const LIVE_TOOLS = FREE_TOOLS.filter((t) => t.status === "live")

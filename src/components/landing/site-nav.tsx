@@ -93,6 +93,7 @@ const CARD_ICONS: Record<string, LucideIcon> = {
   "all free tools": Wrench,
   "amazon revenue calculator": Calculator,
   "meesho label manager": PackageCheck,
+  "flipkart label manager": PackageCheck,
 }
 
 function iconFor(key?: string): LucideIcon {

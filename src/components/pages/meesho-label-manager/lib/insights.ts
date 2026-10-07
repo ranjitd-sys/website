@@ -93,7 +93,7 @@ export function validate(metas: LabelMeta[]): BatchFlag[] {
     if (!m.pincode) missingPin.push(n)
   })
   const dupAwb = [...byAwb.values()].filter((v) => v.length > 1).flat()
-  if (dupAwb.length) flags.push({ level: "warn", title: "Duplicate AWB — the same package appears more than once", labels: dupAwb })
+  if (dupAwb.length) flags.push({ level: "warn", title: "Duplicate AWB — the same package appears more than once", labels: dupAwb.sort((a, b) => a - b) })
   if (missingAwb.length) flags.push({ level: "warn", title: "No AWB / tracking number found", labels: missingAwb })
   if (badQty.length) flags.push({ level: "warn", title: "Quantity missing or zero", labels: badQty })
   if (missingPin.length) flags.push({ level: "warn", title: "Destination pincode not found", labels: missingPin })
@@ -102,7 +102,7 @@ export function validate(metas: LabelMeta[]): BatchFlag[] {
     flags.push({
       level: "info",
       title: `${split.length} order${split.length === 1 ? " is" : "s are"} split across multiple packages — counted once in totals`,
-      labels: split.flat(),
+      labels: split.flat().sort((a, b) => a - b),
     })
   return flags
 }
