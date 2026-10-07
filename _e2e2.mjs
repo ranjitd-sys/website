@@ -1,0 +1,25 @@
+import { chromium } from "playwright"
+const [file, url] = process.argv.slice(2)
+const b = await chromium.launch()
+const p = await b.newPage({ acceptDownloads: true, viewport: { width: 1280, height: 1800 } })
+const errs = []
+p.on("pageerror", e => errs.push(e.message))
+p.on("console", m => { if (m.type() === "error") errs.push(m.text()) })
+await p.goto(url, { waitUntil: "networkidle" })
+await p.setInputFiles('input[type=file]', file)
+await p.getByText("Your labels are ready").waitFor({ timeout: 90000 })
+console.log("SUMMARY:", (await p.getByText("Batch summary").locator("xpath=../../..").innerText()).replace(/\n+/g, " | "))
+const flagBtn = p.locator("button[aria-expanded]").filter({ hasText: /check|Notes/ })
+if (await flagBtn.count()) { await flagBtn.first().click(); console.log("FLAGS:", (await flagBtn.first().locator("xpath=..").innerText()).replace(/\n+/g, " | ")) }
+let dl = p.waitForEvent("download"); await p.getByRole("button", { name: /Export orders/ }).click()
+let d = await dl; await d.saveAs("/tmp/orders.csv"); console.log("CSV name:", d.suggestedFilename())
+await p.getByRole("button", { name: /Customize print/ }).click()
+await p.getByLabel("Sort labels").selectOption("pincode")
+await p.getByRole("switch", { name: /Picklist/ }).or(p.getByLabel("Picklist")).first().click()
+const names = []
+p.on("download", async x => { names.push(x.suggestedFilename()); await x.saveAs("/tmp/dl-" + x.suggestedFilename()) })
+await p.getByRole("button", { name: /Download PDF/ }).click()
+await p.waitForTimeout(8000)
+console.log("DOWNLOADS:", names, "ERRORS:", errs)
+await p.screenshot({ path: "/tmp/done.png", fullPage: false })
+await b.close()

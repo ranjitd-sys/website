@@ -10,6 +10,15 @@ import { picklistPdf } from "./lib/picklist"
 import { sortUnits } from "./lib/sort"
 import type { ProcessStatus, OutputMode, ThermalPresetId, FitMode, SortKey, InvoiceMode, PerSheet, LabelImage } from "./types"
 import { THERMAL_PRESETS } from "./types"
+<<<<<<< main
+=======
+import { getProvider, type ProviderId } from "@/components/pages/label-provider/provider"
+import { toCsv, topSeller, slugify } from "./lib/insights"
+import BatchPanel from "./BatchPanel"
+import { EMPTY_META, type LabelMeta } from "./types"
+
+const metasOf = (units: ImposeUnit[]): LabelMeta[] => units.map((u) => u.meta ?? EMPTY_META)
+>>>>>>> local
 
 const MAX_BYTES = 50 * 1024 * 1024
 
@@ -627,7 +636,9 @@ export default function LabelManager() {
     setGenProgress({ current: 0, total: units.length })
     await nextFrame()
     try {
-      const bytes = await picklistPdf(units, fileName.replace(/\.pdf$/i, "") || "Picklist")
+      const seller = topSeller(metasOf(units))
+      const title = `${seller || provider.name} — picklist`
+      const bytes = await picklistPdf(units, title)
       pdfPicklistCache.current = { key, bytes }
       return bytes
     } finally {
@@ -635,23 +646,21 @@ export default function LabelManager() {
       setGenTask(null)
       setGenProgress(null)
     }
-  }, [picklist, sortKey, fileName])
+  }, [picklist, sortKey, fileName, provider])
 
-  const buildOverlaySummary = (): string => {
-    const couriers = new Set<string>()
-    const skus = new Set<string>()
-    for (const u of imposeUnits.current) {
-      if (u.meta?.courier) couriers.add(u.meta.courier)
-      if (u.meta?.sku) skus.add(u.meta.sku)
-    }
-    const parts: string[] = []
-    if (couriers.size > 0) parts.push(`${couriers.size} courier${couriers.size === 1 ? "" : "s"}`)
-    if (skus.size > 0) parts.push(`${skus.size} SKU${skus.size === 1 ? "" : "s"}`)
-    return parts.join(" · ")
-  }
+  // "<seller>-<marketplace>" when the seller is on the labels, else the upload name
+  // (with any earlier "-labels" suffix stripped so re-runs don't stack it).
+  const outBase = useCallback((): string => {
+    const brand = slugify(topSeller(metasOf(imposeUnits.current)))
+    const market = provider.name.toLowerCase()
+    if (brand) return `${brand}-${market}`
+    const b = fileName.replace(/\.pdf$/i, "").replace(/(-labels)+$/i, "")
+    return fileName.includes("files") || !b ? market : b
+  }, [fileName, provider])
 
   const handleDownload = useCallback(async () => {
     const bytes = await buildPrimary("download")
+<<<<<<< main
     const base = fileName.replace(/\.pdf$/i, "")
     const name = fileName.includes("files") ? "meesho-labels.pdf" : `${base}-labels.pdf`
     downloadBytes(bytes, name)
@@ -660,6 +669,20 @@ export default function LabelManager() {
     const pick = await buildPicklist()
     if (pick) downloadBytes(pick, fileName.includes("files") ? "meesho-picklist.pdf" : `${base}-picklist.pdf`)
   }, [buildPrimary, buildInvoices, buildPicklist, fileName])
+=======
+    const base = outBase()
+    downloadBytes(bytes, `${base}-labels.pdf`)
+    const inv = await buildInvoices()
+    if (inv) downloadBytes(inv, `${base}-invoices.pdf`)
+    const pick = await buildPicklist()
+    if (pick) downloadBytes(pick, `${base}-picklist.pdf`)
+  }, [buildPrimary, buildInvoices, buildPicklist, outBase])
+
+  const handleCsv = useCallback(() => {
+    const units = sortUnits(imposeUnits.current, sortKey)
+    downloadBytes(toCsv(metasOf(units)), `${outBase()}-orders.csv`, "text/csv;charset=utf-8")
+  }, [sortKey, outBase])
+>>>>>>> local
 
   const handlePrint = useCallback(async () => {
     const bytes = await buildPrimary("print")
@@ -813,6 +836,7 @@ export default function LabelManager() {
               <option value="default">As uploaded</option>
               <option value="courier">By courier</option>
               <option value="sku">By SKU</option>
+              <option value="pincode">By pincode (route)</option>
             </Select>
           </div>
           <div className="flex items-center gap-2">
@@ -830,8 +854,6 @@ export default function LabelManager() {
       </div>
     </div>
   )
-
-  const metaSummary = buildOverlaySummary()
 
   const sheets = sheetCount(labels.length, perSheet)
   const readyLine =
@@ -934,9 +956,7 @@ export default function LabelManager() {
           <p className="mt-2 inline-flex items-start gap-2 text-xs text-ink-500">
             <span className="mt-0.5">{listEnd}</span>
           </p>
-          {metaSummary && (
-            <span className="mt-1 inline-block text-xs text-ink-500">{metaSummary}</span>
-          )}
+          <BatchPanel metas={metasOf(imposeUnits.current)} onCsv={handleCsv} />
 
           <div className="mt-4 flex flex-col gap-3 rounded-xl border border-ink-200 bg-ink-50/60 p-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div className="flex items-start gap-3">

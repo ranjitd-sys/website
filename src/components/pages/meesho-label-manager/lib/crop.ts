@@ -23,8 +23,8 @@ export function canvasToPngDataUrl(canvas: HTMLCanvasElement): string {
   return canvas.toDataURL("image/png")
 }
 
-export function downloadBytes(bytes: Uint8Array, filename: string): void {
-  const blob = new Blob([bytes as BlobPart], { type: "application/pdf" })
+export function downloadBytes(bytes: Uint8Array | string, filename: string, type = "application/pdf"): void {
+  const blob = new Blob([bytes as BlobPart], { type })
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
   a.href = url
