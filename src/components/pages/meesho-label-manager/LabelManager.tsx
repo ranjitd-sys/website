@@ -405,7 +405,7 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
   const [pageCount, setPageCount] = useState(0)
   const [progress, setProgress] = useState({ current: 0, total: 0 })
   const [outputMode, setOutputMode] = useState<OutputMode>("a4")
-  const [perSheet, setPerSheet] = useState<PerSheet>(4)
+  const [perSheet, setPerSheet] = useState<PerSheet>(1)
   const [cutGuides, setCutGuides] = useState(true)
   const [cutGap, setCutGap] = useState(0)
   const [endLine, setEndLine] = useState(true)
@@ -845,7 +845,7 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
   const sheets = sheetCount(labels.length, perSheet)
   const readyLine =
     outputMode === "a4"
-      ? `Prints on ${sheets} A4 sheet${sheets === 1 ? "" : "s"} with ${perSheet} label${perSheet === 1 ? "" : "s"} on each page. Cut once down the middle, then once across, to get ${labels.length} label${labels.length === 1 ? "" : "s"}.`
+      ? `Prints on ${sheets} A4 sheet${sheets === 1 ? "" : "s"} with ${perSheet} label${perSheet === 1 ? "" : "s"} on each page.${perSheet === 4 ? ` Cut once down the middle, then once across, to get ${labels.length} label${labels.length === 1 ? "" : "s"}.` : perSheet === 2 ? " Cut once through the middle of each page." : ""}`
       : `${labels.length} label${labels.length === 1 ? "" : "s"}, one per page on ${THERMAL_PRESETS[thermalPreset].label}. Print at 100% size, no scaling.`
 
   return (
