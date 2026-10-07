@@ -1,10 +1,11 @@
 import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/types/src/display/api"
 import type { PdfBox } from "./pdf"
-import { pageAnchors, renderPageToCanvas } from "./pdf"
+import { renderPageToCanvas } from "./pdf"
 import { detectAutoPage, fullWidthLines } from "./detect"
 import { EMPTY_META, type DetectedRegion, type LabelMeta } from "../types"
-import type { LabelProvider } from "@/components/pages/label-provider/provider"
+import type { LabelProvider, ProviderAnchors } from "@/components/pages/label-provider/provider"
 import type { TItem } from "./meta"
+import { context2d, type AnyCanvas } from "./canvas"
 
 export interface BoxSet {
   labelBox: PdfBox
@@ -43,7 +44,7 @@ function regionToPt(r: DetectedRegion, H: number): PdfBox {
 }
 
 function firstBlackLineAbove(
-  canvas: HTMLCanvasElement,
+  canvas: AnyCanvas,
   yTop: number,
   windowPt = 90,
 ): number | null {
@@ -64,10 +65,10 @@ const TRIM_PAD = 4
 // Shrinks a full-width label band [0, cut] to the printed label box: drops blank side
 // margins and stops above a full-width separator (e.g. Flipkart's dashed fold line).
 function trimToContent(
-  canvas: HTMLCanvasElement,
+  canvas: AnyCanvas,
   cut: number,
 ): { top: number; left: number; right: number; cut: number } | null {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+  const ctx = context2d(canvas, true)
   if (!ctx) return null
   const w = canvas.width
   const h = Math.min(canvas.height, Math.ceil(cut))
@@ -123,18 +124,41 @@ function trimToContent(
   }
 }
 
+function findAnchors(
+  items: TItem[],
+  anchors: ProviderAnchors,
+): { productDetailsY: number | null; taxInvoiceY: number | null } {
+  let productDetailsY: number | null = null
+  let taxInvoiceY: number | null = null
+  for (const it of items) {
+    if (productDetailsY == null && anchors.productDetails?.test(it.str)) productDetailsY = it.y
+    if (taxInvoiceY == null && anchors.taxInvoice.test(it.str)) taxInvoiceY = it.y
+  }
+  return { productDetailsY, taxInvoiceY }
+}
+
+/**
+ * `canvas` may be a promise so the caller can start rendering the page while the text
+ * layer is still being extracted; it is only awaited when pixels are actually needed.
+ */
 export async function analyzePage(
   pdf: PDFDocumentProxy,
   pageNum: number,
-  canvas?: HTMLCanvasElement,
+  canvas?: AnyCanvas | Promise<AnyCanvas>,
   provider?: LabelProvider,
 ): Promise<AnalyzedPage> {
   const page = await pdf.getPage(pageNum)
+  const vp = page.getViewport({ scale: 1 })
+  const W = vp.width
+  const H = vp.height
   const items = await textItems(page)
-  const { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H } = await pageAnchors(
-    page,
+  const { productDetailsY, taxInvoiceY } = findAnchors(
+    items,
     provider?.anchors ?? { taxInvoice: /tax\s*invoice/i },
   )
+  let canvasCache: Promise<AnyCanvas> | null = null
+  const getCanvas = (): Promise<AnyCanvas> =>
+    (canvasCache ??= canvas ? Promise.resolve(canvas) : renderPageToCanvas(pdf, pageNum, 1))
   const meta = provider
     ? provider.extractMeta(items, productDetailsY, taxInvoiceY)
     : { ...EMPTY_META }
@@ -144,7 +168,7 @@ export async function analyzePage(
     let cut: number
     let lineCut = false
     if (productDetailsY != null && taxInvoiceY != null) {
-      const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+      const cv = await getCanvas()
       const line = firstBlackLineAbove(cv, taxInvoiceY)
       if (line != null && line > productDetailsY) {
         cut = line + 2
@@ -166,7 +190,7 @@ export async function analyzePage(
     let right = W
     let top = H
     if (provider?.trimSides) {
-      const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+      const cv = await getCanvas()
       const sx = cv.width / W
       const t = trimToContent(cv, cut * sx)
       if (t) {
@@ -192,7 +216,7 @@ export async function analyzePage(
     }
   } else if (provider?.trimSides) {
     // No invoice anchor: the page is already a cropped label (e.g. a re-uploaded output).
-    const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+    const cv = await getCanvas()
     const sx = cv.width / W
     const t = trimToContent(cv, cv.height)
     box = {
@@ -203,7 +227,7 @@ export async function analyzePage(
       fromRaster: false,
     }
   } else {
-    const cv = canvas ?? (await renderPageToCanvas(pdf, pageNum, 1))
+    const cv = await getCanvas()
     const det = detectAutoPage(cv, pageNum)
     const full: PdfBox = { left: 0, bottom: 0, right: W, top: H }
     const labelReg = det.regions.find((r) => r.kind === "label") ?? det.regions[0] ?? null

@@ -1,4 +1,5 @@
-import type { PDFDocumentProxy, PDFPageProxy } from "pdfjs-dist/types/src/display/api"
+import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api"
+import { makeCanvas, context2d, type AnyCanvas } from "./canvas"
 
 export interface PdfBox {
   left: number
@@ -15,7 +16,7 @@ async function pdfjs() {
 
 let workerConfigured = false
 
-export async function loadPdf(data: ArrayBuffer): Promise<PDFDocumentProxy> {
+async function configuredPdfjs() {
   const pdfjsLib = await pdfjs()
   if (!workerConfigured) {
     const { default: workerUrl } = await import(
@@ -24,7 +25,24 @@ export async function loadPdf(data: ArrayBuffer): Promise<PDFDocumentProxy> {
     pdfjsLib.GlobalWorkerOptions.workerSrc = workerUrl as string
     workerConfigured = true
   }
-  const task = pdfjsLib.getDocument({ data })
+  return pdfjsLib
+}
+
+export type PdfWorker = InstanceType<typeof import("pdfjs-dist").PDFWorker>
+
+/**
+ * pdf.js parses each document's pages in a single worker thread, so pages are decoded
+ * one at a time. Separate workers let several pages be parsed in parallel on
+ * different cores; documents can share a worker, so the thread count stays fixed.
+ */
+export async function createPdfWorkers(count: number): Promise<PdfWorker[]> {
+  const pdfjsLib = await configuredPdfjs()
+  return Array.from({ length: count }, () => new pdfjsLib.PDFWorker())
+}
+
+export async function loadPdf(data: ArrayBuffer, worker?: PdfWorker): Promise<PDFDocumentProxy> {
+  const pdfjsLib = await configuredPdfjs()
+  const task = pdfjsLib.getDocument(worker ? { data, worker } : { data })
   return task.promise
 }
 
@@ -32,42 +50,18 @@ export async function renderPageToCanvas(
   pdf: PDFDocumentProxy,
   pageNum: number,
   scale = 2,
-): Promise<HTMLCanvasElement> {
+): Promise<AnyCanvas> {
   const page = await pdf.getPage(pageNum)
   const viewport = page.getViewport({ scale })
-  const canvas = document.createElement("canvas")
-  canvas.width = Math.floor(viewport.width)
-  canvas.height = Math.floor(viewport.height)
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+  const canvas = makeCanvas(viewport.width, viewport.height)
+  const ctx = context2d(canvas, true)
   if (!ctx) throw new Error("Canvas 2D context unavailable")
-  await page.render({ canvas, canvasContext: ctx, viewport }).promise
+  // pdf.js types only name HTMLCanvasElement, but it draws through the context and
+  // works the same with an OffscreenCanvas inside a worker.
+  await page.render({
+    canvas: canvas as HTMLCanvasElement,
+    canvasContext: ctx as CanvasRenderingContext2D,
+    viewport,
+  }).promise
   return canvas
-}
-
-export interface PageAnchors {
-  productDetailsY: number | null
-  taxInvoiceY: number | null
-  widthPt: number
-  heightPt: number
-}
-
-export async function pageAnchors(
-  page: PDFPageProxy,
-  anchors: { productDetails?: RegExp; taxInvoice: RegExp } = { taxInvoice: /tax\s*invoice/i },
-): Promise<PageAnchors> {
-  const vp = page.getViewport({ scale: 1 })
-  const H = vp.height
-  const W = vp.width
-  const tc = await page.getTextContent()
-  let productDetailsY: number | null = null
-  let taxInvoiceY: number | null = null
-  for (const raw of tc.items) {
-    const it = raw as { str?: string; transform?: number[]; height?: number }
-    if (!it.str || !it.transform) continue
-    const h = it.height ?? 0
-    const [, yTop] = vp.convertToViewportPoint(it.transform[4], it.transform[5] + h)
-    if (productDetailsY == null && anchors.productDetails?.test(it.str)) productDetailsY = yTop
-    if (taxInvoiceY == null && anchors.taxInvoice.test(it.str)) taxInvoiceY = yTop
-  }
-  return { productDetailsY, taxInvoiceY, widthPt: W, heightPt: H }
 }

@@ -46,6 +46,21 @@ export function nextFrame(): Promise<void> {
   })
 }
 
+const YIELD_BUDGET_MS = 50
+
+/**
+ * Returns a function that yields a frame only once `budgetMs` of work has passed, so
+ * long loops keep the UI (and progress bar) responsive without paying ~16 ms per item.
+ */
+export function frameYielder(budgetMs = YIELD_BUDGET_MS): () => Promise<void> {
+  let last = performance.now()
+  return async () => {
+    if (performance.now() - last < budgetMs) return
+    await nextFrame()
+    last = performance.now()
+  }
+}
+
 interface Fitted {
   dw: number
   dh: number
@@ -168,6 +183,7 @@ export async function imposePdf(
   onProgress?: (current: number, total: number) => void,
 ): Promise<Uint8Array> {
   const out = await PDFDocument.create()
+  const maybeYield = frameYielder()
   const { rows, cols } = grid
   const pad = options.cutGuides ? GUIDE_PAD : 0
   const outer = OUTER + pad
@@ -286,7 +302,7 @@ export async function imposePdf(
     }
     placed++
     onProgress?.(placed, units.length)
-    await nextFrame()
+    await maybeYield()
   }
   await nextFrame()
   return out.save()

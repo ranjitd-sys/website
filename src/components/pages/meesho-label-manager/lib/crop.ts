@@ -1,13 +1,9 @@
 import type { LabelRegion } from "../types"
+import { makeCanvas, context2d, type AnyCanvas } from "./canvas"
 
-export function cropRegion(
-  src: HTMLCanvasElement,
-  region: LabelRegion,
-): HTMLCanvasElement {
-  const out = document.createElement("canvas")
-  out.width = Math.max(1, Math.floor(region.width))
-  out.height = Math.max(1, Math.floor(region.height))
-  const ctx = out.getContext("2d")
+export function cropRegion(src: AnyCanvas, region: LabelRegion): AnyCanvas {
+  const out = makeCanvas(region.width, region.height)
+  const ctx = context2d(out)
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   ctx.fillStyle = "#ffffff"
   ctx.fillRect(0, 0, out.width, out.height)

@@ -1,7 +1,7 @@
 import { PDFDocument } from "pdf-lib"
 import type { PdfBox } from "./pdf"
 import type { ImposeUnit } from "./impose"
-import { nextFrame } from "./impose"
+import { nextFrame, frameYielder } from "./impose"
 
 export interface InvoicesOptions {
   mode: "off" | "a4"
@@ -14,6 +14,7 @@ export async function invoicesPdf(
 ): Promise<Uint8Array> {
   if (options.mode === "off") throw new Error("invoices disabled")
   const out = await PDFDocument.create()
+  const maybeYield = frameYielder()
   const docCache = new Map<ArrayBuffer, PDFDocument>()
   async function docFor(bytes: ArrayBuffer): Promise<PDFDocument> {
     let doc = docCache.get(bytes)
@@ -45,7 +46,7 @@ export async function invoicesPdf(
     }
     placed++
     onProgress?.(placed, units.length)
-    await nextFrame()
+    await maybeYield()
   }
   await nextFrame()
   return out.save()

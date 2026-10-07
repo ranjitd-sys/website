@@ -1,4 +1,5 @@
 import type { DetectedRegion, PageDetection } from "../types"
+import { context2d, type AnyCanvas } from "./canvas"
 
 const DARK_THRESHOLD = 128
 const CONTENT_MIN = 0.005
@@ -55,8 +56,8 @@ function findFullWidthLines(
   return merged
 }
 
-export function fullWidthLines(canvas: HTMLCanvasElement, minFrac = 0.6): number[] {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+export function fullWidthLines(canvas: AnyCanvas, minFrac = 0.6): number[] {
+  const ctx = context2d(canvas, true)
   if (!ctx) return []
   const w = canvas.width
   const h = canvas.height
@@ -338,8 +339,8 @@ function detectAutoGrid(
   }
 }
 
-export function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDetection {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+export function detectAutoPage(canvas: AnyCanvas, page: number): PageDetection {
+  const ctx = context2d(canvas, true)
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
   const h = canvas.height
@@ -398,8 +399,8 @@ export function detectAutoPage(canvas: HTMLCanvasElement, page: number): PageDet
   }
 }
 
-export function detectPage(canvas: HTMLCanvasElement, page: number): PageDetection {
-  const ctx = canvas.getContext("2d", { willReadFrequently: true })
+export function detectPage(canvas: AnyCanvas, page: number): PageDetection {
+  const ctx = context2d(canvas, true)
   if (!ctx) throw new Error("Canvas 2D context unavailable")
   const w = canvas.width
   const h = canvas.height

@@ -1,8 +1,10 @@
 import { useCallback, useRef, useState, type ReactNode } from "react"
 import { FileUp, Loader2, Download, Printer, RotateCcw, ShieldCheck, PackageSearch, PackageCheck, AlertTriangle, ZoomIn, X, FileText, ArrowDownUp, Settings2, ChevronDown, Scissors, Minus, Wand2, Check, FileStack } from "lucide-react"
-import { loadPdf, renderPageToCanvas } from "./lib/pdf"
-import { analyzePage } from "./lib/labelbox"
-import { cropRegion, canvasToPngDataUrl, downloadBytes } from "./lib/crop"
+import { loadPdf, createPdfWorkers } from "./lib/pdf"
+import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api"
+import { processPage } from "./lib/page-job"
+import { PageWorkerPool } from "./lib/worker-pool"
+import { canvasToPngDataUrl, downloadBytes } from "./lib/crop"
 import { imposePdf, chooseGrid, sheetCount, nextFrame, computeLayout, type ImposeUnit, type A4Layout } from "./lib/impose"
 import { thermalPdf } from "./lib/thermal"
 import { invoicesPdf } from "./lib/invoices"
@@ -10,7 +12,7 @@ import { picklistPdf } from "./lib/picklist"
 import { sortUnits } from "./lib/sort"
 import type { ProcessStatus, OutputMode, ThermalPresetId, FitMode, SortKey, InvoiceMode, PerSheet, LabelImage } from "./types"
 import { THERMAL_PRESETS } from "./types"
-import { getProvider, type ProviderId } from "@/components/pages/label-provider/provider"
+import { getProvider, type LabelProvider, type ProviderId } from "@/components/pages/label-provider/provider"
 import { toCsv, topSeller, slugify } from "./lib/insights"
 import BatchPanel from "./BatchPanel"
 import { EMPTY_META, type LabelMeta } from "./types"
@@ -18,6 +20,12 @@ import { EMPTY_META, type LabelMeta } from "./types"
 const metasOf = (units: ImposeUnit[]): LabelMeta[] => units.map((u) => u.meta ?? EMPTY_META)
 
 const MAX_BYTES = 50 * 1024 * 1024
+// Pages processed at once. More than ~3 stops helping (each worker loads its own pdf.js
+// and copy of the file), and low-end phones have few cores, so leave one for the UI.
+const PAGE_CONCURRENCY = Math.max(
+  1,
+  Math.min(3, ((typeof navigator !== "undefined" && navigator.hardwareConcurrency) || 4) - 1),
+)
 
 const STEPS: { id: ProcessStatus; label: string }[] = [
   { id: "reading", label: "Reading PDF" },
@@ -25,16 +33,108 @@ const STEPS: { id: ProcessStatus; label: string }[] = [
   { id: "preparing", label: "Building previews" },
 ]
 
-function downscale(canvas: HTMLCanvasElement, maxW = 420): string {
-  const scale = Math.min(1, maxW / canvas.width)
-  if (scale >= 1) return canvasToPngDataUrl(canvas)
-  const c = document.createElement("canvas")
-  c.width = Math.floor(canvas.width * scale)
-  c.height = Math.floor(canvas.height * scale)
-  const ctx = c.getContext("2d")
-  if (!ctx) return canvasToPngDataUrl(canvas)
-  ctx.drawImage(canvas, 0, 0, c.width, c.height)
-  return canvasToPngDataUrl(c)
+interface PageOut {
+  unit: ImposeUnit
+  image: LabelImage
+  raster: boolean
+}
+
+interface ProcessHooks {
+  onPageCount: (total: number) => void
+  onProgress: (done: number, total: number) => void
+}
+
+function jobList(counts: number[]): { fi: number; p: number }[] {
+  return counts.flatMap((n, fi) => Array.from({ length: n }, (_, i) => ({ fi, p: i + 1 })))
+}
+
+// Runs `run(job, lane)` across `lanes` concurrent lanes; results keep job order.
+async function runLanes<J, R>(jobs: J[], lanes: number, run: (job: J, lane: number) => Promise<R>, onDone: (n: number) => void): Promise<R[]> {
+  const results: R[] = Array.from({ length: jobs.length })
+  let next = 0
+  let done = 0
+  const lane = async (k: number) => {
+    while (next < jobs.length) {
+      const j = next++
+      results[j] = await run(jobs[j], k)
+      onDone(++done)
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(lanes, jobs.length) }, (_, k) => lane(k)))
+  return results
+}
+
+/** Render + analyze in Web Workers (OffscreenCanvas), keeping the UI thread free. */
+async function processInWorkers(
+  buffers: ArrayBuffer[],
+  providerId: ProviderId,
+  hooks: ProcessHooks,
+  urls: string[],
+): Promise<PageOut[]> {
+  const pool = new PageWorkerPool(PAGE_CONCURRENCY)
+  try {
+    const counts: number[] = []
+    for (const [fi, buf] of buffers.entries()) counts.push(await pool.workers[0].open(fi, buf))
+    const total = counts.reduce((a, b) => a + b, 0)
+    hooks.onPageCount(total)
+    return await runLanes(
+      jobList(counts),
+      pool.workers.length,
+      async ({ fi, p }, lane) => {
+        const r = await pool.workers[lane].page(fi, buffers[fi], p, providerId)
+        const url = URL.createObjectURL(r.blob)
+        urls.push(url)
+        return {
+          unit: { bytes: buffers[fi], pageIndex: p, box: r.box, invoice: r.invoice, meta: r.meta },
+          image: { id: `src-${fi}-${p}`, page: p, kind: "label", previewUrl: url, fullUrl: url, width: r.width, height: r.height },
+          raster: r.raster,
+        }
+      },
+      (n) => hooks.onProgress(n, total),
+    )
+  } finally {
+    pool.terminate()
+  }
+}
+
+/** Fallback for browsers without Worker/OffscreenCanvas: same pipeline on the main thread. */
+async function processOnMainThread(buffers: ArrayBuffer[], provider: LabelProvider, hooks: ProcessHooks): Promise<PageOut[]> {
+  const workers = await createPdfWorkers(PAGE_CONCURRENCY)
+  // laneDocs[k][fi] = file fi opened on pdf.js worker k (pages parse in parallel)
+  const laneDocs: Map<number, Promise<PDFDocumentProxy>>[] = workers.map(() => new Map())
+  const docFor = (lane: number, fi: number): Promise<PDFDocumentProxy> => {
+    let d = laneDocs[lane].get(fi)
+    if (!d) {
+      // pdf.js takes ownership of the buffer it is given, so it always gets a copy.
+      d = loadPdf(buffers[fi].slice(0), workers[lane])
+      laneDocs[lane].set(fi, d)
+    }
+    return d
+  }
+  try {
+    const counts: number[] = []
+    for (const fi of buffers.keys()) counts.push((await docFor(0, fi)).numPages)
+    const total = counts.reduce((a, b) => a + b, 0)
+    hooks.onPageCount(total)
+    return await runLanes(
+      jobList(counts),
+      workers.length,
+      async ({ fi, p }, lane) => {
+        const r = await processPage(await docFor(lane, fi), p, provider)
+        const url = canvasToPngDataUrl(r.thumb as HTMLCanvasElement)
+        r.thumb.width = r.thumb.height = 0
+        return {
+          unit: { bytes: buffers[fi], pageIndex: p, box: r.box, invoice: r.invoice, meta: r.meta },
+          image: { id: `src-${fi}-${p}`, page: p, kind: "label", previewUrl: url, fullUrl: url, width: r.width, height: r.height },
+          raster: r.raster,
+        }
+      },
+      (n) => hooks.onProgress(n, total),
+    )
+  } finally {
+    for (const m of laneDocs) for (const d of m.values()) void d.then((doc) => doc.loadingTask.destroy()).catch(() => {})
+    for (const w of workers) w.destroy()
+  }
 }
 
 const FIT_LABELS: Record<FitMode, string> = {
@@ -429,8 +529,11 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
   const [detail, setDetail] = useState<LabelImage | null>(null)
   const [showAdvanced, setShowAdvanced] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const thumbUrls = useRef<string[]>([])
 
   const reset = useCallback(() => {
+    for (const u of thumbUrls.current) URL.revokeObjectURL(u)
+    thumbUrls.current = []
     setStatus("idle")
     setError(null)
     setLabels([])
@@ -468,63 +571,30 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
     pdfInvoiceCache.current = null
     pdfPicklistCache.current = null
     imposeUnits.current = []
+    for (const u of thumbUrls.current) URL.revokeObjectURL(u)
+    thumbUrls.current = []
     try {
       setStatus("reading")
-      const docs: { bytes: ArrayBuffer; pdf: Awaited<ReturnType<typeof loadPdf>> }[] = []
-      for (const f of files) {
-        const buf = await f.arrayBuffer()
-        const pdf = await loadPdf(buf.slice(0))
-        docs.push({ bytes: buf, pdf })
+      const buffers = await Promise.all(files.map((f) => f.arrayBuffer()))
+      const hooks: ProcessHooks = {
+        onPageCount: (n) => {
+          setPageCount(n)
+          setStatus("analyzing")
+        },
+        onProgress: (current, total) => setProgress({ current, total }),
       }
-      const totalPages = docs.reduce((a, d) => a + d.pdf.numPages, 0)
-      setPageCount(totalPages)
-
-      setStatus("analyzing")
-      const out: LabelImage[] = []
-      const units: ImposeUnit[] = []
-      let raster = 0
-      let n = 0
-      for (let fi = 0; fi < docs.length; fi++) {
-        const { bytes, pdf } = docs[fi]
-        for (let p = 1; p <= pdf.numPages; p++) {
-          n++
-          setProgress({ current: n, total: totalPages })
-          const full = await renderPageToCanvas(pdf, p, 1)
-          const analyzed = await analyzePage(pdf, p, full, provider)
-          if (analyzed.box.fromRaster) raster++
-          const sw = analyzed.box.labelBox.right - analyzed.box.labelBox.left
-          const sh = analyzed.box.labelBox.top - analyzed.box.labelBox.bottom
-          units.push({
-            bytes,
-            pageIndex: p,
-            box: analyzed.box.labelBox,
-            invoice: analyzed.box.invoiceBox,
-            meta: analyzed.meta,
-          })
-          const H = full.height
-          const cropped = cropRegion(full, {
-            page: p,
-            x: analyzed.box.labelBox.left,
-            y: H - analyzed.box.labelBox.top,
-            width: sw,
-            height: sh,
-          })
-          const url = downscale(cropped)
-          out.push({
-            id: `src-${fi}-${p}`,
-            page: p,
-            kind: "label",
-            previewUrl: url,
-            fullUrl: url,
-            width: cropped.width,
-            height: cropped.height,
-          })
-          full.width = 0
-          full.height = 0
-          cropped.width = 0
-          cropped.height = 0
+      let results: PageOut[] | null = null
+      if (PageWorkerPool.supported()) {
+        try {
+          results = await processInWorkers(buffers, providerId, hooks, thumbUrls.current)
+        } catch (err) {
+          console.warn("Label worker unavailable — processing on the main thread instead.", err)
         }
       }
+      results ??= await processOnMainThread(buffers, provider, hooks)
+      const units = results.map((r) => r.unit)
+      const out = results.map((r) => r.image)
+      const raster = results.filter((r) => r.raster).length
       imposeUnits.current = units
       const first = units.find((u) => u.box.right - u.box.left > 1)
       imposeAspect.current = first
@@ -538,7 +608,7 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
       setStatus("error")
       setError(e instanceof Error ? e.message : "Failed to process the PDF.")
     }
-  }, [])
+  }, [provider, providerId])
 
   const onDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()

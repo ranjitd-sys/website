@@ -11,7 +11,7 @@ import type { ThermalPresetId, FitMode } from "../types"
 import { THERMAL_PRESETS } from "../types"
 import type { PdfBox } from "./pdf"
 import type { ImposeUnit } from "./impose"
-import { nextFrame } from "./impose"
+import { nextFrame, frameYielder } from "./impose"
 import { drawSkuOverlay } from "./overlay"
 
 const END_LINE = rgb(0, 0, 0)
@@ -47,6 +47,7 @@ export async function thermalPdf(
   const pw = preset.wPt
   const ph = preset.hPt
   const out = await PDFDocument.create()
+  const maybeYield = frameYielder()
   const docCache = new Map<ArrayBuffer, PDFDocument>()
   async function docFor(bytes: ArrayBuffer): Promise<PDFDocument> {
     let doc = docCache.get(bytes)
@@ -107,7 +108,7 @@ export async function thermalPdf(
       drawSkuOverlay(page, 3, ph - 12, pw - 6, unit.meta)
     }
     onProgress?.(i + 1, units.length)
-    await nextFrame()
+    await maybeYield()
   }
   await nextFrame()
   return out.save()
