@@ -3,89 +3,341 @@ import type { DailyVisibility } from "@/lib/seo-dashboard/data"
 
 interface Props {
   days: DailyVisibility[]
-  maxPoints?: number
+  metric?: "traffic" | "position"
+  range?: number
 }
 
-const { days, maxPoints = 90 } = Astro.props
-const data = days.slice(-maxPoints)
-const W = 720
-const H = 240
-const PAD = { top: 12, right: 8, bottom: 24, left: 8 }
-
+const { days, metric = "traffic", range = 28 } = Astro.props
+const data = days
 const n = data.length
-const maxImpr = Math.max(...data.map((d) => d.impressions), 1)
-const maxClicks = Math.max(...data.map((d) => d.clicks), 1)
-const maxV = Math.max(maxImpr, maxClicks) * 1.15
-const minPos = Math.min(...data.map((d) => d.position), 20) - 1
-const maxPos = Math.max(...data.map((d) => d.position), 20) + 2
 
-const x = (i: number) => PAD.left + (i / Math.max(n - 1, 1)) * (W - PAD.left - PAD.right)
-const yImp = (v: number) => PAD.top + (1 - v / maxV) * (H - PAD.top - PAD.bottom)
-const yPos = (v: number) => PAD.top + ((v - minPos) / (maxPos - minPos)) * (H - PAD.top - PAD.bottom)
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+const dateLabel = (s: string) => {
+  const [, m, d] = s.split("-")
+  return `${MONTHS[Number(m) - 1]} ${Number(d)}`
+}
+const fmtInt = (v: number) => v.toLocaleString("en-IN")
 
-const path = (series: Array<{ v: number; i: number }>) =>
-  series.map((p, idx) => `${idx === 0 ? "M" : "L"}${x(p.i).toFixed(1)},${p.v.toFixed(1)}`).join(" ")
+const W = 780
+const H = 260
+const PAD = { top: 20, right: 20, bottom: 36, left: 24 }
+const innerW = W - PAD.left - PAD.right
+const innerH = H - PAD.top - PAD.bottom
 
-const areaPts = data.map((d, i) => ({ v: yImp(d.impressions), i }))
-const areaPath = `${path(areaPts)} L${x(n - 1)},${H - PAD.bottom} L${x(0)},${H - PAD.bottom} Z`
-const clicksPts = data.map((d, i) => ({ v: yImp(d.clicks), i }))
-const posPts = data.map((d, i) => ({ v: yPos(d.position), i }))
+const x = (i: number) => PAD.left + (n <= 1 ? innerW / 2 : (i / (n - 1)) * innerW)
 
-const last = data[n - 1]
-const gridLines = [0, 0.25, 0.5, 0.75, 1]
+const monotoneCubic = (points: Array<{ x: number; y: number }>) => {
+  const len = points.length
+  if (len === 0) return ""
+  if (len === 1) return `M${points[0]!.x.toFixed(1)},${points[0]!.y.toFixed(1)}`
+  if (len === 2) {
+    return `M${points[0]!.x.toFixed(1)},${points[0]!.y.toFixed(1)} L${points[1]!.x.toFixed(1)},${points[1]!.y.toFixed(1)}`
+  }
+  const h: number[] = []
+  const slope: number[] = []
+  for (let i = 0; i < len - 1; i++) {
+    const dx = points[i + 1]!.x - points[i]!.x
+    const dy = points[i + 1]!.y - points[i]!.y
+    h.push(dx)
+    slope.push(dx === 0 ? 0 : dy / dx)
+  }
+  const t: number[] = [slope[0]!]
+  for (let i = 1; i < len - 1; i++) {
+    const s0 = slope[i - 1]!
+    const s1 = slope[i]!
+    t.push(s0 * s1 <= 0 ? 0 : (s0 + s1) / 2)
+  }
+  t.push(slope[len - 2]!)
+  for (let i = 0; i < len - 1; i++) {
+    const s = slope[i]!
+    if (s === 0) {
+      t[i] = 0
+      t[i + 1] = 0
+    } else {
+      const a = t[i]! / s
+      const b = t[i + 1]! / s
+      const mag = a * a + b * b
+      if (mag > 9) {
+        const tau = 3 / Math.sqrt(mag)
+        t[i] = tau * a * s
+        t[i + 1] = tau * b * s
+      }
+    }
+  }
+  let d = `M${points[0]!.x.toFixed(1)},${points[0]!.y.toFixed(1)}`
+  for (let i = 0; i < len - 1; i++) {
+    const p0 = points[i]!
+    const p1 = points[i + 1]!
+    const hi = h[i]!
+    const c1x = p0.x + hi / 3
+    const c1y = p0.y + (t[i]! * hi) / 3
+    const c2x = p1.x - hi / 3
+    const c2y = p1.y - (t[i + 1]! * hi) / 3
+    d += ` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p1.x.toFixed(1)},${p1.y.toFixed(1)}`
+  }
+  return d
+}
 
-const fmt = (n: number) =>
-  n >= 1_000_000 ? `${(n / 1_000_000).toFixed(1)}M` : n >= 1_000 ? `${(n / 1_000).toFixed(1)}k` : `${n}`
+const areaOf = (line: string, baseY: number, n: number) =>
+  `${line} L${x(n - 1).toFixed(1)},${baseY.toFixed(1)} L${x(0).toFixed(1)},${baseY.toFixed(1)} Z`
+
+const niceTicks = (max: number, count = 4): number[] => {
+  if (max <= 0) return [0]
+  const raw = max / count
+  const mag = 10 ** Math.floor(Math.log10(raw || 1))
+  const norm = raw / mag
+  const step = (norm >= 7.5 ? 10 : norm >= 3 ? 5 : norm >= 1.5 ? 2 : 1) * mag
+  const out: number[] = []
+  for (let t = step; t <= max + step * 0.001; t += step) out.push(Number(t.toFixed(6)))
+  return out.length >= 1 ? out : [max]
+}
+
+interface Series {
+  key: string
+  label: string
+  values: number[]
+  stroke: string
+  fillId: string
+  strokeW: number
+  dotR: number
+}
+
+let seriesList: Series[]
+let lo = 0
+let hi = 1
+let invert = false
+
+if (metric === "traffic") {
+  const impr = data.map((d) => d.impressions)
+  const clicks = data.map((d) => d.clicks)
+  hi = Math.max(...impr, 1) * 1.08
+  seriesList = [
+    { key: "impr", label: "Impressions", values: impr, stroke: "var(--brand-400)", fillId: "g-impr", strokeW: 1.8, dotR: 3.5 },
+    { key: "clicks", label: "Clicks", values: clicks, stroke: "var(--brand-600)", fillId: "g-clicks", strokeW: 2.1, dotR: 3.8 },
+  ]
+} else {
+  const pos = data.map((d) => d.position)
+  let vmin = Math.min(...pos)
+  let vmax = Math.max(...pos)
+  if (vmin === vmax) { vmin -= 1; vmax += 1 }
+  const pad = (vmax - vmin) * 0.14
+  lo = vmin - pad
+  hi = vmax + pad
+  invert = true
+  seriesList = [
+    { key: "pos", label: "Avg position", values: pos, stroke: "var(--ink-600)", fillId: "g-pos", strokeW: 2.1, dotR: 4 },
+  ]
+}
+
+const y = (v: number) => {
+  const t = (v - lo) / (hi - lo || 1)
+  return invert ? PAD.top + t * innerH : PAD.top + (1 - t) * innerH
+}
+
+const baseY = PAD.top + innerH
+const gridLines = niceTicks(hi, 4)
+
+const xIdx = n <= 1 ? [0] : [...new Set([0, Math.round((n - 1) * 0.2), Math.round((n - 1) * 0.4), Math.round((n - 1) * 0.6), Math.round((n - 1) * 0.8), n - 1])]
+const showDots = n <= 80
+
+const lastPos = data[n - 1]?.position ?? 0
+const changeClicks = n >= 2 ? data[n - 1]!.clicks - data[0]!.clicks : 0
+const changeImpr = n >= 2 ? data[n - 1]!.impressions - data[0]!.impressions : 0
+const changePos = n >= 2 ? data[n - 1]!.position - data[0]!.position : 0
+const signArrow = (v: number) => (v > 0 ? "↑" : v < 0 ? "↓" : "·")
+const improved = (v: number, inverted: boolean) => (inverted ? v < 0 : v > 0)
+const chip = (v: number, good: boolean) =>
+  v === 0
+    ? "bg-ink-100 text-ink-500"
+    : good
+      ? "bg-success-100 text-success-700"
+      : "bg-danger-100 text-danger-700"
 ---
 
-<figure class="w-full" role="img" aria-label="Daily impressions, clicks and average position over the selected range">
-  <svg viewBox={`0 0 ${W} ${H}`} class="w-full" role="presentation" aria-hidden="true">
-    <defs>
-      <linearGradient id="vis-area" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--brand-400)" stop-opacity="0.22" />
-        <stop offset="100%" stop-color="var(--brand-400)" stop-opacity="0" />
-      </linearGradient>
-    </defs>
+<figure class="chart-container w-full" role="img" aria-label={`${metric === "traffic" ? "Clicks and impressions" : "Average position"} over the last ${range} days, ${n} samples`}>
+  <div class="chart-wrapper relative">
+    <svg viewBox={`0 0 ${W} ${H}`} class="w-full" role="presentation" aria-hidden="true">
+      <defs>
+        <linearGradient id="g-impr" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--brand-400)" stop-opacity="0.26" />
+          <stop offset="70%" stop-color="var(--brand-400)" stop-opacity="0.07" />
+          <stop offset="100%" stop-color="var(--brand-400)" stop-opacity="0.01" />
+        </linearGradient>
+        <linearGradient id="g-clicks" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--brand-600)" stop-opacity="0.32" />
+          <stop offset="70%" stop-color="var(--brand-600)" stop-opacity="0.08" />
+          <stop offset="100%" stop-color="var(--brand-600)" stop-opacity="0.01" />
+        </linearGradient>
+        <linearGradient id="g-pos" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--ink-400)" stop-opacity="0.22" />
+          <stop offset="100%" stop-color="var(--ink-400)" stop-opacity="0.02" />
+        </linearGradient>
+      </defs>
 
-    {gridLines.map((g) => {
-      const y = PAD.top + g * (H - PAD.top - PAD.bottom)
-      return (
-        <line
-          x1={PAD.left}
-          x2={W - PAD.right}
-          y1={y}
-          y2={y}
-          stroke="var(--ink-200)"
-          stroke-width="1"
-          stroke-dasharray="3 4"
-        />
-      )
-    })}
+      {
+        gridLines.map((t) => (
+          <line
+            x1={PAD.left}
+            x2={W - PAD.right}
+            y1={y(t)}
+            y2={y(t)}
+            stroke="var(--ink-200)"
+            stroke-width="1"
+            stroke-dasharray="4 6"
+          />
+        ))
+      }
 
-    <path d={areaPath} fill="url(#vis-area)" />
-    <path d={path(clicksPts)} fill="none" stroke="var(--brand-600)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-    <path d={path(posPts)} fill="none" stroke="var(--ink-400)" stroke-width="1.8" stroke-dasharray="1 5" stroke-linecap="round" />
+      {
+        seriesList.map((s) => {
+          const pts = s.values.map((v, i) => ({ x: x(i), y: y(v), v, i }))
+          const line = monotoneCubic(pts)
+          const area = areaOf(line, baseY, n)
+          return (
+            <>
+              <path d={area} fill={`url(#${s.fillId})`} />
+              <path d={line} fill="none" stroke={s.stroke} stroke-width={s.strokeW} stroke-linecap="round" stroke-linejoin="round" />
+              {
+                showDots &&
+                  pts.map((p) => {
+                    const val = metric === "position" ? p.v.toFixed(1) : fmtInt(p.v)
+                    return (
+                      <circle
+                        class="chart-dot"
+                        cx={p.x}
+                        cy={p.y}
+                        r={s.dotR}
+                        fill="#ffffff"
+                        stroke={s.stroke}
+                        stroke-width="2"
+                        data-date={dateLabel(data[p.i]!.sample_date)}
+                        data-label={s.label}
+                        data-value={val}
+                      >
+                        <title>{`${data[p.i]!.sample_date} · ${s.label}: ${val}`}</title>
+                      </circle>
+                    )
+                  })
+              }
+            </>
+          )
+        })
+      }
 
-    {n > 0 && (
-      <circle cx={x(n - 1)} cy={yImp(last.clicks)} r="3.5" fill="var(--brand-600)" />
-    )}
-  </svg>
+      {
+        xIdx.map((i) => (
+          <text x={x(i)} y={H - 12} text-anchor="middle" font-size="11" fill="var(--ink-400)" font-family="var(--font-sans)">
+            {dateLabel(data[i]!.sample_date)}
+          </text>
+        ))
+      }
 
-  <figcaption class="mt-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-    <span class="inline-flex items-center gap-2">
-      <span class="inline-block size-2 rounded-full" style="background: var(--brand-600)"></span>
-      Clicks
-    </span>
-    <span class="inline-flex items-center gap-2">
-      <span class="inline-block size-2.5 rounded-sm" style="background: var(--brand-400); opacity: 0.45"></span>
-      Impressions (area)
-    </span>
-    <span class="inline-flex items-center gap-2">
-      <span class="inline-block h-0.5 w-3.5 border-t border-dashed" style="border-color: var(--ink-400)"></span>
-      Avg position
-    </span>
-    <span class="ml-auto font-mono tabular-nums">
-      {data[0]?.sample_date} → {last?.sample_date} · peak {fmt(maxImpr)} impr · {fmt(last?.clicks ?? 0)} clicks
-    </span>
+      {
+        metric === "traffic" && n > 1 && (
+          <>
+            <circle cx={x(n - 1)} cy={y(data[n - 1]!.impressions)} r="3.5" fill="var(--brand-400)" />
+            <circle cx={x(n - 1)} cy={y(data[n - 1]!.clicks)} r="4.5" fill="var(--brand-600)" />
+          </>
+        )
+      }
+      {
+        metric === "position" && n > 1 && (
+          <circle cx={x(n - 1)} cy={y(lastPos)} r="5" fill="var(--ink-600)" />
+        )
+      }
+    </svg>
+    <div class="chart-tooltip" aria-hidden="true"></div>
+  </div>
+
+  <figcaption class="mt-5 space-y-3 border-t border-border pt-4 text-xs">
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+      {
+        metric === "traffic" ? (
+          <>
+            <span class="inline-flex items-center gap-2 font-medium text-ink-700">
+              <span class="inline-block size-2.5 rounded-sm" style="background: var(--brand-400)"></span>
+              Impressions
+            </span>
+            <span class="inline-flex items-center gap-2 font-medium text-ink-700">
+              <span class="inline-block size-2.5 rounded-sm" style="background: var(--brand-600)"></span>
+              Clicks
+            </span>
+          </>
+        ) : (
+          <span class="inline-flex items-center gap-2 font-medium text-ink-700">
+            <span class="inline-block size-2.5 rounded-sm" style="background: var(--ink-600)"></span>
+            Avg position (lower is better)
+          </span>
+        )
+      }
+    </div>
+
+    <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-muted-foreground">
+      {
+        n >= 2 && metric === "traffic" && (
+          <>
+            <span class:list={["inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-mono font-semibold tabular-nums", chip(changeImpr, improved(changeImpr, false))]}>
+              {signArrow(changeImpr)} {fmtInt(Math.abs(changeImpr))} impr
+            </span>
+            <span class:list={["inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-mono font-semibold tabular-nums", chip(changeClicks, improved(changeClicks, false))]}>
+              {signArrow(changeClicks)} {fmtInt(Math.abs(changeClicks))} clicks
+            </span>
+          </>
+        )
+      }
+      {
+        n >= 2 && metric === "position" && (
+          <span class:list={["inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 font-mono font-semibold tabular-nums", chip(changePos, improved(changePos, true))]}>
+            {signArrow(-changePos)} {Math.abs(changePos).toFixed(1)} rank
+          </span>
+        )
+      }
+      <span class="font-mono tabular-nums">
+        {n} sample{n === 1 ? "" : "s"} · {data[0]?.sample_date} → {data[n - 1]?.sample_date}
+      </span>
+    </div>
   </figcaption>
+
+  <script>
+    import "@/components/admin/seo/chart-tooltip"
+  </script>
+
+  <style>
+    .chart-tooltip {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      background: var(--ink-950);
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-family: var(--font-sans);
+      box-shadow: 0 6px 18px rgba(11, 17, 32, 0.25);
+      transition: opacity 0.15s ease;
+      z-index: 10;
+      white-space: nowrap;
+    }
+    .tooltip-date {
+      font-size: 10px;
+      opacity: 0.65;
+      margin-bottom: 2px;
+    }
+    .tooltip-label {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+    .tooltip-value {
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 2px;
+      font-family: var(--font-mono);
+    }
+    .chart-dot {
+      transition: r 0.15s ease;
+    }
+    .chart-dot:hover {
+      r: 6;
+    }
+  </style>
 </figure>

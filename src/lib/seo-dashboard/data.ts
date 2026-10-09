@@ -1,5 +1,6 @@
 export type KeywordIntent = "commercial" | "transactional" | "informational"
 export type KeywordStatus = "active" | "paused" | "retired"
+export type SeoMetric = "traffic" | "position"
 export type OpportunityStatus =
   | "proposed"
   | "optimizing"
@@ -7,7 +8,7 @@ export type OpportunityStatus =
   | "done"
   | "measured"
   | "rejected"
-export type Verdict = "improved" | "stable" | "regressed" | "stuck"
+export type Verdict = "won" | "stuck" | "falling"
 
 export interface DailyVisibility {
   sample_date: string
@@ -49,7 +50,7 @@ export interface ChangeRow {
   id: number
   term: string
   branch: string
-  pr_url: string
+  pr_url: string | null
   deployed: boolean
   measured: boolean
   position_before: number | null
@@ -139,17 +140,16 @@ export const SAMPLE_DASHBOARD: DashboardData = {
     measured: 2,
     avgDelta: -4.5,
     verdicts: [
-      { verdict: "improved", count: 1 },
-      { verdict: "stable", count: 1 },
-      { verdict: "regressed", count: 0 },
-      { verdict: "stuck", count: 0 },
+      { verdict: "won", count: 1 },
+      { verdict: "stuck", count: 1 },
+      { verdict: "falling", count: 0 },
     ],
   },
   recentChanges: [
     { id: 5, term: "d2c platforms", branch: "seo/solutions-d2c-brands-d2c-platforms", pr_url: "https://github.com/org/deepecom/pull/15", deployed: true, measured: false, position_before: 41, position_after: 29, delta: -12, verdict: null, created_at: "2026-09-14T10:20:00.000Z" },
     { id: 4, term: "amazon seller gst accounting", branch: "seo/solutions-amazon-sellers-amazon-seller-gst-accounting", pr_url: "https://github.com/org/deepecom/pull/14", deployed: true, measured: false, position_before: 17, position_after: 9, delta: -8, verdict: null, created_at: "2026-09-07T09:05:00.000Z" },
-    { id: 3, term: "flipkart payment reconciliation", branch: "seo/resources-reconciliation-flipkart-payment-reconciliation", pr_url: "https://github.com/org/deepecom/pull/13", deployed: true, measured: true, position_before: 18, position_after: 7, delta: -11, verdict: "improved", created_at: "2026-08-31T08:40:00.000Z" },
-    { id: 2, term: "ecommerce accounting software", branch: "seo/resources-ecommerce-accounting-ecommerce-accounting-software-india", pr_url: "https://github.com/org/deepecom/pull/11", deployed: true, measured: true, position_before: 24, position_after: 11, delta: -13, verdict: "improved", created_at: "2026-08-24T07:15:00.000Z" },
+    { id: 3, term: "flipkart payment reconciliation", branch: "seo/resources-reconciliation-flipkart-payment-reconciliation", pr_url: "https://github.com/org/deepecom/pull/13", deployed: true, measured: true, position_before: 18, position_after: 7, delta: -11, verdict: "won", created_at: "2026-08-31T08:40:00.000Z" },
+    { id: 2, term: "ecommerce accounting software", branch: "seo/resources-ecommerce-accounting-ecommerce-accounting-software-india", pr_url: "https://github.com/org/deepecom/pull/11", deployed: true, measured: true, position_before: 24, position_after: 11, delta: -13, verdict: "won", created_at: "2026-08-24T07:15:00.000Z" },
     { id: 1, term: "tally ecommerce integration", branch: "seo/erp-connector-accounting-ecommerce-accounting-tally", pr_url: "https://github.com/org/deepecom/pull/9", deployed: false, measured: false, position_before: null, position_after: null, delta: null, verdict: null, created_at: "2026-08-17T06:00:00.000Z" },
   ],
   learnings: [

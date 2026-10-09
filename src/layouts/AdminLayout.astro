@@ -1,0 +1,109 @@
+---
+import "@/styles/landing.css"
+import { Font } from "astro:assets"
+import AdminSidebar from "@/components/admin/layout/AdminSidebar.astro"
+import { ADMIN_AGENTS } from "@/data/admin-nav"
+
+interface Props {
+  title?: string
+  description?: string
+  active?: string
+  agentName?: string
+  showNav?: boolean
+}
+
+const {
+  title = "DeepEcom — Internal",
+  description = "DeepEcom internal dashboard.",
+  active = "seo",
+  agentName = "SEO Agent",
+  showNav = true,
+} = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/logo.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#0a317c" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <Font cssVariable="--font-geist" preload />
+    <Font cssVariable="--font-plex" preload />
+    <script is:inline>
+      document.documentElement.classList.add("js")
+    </script>
+    <style is:global>
+      /* landing.css sets overflow-x:hidden on html/body, which breaks position:sticky. */
+      html,
+      body {
+        overflow-x: visible;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <div class="flex min-h-svh">
+      {showNav && <AdminSidebar {active} />}
+
+      <div class:list={["flex min-w-0 flex-1 flex-col", showNav && "lg:pl-60"]}>
+        <header class:list={["sticky top-0 z-40 backdrop-blur", showNav ? "border-b border-border bg-white/90" : "hidden"]}>
+          <div class="flex h-14 items-center justify-between gap-3 px-6 sm:px-8">
+            <div class="flex items-center gap-3 lg:hidden">
+              <a href="/" class="flex items-center gap-2">
+                <span class="grid size-7 place-items-center rounded-lg bg-ink-950 text-[10px] font-bold text-white">DE</span>
+                <span class="text-[15px] font-bold tracking-tight text-ink-950">Deep<span class="text-brand-600">Ecom</span></span>
+              </a>
+            </div>
+            <span class="hidden text-sm font-semibold text-ink-500 lg:inline">{agentName}</span>
+            <div class="flex items-center gap-2">
+              <slot name="header-actions" />
+              <a
+                href="/"
+                class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink-700 transition hover:border-ink-300 hover:bg-ink-50"
+              >
+                View site
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M4 12L12 4M12 4H6M12 4v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </a>
+            </div>
+          </div>
+
+          <nav class="flex gap-1.5 overflow-x-auto border-t border-border px-4 py-2 lg:hidden" aria-label="Agents">
+            {
+              ADMIN_AGENTS.map((agent) => (
+                <a
+                  href={agent.href}
+                  aria-current={agent.id === active ? "page" : undefined}
+                  class:list={[
+                    "shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition",
+                    agent.id === active
+                      ? "border-brand-200 bg-brand-50 text-brand-700"
+                      : "border-border bg-white text-ink-500 hover:text-ink-900",
+                  ]}
+                >
+                  {agent.name}
+                  {agent.status === "soon" && <span class="ml-1 text-[10px] font-medium text-ink-400">· soon</span>}
+                </a>
+              ))
+            }
+          </nav>
+        </header>
+
+        <main class="min-w-0 flex-1">
+          <slot />
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

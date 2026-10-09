@@ -1,0 +1,72 @@
+---
+import { Mail, Search } from "lucide-react"
+import { ADMIN_AGENTS, type AdminAgentIcon } from "@/data/admin-nav"
+
+interface Props {
+  active?: string
+}
+
+const { active = "seo" } = Astro.props
+
+const ICONS: Record<AdminAgentIcon, typeof Search> = {
+  search: Search,
+  mail: Mail,
+}
+---
+
+<aside class="fixed top-0 left-0 z-40 hidden h-svh w-60 shrink-0 flex-col border-r border-border bg-white lg:flex" aria-label="Agents">
+  <div class="flex h-14 items-center gap-2.5 border-b border-border px-5">
+    <span class="grid size-7 place-items-center rounded-lg bg-ink-950 text-[10px] font-bold text-white">DE</span>
+    <div class="leading-tight">
+      <p class="text-[13px] font-bold tracking-tight text-ink-950">Deep<span class="text-brand-600">Ecom</span></p>
+      <p class="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Agent Console</p>
+    </div>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto px-3 py-5">
+    <p class="px-2.5 pb-2 text-[10px] font-bold uppercase tracking-[0.12em] text-ink-400">Agents</p>
+    <ul class="space-y-1">
+      {
+        ADMIN_AGENTS.map((agent) => {
+          const isActive = agent.id === active
+          const Icon = ICONS[agent.icon]
+          const soon = agent.status === "soon"
+          return (
+            <li>
+              <a
+                href={agent.href}
+                aria-current={isActive ? "page" : undefined}
+                class:list={[
+                  "group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition",
+                  isActive ? "bg-brand-50 text-brand-700" : soon ? "text-ink-400 hover:bg-ink-50 hover:text-ink-600" : "text-ink-600 hover:bg-ink-50 hover:text-ink-900",
+                ]}
+              >
+                <span class:list={["grid size-8 shrink-0 place-items-center rounded-lg", isActive ? "bg-brand-100 text-brand-700" : "bg-ink-50 text-ink-400 group-hover:text-ink-600"]}>
+                  <Icon size={15} strokeWidth={isActive ? 2.2 : 1.8} />
+                </span>
+                <span class="min-w-0 flex-1">
+                  <span class="block truncate text-[13px] font-semibold leading-tight">{agent.name}</span>
+                  <span class:list={["block truncate text-[11px] leading-tight", isActive ? "text-brand-600/80" : "text-ink-400"]}>{agent.product}</span>
+                </span>
+                {
+                  soon && (
+                    <span class="shrink-0 rounded-full bg-ink-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-ink-500">
+                      soon
+                    </span>
+                  )
+                }
+                {isActive && agent.status === "live" && <span class="size-1.5 shrink-0 rounded-full bg-success-500" aria-label="Active"></span>}
+              </a>
+            </li>
+          )
+        })
+      }
+    </ul>
+  </nav>
+
+  <div class="border-t border-border px-5 py-4">
+    <p class="text-[11px] text-muted-foreground">
+      <span class="font-semibold text-ink-600">1 of {ADMIN_AGENTS.length}</span> agents live
+    </p>
+  </div>
+</aside>

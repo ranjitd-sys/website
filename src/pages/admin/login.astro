@@ -1,0 +1,95 @@
+---
+import AdminLayout from "@/layouts/AdminLayout.astro"
+import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/admin-auth"
+
+const isAdmin = verifyAdminToken(Astro.cookies.get(ADMIN_COOKIE)?.value)
+if (isAdmin) {
+  return Astro.redirect("/admin/seo")
+}
+
+const loginError = Astro.url.searchParams.get("error") === "1"
+---
+
+<AdminLayout title="Sign in — DeepEcom Agent Console" description="DeepEcom internal dashboard sign in." showNav={false}>
+  <section class="grid min-h-svh place-items-center bg-ink-950 px-6 py-24">
+    <div
+      class="pointer-events-none fixed inset-0"
+      aria-hidden="true"
+      style="background:
+        radial-gradient(48rem 24rem at 50% -10%, rgba(33,101,236,0.22), transparent 60%),
+        radial-gradient(30rem 18rem at 90% 110%, rgba(92,148,255,0.1), transparent 55%)"
+    ></div>
+
+    <form method="post" action="/api/admin/login" class="relative w-full max-w-sm rounded-2xl border border-white/10 bg-white p-8 shadow-card">
+      <div class="mb-6 text-center">
+        <span class="mx-auto grid size-10 place-items-center rounded-xl bg-ink-950 text-[12px] font-bold text-white">DE</span>
+        <p class="mt-4 text-[11px] font-bold uppercase tracking-[0.16em] text-brand-600">Agent Console</p>
+        <h1 class="mt-1.5 text-2xl font-bold tracking-tight text-ink-950">Sign in</h1>
+        <p class="mt-1.5 text-sm text-muted-foreground">Enter the dashboard password to continue.</p>
+      </div>
+
+      {
+        loginError && (
+          <p role="alert" class="mb-4 rounded-lg border border-danger-200 bg-danger-50 px-3.5 py-2.5 text-sm text-danger-700">
+            Incorrect password. Please try again.
+          </p>
+        )
+      }
+
+      <label class="grid gap-1.5">
+        <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Password</span>
+        <div class="relative">
+          <input
+            id="admin-password"
+            type="password"
+            name="password"
+            required
+            autofocus
+            autocomplete="current-password"
+            placeholder="••••••••"
+            class="h-11 w-full rounded-lg border border-border bg-white px-3.5 pr-11 text-sm text-ink-900 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+          />
+          <button
+            id="toggle-password"
+            type="button"
+            aria-label="Show password"
+            aria-pressed="false"
+            aria-controls="admin-password"
+            class="absolute inset-y-0 right-0 grid w-11 place-items-center rounded-r-lg text-ink-400 transition hover:text-ink-700 focus-visible:text-ink-700"
+          >
+            <svg class="icon-eye" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+            <svg class="icon-eye-off" style="display:none" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+              <path d="M10.73 5.08A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a13.2 13.2 0 0 1-1.67 2.68" />
+              <path d="M6.61 6.61A13.5 13.5 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.39-1.61" />
+              <line x1="2" x2="22" y1="2" y2="22" />
+            </svg>
+          </button>
+        </div>
+      </label>
+
+      <button type="submit" class="mt-5 h-11 w-full rounded-lg bg-brand-600 text-sm font-semibold text-white transition hover:bg-brand-700">
+        View dashboard
+      </button>
+    </form>
+  </section>
+  <script is:inline>
+    ;(() => {
+      const btn = document.getElementById("toggle-password")
+      const input = document.getElementById("admin-password")
+      if (!btn || !input) return
+      btn.addEventListener("click", () => {
+        const show = input.type === "password"
+        input.type = show ? "text" : "password"
+        btn.setAttribute("aria-pressed", String(show))
+        btn.setAttribute("aria-label", show ? "Hide password" : "Show password")
+        btn.querySelector(".icon-eye").style.display = show ? "none" : ""
+        btn.querySelector(".icon-eye-off").style.display = show ? "" : "none"
+        input.focus()
+      })
+    })()
+  </script>
+</AdminLayout>

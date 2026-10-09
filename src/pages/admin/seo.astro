@@ -1,6 +1,8 @@
 ---
-import PageLayout from "@/layouts/PageLayout.astro"
-import { SAMPLE_DASHBOARD, type DashboardData } from "@/lib/seo-dashboard/data"
+import AdminLayout from "@/layouts/AdminLayout.astro"
+import { SAMPLE_DASHBOARD, type DashboardData, type SeoMetric } from "@/lib/seo-dashboard/data"
+import { loadDashboard } from "@/lib/seo-dashboard/db"
+import { ADMIN_COOKIE, verifyAdminToken } from "@/lib/admin-auth"
 import KpiCard from "@/components/admin/seo/KpiCard.astro"
 import VisibilityChart from "@/components/admin/seo/VisibilityChart.astro"
 import RankingBars from "@/components/admin/seo/RankingBars.astro"
@@ -9,68 +11,138 @@ import Pipeline from "@/components/admin/seo/Pipeline.astro"
 import ChangesTable from "@/components/admin/seo/ChangesTable.astro"
 import LearningsList from "@/components/admin/seo/LearningsList.astro"
 
-const range = (n: number) => Array.from({ length: n }, (_, i) => i)
-
+const useSample = Astro.url.searchParams.get("sample") === "1"
 const CHART_RANGE = Math.min(Math.max(Number(Astro.url.searchParams.get("range")) || 28, 7), 90)
 
-const data: DashboardData = SAMPLE_DASHBOARD
-const AUTHENTICATED = true
+const METRICS: SeoMetric[] = ["traffic", "position"]
+const metricParam = Astro.url.searchParams.get("metric") ?? ""
+const metric: SeoMetric = METRICS.includes(metricParam as SeoMetric) ? (metricParam as SeoMetric) : "traffic"
+const METRIC_LABEL: Record<SeoMetric, string> = { traffic: "Traffic", position: "Position" }
+
+const AUTHENTICATED = verifyAdminToken(Astro.cookies.get(ADMIN_COOKIE)?.value)
+if (!AUTHENTICATED) {
+  return Astro.redirect("/admin/login")
+}
+
+const data: DashboardData = useSample ? SAMPLE_DASHBOARD : await loadDashboard()
 
 const DAYS = 28
+const MS_DAY = 86_400_000
 const daily = data.daily
-const recent = daily.slice(-DAYS)
-const prior = daily.slice(-DAYS * 2, -DAYS)
+const latestMs = daily.length ? new Date(daily[daily.length - 1]!.sample_date).getTime() : Date.now()
+const cutoff = (days: number) => latestMs - days * MS_DAY
+
+const chartData = daily.filter((d) => new Date(d.sample_date).getTime() >= cutoff(CHART_RANGE))
+const recent = daily.filter((d) => new Date(d.sample_date).getTime() >= cutoff(DAYS))
+const prior = daily.filter((d) => {
+  const t = new Date(d.sample_date).getTime()
+  return t >= cutoff(DAYS * 2) && t < cutoff(DAYS)
+})
 
 const period = (rows: typeof daily) => {
   const clicks = rows.reduce((s, r) => s + r.clicks, 0)
   const impressions = rows.reduce((s, r) => s + r.impressions, 0)
-  const position = rows.length ? rows.reduce((s, r) => s + r.position, 0) / rows.length : 0
-  const ctr = impressions ? clicks / impressions : 0
+  const position = rows.length ? rows.reduce((s, r) => s + r.position, 0) / rows.length : null
+  const ctr = impressions ? clicks / impressions : null
   return { clicks, impressions, position, ctr }
 }
 
 const now = period(recent)
 const prev = period(prior)
-const pct = (a: number, b: number) => (b === 0 ? 0 : ((a - b) / b) * 100)
+const hasNow = recent.length > 0
+const hasPrev = prior.length > 0
 
-const totalClicks = data.keywords.reduce((s, k) => s + k.count, 0)
+const pctDelta = (a: number | null, b: number | null): number | undefined =>
+  hasPrev && a !== null && b !== null && b !== 0 ? Math.round(((a - b) / b) * 1000) / 10 : undefined
+const posDelta = (a: number | null, b: number | null): number | undefined =>
+  hasPrev && a !== null && b !== null ? Math.round((a - b) * 10) / 10 : undefined
 
+const totalKeywords = data.keywords.reduce((s, k) => s + k.count, 0)
 const fmtInt = (n: number) => n.toLocaleString("en-IN")
-const fmtPct = (n: number) => `${n.toFixed(1)}%`
-const fmtNum = (n: number) => (Math.round(n)).toLocaleString("en-IN")
 
 const kpis = [
-  { label: "Clicks", value: fmtInt(now.clicks), delta: pct(now.clicks, prev.clicks), positiveIsGood: true },
-  { label: "Impressions", value: fmtInt(now.impressions), delta: pct(now.impressions, prev.impressions), positiveIsGood: true },
-  { label: "Avg CTR", value: fmtPct(now.ctr * 100), delta: pct(now.ctr, prev.ctr), positiveIsGood: true },
-  { label: "Avg position", value: now.position.toFixed(1), delta: now.position - prev.position, positiveIsGood: false },
-].map((k) => ({ ...k, delta: Math.round(k.delta * 10) / 10 }))
+  {
+    label: "Clicks",
+    value: hasNow ? fmtInt(now.clicks) : "—",
+    delta: pctDelta(now.clicks, prev.clicks),
+    positiveIsGood: true,
+    icon: "clicks" as const,
+    hint: hasPrev ? undefined : "no prior window yet",
+  },
+  {
+    label: "Impressions",
+    value: hasNow ? fmtInt(now.impressions) : "—",
+    delta: pctDelta(now.impressions, prev.impressions),
+    positiveIsGood: true,
+    icon: "impressions" as const,
+    hint: hasPrev ? undefined : "no prior window yet",
+  },
+  {
+    label: "Avg CTR",
+    value: now.ctr !== null ? `${(now.ctr * 100).toFixed(1)}%` : "—",
+    delta: pctDelta(now.ctr, prev.ctr),
+    positiveIsGood: true,
+    icon: "ctr" as const,
+    hint: hasPrev ? undefined : "no prior window yet",
+  },
+  {
+    label: "Avg position",
+    value: now.position !== null ? now.position.toFixed(1) : "—",
+    delta: posDelta(now.position, prev.position),
+    positiveIsGood: false,
+    icon: "position" as const,
+    deltaSuffix: "",
+    hint: hasPrev ? "lower is better" : "no prior window yet",
+  },
+]
+
+const sourceLabel = useSample ? "SAMPLE data" : "live · DeepRank DB"
 ---
 
-<PageLayout title="SEO Dashboard — DeepEcom" description="DeepEcom SEO agent KPIs" noindex>
-  {
-    AUTHENTICATED ? (
-      <>
-        <section class="border-b border-border bg-ink-950 text-white">
+<AdminLayout title="SEO Dashboard — DeepEcom" description="DeepEcom SEO agent KPIs" active="seo" agentName="SEO Agent">
+  <form slot="header-actions" method="post" action="/api/admin/logout">
+    <button
+      type="submit"
+      class="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-1.5 text-xs font-semibold text-ink-700 transition hover:border-danger-200 hover:bg-danger-50 hover:text-danger-700"
+    >
+      Sign out
+    </button>
+  </form>
+  <>
+    <section class="relative overflow-hidden border-b border-border bg-ink-950 text-white">
           <div
             class="pointer-events-none absolute inset-0"
             aria-hidden="true"
-            style="background: radial-gradient(40rem 20rem at 85% -20%, rgba(33,101,236,0.28), transparent 60%)"
+            style="background:
+              radial-gradient(48rem 24rem at 82% -30%, rgba(33,101,236,0.32), transparent 60%),
+              radial-gradient(30rem 18rem at 15% 110%, rgba(92,148,255,0.12), transparent 55%)"
           ></div>
-          <div class="relative mx-auto max-w-7xl px-6 py-10 sm:px-8">
-            <div class="flex flex-wrap items-end justify-between gap-6">
+          <div class="relative mx-auto max-w-7xl px-6 py-12 sm:px-8">
+            <div class="flex flex-wrap items-end justify-between gap-8">
               <div>
-                <p class="eyebrow text-brand-400">DeepRank · SEO Agent</p>
-                <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">SEO Agent KPIs</h1>
-                <p class="mt-3 max-w-xl text-sm leading-relaxed text-white/70">
+                <p class="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.16em] text-brand-400">
+                  <span class="h-px w-8 bg-brand-500" aria-hidden="true"></span>
+                  DeepRank · SEO Agent
+                </p>
+                <h1 class="mt-3 text-3xl font-bold tracking-tight text-white sm:text-[2.6rem] sm:leading-[1.1]">SEO Agent KPIs</h1>
+                <p class="mt-3.5 max-w-xl text-sm leading-relaxed text-white/60">
                   Track what the DeepEcom SEO agent is shipping — visibility, rankings, the opportunity
                   pipeline, and measured results of deployed changes.
                 </p>
               </div>
-              <div class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-right backdrop-blur">
-                <p class="text-xs uppercase tracking-wider text-white/50">Data as of</p>
-                <p class="mt-0.5 font-mono text-lg font-semibold tabular-nums">{data.dataFreshness ?? "—"}</p>
-                <p class="mt-1 text-xs text-white/50">{totalClicks} keywords · SAMPLE data</p>
+              <div class="min-w-56 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 backdrop-blur">
+                <p class="flex items-center justify-end gap-2 text-[11px] font-semibold uppercase tracking-wider text-white/50">
+                  <span
+                    class="inline-block size-2 rounded-full"
+                    style={`background:${useSample ? "var(--warning-500)" : "var(--success-500)"}`}
+                    aria-hidden="true"
+                  ></span>
+                  {useSample ? "Sample" : "Live"}
+                </p>
+                <p class="mt-2 font-mono text-xl font-bold tabular-nums text-white">{data.dataFreshness ?? "—"}</p>
+                <p class="mt-1 text-xs text-white/50">
+                  {totalKeywords} keywords · {sourceLabel}
+                </p>
               </div>
             </div>
           </div>
@@ -83,29 +155,54 @@ const kpis = [
             ))}
           </section>
 
-          <section class="rounded-2xl border border-border bg-white p-5 shadow-card lg:col-span-3">
-            <header class="mb-1 flex flex-wrap items-center justify-between gap-3">
+          <section class="rounded-2xl border border-border bg-white p-6 shadow-card lg:col-span-3">
+            <header class="flex flex-wrap items-center justify-between gap-4 border-b border-border px-2 pb-5">
               <div>
                 <h2 class="text-sm font-semibold text-ink-950">Visibility over time</h2>
-                <p class="text-xs text-muted-foreground">Last {DAYS} days vs previous {DAYS}</p>
+                <p class="mt-0.5 text-xs text-muted-foreground">{METRIC_LABEL[metric]} · last {CHART_RANGE} days</p>
               </div>
-              <nav class="flex items-center gap-1 rounded-lg border border-border bg-ink-50 p-0.5 text-xs" aria-label="Chart range">
-                {[7, 28, 90].map((r) => (
-                  <a
-                    href={`?range=${r}`}
-                    aria-current={r === CHART_RANGE ? "page" : undefined}
-                    class:list={[
-                      "rounded-md px-2.5 py-1 font-semibold transition",
-                      r === CHART_RANGE ? "bg-white text-ink-900 shadow-sm" : "text-muted-foreground hover:text-ink-900",
-                    ]}
-                  >
-                    {r}d
-                  </a>
-                ))}
-              </nav>
+              <div class="flex flex-wrap items-center gap-2">
+                <nav class="flex items-center gap-1 rounded-lg border border-border bg-ink-50 p-0.5 text-xs" aria-label="Metric">
+                  {METRICS.map((mk) => (
+                    <a
+                      href={`?range=${CHART_RANGE}&metric=${mk}`}
+                      aria-current={mk === metric ? "page" : undefined}
+                      class:list={[
+                        "rounded-md px-2.5 py-1 font-semibold transition",
+                        mk === metric ? "bg-white text-ink-900 shadow-sm" : "text-muted-foreground hover:text-ink-900",
+                      ]}
+                    >
+                      {METRIC_LABEL[mk]}
+                    </a>
+                  ))}
+                </nav>
+                <nav class="flex items-center gap-1 rounded-lg border border-border bg-ink-50 p-0.5 text-xs" aria-label="Chart range">
+                  {[7, 28, 90].map((r) => (
+                    <a
+                      href={`?range=${r}&metric=${metric}`}
+                      aria-current={r === CHART_RANGE ? "page" : undefined}
+                      class:list={[
+                        "rounded-md px-2.5 py-1 font-semibold transition",
+                        r === CHART_RANGE ? "bg-white text-ink-900 shadow-sm" : "text-muted-foreground hover:text-ink-900",
+                      ]}
+                    >
+                      {r}d
+                    </a>
+                  ))}
+                </nav>
+              </div>
             </header>
-            <div class="mt-4">
-              <VisibilityChart days={daily} maxPoints={CHART_RANGE} />
+            <div class="mt-6">
+              {chartData.length >= 2 ? (
+                <VisibilityChart days={chartData} metric={metric} range={CHART_RANGE} />
+              ) : (
+                <div class="flex h-40 items-center justify-center rounded-xl border border-dashed border-ink-200 text-center text-xs text-muted-foreground">
+                  <p class="max-w-sm">
+                    Not enough position samples yet in this range. The agent records a sample when it
+                    creates a PR, so this chart fills in as the agent runs.
+                  </p>
+                </div>
+              )}
             </div>
           </section>
 
@@ -130,10 +227,9 @@ const kpis = [
             <LearningsList learnings={data.learnings} />
             <div class="rounded-2xl border border-border bg-white p-5 shadow-card">
               <header class="mb-4">
-                <h3 class="text-sm font-semibold text-ink-950">Pipeline view (SAMPLE)</h3>
+                <h3 class="text-sm font-semibold text-ink-950">Per-page breakdown</h3>
                 <p class="text-xs text-muted-foreground">
-                  Placeholder panel for future per-page URL breakdown + CSV export. WCAG-targeted
-                  chart labels are in place.
+                  Placeholder for a future per-page URL view and CSV export of dashboard data.
                 </p>
               </header>
               <div class="flex h-40 items-center justify-center rounded-xl border border-dashed border-ink-200 text-xs text-muted-foreground">
@@ -143,30 +239,4 @@ const kpis = [
           </section>
         </main>
       </>
-    ) : (
-      <section class="grid min-h-[70vh] place-items-center px-6 py-24">
-        <form method="post" action="/api/admin/login" class="w-full max-w-sm rounded-2xl border border-border bg-white p-8 shadow-card">
-          <div class="mb-6 text-center">
-            <p class="eyebrow text-brand-600">DeepRank · Admin</p>
-            <h1 class="mt-2 text-2xl font-bold tracking-tight text-ink-950">SEO Dashboard</h1>
-            <p class="mt-2 text-sm text-muted-foreground">Enter the dashboard password to continue.</p>
-          </div>
-          <label class="grid gap-1.5">
-            <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Password</span>
-            <input
-              type="password"
-              name="password"
-              required
-              autocomplete="current-password"
-              placeholder="••••••••"
-              class="h-11 rounded-lg border border-border bg-white px-3.5 text-sm text-ink-900 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
-            />
-          </label>
-          <button type="submit" class="mt-5 h-11 w-full rounded-lg bg-brand-600 text-sm font-semibold text-white transition hover:bg-brand-700">
-            View dashboard
-          </button>
-        </form>
-      </section>
-    )
-  }
-</PageLayout>
+</AdminLayout>

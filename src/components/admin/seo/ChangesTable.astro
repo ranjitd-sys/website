@@ -16,9 +16,9 @@ const { changes, summary } = Astro.props
 
 const verdictColor = (v: Verdict) => {
   switch (v) {
-    case "improved":
+    case "won":
       return "bg-success-100 text-success-700"
-    case "regressed":
+    case "falling":
       return "bg-danger-100 text-danger-700"
     case "stuck":
       return "bg-warning-100 text-warning-700"
@@ -57,7 +57,7 @@ const statCards = [
       <div class="flex flex-wrap items-center gap-2 border-t border-border px-5 py-3">
         <span class="text-xs text-muted-foreground">Measured verdicts:</span>
         {summary.verdicts.map((v) => (
-          <span key={v.verdict} class:list={["inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(v.verdict)]}>
+          <span class:list={["inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(v.verdict)]}>
             {v.verdict}
             <span class="font-mono tabular-nums">{v.count}</span>
           </span>
@@ -66,8 +66,14 @@ const statCards = [
     )
   }
 
-  <div class="overflow-x-auto border-t border-border">
-    <table class="w-full min-w-[720px] text-left text-sm tabular-nums">
+  {
+    changes.length === 0 ? (
+      <div class="border-t border-border px-5 py-10 text-center text-xs text-muted-foreground">
+        No changes yet. The agent opens a PR when it finds an opportunity worth optimizing.
+      </div>
+    ) : (
+      <div class="overflow-x-auto border-t border-border">
+        <table class="w-full min-w-[720px] text-left text-sm tabular-nums">
       <thead>
         <tr class="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
           <th class="px-5 py-2.5 font-semibold">Keyword</th>
@@ -87,9 +93,13 @@ const statCards = [
               <code class="rounded bg-ink-50 px-1.5 py-0.5 font-mono text-xs text-ink-600">{shortBranch(c.branch)}</code>
             </td>
             <td class="px-4 py-3 text-center">
-              <a class="text-brand-600 underline-offset-2 hover:underline" href={c.pr_url}>
-                #{c.pr_url.split("/").pop()}
-              </a>
+              {c.pr_url ? (
+                <a class="text-brand-600 underline-offset-2 hover:underline" href={c.pr_url}>
+                  #{c.pr_url.split("/").pop()}
+                </a>
+              ) : (
+                <span class="text-ink-300">—</span>
+              )}
             </td>
             <td class="px-4 py-3 text-center">
               <span
@@ -112,9 +122,10 @@ const statCards = [
               </span>
             </td>
             <td class="px-4 py-3 text-center">
-              {c.verdict ? (
-                <span class:list={["inline-flex rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(c.verdict)]}>
+              {c.delta !== null ? (
+                <span class:list={["inline-flex rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(c.verdict ?? "stuck")]}>
                   {c.delta! > 0 ? "+" : ""}{c.delta}
+                  {c.verdict ? ` ${c.verdict}` : ""}
                 </span>
               ) : (
                 <span class="text-ink-300">—</span>
@@ -126,4 +137,6 @@ const statCards = [
       </tbody>
     </table>
   </div>
+    )
+  }
 </section>
