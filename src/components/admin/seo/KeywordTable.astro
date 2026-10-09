@@ -1,0 +1,79 @@
+---
+import type { KeywordMover } from "@/lib/seo-dashboard/data"
+
+const { movers } = Astro.props
+
+const intentColor = (intent: string) =>
+  intent === "commercial"
+    ? "bg-brand-50 text-brand-700"
+    : intent === "transactional"
+      ? "bg-success-100 text-success-700"
+      : "bg-ink-100 text-ink-500"
+
+const fmt = (n: number | null) =>
+  n === null ? "—" : n >= 1_000 ? `${(n / 1_000).toFixed(1)}k` : `${n}`
+---
+
+<section class="overflow-hidden rounded-2xl border border-border bg-white shadow-card">
+  <header class="flex items-center justify-between border-b border-border px-5 py-4">
+    <h3 class="text-sm font-semibold text-ink-950">Top keyword movers</h3>
+    <span class="text-xs text-muted-foreground">Position change · last 30 days · SAMPLE</span>
+  </header>
+  <div class="overflow-x-auto">
+    <table class="w-full min-w-[720px] text-left text-sm tabular-nums">
+      <thead>
+        <tr class="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
+          <th class="px-5 py-2.5 font-semibold">Keyword</th>
+          <th class="px-4 py-2.5 font-semibold">Intent</th>
+          <th class="px-4 py-2.5 text-right font-semibold">Volume</th>
+          <th class="px-4 py-2.5 text-right font-semibold">Pos now</th>
+          <th class="px-4 py-2.5 text-right font-semibold">Pos 30d</th>
+          <th class="px-4 py-2.5 text-right font-semibold">Δ</th>
+          <th class="px-4 py-2.5 text-right font-semibold">Clicks</th>
+          <th class="px-5 py-2.5 text-right font-semibold">Impr.</th>
+        </tr>
+      </thead>
+      <tbody>
+        {
+          movers.map((m) => {
+            const improved = m.delta !== null && m.delta < 0
+            const moved = m.delta !== null && m.delta !== 0
+            return (
+              <tr class="border-b border-border last:border-0 hover:bg-ink-50/60">
+                <td class="px-5 py-3">
+                  <p class="font-medium text-ink-900">{m.term}</p>
+                  <p class="text-xs text-muted-foreground">{m.intent}</p>
+                </td>
+                <td class="px-4 py-3">
+                  <span class:list={["inline-flex rounded-md px-2 py-0.5 text-xs font-semibold", intentColor(m.intent)]}>
+                    {m.intent}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-right text-ink-600">{fmt(m.volume)}</td>
+                <td class="px-4 py-3 text-right font-semibold text-ink-900">{m.position ?? "—"}</td>
+                <td class="px-4 py-3 text-right text-ink-500">{m.position30 ?? "—"}</td>
+                <td class="px-4 py-3 text-right font-semibold">
+                  {
+                    moved && (
+                      <span
+                        class:list={[
+                          "inline-flex min-w-10 justify-center rounded-md px-1.5 py-0.5 text-xs",
+                          improved ? "bg-success-100 text-success-700" : "bg-danger-100 text-danger-700",
+                        ]}
+                      >
+                        {m.delta! > 0 ? "↑" : "↓"} {Math.abs(m.delta!)}
+                      </span>
+                    )
+                  }
+                  {!moved && <span class="text-ink-300">·</span>}
+                </td>
+                <td class="px-4 py-3 text-right text-ink-600">{fmt(m.clicks)}</td>
+                <td class="px-5 py-3 text-right text-ink-600">{fmt(m.impressions)}</td>
+              </tr>
+            )
+          })
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

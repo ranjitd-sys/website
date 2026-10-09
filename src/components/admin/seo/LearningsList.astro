@@ -1,0 +1,26 @@
+---
+import type { Learning } from "@/lib/seo-dashboard/data"
+
+const { learnings } = Astro.props
+
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+---
+
+<section class="rounded-2xl border border-border bg-white p-5 shadow-card">
+  <header class="mb-4 flex items-center justify-between">
+    <h3 class="text-sm font-semibold text-ink-950">Latest learnings</h3>
+    <span class="font-mono text-xs text-muted-foreground tabular-nums">{learnings.length}</span>
+  </header>
+  <ol class="space-y-4">
+    {learnings.map((l) => (
+      <li class="flex gap-3">
+        <span class="mt-1.5 inline-block size-1.5 shrink-0 rounded-full bg-brand-500" aria-hidden="true"></span>
+        <div>
+          <p class="text-sm leading-relaxed text-ink-700">{l.content}</p>
+          <p class="mt-1 text-xs text-muted-foreground">{fmtDate(l.created_at)}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

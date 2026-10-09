@@ -1,0 +1,129 @@
+---
+import type { ChangeRow, Verdict } from "@/lib/seo-dashboard/data"
+
+interface Props {
+  changes: ChangeRow[]
+  summary: {
+    branchesCreated: number
+    deployed: number
+    measured: number
+    avgDelta: number | null
+    verdicts: Array<{ verdict: Verdict; count: number }>
+  }
+}
+
+const { changes, summary } = Astro.props
+
+const verdictColor = (v: Verdict) => {
+  switch (v) {
+    case "improved":
+      return "bg-success-100 text-success-700"
+    case "regressed":
+      return "bg-danger-100 text-danger-700"
+    case "stuck":
+      return "bg-warning-100 text-warning-700"
+    default:
+      return "bg-ink-100 text-ink-500"
+  }
+}
+
+const shortBranch = (b: string) => b.replace(/^seo\//, "").slice(0, 42)
+const fmtDate = (iso: string) => new Date(iso).toISOString().slice(0, 10)
+
+const statCards = [
+  { label: "PRs created", value: summary.branchesCreated },
+  { label: "Deployed", value: summary.deployed },
+  { label: "Measured", value: summary.measured },
+  { label: "Avg position delta", value: summary.avgDelta === null ? "—" : `${summary.avgDelta > 0 ? "+" : ""}${summary.avgDelta}` },
+]
+---
+
+<section class="rounded-2xl border border-border bg-white shadow-card">
+  <header class="border-b border-border px-5 py-4">
+    <h3 class="text-sm font-semibold text-ink-950">Agent output — PRs & measurements</h3>
+  </header>
+
+  <div class="grid grid-cols-2 gap-px bg-border sm:grid-cols-4">
+    {statCards.map((c) => (
+      <div class="bg-white px-5 py-4">
+        <p class="text-xs text-muted-foreground">{c.label}</p>
+        <p class="mt-1 font-mono text-2xl font-bold text-ink-950 tabular-nums">{c.value}</p>
+      </div>
+    ))}
+  </div>
+
+  {
+    summary.verdicts.length > 0 && (
+      <div class="flex flex-wrap items-center gap-2 border-t border-border px-5 py-3">
+        <span class="text-xs text-muted-foreground">Measured verdicts:</span>
+        {summary.verdicts.map((v) => (
+          <span key={v.verdict} class:list={["inline-flex items-center gap-1.5 rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(v.verdict)]}>
+            {v.verdict}
+            <span class="font-mono tabular-nums">{v.count}</span>
+          </span>
+        ))}
+      </div>
+    )
+  }
+
+  <div class="overflow-x-auto border-t border-border">
+    <table class="w-full min-w-[720px] text-left text-sm tabular-nums">
+      <thead>
+        <tr class="border-b border-border text-xs uppercase tracking-wider text-muted-foreground">
+          <th class="px-5 py-2.5 font-semibold">Keyword</th>
+          <th class="px-4 py-2.5 font-semibold">Branch</th>
+          <th class="px-4 py-2.5 text-center font-semibold">PR</th>
+          <th class="px-4 py-2.5 text-center font-semibold">Deployed</th>
+          <th class="px-4 py-2.5 text-center font-semibold">Measured</th>
+          <th class="px-4 py-2.5 text-center font-semibold">Δ position</th>
+          <th class="px-5 py-2.5 text-right font-semibold">Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {changes.map((c) => (
+          <tr class="border-b border-border last:border-0 hover:bg-ink-50/60">
+            <td class="px-5 py-3 font-medium text-ink-900">{c.term}</td>
+            <td class="px-4 py-3">
+              <code class="rounded bg-ink-50 px-1.5 py-0.5 font-mono text-xs text-ink-600">{shortBranch(c.branch)}</code>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <a class="text-brand-600 underline-offset-2 hover:underline" href={c.pr_url}>
+                #{c.pr_url.split("/").pop()}
+              </a>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span
+                class:list={[
+                  "inline-flex rounded-md px-2 py-0.5 text-xs font-semibold",
+                  c.deployed ? "bg-success-100 text-success-700" : "bg-ink-100 text-ink-500",
+                ]}
+              >
+                {c.deployed ? "yes" : "no"}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              <span
+                class:list={[
+                  "inline-flex rounded-md px-2 py-0.5 text-xs font-semibold",
+                  c.measured ? "bg-brand-50 text-brand-700" : "bg-ink-100 text-ink-500",
+                ]}
+              >
+                {c.measured ? "yes" : "pending"}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-center">
+              {c.verdict ? (
+                <span class:list={["inline-flex rounded-md px-2 py-0.5 text-xs font-semibold capitalize", verdictColor(c.verdict)]}>
+                  {c.delta! > 0 ? "+" : ""}{c.delta}
+                </span>
+              ) : (
+                <span class="text-ink-300">—</span>
+              )}
+            </td>
+            <td class="px-5 py-3 text-right text-xs text-muted-foreground">{fmtDate(c.created_at)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

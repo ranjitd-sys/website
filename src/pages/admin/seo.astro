@@ -1,0 +1,172 @@
+---
+import PageLayout from "@/layouts/PageLayout.astro"
+import { SAMPLE_DASHBOARD, type DashboardData } from "@/lib/seo-dashboard/data"
+import KpiCard from "@/components/admin/seo/KpiCard.astro"
+import VisibilityChart from "@/components/admin/seo/VisibilityChart.astro"
+import RankingBars from "@/components/admin/seo/RankingBars.astro"
+import KeywordTable from "@/components/admin/seo/KeywordTable.astro"
+import Pipeline from "@/components/admin/seo/Pipeline.astro"
+import ChangesTable from "@/components/admin/seo/ChangesTable.astro"
+import LearningsList from "@/components/admin/seo/LearningsList.astro"
+
+const range = (n: number) => Array.from({ length: n }, (_, i) => i)
+
+const CHART_RANGE = Math.min(Math.max(Number(Astro.url.searchParams.get("range")) || 28, 7), 90)
+
+const data: DashboardData = SAMPLE_DASHBOARD
+const AUTHENTICATED = true
+
+const DAYS = 28
+const daily = data.daily
+const recent = daily.slice(-DAYS)
+const prior = daily.slice(-DAYS * 2, -DAYS)
+
+const period = (rows: typeof daily) => {
+  const clicks = rows.reduce((s, r) => s + r.clicks, 0)
+  const impressions = rows.reduce((s, r) => s + r.impressions, 0)
+  const position = rows.length ? rows.reduce((s, r) => s + r.position, 0) / rows.length : 0
+  const ctr = impressions ? clicks / impressions : 0
+  return { clicks, impressions, position, ctr }
+}
+
+const now = period(recent)
+const prev = period(prior)
+const pct = (a: number, b: number) => (b === 0 ? 0 : ((a - b) / b) * 100)
+
+const totalClicks = data.keywords.reduce((s, k) => s + k.count, 0)
+
+const fmtInt = (n: number) => n.toLocaleString("en-IN")
+const fmtPct = (n: number) => `${n.toFixed(1)}%`
+const fmtNum = (n: number) => (Math.round(n)).toLocaleString("en-IN")
+
+const kpis = [
+  { label: "Clicks", value: fmtInt(now.clicks), delta: pct(now.clicks, prev.clicks), positiveIsGood: true },
+  { label: "Impressions", value: fmtInt(now.impressions), delta: pct(now.impressions, prev.impressions), positiveIsGood: true },
+  { label: "Avg CTR", value: fmtPct(now.ctr * 100), delta: pct(now.ctr, prev.ctr), positiveIsGood: true },
+  { label: "Avg position", value: now.position.toFixed(1), delta: now.position - prev.position, positiveIsGood: false },
+].map((k) => ({ ...k, delta: Math.round(k.delta * 10) / 10 }))
+---
+
+<PageLayout title="SEO Dashboard — DeepEcom" description="DeepEcom SEO agent KPIs" noindex>
+  {
+    AUTHENTICATED ? (
+      <>
+        <section class="border-b border-border bg-ink-950 text-white">
+          <div
+            class="pointer-events-none absolute inset-0"
+            aria-hidden="true"
+            style="background: radial-gradient(40rem 20rem at 85% -20%, rgba(33,101,236,0.28), transparent 60%)"
+          ></div>
+          <div class="relative mx-auto max-w-7xl px-6 py-10 sm:px-8">
+            <div class="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <p class="eyebrow text-brand-400">DeepRank · SEO Agent</p>
+                <h1 class="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">SEO Agent KPIs</h1>
+                <p class="mt-3 max-w-xl text-sm leading-relaxed text-white/70">
+                  Track what the DeepEcom SEO agent is shipping — visibility, rankings, the opportunity
+                  pipeline, and measured results of deployed changes.
+                </p>
+              </div>
+              <div class="rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-right backdrop-blur">
+                <p class="text-xs uppercase tracking-wider text-white/50">Data as of</p>
+                <p class="mt-0.5 font-mono text-lg font-semibold tabular-nums">{data.dataFreshness ?? "—"}</p>
+                <p class="mt-1 text-xs text-white/50">{totalClicks} keywords · SAMPLE data</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <main class="relative mx-auto max-w-7xl space-y-6 px-6 py-8 sm:px-8">
+          <section class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {kpis.map((k) => (
+              <KpiCard {...k} />
+            ))}
+          </section>
+
+          <section class="rounded-2xl border border-border bg-white p-5 shadow-card lg:col-span-3">
+            <header class="mb-1 flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 class="text-sm font-semibold text-ink-950">Visibility over time</h2>
+                <p class="text-xs text-muted-foreground">Last {DAYS} days vs previous {DAYS}</p>
+              </div>
+              <nav class="flex items-center gap-1 rounded-lg border border-border bg-ink-50 p-0.5 text-xs" aria-label="Chart range">
+                {[7, 28, 90].map((r) => (
+                  <a
+                    href={`?range=${r}`}
+                    aria-current={r === CHART_RANGE ? "page" : undefined}
+                    class:list={[
+                      "rounded-md px-2.5 py-1 font-semibold transition",
+                      r === CHART_RANGE ? "bg-white text-ink-900 shadow-sm" : "text-muted-foreground hover:text-ink-900",
+                    ]}
+                  >
+                    {r}d
+                  </a>
+                ))}
+              </nav>
+            </header>
+            <div class="mt-4">
+              <VisibilityChart days={daily} maxPoints={CHART_RANGE} />
+            </div>
+          </section>
+
+          <section class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-1">
+              <RankingBars buckets={data.buckets} />
+            </div>
+            <div class="lg:col-span-2">
+              <KeywordTable movers={data.movers} />
+            </div>
+          </section>
+
+          <section>
+            <Pipeline stages={data.pipeline} />
+          </section>
+
+          <section>
+            <ChangesTable changes={data.recentChanges} summary={data.changes} />
+          </section>
+
+          <section class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <LearningsList learnings={data.learnings} />
+            <div class="rounded-2xl border border-border bg-white p-5 shadow-card">
+              <header class="mb-4">
+                <h3 class="text-sm font-semibold text-ink-950">Pipeline view (SAMPLE)</h3>
+                <p class="text-xs text-muted-foreground">
+                  Placeholder panel for future per-page URL breakdown + CSV export. WCAG-targeted
+                  chart labels are in place.
+                </p>
+              </header>
+              <div class="flex h-40 items-center justify-center rounded-xl border border-dashed border-ink-200 text-xs text-muted-foreground">
+                Coming soon
+              </div>
+            </div>
+          </section>
+        </main>
+      </>
+    ) : (
+      <section class="grid min-h-[70vh] place-items-center px-6 py-24">
+        <form method="post" action="/api/admin/login" class="w-full max-w-sm rounded-2xl border border-border bg-white p-8 shadow-card">
+          <div class="mb-6 text-center">
+            <p class="eyebrow text-brand-600">DeepRank · Admin</p>
+            <h1 class="mt-2 text-2xl font-bold tracking-tight text-ink-950">SEO Dashboard</h1>
+            <p class="mt-2 text-sm text-muted-foreground">Enter the dashboard password to continue.</p>
+          </div>
+          <label class="grid gap-1.5">
+            <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Password</span>
+            <input
+              type="password"
+              name="password"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••"
+              class="h-11 rounded-lg border border-border bg-white px-3.5 text-sm text-ink-900 outline-none transition focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+            />
+          </label>
+          <button type="submit" class="mt-5 h-11 w-full rounded-lg bg-brand-600 text-sm font-semibold text-white transition hover:bg-brand-700">
+            View dashboard
+          </button>
+        </form>
+      </section>
+    )
+  }
+</PageLayout>

@@ -1,0 +1,42 @@
+---
+import type { RankingBucket } from "@/lib/seo-dashboard/data"
+
+interface Props {
+  buckets: RankingBucket[]
+}
+
+const { buckets } = Astro.props
+const total = buckets.reduce((s, b) => s + b.count, 0) || 1
+const maxCount = Math.max(...buckets.map((b) => b.count), 1)
+const W = 640
+const BAR = 22
+const GAP = 14
+const H = buckets.length * (BAR + GAP) + 8
+const LABEL = 92
+const VAL = 64
+const barW = (c: number) => Math.max((c / maxCount) * (W - LABEL - VAL), 4)
+const colors = ["var(--brand-600)", "var(--brand-500)", "var(--brand-400)", "var(--brand-300)", "var(--ink-300)", "var(--ink-200)"]
+---
+
+<figure class="w-full" role="img" aria-label="Distribution of tracked keywords by current search position">
+  <svg viewBox={`0 0 ${W} ${H}`} style={`height:${H}px`} class="w-full" role="presentation" aria-hidden="true">
+    {buckets.map((b, i) => {
+      const y = i * (BAR + GAP)
+      const w = barW(b.count)
+      return (
+        <g key={b.label}>
+          <text x={LABEL - 10} y={y + BAR / 2 + 4} text-anchor="end" font-size="12" fill="var(--ink-600)" font-family="var(--font-sans)">
+            {b.label}
+          </text>
+          <rect x={LABEL} y={y} width={w} height={BAR} rx="5" fill={colors[i % colors.length]} />
+          <text x={LABEL + w + 8} y={y + BAR / 2 + 4} font-size="12" font-weight="600" fill="var(--ink-900)" font-family="var(--font-mono)">
+            {b.count}
+          </text>
+        </g>
+      )
+    })}
+  </svg>
+  <figcaption class="mt-3 text-xs text-muted-foreground">
+    Latest recorded position per keyword · {total} keywords tracked
+  </figcaption>
+</figure>
