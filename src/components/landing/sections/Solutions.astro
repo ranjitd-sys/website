@@ -1,4 +1,6 @@
 ---
+import { logoAsset } from "@/data/logoAssets";
+
 const solutions = [
   {
     label: "Amazon Sellers",
@@ -60,19 +62,11 @@ const solutions = [
             <div class="item-header">
               <!-- Icon Avatar -->
               <div class="icon-avatar micro-icon micro-ping">
-                {s.icon === 'amazon' && (
-                  <svg viewBox="0 0 24 24" width="22" height="22">
-                    <path fill="#FF9900" d="M13.7 15.3c-2.3 1.7-5.6 2.6-8.5 2.6-4 0-7.5-1.5-10.2-4.1-.2-.2 0-.5.2-.3 3.1 2.7 7.2 4.3 11.5 4.3 2.6 0 5.6-.7 8.2-2.1.4-.2.7.2.3.5z"/>
-                    <path fill="#000000" d="M15.9 14.1c-.2-.3-1.4-.2-2 .1-.2.1-.2.3 0 .4.8.6 2.1.4 2.4.1.2-.2 0-1.2-.4-.6z"/>
-                  </svg>
-                )}
-                {s.icon === 'shopify' && (
-                  <svg viewBox="0 0 24 24" width="20" height="20" fill="#95BF47">
-                    <path d="M20.6 6.3s-1.7-.5-3-.3c0 0-.8-2.3-2.6-3.3 0 0-1.8-.1-3.2 1.2 0 0-1.2 1.1-1.6 3.2 0 0-2 .6-2.1.7L6 19.3l12.4 2.2 3.6-14.2-1.4-1zm-6.2-.9c.6-.6 1.4-.7 1.4-.7s.3 1.2-.2 2.2c-.5 Matrix 1.3-1.6 1.6-1.6 1.6s-.2-1.7.4-3.1z"/>
-                  </svg>
+                {s.icon && (
+                  <img src={logoAsset(s.icon)?.src} alt="" width="22" height="22" loading="lazy" />
                 )}
                 {s.type === 'svg' && (
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#2165EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d={s.path} />
                   </svg>
                 )}
@@ -122,7 +116,7 @@ const solutions = [
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #2165EC;
+    color: var(--brand-600);
     margin-bottom: 1.5rem;
   }
 
@@ -186,6 +180,7 @@ const solutions = [
     border-radius: 50%;
     background: #ffffff;
     border: 1px solid #e2e8f0;
+    color: var(--brand-600);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -195,6 +190,12 @@ const solutions = [
   .icon-avatar svg {
     width: 1.15rem;
     height: 1.15rem;
+  }
+
+  .icon-avatar img {
+    width: 1.15rem;
+    height: 1.15rem;
+    object-fit: contain;
   }
 
   .item-header strong {
@@ -217,7 +218,7 @@ const solutions = [
   .explore-link {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #2165EC;
+    color: var(--brand-600);
     display: flex;
     align-items: center;
     gap: 0.25rem;

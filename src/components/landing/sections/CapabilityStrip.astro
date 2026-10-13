@@ -48,7 +48,7 @@ const capabilities = [
     <div class="capability-grid">
       {
         capabilities.map((c, i) => (
-          <div class="capability-item reveal micro-card" data-delay={i * 60}>
+          <div class="capability-item reveal" data-delay={i * 60}>
             <div class="icon-bubble micro-icon micro-ping">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d={c.icon} />
@@ -89,7 +89,7 @@ const capabilities = [
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #2165EC;
+    color: var(--brand-600);
     margin-bottom: 1.5rem;
   }
 
@@ -148,7 +148,7 @@ const capabilities = [
     height: 2.5rem;
     border-radius: 50%;
     background: #f2f7ff; /* Very light indigo tint */
-    color: #2165EC;
+    color: var(--brand-600);
     display: flex;
     align-items: center;
     justify-content: center;

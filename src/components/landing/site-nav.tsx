@@ -380,7 +380,7 @@ function SolutionsPanel({ item, variants }: { item: NavItem; variants?: Variants
           </div>
         </div>
         <a
-          href="/book-a-demo"
+          href="/contact"
           className="group inline-flex shrink-0 items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-semibold text-white shadow-md shadow-primary/25 transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary/50"
         >
           Talk to an expert
