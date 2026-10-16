@@ -8,7 +8,7 @@ const NAME_RE = /^[\p{L}\p{M}.'\-\s]+$/u
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 const PHONE_RE = /^(?:\+?91[\s.-]?|0)?\s*[6-9]\d{9}$/
 
-const BodySchema = z.object({
+const BodySchema = z.object({ 
   name: z
     .string()
     .trim()
@@ -42,17 +42,23 @@ function json(data: unknown, status = 200) {
   })
 }
 
-export const POST: APIRoute = async ({ request }) => {
-  const host = import.meta.env.SMTP_HOST
-  const port = Number(import.meta.env.SMTP_PORT ?? 587)
-  const user = import.meta.env.SMTP_USER
-  const pass = import.meta.env.SMTP_PASS
-  const from = import.meta.env.SMTP_FROM ?? user
-  const to = import.meta.env.INFO_EMAIL ?? "info@deepecom.com"
+// Server-side env access that works in Astro dev (import.meta.env) and on
+// Vercel SSR (process.env). Private secrets are not statically injected into
+// import.meta.env at runtime on Vercel, so process.env is checked first.
+function env(name: string): string | undefined {
+  const fromProcess = typeof process !== "undefined" ? process.env?.[name] : undefined
+  const fromMeta = (import.meta.env as unknown as Record<string, string | undefined>)?.[name]
+  const value = fromProcess || fromMeta
+  return value && value.length > 0 ? value : undefined
+}
 
-  if (!host || !user || !pass) {
-    return json({ error: "Email is not configured yet. Please configure SMTP settings." }, 500)
-  }
+export const POST: APIRoute = async ({ request }) => {
+  const host = env("SMTP_HOST")
+  const port = Number(env("SMTP_PORT") ?? 587)
+  const user = env("SMTP_USER")
+  const pass = env("SMTP_PASS")
+  const from = env("SMTP_FROM") ?? user
+  const to = env("INFO_EMAIL") ?? "info@deepecom.com"
 
   let body: unknown
   try {
@@ -71,6 +77,12 @@ export const POST: APIRoute = async ({ request }) => {
   // Honeypot — silently accept bot submissions without sending.
   if (_honey && _honey.length > 0) {
     return json({ success: true, referenceId: `HP-${Math.floor(100000 + Math.random() * 900000)}` })
+  }
+
+  // Config is only required for a real send (checked after validation so a
+  // mistyped submission surfaces field errors, not a 500).
+  if (!host || !user || !pass) {
+    return json({ error: "Email is not configured yet. Please configure SMTP settings." }, 500)
   }
 
   const referenceId = `DE${Date.now().toString().slice(-6)}${Math.floor(100 + Math.random() * 900)}`

@@ -16,23 +16,25 @@ interface Props {
   storageKey?: string
   /** When false, the popup opens every time the trigger flips to true. */
   oncePerSession?: boolean
+  /** Notified when the popup closes (X, Escape, or CTA), so the parent can reset its trigger. */
+  onDismiss?: () => void
 }
 
 const STEPS = [
   {
     icon: Database,
     title: "Fetch marketplace data",
-    body: "Bring supported marketplace transaction data and existing Tally masters into the integration workflow.",
+    body: "Orders, settlements and your Tally masters, pulled into one flow.",
   },
   {
     icon: ListChecks,
     title: "Map to Tally",
-    body: "Map marketplace fees, CGST, SGST, IGST, TCS, TDS and other supported transaction attributes to the appropriate Tally ledgers. Resolve pending mappings before proceeding.",
+    body: "Fees, GST, TCS and TDS matched to the right ledgers.",
   },
   {
     icon: CheckCheck,
     title: "Sync and reconcile",
-    body: "Post supported transactions as Tally vouchers and compare marketplace values with Tally amounts to identify differences.",
+    body: "Vouchers posted to Tally, reconciled against payouts.",
   },
 ]
 
@@ -43,6 +45,7 @@ export default function TallySyncIntroModal({
   href = "/integrations/tally",
   storageKey = "ts-intro-dismissed",
   oncePerSession = true,
+  onDismiss,
 }: Props) {
   const [open, setOpen] = useState(false)
 
@@ -64,6 +67,7 @@ export default function TallySyncIntroModal({
       try { window.sessionStorage.setItem(storageKey, "1") } catch {}
     }
     trackEvent("tally_sync_intro_dismissed", { source_tool: source, placement })
+    onDismiss?.()
   }
 
   return (
@@ -89,13 +93,12 @@ export default function TallySyncIntroModal({
                   <span className="h-1.5 w-1.5 rounded-full bg-brand-600" />
                   Introducing Tally Sync
                 </span>
-                <Dialog.Title className="mt-2.5 text-xl font-extrabold leading-tight tracking-[-0.02em] text-ink-950 sm:text-2xl">
-                  Stop entering marketplace transactions into Tally manually.
+                <Dialog.Title className="mt-2.5 text-2xl font-extrabold leading-[1.1] tracking-[-0.02em] text-ink-950 sm:text-[1.75rem]">
+                  Get your <span className="text-brand-600">Tally&nbsp;Sync</span> for Amazon, Flipkart, Meesho and other marketplaces.
                 </Dialog.Title>
                 <Dialog.Description className="mt-3 text-sm leading-relaxed text-ink-500">
-                  DeepEcom Tally Sync connects your marketplace data to Tally, helps you map
-                  marketplace fees and taxes to the correct accounting entries, posts supported
-                  transactions, and reconciles the results.
+                  Stop re-entering transactions by hand. DeepEcom maps your marketplace data to Tally,
+                  posts the vouchers and reconciles payouts.
                 </Dialog.Description>
 
                 <ul className="mt-5 flex flex-col gap-3.5">

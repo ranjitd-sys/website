@@ -532,6 +532,7 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
   const [genTask, setGenTask] = useState<"download" | "print" | null>(null)
   const [genProgress, setGenProgress] = useState<{ current: number; total: number } | null>(null)
   const trackedDone = useRef(false)
+  const [introOpen, setIntroOpen] = useState(false)
   useEffect(() => {
     if (status === "done" && !trackedDone.current) {
       trackedDone.current = true
@@ -539,6 +540,9 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
     }
     if (status !== "done") trackedDone.current = false
   }, [status, providerId])
+  useEffect(() => {
+    if (status !== "done") setIntroOpen(false)
+  }, [status])
   const pdfCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
   const pdfInvoiceCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
   const pdfPicklistCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
@@ -750,6 +754,7 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
     if (inv) downloadBytes(inv, `${base}-invoices.pdf`)
     const pick = await buildPicklist()
     if (pick) downloadBytes(pick, `${base}-picklist.pdf`)
+    window.setTimeout(() => setIntroOpen(true), 500)
   }, [buildPrimary, buildInvoices, buildPicklist, outBase])
 
   const handleCsv = useCallback(() => {
@@ -1176,9 +1181,10 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
       ) : null}
 
       <TallySyncIntroModal
-        trigger={status === "done"}
+        trigger={introOpen}
+        onDismiss={() => setIntroOpen(false)}
         source={providerId}
-        placement="post-processing"
+        placement="post-download"
         storageKey={`ts-intro-dismissed:${providerId}`}
         oncePerSession={false}
       />
