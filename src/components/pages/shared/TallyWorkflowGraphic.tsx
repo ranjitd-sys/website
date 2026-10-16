@@ -8,19 +8,11 @@ const STEPPER = [
   { title: "Reconcile", sub: "Read back & match", active: false },
 ]
 
-const STEPS = [
-  {
-    title: "Fetch from Tally",
-    lines: ["Read existing Tally masters: voucher types,", "ledgers, godowns and stock items."],
-  },
-  {
-    title: "Map to marketplace attributes",
-    lines: ["Assign marketplace fees, CGST, IGST, TCS and", "TDS to the right Tally ledgers."],
-  },
-  {
-    title: "Post and reconcile",
-    lines: ["Post vouchers into Tally and compare", "marketplace vs Tally values."],
-  },
+const MAPPINGS = [
+  { from: "Marketplace fee", channel: "Amazon", to: "Commission" },
+  { from: "CGST / SGST", channel: "Amazon", to: "Input GST" },
+  { from: "TCS", channel: "Flipkart", to: "TCS Payable" },
+  { from: "Shipping", channel: "Meesho", to: "Freight Out" },
 ]
 
 export default function TallyWorkflowGraphic() {
@@ -37,8 +29,9 @@ export default function TallyWorkflowGraphic() {
     >
       <title id={titleId}>DeepEcom Tally Sync workflow</title>
       <desc id={descId}>
-        Marketplace data is fetched, mapped to Tally ledgers and posted as vouchers, then
-        reconciled against Tally amounts with an 18 of 18 match rate.
+        Marketplace attributes are mapped to the correct Tally ledgers — fees to Commission,
+        CGST and SGST to Input GST, TCS to TCS Payable and shipping to Freight Out. Four of four
+        mappings are resolved and transactions are reconciled against Tally.
       </desc>
 
       <rect x="12" y="10" width="436" height="34" rx="8" className="fill-white stroke-ink-200" />
@@ -96,44 +89,51 @@ export default function TallyWorkflowGraphic() {
 
       <rect x="144" y="54" width="304" height="276" rx="10" className="fill-white stroke-ink-200" />
       <text x="162" y="78" className="fill-ink-950" fontSize="12" fontWeight="700">
-        How the integration works
+        Ledger mapping
+      </text>
+      <text x="430" y="78" textAnchor="end" className="fill-success-700" fontSize="9" fontWeight="600">
+        4 / 4 resolved
       </text>
 
-      {STEPS.map((s, i) => {
-        const y = 92 + i * 72
+      {MAPPINGS.map((m, i) => {
+        const y = 92 + i * 56
         return (
-          <g key={s.title}>
-            <rect x="162" y={y} width="268" height="62" rx="8" className="fill-ink-50 stroke-ink-200" />
-            <rect x="174" y={y + 12} width="22" height="22" rx="6" className="fill-brand-50 stroke-brand-200" />
+          <g key={m.from}>
+            <rect x="162" y={y} width="268" height="48" rx="8" className="fill-ink-50 stroke-ink-200" />
+            <circle cx="182" cy={y + 24} r="4.5" className="fill-brand-600" />
+            <text x="196" y={y + 22} className="fill-ink-900" fontSize="10.5" fontWeight="600">
+              {m.from}
+            </text>
             <text
-              x="185"
+              x="196"
+              y={y + 35}
+              className="fill-ink-400"
+              fontSize="8"
+              fontWeight="600"
+              letterSpacing="0.4"
+            >
+              {m.channel.toUpperCase()}
+            </text>
+            <path d={`M296 ${y + 24} h20`} className="stroke-ink-300" strokeWidth="1.3" strokeLinecap="round" />
+            <path
+              d={`M312 ${y + 20} l4 4 l-4 4`}
+              fill="none"
+              className="stroke-ink-300"
+              strokeWidth="1.3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <rect x="332" y={y + 15} width="88" height="18" rx="9" className="fill-success-50 stroke-success-200" />
+            <text
+              x="376"
               y={y + 27}
               textAnchor="middle"
-              className="fill-brand-700"
-              fontSize="10"
-              fontWeight="700"
+              className="fill-success-700"
+              fontSize="8.5"
+              fontWeight="600"
             >
-              {i + 1}
+              {m.to}
             </text>
-            <text x="206" y={y + 20} className="fill-ink-900" fontSize="11" fontWeight="600">
-              {s.title}
-            </text>
-            <text x="206" y={y + 36} className="fill-ink-500" fontSize="9">
-              {s.lines[0]}
-            </text>
-            <text x="206" y={y + 48} className="fill-ink-500" fontSize="9">
-              {s.lines[1]}
-            </text>
-            {i < STEPS.length - 1 && (
-              <path
-                d={`M296 ${y + 64} l4 5 l4 -5`}
-                fill="none"
-                className="stroke-ink-300"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            )}
           </g>
         )
       })}
