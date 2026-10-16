@@ -46,6 +46,7 @@ import { INTEGRATION_CATEGORIES, integrationsByCategory, type IntegrationCategor
 import { logoAsset } from "@/data/logoAssets"
 import { customers } from "@/data/customers"
 import { PLANS } from "@/data/pricing"
+import { FREE_TOOLS } from "@/data/tools"
 import { Button } from "./ui/button"
 
 const OPEN_DELAY = 100
@@ -431,34 +432,113 @@ function ResourcesPanel({ item, variants }: { item: NavItem; variants?: Variants
 }
 
 function ToolsPanel({ item, variants }: { item: NavItem; variants?: Variants }) {
+  const live = FREE_TOOLS.filter((t) => t.status === "live").slice(0, 6)
+  const planned = FREE_TOOLS.filter((t) => t.status === "planned").slice(0, 10)
+
   return (
-    <div className="grid grid-cols-[1fr_0.72fr] gap-4 p-5">
-      <div className="flex flex-col gap-4">
-        {item.groups?.map((g) => (
-          <GroupCard key={g.title} group={g} variants={variants} />
-        ))}
+    <div className="grid grid-cols-[1.5fr_0.85fr] gap-5 p-5">
+      <div className="flex flex-col gap-5">
+        <section className="flex flex-col gap-2">
+          <header className="flex items-center justify-between px-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Available now
+            </span>
+            <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2 py-px text-[10px] font-bold text-emerald-700">
+              {live.length} live
+            </span>
+          </header>
+          <div className="flex flex-col gap-1.5">
+            {live.map((t) => (
+              <a
+                key={t.id}
+                href={t.href ?? "/tools"}
+                className="group flex items-center justify-between rounded-xl px-3.5 py-3 transition-colors hover:bg-muted/80 focus:bg-muted/80 focus:outline-none"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/20 transition-colors duration-300 group-hover:bg-primary group-hover:text-primary-foreground group-focus:bg-primary group-focus:text-primary-foreground">
+                    {(() => {
+                      const Icon = iconFor(t.name)
+                      return <Icon size={16} />
+                    })()}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-foreground transition-colors group-hover:text-primary group-focus:text-primary">
+                      {t.name}
+                    </span>
+                    <span className="mt-0.5 text-xs text-muted-foreground">{t.description}</span>
+                  </div>
+                </div>
+                <span className="flex shrink-0 items-center gap-1.5 rounded-full border border-border/50 bg-muted/40 px-2.5 py-1 text-[10px] font-semibold text-muted-foreground transition-colors duration-300 group-hover:border-emerald-200 group-hover:bg-emerald-50 group-hover:text-emerald-700 group-focus:border-emerald-200 group-focus:bg-emerald-50 group-focus:text-emerald-700">
+                  <span className="size-1.5 rounded-full bg-emerald-500" />
+                  Live
+                </span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <header className="flex items-center justify-between px-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Coming soon
+            </span>
+            <span className="text-[10px] font-medium text-muted-foreground">
+              {FREE_TOOLS.filter((t) => t.status === "planned").length} planned
+            </span>
+          </header>
+          <ul className="grid grid-cols-2 gap-1.5">
+            {planned.map((t) => (
+              <li
+                key={t.id}
+                title={t.description}
+                className="flex items-center gap-2.5 rounded-xl border border-border/40 bg-muted/30 px-3 py-2.5 text-xs text-muted-foreground"
+              >
+                {(() => {
+                  const Icon = iconFor(t.name)
+                  return (
+                    <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-background text-muted-foreground ring-1 ring-border/40">
+                      <Icon size={13} />
+                    </span>
+                  )
+                })()}
+                <span className="min-w-0 truncate font-medium text-foreground/70">{t.name}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
       <motion.div
         variants={variants}
-        className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-gradient-to-b from-muted/70 to-muted p-5 ring-1 ring-border/40"
+        className="relative flex flex-col overflow-hidden rounded-2xl bg-gradient-to-b from-primary/90 via-primary to-primary/80 p-5 shadow-lg shadow-primary/25"
       >
+        <div className="pointer-events-none absolute -right-6 -top-6 size-24 rounded-full bg-white/10" aria-hidden="true" />
         <div className="relative z-10">
-          <div className="mb-3.5 flex size-11 items-center justify-center rounded-xl bg-primary shadow-md shadow-primary/25">
-            <Wrench size={18} className="text-white" />
+          <div className="mb-3.5 flex size-11 items-center justify-center rounded-xl bg-white/15 text-white shadow-md ring-1 ring-white/20">
+            <Wrench size={18} />
           </div>
-          <span className="text-[10px] font-bold uppercase tracking-wider text-primary">Free · No sign-up</span>
-          <h4 className="mt-1.5 text-sm font-semibold text-foreground">
-            Every calculator in one place.
+          <span className="text-[10px] font-bold uppercase tracking-wider text-primary-foreground/80">Free · No sign-up</span>
+          <h4 className="mt-1.5 text-sm font-semibold text-primary-foreground">
+            {FREE_TOOLS.length} tools and counting.
           </h4>
-          <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
-            Fee calculators, label tools and reconciliation utilities — plus everything planned next.
+          <p className="mt-1.5 text-xs leading-relaxed text-primary-foreground/80">
+            Calculators, label utilities and reconciliation previews — built from the same fee data and accounting logic that powers DeepEcom.
           </p>
         </div>
-        <div className="relative z-10 mt-4">
+        <div className="relative z-10 mt-auto flex flex-wrap items-center gap-2 border-t border-white/15 pt-3 text-xs font-medium text-primary-foreground/80">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 ring-1 ring-white/20 leading-none">
+            <span className="size-1.5 rounded-full bg-emerald-300" />
+            {live.length} ready now
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 ring-1 ring-white/15 leading-none">
+            <span className="size-1.5 rounded-full bg-white/60" />
+            {FREE_TOOLS.filter((t) => t.status === "planned").length} on the way
+          </span>
+        </div>
+        <div className="relative z-10 mt-3">
           <a
             href={item.featured?.href ?? "/tools"}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-foreground transition-colors hover:text-primary focus:outline-none focus:underline"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-2 text-xs font-semibold text-primary transition-colors hover:bg-white/90 focus:outline-none focus:underline"
           >
             {item.featured?.label ?? "Browse all tools"}
             <ArrowRight size={12} className="transition-transform group-hover:translate-x-1" />
@@ -561,7 +641,7 @@ const PANEL_WIDTHS: Record<string, string> = {
   integrations: "w-[880px]",
   "case-studies": "w-[720px]",
   pricing: "w-[800px]",
-  tools: "w-[560px]",
+  tools: "w-[820px]",
 }
 
 // --- Integration brand monograms (kept small & typographic like the ecosystem page) ---

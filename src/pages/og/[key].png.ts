@@ -28,11 +28,6 @@ const COPY: Record<string, Copy> = {
     title: "Understand your business.",
     lead: "Profitability, reconciliation, dashboard, reports.",
   },
-  erp: {
-    eyebrow: "DEEPECOM ERP CONNECTOR",
-    title: "Account every transaction. Automatically.",
-    lead: "GST · TCS/TDS · inventory · stock transfers · Tally · SAP · Zoho",
-  },
   solutions: {
     eyebrow: "SOLUTIONS",
     title: "Built around how your business works.",
@@ -258,7 +253,7 @@ export const GET: APIRoute = async ({ params }) => {
   const resvg = new Resvg(svg, { fitTo: { mode: "width", value: WIDTH } })
   const png = resvg.render().asPng()
 
-  return new Response(png, {
+  return new Response(png as unknown as BodyInit, {
     headers: {
       "Content-Type": "image/png",
       "Cache-Control": "public, max-age=31536000, immutable",

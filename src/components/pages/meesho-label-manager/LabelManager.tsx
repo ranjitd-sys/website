@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type ReactNode } from "react"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 import { FileUp, Loader2, Download, Printer, RotateCcw, ShieldCheck, PackageSearch, PackageCheck, AlertTriangle, ZoomIn, X, FileText, ArrowDownUp, Settings2, ChevronDown, Scissors, Minus, Wand2, Check, FileStack } from "lucide-react"
 import { loadPdf, createPdfWorkers } from "./lib/pdf"
 import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api"
@@ -14,10 +14,24 @@ import type { ProcessStatus, OutputMode, ThermalPresetId, FitMode, SortKey, Invo
 import { THERMAL_PRESETS } from "./types"
 import { getProvider, type LabelProvider, type ProviderId } from "@/components/pages/label-provider/provider"
 import { toCsv, topSeller, slugify } from "./lib/insights"
+import { trackEvent } from "@/lib/analytics"
 import BatchPanel from "./BatchPanel"
+import TallySyncConversionCard from "@/components/pages/shared/TallySyncConversionCard"
+import TallySyncIntroModal from "@/components/pages/shared/TallySyncIntroModal"
 import { EMPTY_META, type LabelMeta } from "./types"
 
 const metasOf = (units: ImposeUnit[]): LabelMeta[] => units.map((u) => u.meta ?? EMPTY_META)
+
+const TALLY_CARD_COPY: Record<ProviderId, { title: string; body: string }> = {
+  meesho: {
+    title: "Labels ready. Now finish Meesho accounting in Tally.",
+    body: "Meesho orders, page counts and dispatch data are ready. Tally Sync posts the same orders into Tally order-wise and GST-wise, and reconciles charges and payouts, without manual entry.",
+  },
+  flipkart: {
+    title: "Labels ready. Now finish Flipkart accounting in Tally.",
+    body: "Flipkart orders, page counts and shipment data are ready. Tally Sync posts the same orders into Tally order-wise and GST-wise, and reconciles commissions, shipping charges and payouts, without manual entry.",
+  },
+}
 
 const MAX_BYTES = 50 * 1024 * 1024
 // Pages processed at once. More than ~3 stops helping (each worker loads its own pdf.js
@@ -132,7 +146,7 @@ async function processOnMainThread(buffers: ArrayBuffer[], provider: LabelProvid
       (n) => hooks.onProgress(n, total),
     )
   } finally {
-    for (const m of laneDocs) for (const d of m.values()) void d.then((doc) => doc.loadingTask.destroy()).catch(() => {})
+    for (const m of laneDocs) for (const d of m.values()) void d.then((doc) => doc.loadingTask.destroy()).catch(() => { })
     for (const w of workers) w.destroy()
   }
 }
@@ -185,9 +199,8 @@ function Segmented<T extends string>({
             onClick={() => onChange(o.value)}
             aria-pressed={active}
             aria-label={o.label}
-            className={`flex flex-col items-start rounded-md px-3 py-1.5 text-left transition ${
-              active ? "bg-white text-ink-950 shadow-sm" : "text-ink-500 hover:text-ink-800"
-            }`}
+            className={`flex flex-col items-start rounded-md px-3 py-1.5 text-left transition ${active ? "bg-white text-ink-950 shadow-sm" : "text-ink-500 hover:text-ink-800"
+              }`}
           >
             <span className="text-sm font-semibold leading-tight">{o.label}</span>
             {o.caption ? (
@@ -221,9 +234,8 @@ function Switch({
       className={`relative h-5 w-9 shrink-0 rounded-full transition ${checked ? "bg-brand-600" : "bg-ink-300"}`}
     >
       <span
-        className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${
-          checked ? "left-[18px]" : "left-0.5"
-        }`}
+        className={`absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-all ${checked ? "left-[18px]" : "left-0.5"
+          }`}
       />
     </button>
   )
@@ -254,9 +266,8 @@ function OptionCard({
   return (
     <label className="flex h-full cursor-pointer select-none items-start gap-3 rounded-xl border border-ink-200 bg-white p-3 transition hover:border-brand-300">
       <span
-        className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition ${
-          checked ? "bg-brand-50 text-brand-600" : "bg-ink-100 text-ink-400"
-        }`}
+        className={`mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition ${checked ? "bg-brand-50 text-brand-600" : "bg-ink-100 text-ink-400"
+          }`}
       >
         {icon}
       </span>
@@ -289,16 +300,14 @@ function FormatCard({
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition ${
-        active
+      className={`group flex items-center gap-3 rounded-xl border p-3 text-left transition ${active
           ? "border-brand-500 bg-brand-50/60 shadow-sm shadow-brand-600/10"
           : "border-ink-200 bg-white hover:border-brand-300 hover:bg-ink-50/60"
-      }`}
+        }`}
     >
       <span
-        className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition ${
-          active ? "bg-brand-600 text-white" : "bg-ink-100 text-ink-500 group-hover:bg-ink-200"
-        }`}
+        className={`inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg transition ${active ? "bg-brand-600 text-white" : "bg-ink-100 text-ink-500 group-hover:bg-ink-200"
+          }`}
       >
         {icon}
       </span>
@@ -307,9 +316,8 @@ function FormatCard({
         <span className="mt-0.5 block text-xs leading-snug text-ink-500">{description}</span>
       </span>
       <span
-        className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition ${
-          active ? "border-brand-600 bg-brand-600 text-white" : "border-ink-300 text-transparent"
-        }`}
+        className={`inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition ${active ? "border-brand-600 bg-brand-600 text-white" : "border-ink-300 text-transparent"
+          }`}
         aria-hidden="true"
       >
         <Check size={12} strokeWidth={3} />
@@ -417,17 +425,17 @@ function SheetPreview({
             >
               {cutGuides
                 ? cells.map((c) => (
-                    <span
-                      key={`g${c.unit}`}
-                      className="pointer-events-none absolute rounded-[2px] border border-dashed border-brand-400"
-                      style={{
-                        left: c.left * S - PAD,
-                        top: H - (c.y + c.height) * S - PAD,
-                        width: c.width * S + PAD * 2,
-                        height: c.height * S + PAD * 2,
-                      }}
-                    />
-                  ))
+                  <span
+                    key={`g${c.unit}`}
+                    className="pointer-events-none absolute rounded-[2px] border border-dashed border-brand-400"
+                    style={{
+                      left: c.left * S - PAD,
+                      top: H - (c.y + c.height) * S - PAD,
+                      width: c.width * S + PAD * 2,
+                      height: c.height * S + PAD * 2,
+                    }}
+                  />
+                ))
                 : null}
               {cells.map((c) => {
                 const img = labels[c.unit]?.previewUrl
@@ -523,6 +531,14 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
   const [busy, setBusy] = useState(false)
   const [genTask, setGenTask] = useState<"download" | "print" | null>(null)
   const [genProgress, setGenProgress] = useState<{ current: number; total: number } | null>(null)
+  const trackedDone = useRef(false)
+  useEffect(() => {
+    if (status === "done" && !trackedDone.current) {
+      trackedDone.current = true
+      trackEvent("free_tool_completed", { source_tool: providerId, placement: "tool" })
+    }
+    if (status !== "done") trackedDone.current = false
+  }, [status, providerId])
   const pdfCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
   const pdfInvoiceCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
   const pdfPicklistCache = useRef<{ key: string; bytes: Uint8Array } | null>(null)
@@ -1043,6 +1059,20 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
             </div>
           </div>
 
+          {status === "done" && (
+            <TallySyncConversionCard
+              title={TALLY_CARD_COPY[providerId].title}
+              body={TALLY_CARD_COPY[providerId].body}
+              cta="Explore Tally Sync"
+              href={`/integrations/tally?src=${providerId}-label-manager&placement=post-result`}
+              storageKey={`ts-next-${providerId}`}
+              source={`${providerId}-label-manager`}
+              placement="post-result"
+              variant="secondary"
+              oncePerSession={false}
+            />
+          )}
+
           <div className="mt-4 flex flex-col gap-4 rounded-xl border border-ink-200 bg-white p-4 sm:p-5">
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-bold text-ink-900">Choose your print format</span>
@@ -1145,6 +1175,13 @@ export default function LabelManager({ providerId = "meesho" }: { providerId?: P
         </div>
       ) : null}
 
+      <TallySyncIntroModal
+        trigger={status === "done"}
+        source={providerId}
+        placement="post-processing"
+        storageKey={`ts-intro-dismissed:${providerId}`}
+        oncePerSession={false}
+      />
       {detail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink-950/70 p-4" onClick={() => setDetail(null)} role="dialog" aria-modal="true">
           <div className="max-h-[90vh] max-w-2xl overflow-auto rounded-xl bg-white p-4" onClick={(e) => e.stopPropagation()}>

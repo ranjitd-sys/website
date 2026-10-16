@@ -80,13 +80,15 @@ body {
   }
 }
 
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-  letter-spacing: inherit;
+@layer base {
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    letter-spacing: inherit;
+  }
 }
 
 ::selection {

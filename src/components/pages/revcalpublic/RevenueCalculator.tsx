@@ -22,6 +22,8 @@ import {
   type Zone,
 } from "@/data/amazon-fees"
 import { Check, ChevronDown, Layers, Plus, Search, TrendingDown, X } from "lucide-react"
+import TallySyncConversionCard from "@/components/pages/shared/TallySyncConversionCard"
+import TallySyncIntroModal from "@/components/pages/shared/TallySyncIntroModal"
 
 function money(n: number) {
   return new Intl.NumberFormat("en-IN", {
@@ -52,6 +54,7 @@ interface Preset {
 }
 
 const PRESET_KEY = "revcal-presets-v1"
+const INTRO_STORAGE_KEY = "ts-intro-dismissed:amazon-revenue-calculator"
 
 function loadPresets(): Preset[] {
   try {
@@ -211,6 +214,9 @@ function OptionCard({
 }
 
 export default function RevenueCalculator() {
+  const [introOpen, setIntroOpen] = useState(false)
+  const [calcAttempted, setCalcAttempted] = useState(false)
+  const introOpenedRef = useRef(false)
   const [price, setPrice] = useState(799)
   const [categoryId, setCategoryId] = useState("mobile-phones")
   const [weight, setWeight] = useState(0.5)
@@ -274,6 +280,16 @@ export default function RevenueCalculator() {
   const rankedEstimates = [...estimates].sort((a, b) => b.netProceeds - a.netProceeds)
   const scaleMax = Math.max(...allEstimates.map((e) => e.netProceeds), 1)
   const bestPick = rankedEstimates[0]
+
+  useEffect(() => {
+    if (introOpen || !calcAttempted || estimates.length === 0) return
+    try {
+      if (window.sessionStorage.getItem(INTRO_STORAGE_KEY)) return
+    } catch {}
+    if (introOpenedRef.current) return
+    introOpenedRef.current = true
+    setIntroOpen(true)
+  }, [introOpen, calcAttempted, estimates.length, price, cost, units, weight])
 
   const catFilter = catQuery.trim().toLowerCase()
   const filteredCats = catFilter
@@ -350,7 +366,11 @@ export default function RevenueCalculator() {
   const labelCls = "mb-1 flex h-6 items-end text-xs font-semibold uppercase tracking-wide text-ink-500"
 
   return (
-    <div className="flex flex-col gap-5">
+    <div
+      className="flex flex-col gap-5"
+      onPointerDownCapture={() => setCalcAttempted(true)}
+      onKeyDownCapture={() => setCalcAttempted(true)}
+    >
       <div className="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-card">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink-200 bg-ink-50/60 px-5 py-3">
           <div className="flex items-center gap-2.5">
@@ -744,6 +764,37 @@ export default function RevenueCalculator() {
           Profit = sales price − fees − product cost
         </span>
       </div>
+
+      <TallySyncConversionCard
+        title="Your revenue calculation is complete. What about your accounting?"
+        body="Bring your marketplace fees, taxes, and transactions into Tally Sync to reduce repetitive accounting work and reconcile your marketplace transactions. Values above are estimates — they are not actual realized profit until synced against real settlements. Tally Sync records your actual marketplace transactions; it does not by itself calculate or guarantee net profit."
+        cta="Explore Tally Sync"
+        href="/integrations/tally?src=amazon-revenue-calculator&placement=post-result"
+        storageKey="ts-next-calc"
+        source="amazon-revenue-calculator"
+        placement="post-result"
+        variant="primary"
+      />
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            try {
+              window.sessionStorage.removeItem(INTRO_STORAGE_KEY)
+            } catch {}
+            setIntroOpen(true)
+          }}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-700 transition-colors hover:bg-ink-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+        >
+          See what Tally Sync does
+        </button>
+      </div>
+      <TallySyncIntroModal
+        trigger={introOpen}
+        source="amazon-revenue-calculator"
+        placement="post-result"
+        storageKey={INTRO_STORAGE_KEY}
+      />
     </div>
   )
 }

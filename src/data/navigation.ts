@@ -50,6 +50,7 @@ export const NAV_ITEMS: NavItem[] = [
         href: "/erp-connector",
         links: [
           { label: "Accounting", href: "/erp-connector/accounting", description: "Order-wise, GST-wise, warehouse-wise entries" },
+          { label: "Tally Sync", href: "/integrations/tally", description: "Post ecommerce accounting into Tally" },
           { label: "GST", href: "/erp-connector/gst", description: "GST-ready vouchers posted automatically" },
           { label: "Inventory & Stock Transfers", href: "/erp-connector/inventory", description: "Stock moves accounted across warehouses" },
         ],

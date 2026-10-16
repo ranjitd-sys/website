@@ -1,5 +1,12 @@
 export type ToolStatus = "live" | "planned"
 
+export interface NextStep {
+  title: string
+  body: string
+  cta: string
+  href: string
+}
+
 export interface FreeTool {
   id: string
   name: string
@@ -9,6 +16,7 @@ export interface FreeTool {
   href: string | null
   status: ToolStatus
   keywords: string[]
+  nextStep?: NextStep
 }
 
 export const FREE_TOOLS: FreeTool[] = [
@@ -51,6 +59,12 @@ export const FREE_TOOLS: FreeTool[] = [
     href: "/revcalpublic",
     status: "live",
     keywords: ["amazon fba fee calculator india", "amazon referral fee calculator", "fba vs easy ship vs self ship", "amazon fulfillment fee comparison"],
+    nextStep: {
+      title: "Turn these estimates into real money in your books.",
+      body: "DeepEcom Tally Sync posts every calculated order, GST and fee directly into Tally — from the marketplaces you actually sell on.",
+      cta: "See Tally Sync",
+      href: "/integrations/tally",
+    },
   },
   {
     id: "gst-ecommerce",
@@ -141,6 +155,12 @@ export const FREE_TOOLS: FreeTool[] = [
     href: "/tools/meesho-label-manager",
     status: "live",
     keywords: ["meesho label cropper", "meesho shipping label printer", "meesho label pdf crop"],
+    nextStep: {
+      title: "Labels done? Now account for those orders.",
+      body: "Tally Sync posts each shipped order — with its charges and GST — straight into your ERP, so nothing gets keyed in by hand.",
+      cta: "See Tally Sync",
+      href: "/integrations/tally",
+    },
   },
   {
     id: "flipkart-label-manager",
@@ -151,6 +171,12 @@ export const FREE_TOOLS: FreeTool[] = [
     href: "/tools/flipkart-label-manager",
     status: "live",
     keywords: ["flipkart label cropper", "flipkart shipping label printer", "flipkart label pdf crop"],
+    nextStep: {
+      title: "Labels done? Now account for those orders.",
+      body: "Tally Sync posts each shipped order — with its charges and GST — straight into your ERP, so nothing gets keyed in by hand.",
+      cta: "See Tally Sync",
+      href: "/integrations/tally",
+    },
   },
 ]
 
