@@ -3,6 +3,8 @@ import "@/styles/landing.css"
 import { Font } from "astro:assets"
 import SiteNav from "@/components/landing/site-nav"
 import SiteFooter from "@/components/landing/site-footer.astro"
+import MicrosoftClarity from "@/components/analytics/MicrosoftClarity.astro"
+import AnalyticsConsent from "@/components/analytics/AnalyticsConsent.astro"
 
 interface Props {
   title?: string
@@ -62,6 +64,7 @@ const isHome = pathname === "/"
         <script type="application/ld+json" set:html={JSON.stringify(data)} />
       ))
     }
+    <MicrosoftClarity />
     <Font cssVariable="--font-geist" preload />
     <Font cssVariable="--font-plex" preload />
     <script is:inline>
@@ -74,6 +77,7 @@ const isHome = pathname === "/"
       <slot />
     </main>
     <SiteFooter />
+    <AnalyticsConsent />
     <script>
       // Scroll reveal — fades + slides content in as it enters the viewport
       const io = new IntersectionObserver(

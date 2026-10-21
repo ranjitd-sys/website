@@ -4,6 +4,8 @@ import "@/styles/landing.css"
 import { Font } from "astro:assets"
 import SiteNav from "@/components/landing/site-nav"
 import SiteFooter from "@/components/landing/site-footer.astro"
+import MicrosoftClarity from "@/components/analytics/MicrosoftClarity.astro"
+import AnalyticsConsent from "@/components/analytics/AnalyticsConsent.astro"
 import { buttonVariants } from "@/components/landing/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -84,6 +86,7 @@ const jsonLd = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <MicrosoftClarity />
     <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -104,6 +107,7 @@ const jsonLd = [
     </main>
 
     <SiteFooter />
+    <AnalyticsConsent />
 
     <!-- spacer so the sticky mobile CTA never covers footer content -->
     <div class="h-18 md:hidden" aria-hidden="true"></div>

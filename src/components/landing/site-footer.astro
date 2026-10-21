@@ -1,6 +1,8 @@
 ---
 import { LogoMark } from "./icons"
 
+const showAnalyticsSettings = Boolean(import.meta.env.PUBLIC_CLARITY_ID)
+
 const columns = [
   {
     title: "Products",
@@ -176,6 +178,22 @@ const columns = [
   .footer-bottom-links a:hover {
     color: var(--ink-950);
   }
+  .footer-bottom-links button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted-foreground);
+    font: inherit;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+  }
+  .footer-bottom-links button:hover {
+    color: var(--ink-950);
+  }
+  .footer-bottom-links button:focus-visible {
+    outline: 2px solid var(--brand-600);
+    outline-offset: 3px;
+  }
   .footer-social a {
     display: grid;
     place-items: center;
@@ -230,6 +248,13 @@ const columns = [
         <a href="/contact">Book a Demo</a>
         <span aria-hidden="true">·</span>
         <a href="/privacy-policy">Privacy</a>
+        {
+          showAnalyticsSettings && (
+            <button id="analytics-settings" type="button" aria-controls="analytics-consent" aria-expanded="false">
+              Privacy settings
+            </button>
+          )
+        }
         <a href="/terms">Terms</a>
       </nav>
     </div>

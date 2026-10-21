@@ -1,0 +1,47 @@
+---
+const path = Astro.url.pathname.replace(/\/+$/, "")
+const excludedRoutes = ["/tools/meesho-label-manager", "/tools/flipkart-label-manager"]
+const clarityId =
+  import.meta.env.PROD && !excludedRoutes.includes(path) ? import.meta.env.PUBLIC_CLARITY_ID || "" : ""
+---
+
+<script is:inline define:vars={{ clarityId }}>
+  ;(() => {
+    if (!clarityId) return
+    const consentKey = "deepecom-analytics-consent-v1"
+    let scriptRequested = false
+
+    const ensureClarity = () => {
+      window.clarity =
+        window.clarity ||
+        function (...args) {
+          ;(window.clarity.q = window.clarity.q || []).push(args)
+        }
+      window.clarity("consent", true)
+      if (scriptRequested) return
+      scriptRequested = true
+
+      const script = document.createElement("script")
+      script.async = true
+      script.src = `https://www.clarity.ms/tag/${clarityId}`
+      script.onerror = () => {
+        scriptRequested = false
+        script.remove()
+      }
+      document.head.appendChild(script)
+    }
+
+    const applyConsent = () => {
+      let consent = ""
+      try {
+        consent = localStorage.getItem(consentKey) || ""
+      } catch {}
+
+      if (consent === "accepted") ensureClarity()
+      else if (typeof window.clarity === "function") window.clarity("consent", false)
+    }
+
+    document.addEventListener("deepecom:analytics-consent", applyConsent)
+    applyConsent()
+  })()
+</script>
